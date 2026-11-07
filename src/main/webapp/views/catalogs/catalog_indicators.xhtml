@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -28,110 +28,84 @@
 					update="form1:objects, :form1:messagesEdit" />
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<div class="row">
-					<p:panel id="panel" header="Cat&aacute;logo de Indicadores"
-						styleClass="green col-md-4 row-centered shadow-panel"
-						style="  margin-left: 5%;">
-						<br />
-						<h:panelGrid id="display_1" columns="2" cellpadding="4">
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Catálogo de Indicadores</h1>
+						</div>
+					</div>
 
-							<h:outputText value="Indicador" for="indicatorInput"
-								id="indicadortxt" styleClass="control-label"
-								style="padding-left: 30px; padding-right: 30px;" />
-							<p:inputText id="indicatorInput" styleClass="form-control"
-								value="#{catalogIndicatorsMB.beanFind.cveind}" maxlength="3"
-								converterMessage="Indicador debe ser num&eacute;rico"
-								requiredMessage="El campo Indicador es requerido y mayor a cero"
-								validatorMessage="El campo Indicador debe ser num&eacute;rico y mayor a cero">
-								<p:ajax event="keyup"
-									update=":form1:messagesEdit, :form1:objects"
-									listener="#{catalogIndicatorsMB.findValuesCatalog}" />
-								<pe:keyFilter for="indicatorInput" mask="pint"></pe:keyFilter>
-							</p:inputText>
-
-							<h:outputText value="Nombre" for="indInput"
-								styleClass="control-label"
-								style="padding-left: 30px; padding-right: 30px;" />
-							<p:inputText id="indInput" styleClass="form-control"
-								value="#{catalogIndicatorsMB.beanFind.nomind}"
-								style="margin-top: 10px;" maxlength="50"
-								validatorMessage="Nombre solo permite valores alfanum&eacute;ricos"
-								converterMessage="Nombre solo permite valores alfanum&eacute;ricos"
-								requiredMessage="Nombre solo permite valores alfanum&eacute;ricos">
-								<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
-									for="indInput" />
-								<p:ajax event="keyup"
-									update=":form1:messagesEdit, :form1:objects"
-									listener="#{catalogIndicatorsMB.findValuesCatalog}" />
-							</p:inputText>
-
-							<h:outputText value="Periodo:" for="periodInput"
-								styleClass="control-label"
-								style="padding-left: 30px; padding-right: 30px;" />
-							<p:inputText id="periodInput" styleClass="form-control"
-								value="#{catalogIndicatorsMB.beanFind.periodo}"
-								style="margin-top: 10px;" maxlength="1"
-								onkeyup="this.value=this.value.toUpperCase();"
-								validatorMessage="Periodo solo permite: A,S,T,M"
-								converterMessage="Periodo solo permite: A,S,T,M"
-								requiredMessage="Periodo solo permite: A,S,T,M">
-								<f:validateRegex pattern="^\s*([A]|[S]|[T]|[M]*)\s*$"
-									for="periodInput" />
-								<p:ajax event="keyup"
-									update=":form1:messagesEdit, :form1:objects"
-									listener="#{catalogIndicatorsMB.findValuesCatalog}" />
-							</p:inputText>
-
-							<p:outputPanel layout="block" style="text-align:center">
-								<br />
-								<br />
-
-								<p:commandButton value="Buscar" style="padding: 5px;"
-									update=":form1:messagesEdit, :form1:objects"
-									actionListener="#{catalogIndicatorsMB.findValuesCatalog}"
-									onstart="PF('blockUIWidget').block()"
-									oncomplete="PF('blockUIWidget').unblock()" />
-
-								<p:commandButton value="Limpiar" id="resetear"
-									style="padding: 5px; margin-left: 15px;"
-									update=":form1:messagesEdit, :form1:objects, :form1:display_1"
-									actionListener="#{catalogIndicatorsMB.findAllValuesCatalog}"
-									onstart="PF('blockUIWidget').block()" immediate="true"
-									oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:indicatorInput').value='';document.getElementById('form1:indInput').value=''; document.getElementById('form1:periodInput').value='';" />
-
-							</p:outputPanel>
-						</h:panelGrid>
-					</p:panel>
-
-
-					<p:panel id="panelLabels"
-						styleClass="green col-md-4 row-centered shadow-panel"
-						style=" float: right;  margin-right: 5%;">
-						<h:outputText value="Periodo"
-							style="padding-left: 30px;  color:red;" />
-						<br />
-						<h:outputText value="A=Anual" style="padding-left: 30px; " />
-						<br />
-						<h:outputText value="S=Semestral" style="padding-left: 30px; " />
-						<br />
-						<h:outputText value="T=Trimestral" style="padding-left: 30px; " />
-						<br />
-						<h:outputText value="M=Mensual" style="padding-left: 30px; " />
-					</p:panel>
+					<!-- ===== Buscar indicador ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar indicador</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 220px) minmax(0, 1fr) minmax(0, 220px);">
+									<div class="sg-field">
+										<p:outputLabel for="indicatorInput" value="Indicador" />
+										<p:inputText styleClass="mono" id="indicatorInput"
+											value="#{catalogIndicatorsMB.beanFind.cveind}" maxlength="3"
+											converterMessage="Indicador debe ser num&eacute;rico"
+											requiredMessage="El campo Indicador es requerido y mayor a cero"
+											validatorMessage="El campo Indicador debe ser num&eacute;rico y mayor a cero">
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogIndicatorsMB.findValuesCatalog}" />
+											<p:keyFilter for="indicatorInput" mask="pint"></p:keyFilter>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="indInput" value="Nombre" />
+										<p:inputText id="indInput"
+											value="#{catalogIndicatorsMB.beanFind.nomind}" maxlength="50"
+											validatorMessage="Nombre solo permite valores alfanum&eacute;ricos"
+											converterMessage="Nombre solo permite valores alfanum&eacute;ricos"
+											requiredMessage="Nombre solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+												for="indInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogIndicatorsMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="periodInput" value="Periodo" />
+										<p:inputText styleClass="mono" id="periodInput"
+											value="#{catalogIndicatorsMB.beanFind.periodo}" maxlength="1"
+											onkeyup="this.value=this.value.toUpperCase();"
+											validatorMessage="Periodo solo permite: A,S,T,M"
+											converterMessage="Periodo solo permite: A,S,T,M"
+											requiredMessage="Periodo solo permite: A,S,T,M">
+											<f:validateRegex pattern="^\s*([A]|[S]|[T]|[M]*)\s*$"
+												for="periodInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogIndicatorsMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+								</div>
+								<p class="sg-note">Periodo: <b>A</b> Anual · <b>S</b> Semestral · <b>T</b> Trimestral · <b>M</b> Mensual.</p>
+								<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar"
+										update=":form1:messagesEdit, :form1:objects"
+										actionListener="#{catalogIndicatorsMB.findValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
+									<p:commandButton styleClass="ui-button-flat" value="Limpiar" id="resetear"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+										actionListener="#{catalogIndicatorsMB.findAllValuesCatalog}"
+										onstart="PF('blockUIWidget').block()" immediate="true"
+										oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:indicatorInput').value='';document.getElementById('form1:indInput').value=''; document.getElementById('form1:periodInput').value='';" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
 
 
-					<pe:blockUI widgetVar="blockUIWidget">
-						<h:panelGrid columns="2">
-							<h:graphicImage value="indice.png"
-								style="margin-right: 12px; vertical-align: middle;" />
-							<h:outputText value="Por favor espere..."
-								style="white-space: nowrap;" />
-						</h:panelGrid>
-					</pe:blockUI>
-
-
-
-				</div>
 				<br />
 				<!-- <p:panel id="panelButton"
 					style="width:100%; background-color: #E8ECED;"
@@ -145,6 +119,10 @@
 
  -->				<p:focus context="objects" id="focusTable" />
 
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Indicadores</h2>
+					</div>
 				<p:dataTable id="objects" binding="#{table}" var="object"
 					value="#{catalogIndicatorsMB.list}" styleClass="et_datatable"
 					emptyMessage="No hay registros" editable="true" paginator="true"
@@ -154,7 +132,6 @@
 					selection="#{catalogIndicatorsMB.rowSelected}"
 					rowKey="#{object.index}">
 
-					<f:facet name="header">Cat&aacute;logo de Indicadores</f:facet>
 
 					<p:ajax event="rowEdit" listener="#{catalogIndicatorsMB.onRowEdit}"
 						update=":form1:messagesEdit" />
@@ -172,7 +149,7 @@
 						style="width:5%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.cveind}" />
+								<h:outputText value="#{object.cveind}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText id="cveind" value="#{object.cveind}"
@@ -185,7 +162,7 @@
 									<p:ajax event="blur" update="cveind"></p:ajax>
 									<f:convertNumber type="number" for="cveind" />
 									<f:validateDoubleRange minimum="1" for="cveind" />
-									<pe:keyFilter for="cveind" mask="pint"></pe:keyFilter>
+									<p:keyFilter for="cveind" mask="pint"></p:keyFilter>
 								</p:inputText>
 							</f:facet>
 						</p:cellEditor>
@@ -305,60 +282,59 @@
 
 
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
 						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogIndicatorsMB.list}">
-							<p:graphicImage value="excel.png" width="24" />
+							<i class="pi pi-file-excel" /> Excel
 							<p:fileDownload value="#{catalogIndicatorsMB.fileXls}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogIndicatorsMB.list}">
-							<p:graphicImage value="pdf.png" width="24" />
+							<i class="pi pi-align-left" /> TXT
+							<p:fileDownload value="#{catalogIndicatorsMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogIndicatorsMB.list}">
+							<i class="pi pi-file-pdf" /> PDF
 							<p:fileDownload value="#{catalogIndicatorsMB.filePdf}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogIndicatorsMB.list}" actionListener="#{catalogIndicatorsMB.getFileCsvPl}">
-							<p:graphicImage value="csv.png" width="24" />
+							<i class="pi pi-file" /> CSV
 							
 							<!-- <p:dataExporter type="csv" target="objects"
 								fileName="Indicadores" pageOnly="false" encoding="ISO-8859-1" /> -->
 								
 								<p:fileDownload value="#{catalogIndicatorsMB.csvByPl}" />
 						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogIndicatorsMB.list}">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogIndicatorsMB.file}" />
-						</h:commandLink>
-
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 				<br />
 				<br />
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar" update=":form1:objects"
 							actionListener="#{catalogIndicatorsMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 				</p:dialog>
 

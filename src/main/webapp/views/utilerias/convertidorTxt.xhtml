@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -26,7 +26,7 @@
 
 					</p:messages>
 					<p:panelGrid columns="2"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:column>
 							<p:outputLabel value="Nombe Archivo de Salida" />
 						</p:column>
@@ -35,19 +35,17 @@
 								placeholder="Nombre del Archivo de Saida" required="true"
 								requiredMessage="Campo Obligatorio" >
 								<p:ajax event="blur" update="outName"></p:ajax>
-								<pe:keyFilter regEx="/[a-zA-Z]/i" />
+								<p:keyFilter regEx="/[a-zA-Z]/i" />
 							</p:inputText>
 						</p:column>
 						<p:column colspan="2">
-							<p:fileUpload mode="advanced" multiple="false" sizeLimit="10000000000002400"
+							<p:fileUpload mode="advanced" multiple="false"
 								onstart="PrimeFaces.monitorDownload(start, stop);"
 								id="uploadFile" styleClass="ui-noborder" cancelLabel="Cancelar"
-								uploadLabel="Cargar" allowTypes="/(\.|\/)(xlsx)$/"
-								invalidSizeMessage="Maximum file size allowed is 100 KB"
-								invalidFileMessage="Solo se permiten archivos excel .xlsx!"
+								uploadLabel="Cargar"
 								update="messages, outName"
 								oncomplete="jQuery('#form1\\:downloadFile').click();"
-								fileUploadListener="#{convertidorTxtMB.handleFileUpload}">
+								listener="#{convertidorTxtMB.handleFileUpload}"><p:validateFile sizeLimit="10000000000002400" allowTypes="/(\.|\/)(xlsx)$/"/>
 
 							</p:fileUpload>
 						</p:column>
@@ -57,11 +55,11 @@
 			<script type="text/javascript">
     //<![CDATA[
     function start() {
-        PF('statusDialog').show();
+        PF('blockUIWidget').block();
     }
 
     function stop() {
-        PF('statusDialog').hide();
+        PF('blockUIWidget').unblock();
     }
     //]]>
 </script>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -17,19 +17,17 @@
 					<p:focus context="panelCarga" />
 					<p:outputLabel value="Seleccione archivo" />
 					<p:panelGrid columns="2" id="panelCarga"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:fileUpload
-							fileUploadListener="#{matrizCargaMB.handleFileUpload}"
-							mode="advanced" dragDropSupport="false" multiple="false"
-							update=":form1:messages, errorsFile" sizeLimit="1000000000000"
-							accept=".csv" allowTypes="/(\.|\/)(csv)$/"
-							invalidSizeMessage="Tamaño invalido de archivo."
-							invalidFileMessage="Tipo invalido de archivo."
-							cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+							listener="#{matrizCargaMB.handleFileUpload}"
+							mode="advanced" dragDrop="false" multiple="false"
+							update=":form1:messages, errorsFile"
+							accept=".csv"
+							cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar"><p:validateFile sizeLimit="1000000000000" allowTypes="/(\.|\/)(csv)$/"/>
 						</p:fileUpload>
 					</p:panelGrid>
 					<p:panelGrid columns="4" id="errorsFile"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:commandButton value="Descargar archivo de Errores" ajax="false"
 							rendered="#{not empty matrizCargaMB.fileError}">
 							<p:fileDownload value="#{matrizCargaMB.file}"></p:fileDownload>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -37,11 +37,17 @@
 }
 </style>
 			<h:form id="form1">
-				<p:growl id="growlReportador" showDetail="true" sticky="true"
-					autoUpdate="true" />
-				<p:panel id="panelReporte"
-					header="Inventario General de Bienes Inmuebles"
-					styleClass="col-md-10 green col-centered row-centered shadow-panel">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"><p:autoUpdate/></p:growl>
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Inventario General de Bienes Inmuebles</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:dataGrid id="dataGrid" var="entity"
 						value="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.masterList}"
 						emptyMessage="Cargando información..." paginator="true" rows="1"
@@ -54,7 +60,7 @@
 							listener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.cambiarPagina}"
 							process="dataGrid" update="dataGrid form1:pnlBotonesCRUD" />
 
-						<p:panelGrid styleClass="ui-noborder">
+						<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 							<p:row style="text-align:left;">
 								<p:column>
 									<h:outputText value="Mes:" />
@@ -94,7 +100,7 @@
 								</p:column>
 
 								<p:column>
-									<pe:inputNumber style="width: 7em;" id="inputConsecutivo"
+									<p:inputNumber style="width: 7em;" id="inputConsecutivo"
 										value="#{entity.consec}" decimalPlaces="0"
 										decimalSeparator="." thousandSeparator="," minValue="0"
 										maxlength="9" styleClass="input-7"
@@ -108,7 +114,7 @@
 										style="width:5em" decimalSeparator="" thousandSeparator=""
 										minValue="0" maxlength="4" maxValue="9999"
 										rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
-										<pe:keyFilter mask="pint" />
+										<p:keyFilter mask="pint" />
 										<p:ajax event="blur"
 											listener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.findAcount(rowIndexCaptura)}"
 											update=":form1:growlReportador, nomcta" />
@@ -121,7 +127,7 @@
 									<p:inputText id="inputScta" value="#{entity.scta}"
 										maxlength="10"
 										rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
-										<pe:keyFilter mask="pint" />
+										<p:keyFilter mask="pint" />
 										<p:ajax event="change"
 											listener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.leftPad}"
 											update="inputScta" />
@@ -148,7 +154,7 @@
 								</p:column>
 							</p:row>
 						</p:panelGrid>
-						<p:panelGrid styleClass="ui-noborder">
+						<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 							<p:row style="text-align:left">
 								<p:column>
 									<h:outputText value="No. de Inventario:" />
@@ -179,7 +185,7 @@
 						</p:panelGrid>
 						<p:panel header="Medidas y Colindancias"
 							style="width:max-content;">
-							<p:panelGrid styleClass="ui-noborder">
+							<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 								<p:row style="text-align:left;">
 									<p:column>
 										<h:outputText value="Norte:" />
@@ -196,7 +202,7 @@
 								</p:row>
 								<p:row style="position:relative; top:-9px;">
 									<p:column>
-										<pe:inputNumber value="#{entity.norte}" styleClass="input-8"
+										<p:inputNumber value="#{entity.norte}" styleClass="input-8"
 											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 											minValue="0" maxlength="5" maxValue="99999"
 											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
@@ -207,7 +213,7 @@
 											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
 									</p:column>
 									<p:column>
-										<pe:inputNumber value="#{entity.sur}" styleClass="input-8"
+										<p:inputNumber value="#{entity.sur}" styleClass="input-8"
 											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 											minValue="0" maxlength="5" maxValue="99999"
 											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
@@ -234,7 +240,7 @@
 								</p:row>
 								<p:row style="position:relative; top:-9px;">
 									<p:column>
-										<pe:inputNumber value="#{entity.oriente}" styleClass="input-8"
+										<p:inputNumber value="#{entity.oriente}" styleClass="input-8"
 											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 											minValue="0" maxlength="5" maxValue="99999"
 											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
@@ -245,7 +251,7 @@
 											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
 									</p:column>
 									<p:column>
-										<pe:inputNumber value="#{entity.poniente}"
+										<p:inputNumber value="#{entity.poniente}"
 											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
 											thousandSeparator="," minValue="0" maxlength="5"
 											maxValue="99999"
@@ -259,7 +265,7 @@
 								</p:row>
 							</p:panelGrid>
 						</p:panel>
-						<p:panelGrid styleClass="ui-noborder">
+						<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 							<p:row style="text-align:left; line-height: 25px;">
 								<p:column>
 									<h:outputText value="Superficie:" />
@@ -285,20 +291,20 @@
 							</p:row>
 							<p:row style="position:relative; top:-9px;">
 								<p:column>
-									<pe:inputNumber value="#{entity.superficie}"
+									<p:inputNumber value="#{entity.superficie}"
 										maxValue="999999999" styleClass="input-8" decimalPlaces="2"
 										decimalSeparator="." thousandSeparator="," minValue="0"
 										maxlength="9"
 										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
 								</p:column>
 								<p:column>
-									<pe:inputNumber value="#{entity.supconst}" maxValue="999999999"
+									<p:inputNumber value="#{entity.supconst}" maxValue="999999999"
 										styleClass="input-8" decimalPlaces="2" decimalSeparator="."
 										thousandSeparator="," minValue="0" maxlength="9"
 										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
 								</p:column>
 								<p:column>
-									<pe:inputNumber value="#{entity.valorinm}" maxValue="999999999"
+									<p:inputNumber value="#{entity.valorinm}" maxValue="999999999"
 										styleClass="input-8" decimalPlaces="2" decimalSeparator="."
 										thousandSeparator="," minValue="0" maxlength="9"
 										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
@@ -329,7 +335,7 @@
 
 
 								<p:column>
-									<pe:inputNumber value="#{entity.valorcatas}"
+									<p:inputNumber value="#{entity.valorcatas}"
 										styleClass="input-8" decimalPlaces="2" decimalSeparator="."
 										thousandSeparator="," minValue="0" maxlength="9"
 										maxValue="999999999"
@@ -337,7 +343,7 @@
 								</p:column>
 							</p:row>
 						</p:panelGrid>
-						<p:panelGrid styleClass="ui-noborder">
+						<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 							<p:row style="text-align:left;">
 								<p:column>
 									<h:outputText value="Uso del Inmueble:" />
@@ -405,7 +411,7 @@
 									<div class="ui-g-12 ui-md-6">
 										<p:panel header="P&oacute;liza"
 											style="margin-bottom:20px; width: 45%; left: 5%; position: absolute;">
-											<p:panelGrid styleClass="panelGridCenter ui-noborder">
+											<p:panelGrid styleClass="panelGridCenter ui-noborder" layout="tabular" columns="0">
 												<p:row>
 													<p:column style="width:10em;">
 														<h:outputText value="Tipo póliza:" />
@@ -422,15 +428,15 @@
 														<p:inputText value="#{entity.tippol}" maxlength="1"
 															disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
 															style="width:5em;text-transform: uppercase;">
-															<pe:keyFilter mask="alpha" regEx="/[cCdDeEiI]/" />
+															<p:keyFilter mask="alpha" regEx="/[cCdDeEiI]/" />
 														</p:inputText>
 													</p:column>
 													<p:column>
-														<pe:inputNumber styleClass="input-8"
+														<p:inputNumber styleClass="input-8"
 															value="#{entity.conpol}" maxlength="4" decimalPlaces="0"
 															decimalSeparator="" thousandSeparator="" maxValue="9999"
 															disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
-														</pe:inputNumber>
+														</p:inputNumber>
 													</p:column>
 													<p:column>
 														<p:calendar value="#{entity.fecpol}" pattern="dd/MM/yyyy"
@@ -444,7 +450,7 @@
 									<div class="ui-g-12 ui-md-6">
 										<p:panel header="Movimientos"
 											style="margin-bottom:20px; width: 45%; position: relative; left: 50%;">
-											<p:panelGrid styleClass="panelGridCenter ui-noborder">
+											<p:panelGrid styleClass="panelGridCenter ui-noborder" layout="tabular" columns="0">
 												<p:row>
 													<p:column>
 														<h:outputText value="Fecha alta:" />
@@ -504,7 +510,7 @@
 						</p:panel>
 						<p:panel header="Depreciaci&oacute;n"
 							style="margin-bottom:20px; width: 45%; position: relative; left: 50%;">
-							<p:panelGrid styleClass="panelGridCenter ui-noborder">
+							<p:panelGrid styleClass="panelGridCenter ui-noborder" layout="tabular" columns="0">
 								<p:row>
 									<p:column>
 										<h:outputText value="Porcentaje (%)" />
@@ -518,14 +524,14 @@
 								</p:row>
 								<p:row>
 									<p:column>
-										<pe:inputNumber value="#{entity.porcentaje}"
+										<p:inputNumber value="#{entity.porcentaje}"
 											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
 											thousandSeparator="," minValue="0" maxlength="3"
 											maxValue="100"
 											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
 									</p:column>
 									<p:column>
-										<pe:inputNumber value="#{entity.depreperiodo}"
+										<p:inputNumber value="#{entity.depreperiodo}"
 											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
 											thousandSeparator="," minValue="0" maxlength="9"
 											maxValue="999999999"
@@ -533,7 +539,7 @@
 									</p:column>
 
 									<p:column>
-										<pe:inputNumber value="#{entity.depreacum}"
+										<p:inputNumber value="#{entity.depreacum}"
 											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
 											thousandSeparator="," minValue="0" maxlength="9"
 											maxValue="999999999"
@@ -582,16 +588,10 @@
 							disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
 							update="dataGrid pnlBotonesCRUD" />
 					</h:panelGroup>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
 					message="Desea eliminar el registro actual?" header="Confirmación"
 					severity="alert">

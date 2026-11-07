@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <style type="text/css">
@@ -25,7 +25,7 @@
 					header="Impresion de Cheques Empleados/Proveedores"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
 
-					<p:panelGrid columns="6" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="6" styleClass="col-centered ui-noborder" layout="tabular">
 
 						<p:panel id="chdImpresos" header="Cheques Impresos"
 							styleClass="mystyleClass">
@@ -40,7 +40,7 @@
 								value="Numero de Cheques Cancelados: #{chequeInfoemMB.numeroCancelados}" />
 						</p:panel>
 						<p:draggable for="chqCancelados" />
-						<p:panelGrid columns="1">
+						<p:panelGrid columns="1" layout="tabular">
 							<!--p:commandButton value="Imprimir"/>
                             <p:commandButton value="Limpiar"
                                              actionListener="#{chequeInfoemMB.cleanElements}"
@@ -70,7 +70,7 @@
 					</p:panelGrid>
 
 
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder" layout="tabular">
 						<p:outputLabel value="Tipo de Cheque" />
 						<p:outputLabel value="Mes" />
 						<p:outputLabel value="Numero de #{chequeInfoemMB.tipoPagoCad}"
@@ -93,7 +93,7 @@
 
 					</p:panelGrid>
 					<p:panelGrid columns="3" styleClass="col-centered ui-noborder"
-						id="gridCuenta">
+						id="gridCuenta" layout="tabular">
 						<p:outputLabel value="Consecutivo Cheques" />
 						<p:outputLabel value="Cuenta Bancaria" />
 						<p:outputLabel value="Fecha Cheque" />
@@ -120,13 +120,13 @@
 							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</p:calendar>
 					</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
 						<p:outputLabel value="Notas" />
 						<p:inputTextarea cols="100" rows="2" id="areaNotes"
 							disabled="#{chequeInfoemMB.flagActivate}" />
 					</p:panelGrid>
 					<p:panelGrid columns="3" styleClass="col-centered ui-noborder"
-						id="gridContrato">
+						id="gridContrato" layout="tabular">
 						<p:outputLabel id="lblCNumContra" value="Numero de Contrato"
 							style="display: #{chequeInfoemMB.none}; " />
 
@@ -146,7 +146,7 @@
 							value="#{chequeInfoemMB.contrato.importeAdquisicion}"
 							disabled="true" style="display: #{chequeInfoemMB.none}; " />
 					</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
 
 						<p:outputLabel id="lblEtiqueta" value="#{chequeInfoemMB.etiqueta}" />
 
@@ -156,7 +156,7 @@
 							completeMethod="#{chequeInfoemMB.findEmpleadoByFullName}"
 							scrollHeight="250" />
 					</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
 						<p:outputLabel value="Concepto" />
 						<p:inputTextarea id="concepto" rows="2" cols="100" maxlength="300"
 							disabled="#{chequeInfoemMB.flagActivate}"
@@ -164,13 +164,13 @@
 							onkeyup="this.value=this.value.toUpperCase();"
 							value="#{chequeInfoemMB.concepto}" />
 					</p:panelGrid>
-					<p:panelGrid columns="2" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="2" styleClass="col-centered ui-noborder" layout="tabular">
 						<p:outputLabel value="Cantidad en Moneda" />
 						<p:outputLabel value="Cantidad en Letra" />
 						<p:inputText id="cantidad" value="#{chequeInfoemMB.monto}"
 							disabled="#{chequeInfoemMB.flagActivate}"
 							onkeypress="if (event.keyCode == 13) {return false;} if(event.KeyCode == 9){if(this.value == null){this.value = 0.0;} return false;}">
-							<pe:keyFilter for="cantidad" mask="num"></pe:keyFilter>
+							<p:keyFilter for="cantidad" mask="num"></p:keyFilter>
 							<f:convertNumber pattern="###,###,##0.00" type="number" />
 							<p:ajax listener="#{chequeInfoemMB.chageNumbersToLetters}"
 								event="keyup" update="form1:montoLetras" />
@@ -201,7 +201,7 @@
 					<p:panel id="consultaCheque" header="Consulta de Cheques Generados"
 						styleClass="green col-md-12 col-centered row-centered shadow-panel">
 						<p:panelGrid columns="5"
-							styleClass="green col-centered ui-noborder">
+							styleClass="green col-centered ui-noborder" layout="tabular">
 
 							<p:outputLabel value="Folio" />
 							<p:outputLabel value="Nombre Enpleado" />
@@ -236,7 +236,7 @@
 							</p:selectOneMenu>
 						</p:panelGrid>
 						<p:panelGrid columns="2"
-							styleClass="green col-centered ui-noborder">
+							styleClass="green col-centered ui-noborder" layout="tabular">
 							<p:commandButton value="Buscar" id="find"
 								actionListener="#{chequeInfoemMB.findByCheque}"
 								update="form2:objects " />
@@ -245,7 +245,7 @@
 								update=":form2:nConsulta, form2:mConsulta, form2:cTCheques" />
 						</p:panelGrid>
 						<p:panelGrid columns="1"
-							styleClass="green col-centered ui-noborder">
+							styleClass="green col-centered ui-noborder" layout="tabular">
 							<p:commandButton value="Generar Reporte" ajax="false"
 								onclick="PrimeFaces.monitorDownload(start, stop);"
 								icon="ui-icon-arrowthick-1-s">
@@ -302,7 +302,7 @@
 					<p:panel header="Cancelación de Cheques" id="pCancel"
 						styleClass="green col-md-9 col-centered row-centered shadow-panel">
 						<p:panelGrid columns="1" id="gridBtnCancel"
-							styleClass="green col-centered ui-noborder">
+							styleClass="green col-centered ui-noborder" layout="tabular">
 							<p:commandButton value="Confirm"
 								actionListener="#{chequeInfoemMB.confirmarCalcelCheque}"
 								update="form3:msgsCancel, form2:objects" styleClass="mr-2"
@@ -313,7 +313,7 @@
 							</p:commandButton>
 						</p:panelGrid>
 						<p:panelGrid columns="2" id="gridCancel"
-							styleClass="green col-centered ui-noborder">
+							styleClass="green col-centered ui-noborder" layout="tabular">
 							<p:outputLabel value="Folio" />
 							<p:outputLabel
 								value="#{chequeInfoemMB.cancelTregistroCheque.folio}"

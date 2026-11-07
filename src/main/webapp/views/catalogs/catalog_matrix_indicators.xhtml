@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body style="background-color: #E8ECED;">
@@ -25,163 +25,92 @@
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
 
-				<div class="ui-grid">
-					<div class="ui-grid-row">
-						<p:panel id="panel" header="Matriz de Indicadores"
-							styleClass="ui-grid-col-8 green col-centered row-centered shadow-panel">
-							<div class="ui-grid-col-6">
-								<p:panelGrid columns="3" layout="grid"
-									styleClass="showcase-text-align-center ui-noborder">
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Matriz de Indicadores</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton icon="pi pi-plus" value="Nuevo registro"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								actionListener="#{catalogMatrixIndicatorsMB.insertRow}"
+								oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+						</h:panelGroup>
+					</div>
 
-									<h:outputText value="Nombre de Indicador" for="nameInput"
-										styleClass="control-label" />
-
-									<h:outputText value="Nivel" for="nivelInput"
-										styleClass="control-label" />
-
-									<h:outputText value="Programa" for="programaInput"
-										styleClass="control-label" />
-
-									<p:inputText id="nameInput" styleClass="form-control"
-										value="#{catalogMatrixIndicatorsMB.beanFind.nomind}"
-										maxlength="400"
-										validatorMessage="El campo Nombre de Indicador solo permite valores alfanum&eacute;ricos">
-										<f:validateRegex
-											pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
-											for="nameInput" />
-										<p:ajax event="keyup"
-											update=":form1:messagesEdit, :form1:objects"
-											listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
-									</p:inputText>
-
-									<p:inputText id="nivelInput" maxlength="2"
-										styleClass="form-control"
-										value="#{catalogMatrixIndicatorsMB.beanFind.nivel}"
-										validatorMessage="El campo Nivel solo permite valores NF, NP, NC o NA">
-										<f:validateRegex pattern="^(N|n|NF|NP|NC|NA|nf|np|nc|na)$"
-											for="nivelInput" />
-										<p:ajax event="keyup"
-											update=":form1:messagesEdit, :form1:objects"
-											listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
-									</p:inputText>
-
-									<p:inputText id="programaInput" styleClass="form-control"
-										value="#{catalogMatrixIndicatorsMB.beanFind.programa}"
-										maxlength="8"
-										validatorMessage="El campo solo permite valores numéricos">
-										<f:validateRegex pattern="^\s*([0-9])*\s*$"
-											for="programaInput" />
-										<p:ajax event="keyup"
-											update=":form1:messagesEdit, :form1:objects"
-											listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
-									</p:inputText>
-
-								</p:panelGrid>
-
-								<p:outputPanel id="display_1" layout="block"
-									style="text-align:center">
-
-									<p:commandButton value="Buscar" style="padding: 5px;"
+					<!-- ===== Buscar indicador ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar indicador</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 1fr) minmax(0, 140px) minmax(0, 200px);">
+									<div class="sg-field">
+										<p:outputLabel for="nameInput" value="Nombre de Indicador" />
+										<p:inputText id="nameInput"
+											value="#{catalogMatrixIndicatorsMB.beanFind.nomind}"
+											maxlength="400"
+											validatorMessage="El campo Nombre de Indicador solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex
+												pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+												for="nameInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="nivelInput" value="Nivel" />
+										<p:inputText styleClass="mono" id="nivelInput" maxlength="2"
+											value="#{catalogMatrixIndicatorsMB.beanFind.nivel}"
+											validatorMessage="El campo Nivel solo permite valores NF, NP, NC o NA">
+											<f:validateRegex pattern="^(N|n|NF|NP|NC|NA|nf|np|nc|na)$"
+												for="nivelInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="programaInput" value="Programa" />
+										<p:inputText styleClass="mono" id="programaInput"
+											value="#{catalogMatrixIndicatorsMB.beanFind.programa}"
+											maxlength="8"
+											validatorMessage="El campo solo permite valores numéricos">
+											<f:validateRegex pattern="^\s*([0-9])*\s*$"
+												for="programaInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+								</div>
+								<p class="sg-note">Tipo de indicador: <b>E</b> Estratégico · <b>G</b> Gestión. Frecuencia: <b>M</b> Mensual · <b>T</b> Trimestral · <b>S</b> Semestral · <b>A</b> Anual.</p>
+						<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar"
 										update=":form1:messagesEdit, :form1:objects"
 										actionListener="#{catalogMatrixIndicatorsMB.findValuesCatalog}"
 										onstart="PF('blockUIWidget').block()"
 										oncomplete="PF('blockUIWidget').unblock()" />
-
-									<p:commandButton value="Limpiar"
-										style="padding: 5px; margin-left: 15px;"
+									<p:commandButton styleClass="ui-button-flat" value="Limpiar"
 										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
 										actionListener="#{catalogMatrixIndicatorsMB.findAllValuesCatalog}"
 										onstart="PF('blockUIWidget').block()" immediate="true"
 										oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:nameInput').value='';document.getElementById('form1:nivelInput').value='';document.getElementById('form1:programaInput').value='';" />
-
-								</p:outputPanel>
-							</div>
-
-							<div class="ui-grid-col-2" style="margin-left: 5%;">
-								<p:panel header="Tipo Indicador"
-									styleClass="col-centered row-centered shadow-panel">
-									<h:outputText value="E - Estrat&eacute;gico" />
-									<br />
-									<br />
-									<h:outputText value="G - Gesti&oacute;n" />
-									<br />
-									<br />
-								</p:panel>
-							</div>
-							<div class="ui-grid-col-2" style="margin-left: 5%;">
-								<p:panel header="Frecuencia"
-									styleClass="ui-grid-col-12 green col-centered row-centered shadow-panel">
-									<h:outputText value="M - Mensual" />
-									<br />
-									<h:outputText value="T - Trimestral" />
-									<br />
-									<h:outputText value="S - Semestral" />
-									<br />
-									<h:outputText value="A - Anual" />
-								</p:panel>
-							</div>
-						</p:panel>
-
-
-						<!-- <div class="ui-grid-col-6" style="right: 0%; position: absolute;">
-							<p:panel id="panelLabels"
-								styleClass="green col-centered row-centered shadow-panel"
-								style="width:70%;">
-								<h:outputText value="Tipo de Indicador"
-									style="padding-left: 30px;  color:red;" />
-								<br />
-								<h:outputText value="E-Estrat&eacute;gico"
-									style="padding-left: 30px; " />
-								<br />
-								<h:outputText value="G-Gesti&oacute;n"
-									style="padding-left: 30px; " />
-
-							</p:panel>
-						</div>
-						<div class="ui-grid-col-6" style="right: 0%; position: absolute;">
-							<p:panel id="panelLabels1"
-								styleClass="green col-centered row-centered shadow-panel"
-								style="width:70%;">
-
-								<h:outputText value="Frecuencia"
-									style="padding-left: 30px; margin-top: 10px; color:red;" />
-								<br />
-								<h:outputText value="M-Mensual"
-									style="padding-left: 30px; margin-top: 10px;" />
-								<br />
-								<h:outputText value="T-Trimestral"
-									style="padding-left: 30px; margin-top: 10px;" />
-								<br />
-								<h:outputText value="S-Semestral"
-									style="padding-left: 30px; margin-top: 10px;" />
-								<br />
-								<h:outputText value="A-Anual"
-									style="padding-left: 30px; margin-top: 10px;" />
-							</p:panel>
-						</div> -->
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
 					</div>
-				</div>
-
-				<pe:blockUI widgetVar="blockUIWidget">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Please wait..." style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #E8ECED; ">
-					<center>
-						<p:commandButton value="Nuevo Registro"
-							update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
-							actionListener="#{catalogMatrixIndicatorsMB.insertRow}"
-							oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
-					</center>
-				</p:panel>
 
 				<p:focus context="objects" id="focusTable" />
 
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Matriz de indicadores</h2>
+					</div>
 				<p:dataTable id="objects" binding="#{table}" var="object"
 					value="#{catalogMatrixIndicatorsMB.list}" styleClass="et_datatable"
 					emptyMessage="No hay registros" editable="true" paginator="true"
@@ -191,7 +120,6 @@
 					selection="#{catalogMatrixIndicatorsMB.rowSelected}"
 					rowKey="#{object.id}">
 
-					<f:facet name="header">Matriz de Indicadores</f:facet>
 					<p:ajax event="rowEditInit"
 						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});
 						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden')});" />
@@ -215,7 +143,7 @@
 					<p:column headerText="Programa" exportable="false" style="width:8%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.programa}" />
+								<h:outputText value="#{object.programa}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 
@@ -415,11 +343,12 @@
 						</p:cellEditor>
 					</p:column>
 
-					<p:column headerText="Borrar" style="width:5%" exportable="false">
-						<p:commandLink
+					<p:column headerText="Acciones" exportable="false" style="width:110px;" styleClass="sg-acciones-fila">
+						<p:rowEditor />
+						<p:commandLink styleClass="sg-borrar" id="deleteRow"
 							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
 							oncomplete="PF('confirmDeleteDlg').show()"
-							image="ui-icon ui-icon-close" title="Delete">
+							image="ui-icon ui-icon-close" title="Borrar">
 
 							<f:setPropertyActionListener value="#{object}"
 								target="#{catalogMatrixIndicatorsMB.beanSelected}" />
@@ -428,30 +357,34 @@
 						</p:commandLink>
 					</p:column>
 
-					<p:column style="width:5%" exportable="false">
-						<p:rowEditor />
-					</p:column>
-
 
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogMatrixIndicatorsMB.list}">
-							<p:graphicImage value="excel.png" width="24" />
+							<i class="pi pi-file-excel" /> Excel
 							<p:fileDownload value="#{catalogMatrixIndicatorsMB.fileXls}"
 								disabled="#{empty catalogMatrixIndicatorsMB.list}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogMatrixIndicatorsMB.list}">
-							<p:graphicImage value="pdf.png" width="24" />
+							<i class="pi pi-align-left" /> TXT
+							<p:fileDownload value="#{catalogMatrixIndicatorsMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMatrixIndicatorsMB.list}">
+							<i class="pi pi-file-pdf" /> PDF
 							<p:fileDownload value="#{catalogMatrixIndicatorsMB.filePdf}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogMatrixIndicatorsMB.list}"
 							actionListener="#{catalogMatrixIndicatorsMB.getFileCsvPl}">
-							<p:graphicImage value="csv.png" width="24" />
+							<i class="pi pi-file" /> CSV
 
 							<!-- <p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
 								fileName="MatrizIndicadores" pageOnly="false" /> -->
@@ -459,46 +392,37 @@
 							<p:fileDownload value="#{catalogMatrixIndicatorsMB.csvByPl}" />
 
 						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogMatrixIndicatorsMB.list}">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogMatrixIndicatorsMB.file}" />
-						</h:commandLink>
-
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 				<p:commandButton id="hideButton2"
 					actionListener="#{catalogMatrixIndicatorsMB.showSuccesDelete}"
 					update=":form1:messagesEdit, :form1:objects" ajax="false"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 				<p:commandButton id="hideButton3"
 					actionListener="#{catalogMatrixIndicatorsMB.showSuccesDelete()}"
 					update=":form1:messagesEdit, :form1:objects" ajax="false"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar"
 							update=":form1:objects, :form1:messagesEdit"
 							actionListener="#{catalogMatrixIndicatorsMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 				</p:dialog>
 

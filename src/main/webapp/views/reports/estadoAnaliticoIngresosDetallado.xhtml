@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
@@ -22,11 +22,19 @@
 				<p:remoteCommand id="activeRow" name="activeRow"
 					actionListener="#{eaidMB.activeRowPostPage}" update=":form1:object" />
 
-				<p:panel id="panel" header="Estado analitico de ingresos detallado"
-					styleClass="green col-md-12 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Estado analitico de ingresos detallado</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:fieldset style="margin-bottom:20px">
 						<p:panelGrid id="idForm"
-							styleClass="col-centered row-centered ui-noborder">
+							styleClass="col-centered row-centered ui-noborder" layout="tabular" columns="0">
 							<p:row>
 								<p:column style="text-align: right;">
 									<p:outputLabel value="Trimestre: " />
@@ -57,26 +65,19 @@
 							</p:row>
 							<p:row>
 								<p:column>
-									<p:commandButton value="Adicionar" id="add"
-										icon="ui-icon-plusthick" disabled="#{eaidMB.bAdicionar}"
-										onclick="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});"
-										actionListener="#{eaidMB.addElement}"
-										update=":form1:object, :form1:buscar, :form1:trimestre, add, :form1:limpiar" />
-								</p:column>
-								<p:column>
-									<h:commandLink
-										onclick="PrimeFaces.monitorDownload(start, stop);"
-										title="EXCEL">
-										<p:graphicImage value="excel.png" width="24" />
-										<p:fileDownload value="#{eaidMB.fileXls}" />
-									</h:commandLink>
-								</p:column>
-								<p:column>
-									<p:commandButton id="generateportepdf" value="Correcto"
+									<p:commandButton icon="pi pi-play" id="generateportepdf" value="Generar"
 										ajax="false"
 										onclick="PrimeFaces.monitorDownload(start, stop);">
 										<p:fileDownload value="#{eaidMB.filePdf}" />
 									</p:commandButton>
+								</p:column>
+								<p:column>
+									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL" styleClass="sg-btn-sm">
+										<i class="pi pi-file-excel" /> Excel
+										<p:fileDownload value="#{eaidMB.fileXls}" />
+									</h:commandLink>
 								</p:column>
 								<p:column>
 									<p:commandButton id="generateporteTxt" value="Archivo TXT"
@@ -84,6 +85,13 @@
 										onclick="PrimeFaces.monitorDownload(start, stop);">
 										<p:fileDownload value="#{eaidMB.txtFile}" />
 									</p:commandButton>
+								</p:column>
+								<p:column>
+									<p:commandButton value="Adicionar" id="add"
+										icon="ui-icon-plusthick" disabled="#{eaidMB.bAdicionar}"
+										onclick="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});"
+										actionListener="#{eaidMB.addElement}"
+										update=":form1:object, :form1:buscar, :form1:trimestre, add, :form1:limpiar" />
 								</p:column>
 							</p:row>
 						</p:panelGrid>
@@ -113,10 +121,10 @@
 										<h:outputText value="#{objects.trimestre}" />
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber id="trim" value="#{objects.trimestre}"
+										<p:inputNumber id="trim" value="#{objects.trimestre}"
 											converterMessage="Solo permite numeros del 1 al 4"
 											maxlength="2" size="2" decimalPlaces="0">
-										</pe:inputNumber>
+										</p:inputNumber>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -129,7 +137,7 @@
 									<f:facet name="input">
 										<p:inputText maxlength="6" size="6" id="consecutivo"
 											value="#{objects.consecutivo}" style="width:100%">
-											<pe:keyFilter mask="pint" for="consecutivo" />
+											<p:keyFilter mask="pint" for="consecutivo" />
 											<p:ajax event="blur" update="consecutivo" />
 										</p:inputText>
 									</f:facet>
@@ -159,13 +167,13 @@
 										</h:outputText>
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+										<p:inputNumber decimalPlaces="2" thousandSeparator=","
 											decimalSeparator="." id="estimado"
 											value="#{objects.estimado}" style="width:100%"
 											minValue="-999999999999999.99" maxValue="999999999999999.99">
 
 											<p:ajax event="blur" update="estimado" />
-										</pe:inputNumber>
+										</p:inputNumber>
 
 									</f:facet>
 								</p:cellEditor>
@@ -179,13 +187,13 @@
 										</h:outputText>
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+										<p:inputNumber decimalPlaces="2" thousandSeparator=","
 											decimalSeparator="." id="ampliacion"
 											value="#{objects.ampliacionReduccion}" style="width:100%"
 											minValue="-999999999999999.99" maxValue="999999999999999.99">
 
 											<p:ajax event="blur" update="ampliacion" />
-										</pe:inputNumber>
+										</p:inputNumber>
 
 									</f:facet>
 								</p:cellEditor>
@@ -198,12 +206,12 @@
 										</h:outputText>
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+										<p:inputNumber decimalPlaces="2" thousandSeparator=","
 											decimalSeparator="." id="modificado"
 											value="#{objects.modificado}" style="width:100%"
 											minValue="-999999999999999.99" maxValue="999999999999999.99">
 											<p:ajax event="blur" update="modificado" />
-										</pe:inputNumber>
+										</p:inputNumber>
 
 									</f:facet>
 								</p:cellEditor>
@@ -217,12 +225,12 @@
 										</h:outputText>
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+										<p:inputNumber decimalPlaces="2" thousandSeparator=","
 											decimalSeparator="." id="devengado"
 											value="#{objects.devengado}" style="width:100%"
 											minValue="-999999999999999.99" maxValue="999999999999999.99">
 											<p:ajax event="blur" update="devengado" />
-										</pe:inputNumber>
+										</p:inputNumber>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -235,12 +243,12 @@
 										</h:outputText>
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+										<p:inputNumber decimalPlaces="2" thousandSeparator=","
 											decimalSeparator="." id="recaudado"
 											value="#{objects.recaudado}" style="width:100%"
 											minValue="-999999999999999.99" maxValue="999999999999999.99">
 											<p:ajax event="blur" update="recaudado" />
-										</pe:inputNumber>
+										</p:inputNumber>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -254,13 +262,13 @@
 										</h:outputText>
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+										<p:inputNumber decimalPlaces="2" thousandSeparator=","
 											id="diferencia" decimalSeparator="."
 											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:object span.ui-icon-check').last().click(); return false; } "
 											value="#{objects.diferencia}" style="width:100%"
 											minValue="-999999999999999.99" maxValue="999999999999999.99">
 											<p:ajax event="blur" update="diferencia" />
-										</pe:inputNumber>
+										</p:inputNumber>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -284,14 +292,6 @@
 						</p:dataTable>
 
 					</p:fieldset>
-					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-						<h:panelGrid columns="2">
-							<h:graphicImage value="../catalogs/please_wait.gif"
-								style="margin-right: 12px; vertical-align: middle;" />
-							<h:outputText value="Por favor espere..."
-								style="white-space: nowrap;" />
-						</h:panelGrid>
-					</pe:blockUI>
 
 					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 						<p:commandButton value="Si" type="button"
@@ -299,8 +299,9 @@
 						<p:commandButton value="No" type="button"
 							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 					</p:confirmDialog>
-
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 			<script type="text/javascript">
 			      $('#form1\\:limpiar').click(function(){

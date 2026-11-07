@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -26,8 +26,8 @@
 				<p:messages id="messages" showDetail="true" closable="true" />
 				<p:panelGrid columns="2" id="doscolumnas"
 					columnClasses="columna columna"
-					styleClass="col-centered row-centered ui-noborder">
-					<p:panelGrid columns="1" id="tabla" styleClass="ui-noborder">
+					styleClass="col-centered row-centered ui-noborder" layout="tabular">
+					<p:panelGrid columns="1" id="tabla" styleClass="ui-noborder" layout="tabular">
 						<p:dataTable id="objects" binding="#{table}" var="object"
 							value="#{ingresoPropioCargaAutomaticaMB.polizas}"
 							styleClass="et_datatable green col-centered row-centered shadow-panel"
@@ -93,9 +93,9 @@
 						</p:dataTable>
 					</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="ui-noborder"
-						id="panelIzquierdo">
+						id="panelIzquierdo" layout="tabular">
 						<p:panelGrid columns="2"
-							styleClass="col-centered row-centered ui-noborder">
+							styleClass="col-centered row-centered ui-noborder" layout="tabular">
 							<p:outputLabel value="Mes" />
 							<p:outputLabel value="Numero" />
 							<p:selectOneMenu id="idMes"
@@ -112,21 +112,17 @@
 
 						</p:panelGrid>
 						<p:panelGrid columns="2"
-							styleClass="col-centered row-centered ui-noborder">
+							styleClass="col-centered row-centered ui-noborder" layout="tabular">
 							<p:fileUpload
-								fileUploadListener="#{ingresoPropioCargaAutomaticaMB.handleFileUpload}"
-								mode="advanced" dragDropSupport="false" multiple="false"
-								update=":form1:messages, :form1:object totales errorsFile"
-								sizeLimit="1000000000000" accept=".csv"
-								allowTypes="/(\.|\/)(csv)$/"
-								invalidSizeMessage="Tamaño invalido de archivo."
-								invalidFileMessage="Tipo invalido de archivo."
-								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+								listener="#{ingresoPropioCargaAutomaticaMB.handleFileUpload}"
+								mode="advanced" dragDrop="false" multiple="false"
+								update=":form1:messages, :form1:object totales errorsFile" accept=".csv"
+								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar"><p:validateFile sizeLimit="1000000000000" allowTypes="/(\.|\/)(csv)$/"/>
 
 							</p:fileUpload>
 						</p:panelGrid>
 						<p:panelGrid columns="4" id="errorsFile"
-							styleClass="col-centered row-centered ui-noborder">
+							styleClass="col-centered row-centered ui-noborder" layout="tabular">
 							<p:commandButton value="Descargar archivo de Errores"
 								ajax="false"
 								rendered="#{not empty ingresoPropioCargaAutomaticaMB.fileError}">
@@ -134,7 +130,7 @@
 							</p:commandButton>
 						</p:panelGrid>
 						<p:panelGrid columns="4" id="totales"
-							styleClass="col-centered row-centered ui-noborder">
+							styleClass="col-centered row-centered ui-noborder" layout="tabular">
 							<p:outputLabel value="Cargos" />
 							<p:outputLabel value="Abonos" />
 							<p:outputLabel value="Total Ingreso" />

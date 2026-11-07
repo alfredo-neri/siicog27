@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
 
@@ -16,7 +16,7 @@
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
 					<p:messages id="messages" showDetail="true" closable="true" />
 					<p:panelGrid columns="2"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:outputLabel value="Mes:" />
 						<p:selectOneMenu id="idMes" value="#{comparadorMB.mes}">
 							<f:selectItems value="#{comparadorMB.listMes}" var="meses"
@@ -25,15 +25,13 @@
 						</p:selectOneMenu>
 					</p:panelGrid>
 					<p:panelGrid columns="2"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:fileUpload
-							fileUploadListener="#{comparadorMB.handleFileUpload}"
-							mode="advanced" dragDropSupport="false"
-							update=":form1:messages, :form1:object" sizeLimit="1000000000000"
-							accept=".csv" allowTypes="/(\.|\/)(csv)$/"
-							invalidSizeMessage="Tamaño invalido de archivo."
-							invalidFileMessage="Tipo invalido de archivo."
-							cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+							listener="#{comparadorMB.handleFileUpload}"
+							mode="advanced" dragDrop="false"
+							update=":form1:messages, :form1:object"
+							accept=".csv"
+							cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar"><p:validateFile sizeLimit="1000000000000" allowTypes="/(\.|\/)(csv)$/"/>
 
 						</p:fileUpload>
 					</p:panelGrid>

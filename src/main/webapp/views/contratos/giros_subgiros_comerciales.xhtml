@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -13,158 +13,136 @@
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 
 		<ui:define name="content">
-			<style>
-.columna {
-	width: 50%;
-}
-
-.input-max {
-	width: 100% !important;
-}
-
-.buttons-form {
-	display: flex !important;
-	margin: auto;
-	justify-content: center;
-	align-items: center;
-}
-
-.table-busqueda {
-	display: flex !important;
-	align-items: center;
-	justify-content: end;
-}
-
-.table-busqueda input {
-	width: 50% !important;
-}
-</style>
+			<!--
+				SIICOG: estructura de Contra-recibos (encabezado, tarjeta de datos y tarjeta de lista con buscador).
+				Mismos ids (focus, contenedor, msn, guardar, panelForm1, giro, dataGrid, inputBusqueda, deleteRow),
+				valores, acciones y update.
+			-->
 			<h:form id="form">
 				<p:focus id="focus" />
-				<p:panel id="contenedor"
-					header="Administración de giros y subgiros comerciales"
-					styleClass="green col-md-12 col-centered row-centered shadow-panel">
-					<p:messages id="msn" showDetail="true" closable="true" />
-					<p:remoteCommand name="buscar"
-						actionListener="#{girosSubgirosMB.buscarSubgiros}"
-						oncomplete="return false;" update=":form:dataGrid" />
-					<p:remoteCommand name="guardar" id="guardar"
-						actionListener="#{girosSubgirosMB.guardarSubgiro}"
-						oncomplete="return false;"
-						update=":form:dataGrid :form:msn :form:focus panelForm1" />
-					<p:panel id="panelForm1">
-						<div class="row">
-							<div class="col-md-12">
-								<p:outputLabel>Giro comercial</p:outputLabel>
-								<p:selectOneMenu id="giro"
-									value="#{girosSubgirosMB.subgiroSelected.giro}"
-									style="width: 100% !important;" converter="genericConverter">
-									<f:selectItems value="#{girosSubgirosMB.giros}" var="giro"
-										itemLabel="#{giro.clvgas} #{giro.nomgas}" itemValue="#{giro}" />
-								</p:selectOneMenu>
-							</div>
+				<p:remoteCommand name="buscar"
+					actionListener="#{girosSubgirosMB.buscarSubgiros}"
+					oncomplete="return false;" update=":form:dataGrid" />
+				<p:remoteCommand name="guardar" id="guardar"
+					actionListener="#{girosSubgirosMB.guardarSubgiro}"
+					oncomplete="return false;"
+					update=":form:dataGrid :form:msn :form:focus panelForm1" />
+				<h:panelGroup id="contenedor" layout="block" styleClass="sg-page">
+
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contratos / Catálogos</div>
+							<h1>Giros y Subgiros Comerciales</h1>
 						</div>
-						<div class="row">
-							<div class="col-md-3">
-								<p:outputLabel>Clave</p:outputLabel>
-								<p:inputText value="#{girosSubgirosMB.subgiroSelected.clave}"
-									styleClass="input-max" maxlength="4"
-									onkeypress="if (event.keyCode == 13) {guardar(); return false; } if(event.keyCode == 27) { return false;}" />
-							</div>
-							<div class="col-md-9">
-								<p:outputLabel>Descripcion</p:outputLabel>
-								<p:inputText
-									value="#{girosSubgirosMB.subgiroSelected.descripcion}"
-									styleClass="input-max" maxlength="200"
-									onkeypress="if (event.keyCode == 13) {guardar(); return false; } if(event.keyCode == 27) { return false;}" />
-							</div>
+					</div>
+
+					<!-- ===== Datos del subgiro ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Datos del subgiro comercial</h2>
 						</div>
-						<div class="buttons-form">
-							<p:commandButton value="Guardar" update=":form"
-								action="#{girosSubgirosMB.guardarSubgiro}"
-								styleClass="ui-confirmdialog-no " icon="ui-icon-disk" />
-							<p:commandButton value="Cancelar"
-								update=":form:focus :form:msn :form:panelForm1"
-								action="#{girosSubgirosMB.resetSubgiroSelected}"
-								styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
-						</div>
-					</p:panel>
-					<p:dataTable id="dataGrid" var="object"
-						value="#{girosSubgirosMB.subgiros}" styleClass="et_datatable"
-						emptyMessage="No existen registros" paginator="true" rows="20"
-						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						widgetVar="dataGrid" paginatorPosition="bottom"
-						rowIndexVar="rowIndexCaptura">
-						<f:facet name="header">
-							<div class="table-busqueda">
-								<h:outputText value="Busqueda: " />
-								<p:inputText id="inputBusqueda"
-									value="#{girosSubgirosMB.busqueda}" placeholder="Ingrese texto"
+						<h:panelGroup id="panelForm1" layout="block" styleClass="sg-card-b">
+							<p:messages id="msn" showDetail="true" closable="true" />
+							<div class="sg-fields" style="grid-template-columns: minmax(0, 160px) minmax(0, 1fr);">
+								<div class="sg-field" style="grid-column: span 2;">
+									<p:outputLabel for="giro" value="Giro comercial (partida)" />
+									<p:selectOneMenu id="giro"
+										value="#{girosSubgirosMB.subgiroSelected.giro}"
+										converter="genericConverter">
+										<f:selectItems value="#{girosSubgirosMB.giros}" var="giro"
+											itemLabel="#{giro.clvgas} #{giro.nomgas}" itemValue="#{giro}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="clave" value="Clave" />
+									<p:inputText id="clave" value="#{girosSubgirosMB.subgiroSelected.clave}"
+										styleClass="mono" maxlength="4"
+										onkeypress="if (event.keyCode == 13) {guardar(); return false; } if(event.keyCode == 27) { return false;}" />
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="descripcion" value="Descripción" />
+									<p:inputText id="descripcion"
+										value="#{girosSubgirosMB.subgiroSelected.descripcion}"
+										maxlength="200"
+										onkeypress="if (event.keyCode == 13) {guardar(); return false; } if(event.keyCode == 27) { return false;}" />
+								</div>
+							</div>
+							<div class="sg-actions" style="margin-top: 16px;">
+								<p:commandButton value="Guardar" update=":form"
+									action="#{girosSubgirosMB.guardarSubgiro}"
+									icon="pi pi-save" />
+								<p:commandButton value="Cancelar"
+									update=":form:focus :form:msn :form:panelForm1"
+									action="#{girosSubgirosMB.resetSubgiroSelected}"
+									styleClass="ui-button-flat" icon="pi pi-times" />
+							</div>
+						</h:panelGroup>
+					</div>
+
+					<!-- ===== Subgiros registrados ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Subgiros comerciales</h2>
+							<div class="sg-actions">
+								<p:inputText id="inputBusqueda" style="width: 300px;"
+									value="#{girosSubgirosMB.busqueda}" placeholder="Buscar por partida, clave o descripción"
 									onkeypress="if (event.keyCode == 13) {buscar(); return false; } if(event.keyCode == 27) { return false;}">
 								</p:inputText>
-								<p:commandButton icon="ui-icon-search"
+								<p:commandButton icon="pi pi-search" title="Buscar"
 									actionListener="#{girosSubgirosMB.buscarSubgiros()}"
 									update=":form:dataGrid" />
 							</div>
-						</f:facet>
-						<p:column headerText="Partida" exportable="false" width="5%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.giro.clvgas}" />
-						</p:column>
-						<p:column headerText="Nombre partida" exportable="false"
-							width="40%" style="text-align: left!important;">
-							<p:outputLabel value="#{object.giro.nomgas}" />
-						</p:column>
-						<p:column headerText="Clave" exportable="false" width="5%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.clave}" />
-						</p:column>
-						<p:column headerText="Descripción sub-giro" exportable="false"
-							width="40%" style="text-align: left!important;">
-							<p:outputLabel value="#{object.descripcion}" />
-						</p:column>
-						<p:column headerText="Acciones" exportable="false" width="10%"
-							styleClass="row-centered">
-							<div class="buttons-form">
-								<p:commandLink id="deleteRow" update=":form:msn :form:dataGrid"
-									oncomplete="PF('deleteDialog').show()"
-									image="ui-icon ui-icon-close" title="Eliminar">
-									<f:setPropertyActionListener value="#{object.id}"
-										target="#{girosSubgirosMB.idTemporal}" />
-									<h:outputText styleClass="ui-icon ui-icon-close" />
-								</p:commandLink>
+						</div>
+						<p:dataTable id="dataGrid" var="object"
+							value="#{girosSubgirosMB.subgiros}"
+							emptyMessage="No existen subgiros. Los que guardes aparecerán aquí." paginator="true" rows="20"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							widgetVar="dataGrid" paginatorPosition="bottom"
+							rowIndexVar="rowIndexCaptura">
+							<p:column headerText="Partida" exportable="false" style="width: 90px;">
+								<p:outputLabel value="#{object.giro.clvgas}" styleClass="sg-code" />
+							</p:column>
+							<p:column headerText="Nombre de la partida" exportable="false">
+								<p:outputLabel value="#{object.giro.nomgas}" />
+							</p:column>
+							<p:column headerText="Clave" exportable="false" style="width: 80px;">
+								<p:outputLabel value="#{object.clave}" styleClass="sg-code" />
+							</p:column>
+							<p:column headerText="Descripción del subgiro" exportable="false">
+								<p:outputLabel value="#{object.descripcion}" />
+							</p:column>
+							<p:column headerText="Acciones" exportable="false" style="width: 100px;"
+								styleClass="sg-acciones-fila">
 								<p:commandLink update=":form:focus :form:panelForm1"
-									image="ui-icon ui-icon-edit" title="Editar">
+									styleClass="sg-ico" title="Editar">
 									<f:setPropertyActionListener value="#{object}"
 										target="#{girosSubgirosMB.subgiroSelected}" />
-									<h:outputText styleClass="ui-icon ui-icon-pencil" />
+									<i class="pi pi-pencil" />
 								</p:commandLink>
-							</div>
-						</p:column>
-					</p:dataTable>
-				</p:panel>
+								<p:commandLink id="deleteRow" update=":form:msn :form:dataGrid"
+									oncomplete="PF('deleteDialog').show()"
+									styleClass="sg-borrar" title="Eliminar">
+									<f:setPropertyActionListener value="#{object.id}"
+										target="#{girosSubgirosMB.idTemporal}" />
+									<i class="pi pi-trash" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</h:panelGroup>
 			</h:form>
-			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-				<h:panelGrid columns="2">
-					<h:graphicImage value="../reports/indice.png"
-						style="margin-right: 12px; vertical-align: middle;" />
-					<h:outputText value="Por favor espere..."
-						style="white-space: nowrap;" />
-				</h:panelGrid>
-			</pe:blockUI>
 			<p:confirmDialog widgetVar="deleteDialog"
-				message="Desea eliminar el subgiro comercial actual?"
-				header="Confirmación" severity="alert">
+				message="¿Desea eliminar el subgiro comercial seleccionado?"
+				header="Confirmación" severity="warn">
 				<p:commandButton value="SI" label="SI"
-					style="margin-top:10px;padding:5px;"
-					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					styleClass="ui-confirmdialog-yes ui-button-danger" icon="pi pi-trash"
 					actionListener="#{girosSubgirosMB.deleteSubgiroa}"
 					oncomplete="PF('deleteDialog').hide();"
 					update=":form:dataGrid :form:msn :form" />
 				<p:commandButton value="NO" label="NO"
 					onclick="PF('deleteDialog').hide();"
-					style="margin-top:10px;padding:5px;"
-					styleClass="ui-confirmdialog-no" icon="ui-icon-cancel" />
+					styleClass="ui-confirmdialog-no ui-button-outlined" icon="pi pi-times" />
 			</p:confirmDialog>
 		</ui:define>
 	</ui:composition>

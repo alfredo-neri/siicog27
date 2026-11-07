@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -14,99 +14,115 @@
 
 
 
+			<!--
+				SIICOG fase 2: estructura del prototipo (sicog-pantallas.html, "Administración de usuarios").
+				Se conservan componentes, ids, valores, listeners y diálogos de difem26. Los botones Nuevo, Editar y
+				Eliminar pasan del pie de la tabla al encabezado de la pantalla (mismos ids y acciones); por eso el
+				update de rowSelect/rowUnselect usa la ruta completa :form1:updateButton y :form1:deleteButton.
+				Nuevo y Editar procesan "@this objects" (antes "objects"): en PrimeFaces 16 el boton ya no se
+				procesa solo y su actionListener no se ejecutaba.
+				La columna "Eliminado" (ícono) ahora es "Estado" con chip Activo/Eliminado.
+				No se agregan búsqueda, filtro por tipo ni "Restablecer contraseña" del prototipo: el bean no los tiene.
+			-->
 			<h:form id="form1">
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
 
 				<p:focus context="objects" id="focusTable" />
 
-				<p:dataTable id="objects" var="object"
-					value="#{usersMB.tcUsuarioDataModel}" styleClass="et_datatable"
-					rowStyleClass="#{object.habilitado.equals(0)  ? 'old' : null}"
-					emptyMessage="No hay registros" editable="true" paginator="true"
-					rows="10" lazy="true" rowsPerPageTemplate="5,10,15,20"
-					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					widgetVar="programsWdg" selectionMode="single"
-					selection="#{usersMB.selectedTcUsuario}" rowKey="#{object.id}">
-					<p:ajax event="rowSelect" listener="#{usersMB.onRowSelect}"
-						update="updateButton, deleteButton" />
-					<p:ajax event="rowUnselect" listener="#{usersMB.onRowUnselect}"
-						update="updateButton, deleteButton" />
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Administración / Usuarios</div>
+							<h1>Administración de usuarios</h1>
+						</div>
+						<div class="sg-actions">
+							<p:commandButton process="@this objects"
+								title="Click para agregar un nuevo usuario"
+								update=":formNuevo:usuarioNuevo, :formNuevo2:usuarioNuevo2"
+								icon="pi pi-plus" actionListener="#{usersMB.prepareInsert}"
+								value="Nuevo" />
 
-					<f:facet name="header">Administracion de usuarios</f:facet>
+							<p:commandButton process="@this objects" styleClass="ui-button-outlined"
+								title="Click para editar el usuario seleccionado"
+								update=":formUpdate:usuarioUpdate, :formUpdate2:usuarioUpdate2"
+								icon="pi pi-pencil" actionListener="#{usersMB.prepareUpdate}"
+								value="Editar" disabled="#{usersMB.activeUpdate}"
+								id="updateButton" />
 
-					<p:column headerText="ID" visible="false" styleClass="renglon">
-						<h:outputText value="#{object.id}" />
-					</p:column>
+							<p:commandButton process="objects" styleClass="ui-button-outlined ui-button-danger"
+								title="Click para eliminar el usuario seleccionado"
+								icon="pi pi-trash" value="Eliminar"
+								update="formConfirmDelete:saveConfirmDelete"
+								disabled="#{usersMB.activeUpdate}" id="deleteButton"
+								oncomplete="PF('saveConfirmDeleteWdt').show();" />
+						</div>
+					</div>
 
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Usuarios</h2>
+							<span class="sg-note">Selecciona un usuario para editarlo o eliminarlo</span>
+						</div>
+						<p:dataTable id="objects" var="object"
+							value="#{usersMB.tcUsuarioDataModel}" styleClass="et_datatable"
+							rowStyleClass="#{object.habilitado.equals(0)  ? 'old' : null}"
+							emptyMessage="No hay registros" editable="true" paginator="true"
+							rows="10" lazy="true" rowsPerPageTemplate="5,10,15,20"
+							currentPageReportTemplate="{totalRecords} usuarios · página {currentPage} de {totalPages}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							widgetVar="programsWdg" selectionMode="single"
+							selection="#{usersMB.selectedTcUsuario}" rowKey="#{object.id}">
+							<p:ajax event="rowSelect" listener="#{usersMB.onRowSelect}"
+								update=":form1:updateButton, :form1:deleteButton" />
+							<p:ajax event="rowUnselect" listener="#{usersMB.onRowUnselect}"
+								update=":form1:updateButton, :form1:deleteButton" />
 
-					<p:column headerText="USER ID" exportable="true"
-						styleClass="renglon">
-						<h:outputText value="#{object.usuario}" />
-					</p:column>
+							<p:column headerText="ID" visible="false" styleClass="renglon">
+								<h:outputText value="#{object.id}" />
+							</p:column>
 
-					<p:column headerText="USUARIO_CTL" exportable="true"
-						styleClass="renglon">
-						<h:outputText value="#{object.usuarioCtl}" />
-					</p:column>
+							<p:column headerText="User ID" exportable="true"
+								styleClass="renglon" style="width: 110px;">
+								<h:outputText value="#{object.usuario}" styleClass="sg-code" />
+							</p:column>
 
-					<p:column headerText="NOMBRE" exportable="true"
-						styleClass="renglon">
-						<h:outputText value="#{object.nombre}" />
-					</p:column>
+							<p:column headerText="Usuario CTL" exportable="true"
+								styleClass="renglon" style="width: 90px;">
+								<h:outputText value="#{object.usuarioCtl}" styleClass="sg-code" />
+							</p:column>
 
-					<p:column headerText="TIPO USUARIO" exportable="true"
-						styleClass="renglon">
-						<h:outputText value="#{object.tipoUsuario.clave}" /> -
-						<h:outputText value="#{object.tipoUsuario.descripcion}" />
-					</p:column>
+							<p:column headerText="Nombre" exportable="true"
+								styleClass="renglon" style="width: 190px;">
+								<h:outputText value="#{object.nombre}" style="font-weight: 500;" />
+							</p:column>
 
-					<p:column headerText="Unidad Administrativa" exportable="true"
-						styleClass="renglon">
-						<h:outputText
-							value="#{object.idEntidadAdmini} - #{object.descEntidadAdmin}" />
-					</p:column>
+							<p:column headerText="Tipo de usuario" exportable="true"
+								styleClass="renglon" style="width: 100px;">
+								<h:outputText value="#{object.tipoUsuario.clave}" /> -
+								<h:outputText value="#{object.tipoUsuario.descripcion}" />
+							</p:column>
 
+							<p:column headerText="Unidad administrativa" exportable="true"
+								styleClass="renglon" style="width: 130px;">
+								<h:outputText
+									value="#{object.idEntidadAdmini} - #{object.descEntidadAdmin}" />
+							</p:column>
 
-					<p:column headerText="Ente Público" exportable="true"
-						styleClass="renglon">
-						<h:outputText
-							value="#{object.idLocalidad} - #{object.descLocalidad}" />
-					</p:column>
+							<p:column headerText="Ente público" exportable="true"
+								styleClass="renglon">
+								<h:outputText
+									value="#{object.idLocalidad} - #{object.descLocalidad}" />
+							</p:column>
 
-					<p:column headerText="Eliminado" exportable="false" width="65">
-						<center>
-							<h:outputText styleClass="ui-icon ui-icon-close"
-								rendered="#{not object.habilitado}" />
-						</center>
-					</p:column>
-
-					<f:facet name="footer">
-
-
-						<p:commandButton process="objects"
-							title="Click para agregar un nuevo usuario"
-							update=":formNuevo:usuarioNuevo, :formNuevo2:usuarioNuevo2"
-							icon="ui-icon-plus" actionListener="#{usersMB.prepareInsert}"
-							value="Nuevo" />
-
-						<p:commandButton process="objects"
-							title="Click para editar el usuario seleccionado"
-							update=":formUpdate:usuarioUpdate, :formUpdate2:usuarioUpdate2"
-							icon="ui-icon-pencil" actionListener="#{usersMB.prepareUpdate}"
-							value="Editar" disabled="#{usersMB.activeUpdate}"
-							id="updateButton" />
-
-						<p:commandButton process="objects"
-							title="Click para eliminar el usuario seleccionado"
-							icon="ui-icon-close" value="Eliminar"
-							update="formConfirmDelete:saveConfirmDelete"
-							disabled="#{usersMB.activeUpdate}" id="deleteButton"
-							oncomplete="PF('saveConfirmDeleteWdt').show();" />
-
-					</f:facet>
-
-				</p:dataTable>
+							<p:column headerText="Estado" exportable="false" style="width: 90px;">
+								<h:outputText value="#{object.habilitado ? 'Activo' : 'Eliminado'}"
+									styleClass="sg-chip #{object.habilitado ? 'ok' : 'bad'}" />
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
 			</h:form>
 
 			<h:form id="formNuevo">
@@ -139,7 +155,7 @@
 									</h:selectOneMenu>
 									<p:message id="iEntidadAdminMessage" for="iEntidadAdmin" />
 
-									<p:outputLabel for="iNombre" value="Nombre de Usuario" />
+									<p:outputLabel for="iNombre" value="Nombre de usuario" />
 									<p:inputText id="iNombre"
 										value="#{usersMB.newTcUsuario.nombre}" tabindex="4"
 										required="true"
@@ -163,7 +179,7 @@
 									</p:inputText>
 									<p:message id="iUsuarioMessage" for="iUsuario" />
 
-									<p:outputLabel for="iPass" value="Password" />
+									<p:outputLabel for="iPass" value="Contraseña" />
 
 									<p:password id="iPass" match="iPass2"
 										value="#{usersMB.newTcUsuario.capturedPass}" redisplay="true"
@@ -176,7 +192,7 @@
 									</p:password>
 									<p:message id="iPassMessage2" for="iPass" />
 
-									<p:outputLabel for="iPass2" value="Confirmar Password" />
+									<p:outputLabel for="iPass2" value="Confirmar contraseña" />
 									<p:password id="iPass2"
 										value="#{usersMB.newTcUsuario.capturedPass}" required="true"
 										requiredMessage="El password es requerido" redisplay="true"
@@ -187,7 +203,7 @@
 									</p:password>
 									<p:message id="iPassMessage22" for="iPass2" />
 
-									<p:outputLabel for="iRole" value="Role" />
+									<p:outputLabel for="iRole" value="Rol" />
 									<h:selectOneMenu id="iRole"
 										value="#{usersMB.newTcUsuario.role.id}" tabindex="3"
 										required="true"
@@ -200,7 +216,7 @@
 								</h:panelGrid>
 							</p:panel>
 
-							<p:panel header="Configuracion de Menus de Usuario"
+							<p:panel header="Configuración de menús del usuario"
 								id="panelMenus" style="overflow-y: auto;height: 280px;">
 								<p:message id="menusTreeMessage" for="menusTree" />
 								<p:tree value="#{usersMB.menu}" var="men" id="menusTree"
@@ -217,13 +233,13 @@
 							</p:panel>
 
 							<f:facet name="footer">
-								<p:separator />
+								<p:divider />
 								<center>
 									<p:commandButton value="Confirmar" accesskey="C"
-										icon="ui-icon-check"
+										icon="pi pi-check"
 										actionListener="#{usersMB.insert(actionEvent)}"
 										update=":formNuevo:errorMsg, :formNuevo:panelUserMunNew, :formNuevo:usuarioNuevo, :form1:objects, :formNuevo:panelMenus" />
-									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+									<p:commandButton icon="pi pi-times" styleClass="ui-button-outlined" value="Cancelar"
 										title="Cancelar" onclick="PF('usuarioNuevoDialog').hide()" />
 								</center>
 							</f:facet>
@@ -267,7 +283,7 @@
 									</h:selectOneMenu>
 									<p:message id="iEntidadAdminMessage" for="iEntidadAdminCentral" />
 
-									<p:outputLabel for="iNombre2" value="Nombre de Usuario" />
+									<p:outputLabel for="iNombre2" value="Nombre de usuario" />
 									<p:inputText id="iNombre2"
 										value="#{usersMB.newTcUsuario.nombre}" tabindex="4"
 										maxlength="100" required="true"
@@ -291,7 +307,7 @@
 									</p:inputText>
 									<p:message id="iUsuarioMessage2" for="iUsuario2" />
 
-									<p:outputLabel for="iPass21" value="Password" />
+									<p:outputLabel for="iPass21" value="Contraseña" />
 
 									<p:password id="iPass21" match="iPass22"
 										value="#{usersMB.newTcUsuario.capturedPass}" redisplay="true"
@@ -304,7 +320,7 @@
 									</p:password>
 									<p:message id="iPassMessage21" for="iPass21" />
 
-									<p:outputLabel for="iPass22" value="Confirmar Password" />
+									<p:outputLabel for="iPass22" value="Confirmar contraseña" />
 									<p:password id="iPass22"
 										value="#{usersMB.newTcUsuario.capturedPass}" required="true"
 										requiredMessage="El password es requerido" redisplay="true"
@@ -315,7 +331,7 @@
 									</p:password>
 									<p:message id="iPassMessage1" for="iPass22" />
 
-									<p:outputLabel for="iRole2" value="Role" />
+									<p:outputLabel for="iRole2" value="Rol" />
 									<h:selectOneMenu id="iRole2"
 										value="#{usersMB.newTcUsuario.role.id}" tabindex="3">
 										<f:selectItems value="#{usersMB.roles}" var="sel"
@@ -326,7 +342,7 @@
 								</h:panelGrid>
 							</p:panel>
 
-							<p:panel header="Configuracion de Menus de Usuario"
+							<p:panel header="Configuración de menús del usuario"
 								id="panelMenus2" style="overflow-y: auto;height: 280px;">
 								<p:message id="menusTreeMessage2" for="menusTree2" />
 								<p:tree value="#{usersMB.menu}" var="men" id="menusTree2"
@@ -343,13 +359,13 @@
 							</p:panel>
 
 							<f:facet name="footer">
-								<p:separator />
+								<p:divider />
 								<center>
 									<p:commandButton value="Confirmar" accesskey="C"
-										icon="ui-icon-check"
+										icon="pi pi-check"
 										actionListener="#{usersMB.insert(actionEvent)}"
 										update=":formNuevo2:errorMsg2, :formNuevo2:panelUserCenNew, :formNuevo2:usuarioNuevo2, :form1:objects, :formNuevo2:panelMenus2" />
-									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+									<p:commandButton icon="pi pi-times" styleClass="ui-button-outlined" value="Cancelar"
 										title="Cancelar" onclick="PF('usuarioNuevoDialog2').hide()" />
 								</center>
 							</f:facet>
@@ -361,7 +377,7 @@
 
 
 			<h:form id="formUpdate">
-				<p:dialog header="Actualizar Usuario"
+				<p:dialog header="Actualizar usuario"
 					widgetVar="usuarioUpdateDialog" modal="true" showEffect="fade"
 					hideEffect="explode" resizable="true" styleClass="customDialog">
 					<p:outputPanel id="usuarioUpdate">
@@ -370,7 +386,7 @@
 						<h:panelGrid columns="2">
 							<p:panel header="Datos de usuario"
 								style="overflow-y: auto;height: 320px;">
-								<p:panelGrid>
+								<p:panelGrid layout="tabular" columns="0">
 									<p:row>
 										<p:column>
 											<p:outputLabel value="Ente Público" />
@@ -399,7 +415,7 @@
 									</p:row>
 									<p:row>
 										<p:column>
-											<p:outputLabel value="Nombre Usuario" />
+											<p:outputLabel value="Nombre de usuario" />
 										</p:column>
 										<p:column>
 											<p:inputText id="nameUsrs"
@@ -410,7 +426,7 @@
 
 									<p:row>
 										<p:column>
-											<p:outputLabel value="User Id" />
+											<p:outputLabel value="User ID" />
 										</p:column>
 										<p:column>
 											<p:inputText id="userIdMuni"
@@ -420,7 +436,7 @@
 									</p:row>
 									<p:row>
 										<p:column>
-											<p:outputLabel value="Password" />
+											<p:outputLabel value="Contraseña" />
 										</p:column>
 										<p:column>
 											<p:password id="passMuni" match="passMuniConfirm"
@@ -436,7 +452,7 @@
 									</p:row>
 									<p:row>
 										<p:column>
-											<p:outputLabel value="Confirmar Password" />
+											<p:outputLabel value="Confirmar contraseña" />
 										</p:column>
 										<p:column>
 											<p:password id="passMuniConfirm"
@@ -455,7 +471,7 @@
 									</p:row>
 									<p:row>
 										<p:column>
-											<p:outputLabel value="Role" />
+											<p:outputLabel value="Rol" />
 										</p:column>
 										<p:column>
 											<p:selectOneMenu id="roleMuni"
@@ -477,7 +493,7 @@
 									</p:row>
 								</p:panelGrid>
 							</p:panel>
-							<p:panel header="Configuracion de Menus de Usuario"
+							<p:panel header="Configuración de menús del usuario"
 								id="upanelMenus" style="overflow-y: auto;height: 280px;">
 								<p:message id="umenusTreeMessage" for="umenusTree" />
 								<p:tree value="#{usersMB.menu}" var="men" id="umenusTree"
@@ -494,12 +510,12 @@
 							</p:panel>
 							<f:facet name="footer">
 								<center>
-									<p:separator />
+									<p:divider />
 									<p:commandButton value="Actualizar" accesskey="A"
-										icon="ui-icon-check"
+										icon="pi pi-check"
 										actionListener="#{usersMB.actualizar(actionEvent)}"
 										update=":form1, :formUpdate:uerrorMsg, :form1:objects" />
-									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+									<p:commandButton icon="pi pi-times" styleClass="ui-button-outlined" value="Cancelar"
 										title="Cancelar" onclick="PF('usuarioUpdateDialog').hide();" />
 								</center>
 							</f:facet>
@@ -511,7 +527,7 @@
 			</h:form>
 
 			<h:form id="formUpdate2">
-				<p:dialog header="Actualizar Usuario"
+				<p:dialog header="Actualizar usuario"
 					widgetVar="usuarioUpdateDialog2" modal="true" resizable="true"
 					styleClass="customDialog">
 					<p:outputPanel id="usuarioUpdate2">
@@ -545,7 +561,7 @@
 									<p:message id="uEntidadAdminCentralMessage"
 										for="uEntidadAdminCentral" />
 
-									<p:outputLabel for="uNombre2" value="Nombre de Usuario" />
+									<p:outputLabel for="uNombre2" value="Nombre de usuario" />
 									<p:inputText id="uNombre2"
 										value="#{usersMB.selectedTcUsuario.nombre}" tabindex="9"
 										maxlength="100">
@@ -562,7 +578,7 @@
 									</p:inputText>
 									<p:message id="uUsuarioMessage2" for="uUsuario2" />
 
-									<p:outputLabel for="uPassword2" value="Password" />
+									<p:outputLabel for="uPassword2" value="Contraseña" />
 									<p:password id="uPassword2" match="uPassConfirm2"
 										value="#{usersMB.selectedTcUsuario.capturedPass}"
 										redisplay="true" tabindex="5" maxlength="15"
@@ -573,7 +589,7 @@
 									</p:password>
 									<p:message id="uPassessage2" for="uPassword2" />
 
-									<p:outputLabel for="uPassConfirm2" value="Confirmar Password" />
+									<p:outputLabel for="uPassConfirm2" value="Confirmar contraseña" />
 									<p:password id="uPassConfirm2"
 										value="#{usersMB.selectedTcUsuario.capturedPass}"
 										redisplay="true" tabindex="5" maxlength="15"
@@ -583,7 +599,7 @@
 									</p:password>
 									<p:message id="uPassConfirmMessage2" for="uPassConfirm2" />
 
-									<p:outputLabel for="uRole2" value="Role" />
+									<p:outputLabel for="uRole2" value="Rol" />
 									<h:selectOneMenu id="uRole2"
 										value="#{usersMB.selectedTcUsuario.role.id}" tabindex="3">
 										<f:selectItems value="#{usersMB.roles}" var="sel"
@@ -601,7 +617,7 @@
 								</h:panelGrid>
 							</p:panel>
 
-							<p:panel header="Configuracion de Menus de Usuario"
+							<p:panel header="Configuración de menús del usuario"
 								id="upanelMenusCentral" style="overflow-y: auto;height: 280px;">
 								<p:message id="umenusTreeMessageCentral" for="umenusTreeCentral" />
 								<p:tree value="#{usersMB.menu}" var="men" id="umenusTreeCentral"
@@ -619,12 +635,12 @@
 
 							<f:facet name="footer">
 								<center>
-									<p:separator />
+									<p:divider />
 									<p:commandButton value="Actualizar" accesskey="A"
-										icon="ui-icon-check"
+										icon="pi pi-check"
 										actionListener="#{usersMB.actualizar(actionEvent)}"
 										update=":form1, :formUpdate2:uerrorMsgCentral, :form1:objects" />
-									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+									<p:commandButton icon="pi pi-times" styleClass="ui-button-outlined" value="Cancelar"
 										title="Cancelar" onclick="PF('usuarioUpdateDialog2').hide();" />
 								</center>
 							</f:facet>
@@ -637,17 +653,17 @@
 
 			<h:form id="formConfirmDelete" styleClass="green">
 				<p:dialog id="saveConfirmDelete" widgetVar="saveConfirmDeleteWdt"
-					header="Confirma" modal="true" styleClass="green" resizable="false">
-					<p:panelGrid id="pgridSaveUpdateDate" columns="1">
+					header="Confirmar" modal="true" styleClass="green" resizable="false">
+					<p:panelGrid id="pgridSaveUpdateDate" columns="1" layout="tabular" styleClass="ui-noborder">
 						<h:outputText
 							value="¿Desea eliminar el usuario #{usersMB.selectedTcUsuario.usuario} ?" />
 						<center>
-							<p:panelGrid id="pgridSaveUpdateDateButtons" columns="2">
+							<p:panelGrid id="pgridSaveUpdateDateButtons" columns="2" layout="tabular" styleClass="ui-noborder">
 								<p:commandButton value="Aceptar"
 									update=":form1:messagesEdit, :form1:objects"
 									actionListener="#{usersMB.deleteUser}"
 									oncomplete="PF('saveConfirmDeleteWdt').hide();" />
-								<p:commandButton value="Cancelar"
+								<p:commandButton value="Cancelar" styleClass="ui-button-outlined"
 									update=":form1:messagesEdit, :form1:objects"
 									oncomplete="PF('saveConfirmDeleteWdt').hide();" />
 							</p:panelGrid>

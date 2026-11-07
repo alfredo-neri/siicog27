@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -14,41 +14,16 @@
 					header="Conciliaci&oacute;n de P&oacute;lizas Diario VS Egreso por Referencia)"
 					styleClass="green col-md-11 col-centered row-centered shadow-panel">
 
-					<p:messages id="msg" showDetail="true" closable="true"
-						autoUpdate="true" />
+					<p:messages id="msg" showDetail="true" closable="true"><p:autoUpdate/></p:messages>
 
-					<p:dialog id="modal" modal="true" widgetVar="statusDialog"
-						header="Extrayendo Informaci&oacute;n de la Base de Datos"
-						draggable="false" closable="false" resizable="false">
-						<p:graphicImage name="/images/ajaxloadingbar.gif" />
-					</p:dialog>
 +
 					<!-- Parametros de la consulta -->
-					<p:panelGrid columns="5" id="pgParametros"
-						styleClass="green col-md-7 col-centered row-centered shadow-panel ui-noborder">
-
-						<p:outputLabel value="Ejercicio:" for="anio" />
-						<p:inputText id="anio" value="#{conciliacionPolizaDEMB.anio}"
-							readonly="true" style="width:80px; text-align:center;" />
-
-						<p:outputLabel value="Mes:" for="mes" />
-						<p:selectOneMenu id="mes" value="#{conciliacionPolizaDEMB.mes}">
-							<f:selectItems value="#{conciliacionPolizaDEMB.listaMeses}"
-								var="item" itemValue="#{item.periodo}" itemLabel="#{item.periodo}" />
-						</p:selectOneMenu>
-
-						<p:commandButton value="Buscar" id="buscar"
-							actionListener="#{conciliacionPolizaDEMB.buscar}"
-							onstart="start()" oncomplete="stop()"
-							update=":form1:panelResultado" />
-					</p:panelGrid>
-
 					<p:outputPanel id="panelResultado">
 
 						<!-- Filtros sobre el resultado ya consultado -->
 						<p:panelGrid columns="5" id="pgFiltros"
 							rendered="#{conciliacionPolizaDEMB.consultaEjecutada and conciliacionPolizaDEMB.totalRegistros gt 0}"
-							styleClass="green col-md-7 col-centered row-centered ui-noborder">
+							styleClass="green col-md-7 col-centered row-centered ui-noborder" layout="tabular">
 
 							<p:outputLabel value="Estatus:" for="filtroEstatus" />
 							<p:selectOneMenu id="filtroEstatus"
@@ -80,7 +55,7 @@
 						<!-- Resumen del periodo consultado -->
 						<p:panelGrid columns="5" id="pgResumen"
 							rendered="#{conciliacionPolizaDEMB.consultaEjecutada and conciliacionPolizaDEMB.totalRegistros gt 0}"
-							styleClass="green col-md-11 col-centered row-centered ui-noborder">
+							styleClass="green col-md-11 col-centered row-centered ui-noborder" layout="tabular">
 							<p:outputLabel
 								value="Conciliadas: #{conciliacionPolizaDEMB.totalConciliadas}"
 								styleClass="conciliacion-resumen-ok" />
@@ -101,7 +76,7 @@
 						<p:outputPanel id="panelDatos">
 
 						<p:panelGrid columns="1" id="pgTabla"
-							styleClass="green col-md-11 col-centered row-centered shadow-panel">
+							styleClass="green col-md-11 col-centered row-centered shadow-panel" layout="tabular">
 
 							<p:dataTable id="objects" var="objects"
 								value="#{conciliacionPolizaDEMB.listaConciliacion}"
@@ -199,6 +174,25 @@
 
 						</p:outputPanel>
 					</p:outputPanel>
+
+					<p:panelGrid columns="5" id="pgParametros"
+						styleClass="green col-md-7 col-centered row-centered shadow-panel ui-noborder" layout="tabular">
+
+						<p:outputLabel value="Ejercicio:" for="anio" />
+						<p:inputText id="anio" value="#{conciliacionPolizaDEMB.anio}"
+							readonly="true" style="width:80px; text-align:center;" />
+
+						<p:outputLabel value="Mes:" for="mes" />
+						<p:selectOneMenu id="mes" value="#{conciliacionPolizaDEMB.mes}">
+							<f:selectItems value="#{conciliacionPolizaDEMB.listaMeses}"
+								var="item" itemValue="#{item.periodo}" itemLabel="#{item.periodo}" />
+						</p:selectOneMenu>
+
+						<p:commandButton value="Buscar" id="buscar"
+							actionListener="#{conciliacionPolizaDEMB.buscar}"
+							onstart="start()" oncomplete="stop()"
+							update=":form1:panelResultado" />
+					</p:panelGrid>
 				</p:panel>
 			</h:form>
 
@@ -218,11 +212,11 @@
 
 			<script type="text/javascript">
 				function start() {
-					PF('statusDialog').show();
+					PF('blockUIWidget').block();
 				}
 
 				function stop() {
-					PF('statusDialog').hide();
+					PF('blockUIWidget').unblock();
 				}
 			</script>
 		</ui:define>

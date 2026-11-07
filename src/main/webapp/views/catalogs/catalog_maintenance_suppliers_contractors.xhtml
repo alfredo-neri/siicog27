@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -42,7 +42,7 @@
 								<p:ajax event="keyup"
 									update=":form1:messagesEdit, :form1:objects"
 									listener="#{catalogMaintenanceSuppliersContractorsMB.findValuesCatalog}" />
-								<pe:keyFilter for="keyInput" mask="pint"></pe:keyFilter>
+								<p:keyFilter for="keyInput" mask="pint"></p:keyFilter>
 							</p:inputText>
 
 
@@ -57,7 +57,7 @@
 								<p:ajax event="keyup"
 									update=":form1:messagesEdit, :form1:objects"
 									listener="#{catalogMaintenanceSuppliersContractorsMB.findValuesCatalog}" />
-								<pe:keyFilter for="keyInput" mask="pint"></pe:keyFilter>
+								<p:keyFilter for="keyInput" mask="pint"></p:keyFilter>
 							</p:inputText>
 
 							<h:outputText value="Nombre" for="nameInput"
@@ -114,13 +114,6 @@
 					</p:panel>
 				</div>
 
-				<pe:blockUI widgetVar="blockUIWidget">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Please wait..." style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 
 				<br />
 
@@ -188,7 +181,7 @@
 									converterMessage="El campo Clave debe ser num&eacute;rico y mayor a cero"
 									validatorMessage="El campo Clave debe ser num&eacute;rico y mayor a cero"
 									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
-									<pe:keyFilter for="clvprv" mask="pint"></pe:keyFilter>
+									<p:keyFilter for="clvprv" mask="pint"></p:keyFilter>
 									<f:validateDoubleRange minimum="1" for="clvprv" />
 
 								</p:inputText>
@@ -213,7 +206,7 @@
 									style="width:100%" maxlength="2"
 									validatorMessage="Tipo solo permite los valores: 1, 2, 12"
 									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
-									<pe:keyFilter for="tipprv" mask="pint"></pe:keyFilter>
+									<p:keyFilter for="tipprv" mask="pint"></p:keyFilter>
 									<f:validateLength minimum="1" maximum="2" for="tipprv" />
 									<f:validateRegex pattern="^\s*([1]|[2]|12)\s*$" for="tipprv" />
 
@@ -274,6 +267,13 @@
 
 						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogMaintenanceSuppliersContractorsMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload
+								value="#{catalogMaintenanceSuppliersContractorsMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMaintenanceSuppliersContractorsMB.list}">
 							<p:graphicImage value="pdf.png" width="24" />
 							<p:fileDownload
 								value="#{catalogMaintenanceSuppliersContractorsMB.filePdf}" />
@@ -284,13 +284,6 @@
 							<p:graphicImage value="csv.png" width="24" />
 							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
 								fileName="ProveedoresContratistas" pageOnly="false" />
-						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogMaintenanceSuppliersContractorsMB.list}">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload
-								value="#{catalogMaintenanceSuppliersContractorsMB.file}" />
 						</h:commandLink>
 
 					</f:facet>

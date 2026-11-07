@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -14,9 +14,16 @@
 			<h:form id="form1">
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<p:panel id="idPanel"
-					header="Reportes de Indicadores Mensual de Indicador de Autonom&iacute;a Financiera"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="idPanel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Reportes de Indicadores Mensual de Indicador de Autonom&iacute;a Financiera</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 
 					<p:dataTable id="object" var="objects"
 						value="#{reporte53MB.listPm5211}" binding="#{table}"
@@ -26,7 +33,7 @@
 						widgetVar="pm5011Wdg" rowIndexVar="rowIndex">
 
 						<p:column>
-							<p:panelGrid id="idGrid1" styleClass="col-centered">
+							<p:panelGrid id="idGrid1" styleClass="col-centered" layout="tabular" columns="0">
 
 								<p:row>
 									<p:column style="text-align: right; width:5%">
@@ -35,7 +42,7 @@
 									<p:column colspan="2" style="text-align: left; width:10%;">
 										<p:outputLabel id="lblMensual" value="#{objects.mensual}"
 											 rendered="#{reporte53MB.bLbl}">
-											<pe:keyFilter for="lblMensual" mask="pint"></pe:keyFilter>
+											<p:keyFilter for="lblMensual" mask="pint"></p:keyFilter>
 											<f:convertNumber pattern="00" />
 										</p:outputLabel>
 										<p:selectOneMenu id="txtMensual" value="#{reporte53MB.mes}"
@@ -63,7 +70,7 @@
 									<p:column style="text-align: left; width:70%;">
 										<p:inputText value="#{objects.ipr}" id="ipr" size="15"
 											maxlength="17" disabled="#{reporte53MB.bInabilitado}">
-											<pe:keyFilter for="ipr" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="ipr" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -80,7 +87,7 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.imp}" id="imp" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="imp" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="imp" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -92,7 +99,7 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.der}" id="der" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="der" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="der" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -104,7 +111,7 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.prod}" id="prod" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="prod" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="prod" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -116,7 +123,7 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.aprov}" id="aprov" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="aprov" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="aprov" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -128,7 +135,7 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.apmej}" id="apmej" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="apmej" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="apmej" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -140,7 +147,7 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.acc}" id="acc" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="acc" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="acc" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -152,7 +159,7 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.ipf}" id="ipf" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="ipf" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="ipf" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
@@ -164,14 +171,14 @@
 									<p:column style="text-align: left; width:10px;">
 										<p:inputText value="#{objects.ting}" id="ting" size="15"
 											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
-											<pe:keyFilter for="ting" mask="pnum"></pe:keyFilter>
+											<p:keyFilter for="ting" mask="pnum"></p:keyFilter>
 											<f:convertNumber pattern="#,##0.00" />
 										</p:inputText>
 									</p:column>
 
 								</p:row>
 							</p:panelGrid>
-							<p:panelGrid id="idGrid4">
+							<p:panelGrid id="idGrid4" layout="tabular">
 								<p:commandButton value="Modificar" id="modificar"
 									actionListener="#{reporte53MB.modify(rowIndex)}"
 									icon="ui-icon-arrowreturnthick-1-n"
@@ -203,11 +210,11 @@
 							</p:panelGrid>
 						</p:column>
 					</p:dataTable>
-					<p:panelGrid id="idGrid2" columns="3" styleClass="col-centered">
+					<p:panelGrid id="idGrid2" columns="3" styleClass="col-centered" layout="tabular">
 						<h:outputText value="Mes a Consultar:" />
 						<!-- <p:inputText value="#{reporte53MB.mesReport}" id="mespdf" size="2"
 							maxlength="2">
-							<pe:keyFilter for="mespdf" mask="pint"></pe:keyFilter>
+							<p:keyFilter for="mespdf" mask="pint"></p:keyFilter>
 							<f:convertNumber pattern="00" />
 							<p:ajax event="change" process="idGrid2" update=":form1:mespdf"></p:ajax>
 						</p:inputText> -->
@@ -222,9 +229,9 @@
 							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
 							styleClass="btn btn-default">
 						</p:commandButton> -->
-						<p:commandButton value="Correcto" id="generateportepdf"
+						<p:commandButton icon="pi pi-play" value="Generar" id="generateportepdf"
 							action="#{reporte53MB.createPDF}"
-							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit" />
+							update="form1:visor, :form1:idPanel, :form1:messagesEdit" />
 
 					</p:panelGrid>
 					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
@@ -233,16 +240,25 @@
 						<p:commandButton value="No" type="button"
 							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 					</p:confirmDialog>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte53MB.uuid ne null}">
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte53MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte53MB.uuid ne null}">
 
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte53MB.uuid}&amp;filename=#{reporte53MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte53MB.uuid}&amp;filename=#{reporte53MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
 
-					</p:panel>
-				</p:panel>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -17,10 +17,18 @@
 					<p:fileDownload value="#{reporteFlujoEfectivoMB.fileTxt}" />
 				</p:commandButton>
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte" header="Flujos de Efectivo"
-					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Flujos de Efectivo</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 
-					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder" layout="tabular">
 
 						<h:outputText value="Mes: " for="mesInputOri" id="lblMesInputOri" />
 						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
@@ -41,10 +49,10 @@
 								update=":form1:growlReportador" />
 						</p:selectOneMenu>
 
-						<p:commandButton value="Vista Previa" id="preView"
-							actionListener="#{reporteFlujoEfectivoMB.viewTxt()}"
-							icon="ui-icon-zoomout" update=":form1:preViewTxt"
-							onclick="PF('preViewTxtWg').show();" />
+						<p:commandButton icon="pi pi-play" id="correcto"  value="Generar"
+								actionListener="#{reporteFlujoEfectivoMB.downloadTxt}"
+								update=":form1:growlReportador, :form1:downTxt">
+							</p:commandButton>
 
 					<!-- 	<p:commandButton value="Generar Archivo TXT" ajax="false"
 							onclick="PrimeFaces.monitorDownload(start, stop);"
@@ -52,14 +60,14 @@
 							<p:fileDownload value="#{reporteFlujoEfectivoMB.fileTxt}" />
 						</p:commandButton> -->
 						
-							<p:commandButton id="correcto"  value="Correcto"
-								actionListener="#{reporteFlujoEfectivoMB.downloadTxt}"
-								update=":form1:growlReportador, :form1:downTxt">
-							</p:commandButton>
+							<p:commandButton value="Vista Previa" id="preView"
+							actionListener="#{reporteFlujoEfectivoMB.viewTxt()}"
+							icon="ui-icon-zoomout" update=":form1:preViewTxt"
+							onclick="PF('preViewTxtWg').show();" />
 
 					</p:panelGrid>
 
-					<p:panelGrid>
+					<p:panelGrid layout="tabular">
 						<p:outputLabel rendered="#{reporteFlujoEfectivoMB.bPreView}"
 							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
 							<p:inputTextarea cols="130" id="preViewTxt"
@@ -76,8 +84,9 @@
 
 						</div> -->
 					</p:panelGrid>
-
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 
 			</h:form>
 

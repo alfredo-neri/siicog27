@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,9 +13,16 @@
 		<ui:define name="content">
 			<p:growl id="growlReportador" showDetail="true" sticky="true" />
 			<h:form id="formTable">
-				<p:panel id="panel"
-					header="Archivo TXT Reconducciones del Presupuesto de Ingresos y Egresos"
-					styleClass="green col-md-5 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Archivo TXT Reconducciones del Presupuesto de Ingresos y Egresos</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<h:outputText
 						value="Seleccione el mes y presione el botón Correcto" />
 					<h:panelGrid id="display_2" columns="7"
@@ -29,13 +36,15 @@
 								var="item" itemValue="#{item.mes}" itemLabel="#{item.mes}" />
 						</p:selectOneMenu>
 								&nbsp;&nbsp;
-								<p:commandButton id="generareportetxt"
+								<p:commandButton icon="pi pi-play" id="generareportetxt"
 							style="padding-left: 3px;"
 							action="#{reconducPresupEgrIngrTxtMB.generaReporte}"
-							value="Correcto" ajax="false" styleClass="btn btn-default">
+							value="Generar" ajax="false">
 						</p:commandButton>
 					</h:panelGrid>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

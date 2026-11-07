@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -19,21 +19,27 @@
 					update=":form1:objects" />
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<br />
-				<br />
-
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #E8ECED;">
-
-					<p:commandButton value="Nuevo Registro"
-						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
-						actionListener="#{catalogTopicsProgressMB.cleanInsertRow}"
-						style="margin-left: 50%; padding: 5px;"
-						oncomplete="PF('insertDialog').show();jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
-				</p:panel>
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Catálogo de Temas de Desarrollo</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton value="Nuevo registro" icon="pi pi-plus"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								actionListener="#{catalogTopicsProgressMB.cleanInsertRow}"
+								oncomplete="PF('insertDialog').show();jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+						</h:panelGroup>
+					</div>
 
 				<p:focus context="objects" id="focusTable" />
 
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Temas de desarrollo</h2>
+					</div>
 				<p:dataTable id="objects" binding="#{table}" var="object"
 					value="#{catalogTopicsProgressMB.list}" styleClass="et_datatable"
 					emptyMessage="No hay registros" editable="true" paginator="true"
@@ -41,7 +47,6 @@
 					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					selectionMode="single" rowKey="#{object.id}">
 
-					<f:facet name="header">Cat&aacute;logo de Temas de Desarrollo</f:facet>
 
 					<p:ajax event="rowEdit"
 						listener="#{catalogTopicsProgressMB.onRowEdit}"
@@ -59,7 +64,7 @@
 						style="width:15%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.cvetemas}" />
+								<h:outputText value="#{object.cvetemas}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText value="#{object.cvetemas}" style="width:100%" />
@@ -132,11 +137,12 @@
 					</p:column>
 
 
-					<p:column headerText="Borrar" style="width:10%" exportable="false">
-						<p:commandLink
+					<p:column headerText="Acciones" exportable="false" style="width:110px;" styleClass="sg-acciones-fila">
+						<p:rowEditor />
+						<p:commandLink styleClass="sg-borrar" id="deleteRow"
 							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
 							oncomplete="PF('confirmDeleteDlg').show()"
-							image="ui-icon ui-icon-close" title="Delete">
+							image="ui-icon ui-icon-close" title="Borrar">
 
 							<f:setPropertyActionListener value="#{object}"
 								target="#{catalogTopicsProgressMB.beanSelected}" />
@@ -145,63 +151,57 @@
 						</p:commandLink>
 					</p:column>
 
-					<p:column style="width:10%" exportable="false">
-						<p:rowEditor />
-					</p:column>
-
 
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="excel.png" width="24"
-								style="margin-left: 80%;" />
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file-excel" /> Excel
 							<p:dataExporter type="xls" target="objects"
 								fileName="TemasDesarrollo" pageOnly="false" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="pdf.png" width="24" />
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-align-left" /> TXT
+							<p:fileDownload value="#{catalogTopicsProgressMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file-pdf" /> PDF
 							<p:dataExporter type="pdf" target="objects"
 								fileName="TemasDesarrollo" pageOnly="false" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="csv.png" width="24" />
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file" /> CSV
 							<p:dataExporter  encoding="ISO-8859-1" type="csv" target="objects"
 								fileName="TemasDesarrollo" pageOnly="false" />
 						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogTopicsProgressMB.file}" />
-						</h:commandLink>
-
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 				<br />
 				<br />
 
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar" update=":form1:objects"
 							actionListener="#{catalogTopicsProgressMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 
 				</p:dialog>

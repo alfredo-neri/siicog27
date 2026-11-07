@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -16,7 +16,7 @@
 				<p:panel id="panelReporte"
 					header="CONAC - Estado Analítico del Activo"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="6" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="6" styleClass="col-centered ui-noborder" layout="tabular">
 						<h:outputText value="Trimestre: " for="trim" />
 						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
 							value="#{cNCEdoAnaliticoActivoMB.mesSelected}">
@@ -31,6 +31,13 @@
 							<f:selectItem itemValue="S" itemLabel="S" />
 							<f:selectItem itemValue="N" itemLabel="N" />
 						</p:selectOneMenu> -->
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{cNCEdoAnaliticoActivoMB.viewPdf}" value="Correcto"
+							update="form1:inlinePdf, :form1:growlReportador"
+							styleClass="btn btn-default">
+						</p:commandButton>
 						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
 							title="EXCEL">
 							<p:graphicImage value="excel.png" width="24" />
@@ -41,13 +48,6 @@
 							<p:graphicImage value="txt.png" width="24" />
 							<p:fileDownload value="#{cNCEdoAnaliticoActivoMB.fileTxt}" />
 						</h:commandLink>
-						<p:commandButton id="generateportepdf"
-							onstart="PF('blockUIWidget').block()"
-							oncomplete="PF('blockUIWidget').unblock()"
-							action="#{cNCEdoAnaliticoActivoMB.viewPdf}" value="Correcto"
-							update="form1:inlinePdf, :form1:growlReportador"
-							styleClass="btn btn-default">
-						</p:commandButton>
 					</p:panelGrid>
 					<p:panel id="inlinePdf" style="border:0px"
 						visible="#{cNCEdoAnaliticoActivoMB.uuid ne null}">
@@ -61,12 +61,6 @@
 
 
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.gif"
-							style="margin-right: 12px; vertical-align: middle;" />
-					</h:panelGrid>
-				</pe:blockUI>
 
 			</h:form>
 

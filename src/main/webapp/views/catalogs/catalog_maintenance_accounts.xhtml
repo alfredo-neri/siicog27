@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -17,8 +17,8 @@
 				<p:remoteCommand name="onload"
 					action="#{catalogAccountsMB.onPageLoad}"
 					update=":form1:display_1, :form1:objects"
-					onstart="PF('blockUIWidget').block()"
-					oncomplete="PF('blockUIWidget').unblock()" />
+					onstart="start();"
+					oncomplete="stop();" />
 				<p:remoteCommand name="consultAccountsMajor"
 					actionListener="#{catalogAccountsMB.consultAccountsMajor}"
 					onstart="PF('accountsMajorDT').clearFilters();"
@@ -48,113 +48,104 @@
 
 
 
-				<p:panel id="panel"
-					header="Mantenimiento al Cat&aacute;logo de Cuentas"
-					styleClass="green col-md-8 col-centered row-centered shadow-panel">
-					<h:panelGrid id="display_1" columns="6" cellpadding="4"
-						styleClass="col-centered">
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Mantenimiento al Catálogo de Cuentas</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton icon="pi pi-plus" value="Nuevo registro"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								actionListener="#{catalogAccountsMB.insertRow}"
+								oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});"
+								onmousedown="jQuery('.ui-paginator-first').click();" />
+						</h:panelGroup>
+					</div>
 
-						<h:outputText value="CUENTA:" for="accountInput"
-							style="padding-left: 30px; padding-right: 30px;"
-							styleClass="control-label" />
-						<p:inputText id="accountInput" styleClass="form-control"
-							value="#{catalogAccountsMB.beanFind.cuenta}" maxlength="4"
-							validatorMessage="CUENTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,4})" for="accountInput"></f:validateRegex>
-						</p:inputText>
+					<!-- ===== Buscar cuenta ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar cuenta</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
+									<div class="sg-field">
+										<p:outputLabel for="accountInput" value="Cuenta" />
+										<p:inputText styleClass="mono" id="accountInput"
+											value="#{catalogAccountsMB.beanFind.cuenta}" maxlength="4"
+											validatorMessage="CUENTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,4})" for="accountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="saccountInput" value="Scta" />
+										<p:inputText styleClass="mono" id="saccountInput"
+											value="#{catalogAccountsMB.beanFind.scuenta}" maxlength="10"
+											validatorMessage="SCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9a-zA-Z]{0,10})"
+												for="saccountInput"></f:validateRegex>
 
-						<h:outputText value="SCTA:" for="saccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="saccountInput" styleClass="form-control"
-							value="#{catalogAccountsMB.beanFind.scuenta}" maxlength="10"
-							validatorMessage="SCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9a-zA-Z]{0,10})"
-								for="saccountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="ssaccountInput" value="Sscta" />
+										<p:inputText styleClass="mono" id="ssaccountInput"
+											value="#{catalogAccountsMB.beanFind.sscuenta}" maxlength="15"
+											validatorMessage="SSCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,15})" for="ssaccountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="sssaccountInput" value="Ssscta" />
+										<p:inputText styleClass="mono" id="sssaccountInput"
+											value="#{catalogAccountsMB.beanFind.ssscuenta}" maxlength="4"
+											validatorMessage="SSSCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,4})" for="sssaccountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="ssssaccountInput" value="Sssscta" />
+										<p:inputText styleClass="mono" id="ssssaccountInput"
+											value="#{catalogAccountsMB.beanFind.sssscuenta}" maxlength="3"
+											validatorMessage="SSSSCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,3})" for="ssssaccountInput "></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field" style="grid-column: span 2;">
+										<p:outputLabel for="titleInput" value="Título" />
+										<p:inputText id="titleInput"
+											value="#{catalogAccountsMB.beanFind.nomcta}" maxlength="250">
 
-						</p:inputText>
-
-						<h:outputText value="SSCTA:" for="ssaccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="ssaccountInput" styleClass="form-control"
-							value="#{catalogAccountsMB.beanFind.sscuenta}" maxlength="15"
-							validatorMessage="SSCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,15})" for="ssaccountInput"></f:validateRegex>
-						</p:inputText>
-
-						<h:outputText value="SSSCTA:" for="sssaccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="sssaccountInput" styleClass="form-control"
-							value="#{catalogAccountsMB.beanFind.ssscuenta}"
-							style="margin-top: 10px;" maxlength="4"
-							validatorMessage="SSSCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,4})" for="sssaccountInput"></f:validateRegex>
-						</p:inputText>
-
-						<h:outputText value="SSSSCTA:" for="ssssaccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="ssssaccountInput" styleClass="form-control"
-							value="#{catalogAccountsMB.beanFind.sssscuenta}"
-							style="margin-top: 10px;" maxlength="3"
-							validatorMessage="SSSSCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,3})" for="ssssaccountInput "></f:validateRegex>
-						</p:inputText>
-
-						<h:outputText value="TITULO:" for="titleInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="titleInput" styleClass="form-control"
-							value="#{catalogAccountsMB.beanFind.nomcta}"
-							style="margin-top: 10px;" maxlength="250">
-
-						</p:inputText>
-
-						<p:outputPanel layout="block" style="text-align:center">
-							<br />
-							<p:commandButton value="Buscar" style="padding: 5px;"
-								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
-								actionListener="#{catalogAccountsMB.findValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()" id="search" />
-
-							<p:commandButton value="Resetear"
-								style="padding: 5px; margin-left: 15px; position: absolute; "
-								update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:accountInput"
-								immediate="true"
-								actionListener="#{catalogAccountsMB.findAllValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:accountInput').value=''; document.getElementById('form1:saccountInput').value=''; document.getElementById('form1:ssaccountInput').value='';  document.getElementById('form1:sssaccountInput').value=''; document.getElementById('form1:ssssaccountInput').value=''; document.getElementById('form1:titleInput').value='';" />
-
-						</p:outputPanel>
-					</h:panelGrid>
-				</p:panel>
-
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-
-				<br />
-				<p:panel id="panelButton" style="background-color: #E8ECED;">
-
-					<p:commandButton value="Nuevo Registro"
-						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
-						actionListener="#{catalogAccountsMB.insertRow}"
-						style="margin-left: 47%; padding: 1px;"
-						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});"
-						onmousedown="jQuery('.ui-paginator-first').click();" />
-				</p:panel>
+										</p:inputText>
+									</div>
+								</div>
+								<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+										actionListener="#{catalogAccountsMB.findValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" id="search" />
+									<p:commandButton value="Limpiar" styleClass="ui-button-flat"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:accountInput"
+										immediate="true"
+										actionListener="#{catalogAccountsMB.findAllValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:accountInput').value=''; document.getElementById('form1:saccountInput').value=''; document.getElementById('form1:ssaccountInput').value='';  document.getElementById('form1:sssaccountInput').value=''; document.getElementById('form1:ssssaccountInput').value=''; document.getElementById('form1:titleInput').value='';" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
 
 				<p:focus context="objects" id="focusTable" />
 
-				<div class="table-responsive table-bordered table-condensed">
+				<div>
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Cuentas</h2>
+						</div>
 					<p:dataTable id="objects" var="object"
 						value="#{catalogAccountsMB.list}" styleClass="et_datatable"
 						emptyMessage="No hay registros" editable="true" paginator="true"
@@ -163,7 +154,6 @@
 						selectionMode="single"
 						selection="#{catalogAccountsMB.rowSelected}" rowKey="#{object.id}">
 
-						<f:facet name="header">Mantenimiento al Cat&aacute;logo de Cuentas</f:facet>
 
 						<p:ajax event="rowEditInit"
 							listener="#{catalogAccountsMB.onInitRowEdit}"
@@ -193,7 +183,7 @@
 							width="30">
 							<p:cellEditor>
 								<f:facet name="output">
-									<h:outputText value="#{object.cuenta}" />
+									<h:outputText value="#{object.cuenta}" styleClass="sg-code" />
 								</f:facet>
 								<f:facet name="input">
 									<div class="ui-grid ui-grid-responsive">
@@ -234,7 +224,7 @@
 						<p:column headerText="Scta" exportable="false" width="60">
 							<p:cellEditor>
 								<f:facet name="output">
-									<h:outputText value="#{object.scuenta}" />
+									<h:outputText value="#{object.scuenta}" styleClass="sg-code" />
 								</f:facet>
 								<f:facet name="input">
 									<div class="ui-grid ui-grid-responsive">
@@ -271,7 +261,7 @@
 						<p:column headerText="Sscta" exportable="false" width="60">
 							<p:cellEditor>
 								<f:facet name="output">
-									<h:outputText value="#{object.sscuenta}" />
+									<h:outputText value="#{object.sscuenta}" styleClass="sg-code" />
 								</f:facet>
 								<f:facet name="input">
 									<div class="ui-grid ui-grid-responsive">
@@ -309,7 +299,7 @@
 						<p:column headerText="Ssscta" exportable="false" width="60">
 							<p:cellEditor>
 								<f:facet name="output">
-									<h:outputText value="#{object.ssscuenta}" />
+									<h:outputText value="#{object.ssscuenta}" styleClass="sg-code" />
 								</f:facet>
 								<f:facet name="input">
 									<div class="ui-grid ui-grid-responsive">
@@ -508,12 +498,14 @@
 							</p:cellEditor>
 						</p:column>
 
-						<p:column headerText="Borrar" exportable="false" width="35">
-							<center>
-								<p:commandLink
+						<p:column headerText="Acciones" exportable="false" style="width:110px;" styleClass="sg-acciones-fila">
+							<p:rowEditor rendered="#{object.editable}">
+
+							</p:rowEditor>
+							<p:commandLink styleClass="sg-borrar" id="deleteRow"
 									update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
 									oncomplete="PF('confirmDeleteDlg').show()"
-									image="ui-icon ui-icon-close" title="Delete"
+									image="ui-icon ui-icon-close" title="Borrar"
 									rendered="#{object.deleteable}">
 
 									<f:setPropertyActionListener value="#{object}"
@@ -521,75 +513,67 @@
 									<h:outputText styleClass="ui-icon ui-icon-close" />
 
 								</p:commandLink>
-							</center>
-						</p:column>
-
-						<p:column width="40" exportable="false">
-							<p:rowEditor rendered="#{object.editable}">
-
-							</p:rowEditor>
 						</p:column>
 						<h:commandLink action="homePage">
 							<h:graphicImage value="resources/images/img.png" />
 						</h:commandLink>
 						<f:facet name="footer">
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-								<p:graphicImage value="excel.png" width="24" />
+							<div class="sg-export">
+							<span class="sg-note">Exportar:</span>
+							<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+								<i class="pi pi-file-excel" /> Excel
 								<p:fileDownload value="#{catalogAccountsMB.fileXls}" />
 							</h:commandLink>
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-								<p:graphicImage value="pdf.png" width="24" />
+							<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+								<i class="pi pi-align-left" /> TXT
+								<p:fileDownload value="#{catalogAccountsMB.file}" />
+							</h:commandLink>
+							<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+								<i class="pi pi-file-pdf" /> PDF
 								<p:fileDownload value="#{catalogAccountsMB.filePdf}" />
 							</h:commandLink>
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-								<p:graphicImage value="csv.png" width="24" />
+							<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+								<i class="pi pi-file" /> CSV
 								<p:dataExporter encoding="ISO-8859-1" type="csv"
 									target="objects" fileName="Cuentas" pageOnly="false" />
 							</h:commandLink>
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-								<p:graphicImage value="txt.gif" width="24" />
-								<p:fileDownload value="#{catalogAccountsMB.file}" />
-							</h:commandLink>
+							</div>
 						</f:facet>
 
 					</p:dataTable>
+					</div>
+					</div>
 				</div>
 
 
 				<p:commandButton id="hideButton"
 					update=":form1:messagesEdit, :form1:objects"
 					actionListener="#{catalogAccountsMB.updateViewRowsAutoGenerated}"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 				<p:commandButton id="hideButton2"
 					update=":form1:messagesEdit, :form1:objects"
 					onstart="PF('blockUIWidget').block()"
 					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
+					style="display: none;" />
 				<br />
 				<br />
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar"
 							update=":form1:messagesEdit, :form1:objects"
 							actionListener="#{catalogAccountsMB.delete}"
 							onstart="PF('blockUIWidget').block();"
-							oncomplete="PF('confirmDeleteDlg').hide(); PF('blockUIWidget').unblock();"
-							style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide(); PF('blockUIWidget').unblock();" />
 					</p:outputPanel>
 				</p:dialog>
 

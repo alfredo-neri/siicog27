@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:a="jakarta.faces.passthrough"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -14,11 +14,6 @@
 		
     <h:outputScript library="js" name="gen_partidas_presupuestales.js" />
 			<h:form id="generaPartidasPresup">
-        <p:dialog modal="true" widgetVar="statusDialog" header="Status"
-                  draggable="false" closable="false"
-                  styleClass="green col-md-9 col-centered row-centered shadow-panel">
-          <p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
-        </p:dialog>
 
         <p:dialog id="resGrid" widgetVar="resGrid" modal="true" height="300" width="750"
                   styleClass="green col-md-9 col-centered row-centered shadow-panel">
@@ -26,9 +21,9 @@
 
           <p:dataTable var="item" widgetVar="item" value="#{genPartPresMB.catalogItems}"
                selection="#{genPartPresMB.selectedItem}" rowKey="#{item.id}"
-               scrollable="true" scrollHeight="210">
+               scrollable="true" scrollHeight="210" selectionMode="single">
 
-            <p:column selectionMode="single" style="text-align:center" width="10%"/>
+            <p:column selectionBox="true" style="text-align:center" width="10%"/>
             <p:column headerText="clave" width="20%">
               <h:outputText value="#{item.id}"/>
             </p:column>
@@ -73,7 +68,7 @@
 						<p:inputMask  id="programa" class="progclv helpable" a:data-node="prog" style="margin: 5px 5px"
                          
                          value="#{genPartPresMB.progId}" maxlength="15">
-              <pe:keyFilter regEx="/[0-9_]/i" />
+              <p:keyFilter regEx="/[0-9_]/i" />
               <f:ajax event="blur" listener="#{genPartPresMB.validateProg}" render="mainPanel"/>
             </p:inputMask>
 
@@ -83,7 +78,7 @@
 						<p:inputMask id="partida" class="partclv helpable" a:data-node="part" style="margin: 5px 5px"
                          
                          value="#{genPartPresMB.partId}" maxlength="4">
-              <pe:keyFilter regEx="/[0-9_]/i" />
+              <p:keyFilter regEx="/[0-9_]/i" />
               <f:ajax event="blur" listener="#{genPartPresMB.validatePart}" render="mainPanel"/>
             </p:inputMask>
 						<h:inputText class="partname" size="50" value="#{genPartPresMB.partDesc}" disabled="true"></h:inputText>
@@ -100,8 +95,8 @@
 
 					<h:panelGrid columns="5" styleClass="col-centered row-centered">
 						<p:commandButton value="Correcto" style="padding: 5px;" action="#{genPartPresMB.process}" ajax="true"
-            							update="mainPanel" onstart="PF('statusDialog').show()" 
-            							oncomplete="PF('statusDialog').hide()"/>
+            							update="mainPanel" onstart="PF('blockUIWidget').block()" 
+            							oncomplete="PF('blockUIWidget').unblock()"/>
 						
 					</h:panelGrid>
           <script type="text/javascript">

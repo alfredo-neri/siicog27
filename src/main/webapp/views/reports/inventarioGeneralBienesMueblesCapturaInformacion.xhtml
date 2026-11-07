@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -118,10 +118,17 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 </style>
 			<h:form id="form1"
 				style="display: inline-block; margin-left: auto; margin-right: auto; ">
-				<p:growl id="growlReportador" showDetail="true" sticky="true"
-					autoUpdate="true"></p:growl>
-				<p:panel id="panelReporte" header="Inventario de Bienes Muebles"
-					style="height: 60em;" styleClass="green shadow-panel container">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"><p:autoUpdate/></p:growl>
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Inventario de Bienes Muebles</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:dataGrid id="dataGrid" var="entity"
 						value="#{inventarioGeneralBienesMueblesCapturaInformacionMB.masterList}"
 						styleClass="et_datatable col-md-12 no-border"
@@ -139,7 +146,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 							<div
 								class="col-12 col-xs-12 col-sm-12 col-12-md col-lg-12 col-xs-12">
 								<h:panelGroup id="panel-filtros">
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 											<p:column>
 												<h:outputText value="Mes:" />
@@ -177,7 +184,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 														rendered="#{!inventarioGeneralBienesMueblesCapturaInformacionMB.editando}"
 														disabled="#{!inventarioGeneralBienesMueblesCapturaInformacionMB.editando}"
 														style="width:6em;" />
-													<pe:inputNumber id="inputConsecutivo"
+													<p:inputNumber id="inputConsecutivo"
 														value="#{entity.consec}" styleClass="input-6"
 														decimalPlaces="0" decimalSeparator="."
 														thousandSeparator="," minValue="0" maxlength="9"
@@ -186,7 +193,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:column>
 										</p:row>
 									</p:panelGrid>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 											<p:column>
 												<h:outputText value="Cuenta:" />
@@ -204,7 +211,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 														thousandSeparator="" minValue="0" maxlength="4"
 														maxValue="9999"
 														rendered="#{inventarioGeneralBienesMueblesCapturaInformacionMB.editando}">
-														<pe:keyFilter mask="pint" />
+														<p:keyFilter mask="pint" />
 														<p:ajax event="blur"
 															update=":form1:growlReportador, nomcta" />
 														<!-- ajax -->
@@ -227,7 +234,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 														decimalSeparator="" thousandSeparator=""
 														maxValue="9999999999"
 														rendered="#{inventarioGeneralBienesMueblesCapturaInformacionMB.editando}">
-														<pe:keyFilter mask="pint" />
+														<p:keyFilter mask="pint" />
 														<p:ajax event="change"
 															listener="#{inventarioGeneralBienesMueblesCapturaInformacionMB.leftPad}"
 															update="inputScta" />
@@ -288,7 +295,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:column>
 										</p:row>
 									</p:panelGrid>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 											<p:column>
 												<h:outputText value="Resguardatario:" />
@@ -323,7 +330,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:column>
 										</p:row>
 									</p:panelGrid>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 											<p:column>
 												<h:outputText value="Marca:" />
@@ -413,7 +420,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 									<p:panel header="Factura"
 										style="padding:1em;margin-left: 1.5em; margin-top: 1em;"
 										styleClass="headerBorder">
-										<p:panelGrid styleClass="ui-noborder">
+										<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 											<p:row style="height: 2.8em;">
 												<p:column>
 													<h:outputText value="Factura:" />
@@ -475,7 +482,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 															style="width:8em;display: block;">
 															<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
 														</h:outputText> -->
-														<pe:inputNumber value="#{entity.costo}"
+														<p:inputNumber value="#{entity.costo}"
 															styleClass="input-6" decimalPlaces="2"
 															decimalSeparator="." thousandSeparator="," minValue="0"
 															maxlength="9" maxValue="999999999"
@@ -485,11 +492,11 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:row>
 										</p:panelGrid>
 									</p:panel>
-									<p:panelGrid styleClass="ui-noborder" columns="2">
+									<p:panelGrid styleClass="ui-noborder" columns="2" layout="tabular">
 										<p:panel header="Póliza"
 											style="padding:0em;margin-left: 1.3em; margin-top: 1em;border: 1px solid #dddddd;"
 											styleClass="headerBorder headerTitle">
-	.											<p:panelGrid styleClass="ui-noborder">
+	.											<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 												<p:row style="height: 2.8em;">
 													<p:column>
 														<h:outputText value="Tipo póliza:" />
@@ -504,7 +511,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 																id="tippol"
 																disabled="#{!inventarioGeneralBienesMueblesCapturaInformacionMB.editando}"
 																style="width:2em;text-transform: uppercase;">
-																<pe:keyFilter mask="alpha" regEx="/[cCdDeEiI]/" />
+																<p:keyFilter mask="alpha" regEx="/[cCdDeEiI]/" />
 															</p:inputText>
 														</h:panelGroup>
 													</p:column>
@@ -518,11 +525,11 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 															<!-- <h:outputText value="#{entity.conpol}"
 																rendered="#{!inventarioGeneralBienesMueblesCapturaInformacionMB.editando}"
 																style="width:4em;display: block;" /> -->
-															<pe:inputNumber styleClass="input-4"
+															<p:inputNumber styleClass="input-4"
 																value="#{entity.conpol}" maxlength="4" decimalPlaces="0"
 																decimalSeparator="" thousandSeparator="" maxValue="9999"
 																disabled="#{!inventarioGeneralBienesMueblesCapturaInformacionMB.editando}">
-															</pe:inputNumber>
+															</p:inputNumber>
 														</h:panelGroup>
 													</p:column>
 
@@ -547,7 +554,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 										</p:panel>
 										<h:panelGroup>
 											<p:panelGrid styleClass="ui-noborder"
-												style="margin-top: 2em;">
+												style="margin-top: 2em;" layout="tabular" columns="0">
 												<p:row style="height: 2.8em;">
 													<p:column>
 														<h:outputText value="Recurso:" />
@@ -603,7 +610,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:panelGrid>
 										</h:panelGroup>
 									</p:panelGrid>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 											<p:column>
 												<h:outputText value="Área responsable:" />
@@ -637,7 +644,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:column>
 										</p:row>
 									</p:panelGrid>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 											<p:column>
 												<h:outputText value="Observaciones:" />
@@ -655,7 +662,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:column>
 										</p:row>
 									</p:panelGrid>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 											<p:column>
 												<h:outputText value="Tiempo de Vida Útil:" />
@@ -677,7 +684,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 									<p:panel header="DEPRECIACIÓN"
 										style="padding:1em;margin-left: 1.5em; margin-top: -1em;"
 										styleClass="headerBorder pull-right">
-										<p:panelGrid styleClass="ui-noborder">
+										<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 											<p:row style="height: 2.8em;">
 												<p:column>
 													<h:outputText value="PORCENTAJE" />
@@ -694,7 +701,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 
 												<p:column>
 													<h:panelGroup style="width:10em;display:block;">
-														<pe:inputNumber value="#{entity.porcentaje}"
+														<p:inputNumber value="#{entity.porcentaje}"
 															styleClass="input-10" decimalPlaces="2"
 															decimalSeparator="." thousandSeparator="," minValue="0"
 															maxlength="9" maxValue="100"
@@ -708,7 +715,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 															style="width:8em;display: block;">
 															<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
 														</h:outputText> -->
-														<pe:inputNumber value="#{entity.depreperiodo}"
+														<p:inputNumber value="#{entity.depreperiodo}"
 															styleClass="input-10" decimalPlaces="2"
 															decimalSeparator="." thousandSeparator="," minValue="0"
 															maxlength="9" maxValue="99999999999999"
@@ -723,7 +730,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 															style="width:8em;display: block;">
 															<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
 														</h:outputText> -->
-														<pe:inputNumber value="#{entity.depreacum}"
+														<p:inputNumber value="#{entity.depreacum}"
 															styleClass="input-10" decimalPlaces="2"
 															decimalSeparator="." thousandSeparator="," minValue="0"
 															maxlength="9" maxValue="99999999999999"
@@ -733,7 +740,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 											</p:row>
 										</p:panelGrid>
 									</p:panel>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<p:row style="height: 2.8em;">
 
 										</p:row>
@@ -775,16 +782,10 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 							disabled="#{!inventarioGeneralBienesMueblesCapturaInformacionMB.editando}"
 							update="dataGrid pnlBotonesCRUD" />
 					</h:panelGroup>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
 					message="Desea eliminar el registro actual?" header="Confirmación"
 					severity="alert">

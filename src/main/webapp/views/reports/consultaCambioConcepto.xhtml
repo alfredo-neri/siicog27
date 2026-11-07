@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -43,15 +43,22 @@
 </style>
 			<h:form id="form1"
 				style="display: inline-block; margin-left: auto; margin-right: auto; ">
-				<p:growl id="growlReportador" showDetail="true" sticky="true"
-					autoUpdate="true"></p:growl>
-				<p:panel id="panelReporte" header="Cambio concepto"
-					style="height: 26em;" styleClass="green shadow-panel container">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"><p:autoUpdate/></p:growl>
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Cambio concepto</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<div class="row">
 						<div
 							class="col-12 col-xs-12 col-sm-12 col-12-md col-lg-12 col-xs-12">
 							<p:panelGrid styleClass="ui-noborder col-centered row-centered"
-								id="panel-filtros">
+								id="panel-filtros" layout="tabular" columns="0">
 								<p:row>
 									<p:column>
 										<h:outputText value="Tipo Poliza" />
@@ -75,24 +82,24 @@
 											style="text-transform: uppercase"
 											value="#{bean.polide.tippol}" maxlength="1" id="tippol"
 											onblur="$(this).val($(this).val().toUpperCase());">
-											<pe:keyFilter regEx="/[CDEI]/i" />
+											<p:keyFilter regEx="/[CDEI]/i" />
 										</p:inputText>
 									</p:column>
 
 									<p:column>
-										<pe:inputNumber styleClass="input-small" id="conpol"
+										<p:inputNumber styleClass="input-small" id="conpol"
 											value="#{bean.polide.conpol}" decimalPlaces="0"
 											decimalSeparator="" thousandSeparator=""
 											maxValue="9999999999">
-										</pe:inputNumber>
+										</p:inputNumber>
 									</p:column>
 
 									<p:column>
-										<pe:inputNumber styleClass="input-small" id="renpol"
+										<p:inputNumber styleClass="input-small" id="renpol"
 											value="#{bean.polide.renpol}" decimalPlaces="1"
 											decimalSeparator="." thousandSeparator=""
 											maxValue="9999999999">
-										</pe:inputNumber>
+										</p:inputNumber>
 									</p:column>
 
 									<p:column>
@@ -130,10 +137,10 @@
 								</p:row>
 								<p:row>
 									<p:column colspan="5">
-										<p:commandButton onstart="PF('blockUIWidget').block()"
-											actionListener="#{bean.obtenerPolide}" value="Correcto"
+										<p:commandButton icon="pi pi-play" onstart="PF('blockUIWidget').block()"
+											actionListener="#{bean.obtenerPolide}" value="Generar"
 											update=":form1:growlReportador form1:panel-filtros"
-											styleClass="btn btn-default pull-right" style="width: 6em;">
+											styleClass=" pull-right" style="width: 6em;">
 										</p:commandButton>
 									</p:column>
 								</p:row>
@@ -160,16 +167,10 @@
 							</p:panelGrid>
 						</div>
 					</div>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 		</ui:define>
 	</ui:composition>

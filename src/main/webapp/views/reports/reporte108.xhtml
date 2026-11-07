@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -21,10 +21,18 @@
 				<p:remoteCommand id="lasPage" name="lastPage"
 					oncomplete="activeRow(#{reporte108MB.listPm0511.size()})"
 					update=":form1:object" />
-				<p:panel id="panel" header="Emergencias en Seguridad Pública"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Emergencias en Seguridad Pública</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:fieldset legend="Busqueda" style="margin-bottom:20px">
-						<p:panelGrid id="idForm" styleClass="col-centered row-centered">
+						<p:panelGrid id="idForm" styleClass="col-centered row-centered" layout="tabular" columns="0">
 							<p:row>
 								<p:column style="text-align: right;">
 									<p:outputLabel value="Trimestre: " />
@@ -91,7 +99,7 @@
 							</p:row> -->
 						</p:panelGrid>
 						<p:fieldset>
-							<p:panelGrid id="gridButtons">
+							<p:panelGrid id="gridButtons" layout="tabular">
 								<p:commandButton value="Adicionar" id="add" icon="ui-icon-tag"
 									onclick="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});"
 									actionListener="#{reporte108MB.addElement}"
@@ -124,10 +132,10 @@
 										<h:outputText value="#{objects.trimestre}" />
 									</f:facet>
 									<f:facet name="input">
-										<pe:inputNumber id="trim" value="#{objects.trimestre}"
+										<p:inputNumber id="trim" value="#{objects.trimestre}"
 											converterMessage="Solo permite numeros del 1 al 4"
 											maxlength="2" size="2" decimalPlaces="0">
-										</pe:inputNumber>
+										</p:inputNumber>
 									</f:facet>
 								</p:cellEditor>
 							</p:column>
@@ -140,7 +148,7 @@
 									<f:facet name="input">
 										<p:inputText maxlength="6" size="6" id="conse"
 											value="#{objects.conse}" style="width:100%">
-											<pe:keyFilter mask="pint" for="conse" />
+											<p:keyFilter mask="pint" for="conse" />
 											<p:ajax event="blur" update="conse" />
 										</p:inputText>
 									</f:facet>
@@ -170,7 +178,7 @@
 									<f:facet name="input">
 										<p:inputText id="tiempo" value="#{objects.tiempo}"
 											style="width:100%">
-											<pe:keyFilter mask="pnum" for="tiempo" />
+											<p:keyFilter mask="pnum" for="tiempo" />
 											<p:ajax event="blur" update="tiempo" />
 										</p:inputText>
 
@@ -213,26 +221,18 @@
 						</p:dataTable>
 
 					</p:fieldset>
-					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-						<h:panelGrid columns="2">
-							<h:graphicImage value="../catalogs/please_wait.gif"
-								style="margin-right: 12px; vertical-align: middle;" />
-							<h:outputText value="Por favor espere..."
-								style="white-space: nowrap;" />
-						</h:panelGrid>
-					</pe:blockUI>
-					<p:panelGrid id="idGrid5">
+					<p:panelGrid id="idGrid5" layout="tabular">
 						<h:outputText value="Trimestre a Consultar: " />
 						<p:selectOneMenu value="#{reporte108MB.tPm0511}" id="ctri"
 							disabled="#{empty reporte108MB.lis}">
 							<f:selectItems var="tri" value="#{reporte108MB.lis}"
 								itemValue="#{tri}" itemLabel="#{tri}" />
 						</p:selectOneMenu>
-						<p:commandButton value="Correcto" id="correcto"
+						<p:commandButton value="Generar" id="correcto"
 							onstart="PF('blockUIWidget').block()"
 							oncomplete="PF('blockUIWidget').unblock()"
 							icon="ui-icon-circle-arrow-s"
-							update="form1:inlinePdf,:form1:msgs"
+							update="form1:visor,:form1:msgs"
 							actionListener="#{reporte108MB.createFilePdfInline}"
 							disabled="#{empty reporte108MB.lis}" />
 
@@ -243,16 +243,25 @@
 						<p:commandButton value="No" type="button"
 							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 					</p:confirmDialog>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte108MB.uuid ne null}">
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte108MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte108MB.uuid ne null}">
 
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte108MB.uuid}&amp;filename=#{reporte108MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte108MB.uuid}&amp;filename=#{reporte108MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
 
-					</p:panel>
-				</p:panel>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 			<script type="text/javascript">
 			      $('#form1\\:limpiar').click(function(){

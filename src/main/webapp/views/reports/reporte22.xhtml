@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -24,10 +24,18 @@
 					onclick="PrimeFaces.monitorDownload(start, stop);">
 					<p:fileDownload value="#{reporte22MB.txt}" />
 				</p:commandButton>
-				<p:panel id="panelReporte" header="Mayor de Cuentas"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
-						<p:panelGrid columns="10" styleClass="ui-noborder">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Mayor de Cuentas</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder" layout="tabular">
+						<p:panelGrid columns="10" styleClass="ui-noborder" layout="tabular">
 							<h:outputText value="Mes:" for="idMes" />
 							<p:selectOneMenu id="idMes" value="#{reporte22MB.mes}">
 								<f:selectItems value="#{reporte22MB.listMes}" var="meses"
@@ -36,49 +44,50 @@
 							<h:outputText value="Cuenta Inicial:" for="ctaini" />
 							<p:inputText id="ctaini" size="4" maxlength="4"
 								value="#{reporte22MB.cuentaIni}">
-								<pe:keyFilter mask="pint" />
+								<p:keyFilter mask="pint" />
 							</p:inputText>
 							<h:outputText value="Cuenta Final:" for="cuentafin" />
 							<p:inputText id="cuentafin" size="4" maxlength="4"
 								value="#{reporte22MB.cuentaFin}">
-								<pe:keyFilter mask="pint" />
+								<p:keyFilter mask="pint" />
 							</p:inputText>
-							 <p:commandButton id="generateportepdf"
+							 <p:commandButton icon="pi pi-play" id="generateportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
-								action="#{reporte22MB.viewPdf}" value="Correcto"
-								update="form1:inlinePdf, :form1:growlReportador">
+								action="#{reporte22MB.viewPdf}" value="Generar"
+								update="form1:visor, :form1:growlReportador">
 							</p:commandButton>
-							<p:commandLink actionListener="#{reporte22MB.downloadPdf}"
-								update=":form1:growlReportador, :form1:downPdf" title="PDF">
-								<p:graphicImage value="pdf.png" width="24" />
-							</p:commandLink>
 							<p:commandLink actionListener="#{reporte22MB.downloadXls}"
-								update=":form1:growlReportador, :form1:downXls" title="XLS">
-								<p:graphicImage value="excel.png" width="24" />
+								update=":form1:growlReportador, :form1:downXls" title="XLS" styleClass="sg-btn-sm">
+								<i class="pi pi-file-excel" /> Excel
 							</p:commandLink>
 							<p:commandLink actionListener="#{reporte22MB.downloadTxt}"
-								update=":form1:growlReportador, :form1:downXls" title="TXT">
-								<p:graphicImage value="txt.png" width="24" />
+								update=":form1:growlReportador, :form1:downXls" title="TXT" styleClass="sg-btn-sm">
+								<i class="pi pi-file" /> TXT
+							</p:commandLink>
+							<p:commandLink actionListener="#{reporte22MB.downloadPdf}"
+								update=":form1:growlReportador, :form1:downPdf" title="PDF" styleClass="sg-btn-sm">
+								<i class="pi pi-file-pdf" /> PDF
 							</p:commandLink>
 						</p:panelGrid>
 					</p:panelGrid>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte22MB.uuid ne null}">
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte22MB.uuid}&amp;filename=#{reporte22MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
-					</p:panel>
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte22MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte22MB.uuid ne null}">
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte22MB.uuid}&amp;filename=#{reporte22MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

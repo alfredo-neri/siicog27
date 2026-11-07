@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,24 +13,33 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Archivo TXT de Recaudación del Impuesto Predial"
-					styleClass="green col-md-5 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Archivo TXT de Recaudación del Impuesto Predial</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder" layout="tabular">
 						<h:outputText value="Mes:" for="mesInputOri" />
 						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
 							value="#{rF0010_2_19_3MB.mes}">
 							<f:selectItems value="#{rF0010_2_19_3MB.listTcMes}" var="meses"
 								itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
 						</p:selectOneMenu>
-						<p:commandButton value="Correcto" ajax="false"
+						<p:commandButton value="Generar" ajax="false"
 							onclick="PrimeFaces.monitorDownload(start, stop);"
 							icon="ui-icon-arrowthick-1-s"
 							actionListener="#{rF0010_2_19_3MB.downLoadFile}">
 							<p:fileDownload value="#{rF0010_2_19_3MB.fileTxt}" />
 						</p:commandButton>
 					</p:panelGrid>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

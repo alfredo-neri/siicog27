@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -585,7 +585,7 @@
 										disabled="#{!solicitudesAdquisicionesMB.getCurrentUserIsRevisor()}"
 										actionListener="#{solicitudesAdquisicionesMB.guardarObsRevisor}"
 										update=":formDetallesSolicitudes:msnDetallesSolicitudes" />
-									<p:editor id="editor" widgetVar="editorWidget"
+									<p:textEditor id="editor" widgetVar="editorWidget"
 										controls="#{solicitudesAdquisicionesMB.getCurrentUserIsRevisor()?
 										'bold italic underline font size color highlight numbering	numbering alignleft center justify undo redo rule':'' }"
 										disabled="#{!solicitudesAdquisicionesMB.getCurrentUserIsRevisor()}"
@@ -731,7 +731,7 @@
 										<div class="row">
 											<div class="col-md-12 ui-noborder left-text block">
 												<p:selectOneRadio id="bienServicio" styleClass="checks"
-													converter="genericConverter" layout="grid" columns="5"
+													converter="genericConverter" layout="responsive" columns="5"
 													value="#{solicitudesAdquisicionesMB.solicitudCaptured.bienServicio}">
 													<f:selectItems
 														value="#{solicitudesAdquisicionesMB.bienesList}" var="c"
@@ -1170,12 +1170,8 @@
 										<div class="row">
 											<div class="col-md-8">
 												<p:fileUpload value="#{solicitudesAdquisicionesMB.file}"
-													mode="simple" dragDropSupport="false" multiple="false"
-													sizeLimit="10485760" fileLimit="1"
-													accept=".xls,.xlsx,.doc,.docx"
-													allowTypes="/(\.|\/)(xls|xlsx|docx|doc)$/"
-													invalidSizeMessage="Tamaño invalido de archivo."
-													invalidFileMessage="Tipo invalido de archivo.">
+													mode="simple" dragDrop="false" multiple="false"
+													accept=".xls,.xlsx,.doc,.docx"><p:validateFile sizeLimit="10485760" allowTypes="/(\.|\/)(xls|xlsx|docx|doc)$/" fileLimit="1"/>
 												</p:fileUpload>
 											</div>
 											<!--
@@ -1300,7 +1296,7 @@
 									</div>
 								</div>
 								<p:panelGrid columns="2" id="panelFormButtons"
-									styleClass=" ui-noborder center panel-buttons">
+									styleClass=" ui-noborder center panel-buttons" layout="tabular">
 									<p:commandButton value="Guardar" id="guardarArticulo"
 										update="dataGridArticulos"
 										action="#{solicitudesAdquisicionesMB.guardarArticulos}"
@@ -1540,14 +1536,10 @@
 							<p:messages id="ms" showDetail="true" closable="true"
 								showSummary="false" />
 							<p:fileUpload
-								fileUploadListener="#{solicitudesAdquisicionesMB.subirSolicitudModidificacion}"
-								mode="advanced" dragDropSupport="false" multiple="false"
-								update=":modificaion:ms, :modificaion:panel"
-								sizeLimit="10000000000" accept=".pdf,.png,.gif,.jpeg,.jpg"
-								allowTypes="/(\.|\/)(pdf|gif|jpe?g|jpg|png)$/"
-								invalidSizeMessage="Tamaño invalido de archivo."
-								invalidFileMessage="Tipo invalido de archivo."
-								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+								listener="#{solicitudesAdquisicionesMB.subirSolicitudModidificacion}"
+								mode="advanced" dragDrop="false" multiple="false"
+								update=":modificaion:ms, :modificaion:panel" accept=".pdf,.png,.gif,.jpeg,.jpg"
+								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar"><p:validateFile sizeLimit="10000000000" allowTypes="/(\.|\/)(pdf|gif|jpe?g|jpg|png)$/"/>
 							</p:fileUpload>
 							<p:commandButton value="Iniciar modificación"
 								icon=" ui-icon-newwin" styleClass="button-green no-padding"
@@ -1749,14 +1741,6 @@
 					onclick="PF('iniciarModificacion').hide();"
 					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
 			</p:confirmDialog>
-			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-				<h:panelGrid columns="2">
-					<h:graphicImage value="../reports/indice.png"
-						style="margin-right: 12px; vertical-align: middle;" />
-					<h:outputText value="Por favor espere..."
-						style="white-space: nowrap;" />
-				</h:panelGrid>
-			</pe:blockUI>
 			<h:form id="previewResourse" styleClass="green">
 				<p:dialog widgetVar="modalPreviewResource" modal="true" height="420"
 					width="1200" showEffect="fade" hideEffect="fade" resizable="true">

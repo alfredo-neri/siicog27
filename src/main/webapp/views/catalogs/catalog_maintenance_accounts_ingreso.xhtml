@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -18,97 +18,96 @@
 					onstart="PF('blockUIWidget').block();"
 					oncomplete="PF('blockUIWidget').unblock(); " />
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<p:panel id="panel" header="CLASIFICADOR POR RUBROS DE INGRESOS"
-					styleClass="green col-md-8 col-centered row-centered shadow-panel">
-					<h:panelGrid id="display_1" columns="6" cellpadding="4"
-						styleClass="col-centered">
-						<h:outputText value="CUENTA:" for="accountInput"
-							style="padding-left: 30px; padding-right: 30px;"
-							styleClass="control-label" />
-						<p:inputText id="accountInput" styleClass="form-control"
-							value="#{catalogAccountsIngresoMB.cuenta.cuenta}" maxlength="4"
-							validatorMessage="CUENTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,4})" for="accountInput"></f:validateRegex>
-						</p:inputText>
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Clasificador por Rubros de Ingresos</h1>
+						</div>
+					</div>
 
-						<h:outputText value="SCTA:" for="saccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="saccountInput" styleClass="form-control"
-							value="#{catalogAccountsIngresoMB.cuenta.scuenta}" maxlength="15"
-							validatorMessage="SCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9a-zA-Z]{0,15})"
-								for="saccountInput"></f:validateRegex>
-						</p:inputText>
-
-						<h:outputText value="SSCTA:" for="ssaccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="ssaccountInput" styleClass="form-control"
-							value="#{catalogAccountsIngresoMB.cuenta.sscuenta}"
-							maxlength="20" validatorMessage="SSCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,20})" for="ssaccountInput"></f:validateRegex>
-						</p:inputText>
-
-						<h:outputText value="SSSCTA:" for="sssaccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="sssaccountInput" styleClass="form-control"
-							value="#{catalogAccountsIngresoMB.cuenta.ssscuenta}"
-							style="margin-top: 10px;" maxlength="4"
-							validatorMessage="SSSCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,4})" for="sssaccountInput"></f:validateRegex>
-						</p:inputText>
-
-						<h:outputText value="SSSSCTA:" for="ssssaccountInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="ssssaccountInput" styleClass="form-control"
-							value="#{catalogAccountsIngresoMB.cuenta.sssscuenta}"
-							style="margin-top: 10px;" maxlength="4"
-							validatorMessage="SSSSCTA debe ser num&eacute;rico">
-							<f:validateRegex pattern="([0-9]{0,4})" for="ssssaccountInput "></f:validateRegex>
-						</p:inputText>
-
-						<h:outputText value="TITULO:" for="titleInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="titleInput" styleClass="form-control"
-							value="#{catalogAccountsIngresoMB.cuenta.nomcta}"
-							style="margin-top: 10px;" maxlength="250">
-						</p:inputText>
-
-						<p:outputPanel layout="block" style="text-align:center">
-							<br />
-							<p:commandButton value="Buscar" style="padding: 5px;" id="search"
-								onmousedown="jQuery('.ui-paginator-first').click();"
-								oncomplete="findAcc();" />
-							<p:commandButton value="Limpiar" id="clean"
-								style="padding: 5px; margin-left: 15px; position: absolute; "
-								update=":form1:messagesEdit, :form1:display_1, :form1:accountInput"
-								immediate="true"
-								actionListener="#{catalogAccountsIngresoMB.reset}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:accountInput').value=''; document.getElementById('form1:saccountInput').value=''; document.getElementById('form1:ssaccountInput').value='';  document.getElementById('form1:sssaccountInput').value=''; document.getElementById('form1:ssssaccountInput').value=''; document.getElementById('form1:titleInput').value='';" />
-						</p:outputPanel>
-					</h:panelGrid>
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-				<div class="table-responsive table-bordered table-condensed">
+					<!-- ===== Buscar cuenta ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar cuenta</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
+									<div class="sg-field">
+										<p:outputLabel for="accountInput" value="Cuenta" />
+										<p:inputText styleClass="mono" id="accountInput"
+											value="#{catalogAccountsIngresoMB.cuenta.cuenta}" maxlength="4"
+											validatorMessage="CUENTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,4})" for="accountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="saccountInput" value="Scta" />
+										<p:inputText styleClass="mono" id="saccountInput"
+											value="#{catalogAccountsIngresoMB.cuenta.scuenta}" maxlength="15"
+											validatorMessage="SCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9a-zA-Z]{0,15})"
+												for="saccountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="ssaccountInput" value="Sscta" />
+										<p:inputText styleClass="mono" id="ssaccountInput"
+											value="#{catalogAccountsIngresoMB.cuenta.sscuenta}"
+											maxlength="20" validatorMessage="SSCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,20})" for="ssaccountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="sssaccountInput" value="Ssscta" />
+										<p:inputText styleClass="mono" id="sssaccountInput"
+											value="#{catalogAccountsIngresoMB.cuenta.ssscuenta}" maxlength="4"
+											validatorMessage="SSSCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,4})" for="sssaccountInput"></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="ssssaccountInput" value="Sssscta" />
+										<p:inputText styleClass="mono" id="ssssaccountInput"
+											value="#{catalogAccountsIngresoMB.cuenta.sssscuenta}" maxlength="4"
+											validatorMessage="SSSSCTA debe ser num&eacute;rico">
+											<f:validateRegex pattern="([0-9]{0,4})" for="ssssaccountInput "></f:validateRegex>
+										</p:inputText>
+									</div>
+									<div class="sg-field" style="grid-column: span 2;">
+										<p:outputLabel for="titleInput" value="Título" />
+										<p:inputText id="titleInput"
+											value="#{catalogAccountsIngresoMB.cuenta.nomcta}" maxlength="250">
+										</p:inputText>
+									</div>
+								</div>
+								<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar" id="search"
+										onmousedown="jQuery('.ui-paginator-first').click();"
+										oncomplete="findAcc();" />
+									<p:commandButton styleClass="ui-button-flat" value="Limpiar" id="clean"
+										update=":form1:messagesEdit, :form1:display_1, :form1:accountInput"
+										immediate="true"
+										actionListener="#{catalogAccountsIngresoMB.reset}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:accountInput').value=''; document.getElementById('form1:saccountInput').value=''; document.getElementById('form1:ssaccountInput').value='';  document.getElementById('form1:sssaccountInput').value=''; document.getElementById('form1:ssssaccountInput').value=''; document.getElementById('form1:titleInput').value='';" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				<div>
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Clasificador por rubros de ingresos</h2>
+						</div>
 					<p:dataTable id="objects" var="object" widgetVar="tbCuentas"
 						value="#{catalogAccountsIngresoMB.cuentas}"
 						styleClass="et_datatable" emptyMessage="No hay registros"
 						editable="true" paginator="true" lazy="true" rows="16"
 						resizableColumns="true" scrollable="true"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-						<f:facet name="header">MANTENIMIENTO AL CLASIFICADOR POR RUBROS DE INGRESOS</f:facet>
 						<p:column headerText="Cuenta" visible="false" width="50"
 							exportable="true">
 							<h:outputText value="#{object.cuenta}" />
@@ -218,12 +217,17 @@
 							<h:outputText value="#{object.notcta}" />
 						</p:column>
 						<f:facet name="footer">
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-								<p:graphicImage value="pdf.png" width="24" />
+							<div class="sg-export">
+							<span class="sg-note">Exportar:</span>
+							<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+								<i class="pi pi-file-pdf" /> PDF
 								<p:fileDownload value="#{catalogAccountsIngresoMB.filePdf}" />
 							</h:commandLink>
+							</div>
 						</f:facet>
 					</p:dataTable>
+					</div>
+					</div>
 				</div>
 			</h:form>
 		</ui:define>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -20,8 +20,8 @@
 					</p:commandButton>
 					<p:tabView effect="fold" id="tabs">
 						<p:tab title="Impresión de Cheque" id="impresionCheque">
-							<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
-								<p:panelGrid columns="10" styleClass="ui-noborder">
+							<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
+								<p:panelGrid columns="10" styleClass="ui-noborder" layout="tabular">
 									<h:outputText value="Mes:" />
 									<p:selectOneMenu id="mesInput" value="#{impresionChequeMB.mes}">
 										<f:selectItems value="#{impresionChequeMB.listMeses}"
@@ -45,7 +45,7 @@
 									<p:inputText id="numeroInput"
 										value="#{impresionChequeMB.numero}" maxlength="6" size="6"
 										requiredMessage="El campo P&oacute;liza es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change"
 											update="@this beneficiarioInput, :form1:growlReportador numero numeroAsn"
 											listener="#{impresionChequeMB.changeBeneficiario}"
@@ -55,14 +55,14 @@
 									<p:inputText id="chequeInput"
 										value="#{impresionChequeMB.cheque}" size="6"
 										requiredMessage="El campo N&uacute;mero Cheque es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change" update="@this  cheque chequeAsn" />
 									</p:inputText>
 									<h:outputText value="Tipo gasto:" />
 									<p:selectOneRadio id="gasto"
 										value="#{impresionChequeMB.tipoGasto}"
 										requiredMessage="El Tipo de Gasto es obligatorio"
-										layout="grid" columns="1" styleClass="grid-radio">
+										layout="responsive" columns="1" styleClass="grid-radio">
 										<f:selectItem itemLabel="Viaje" itemValue="1" />
 										<f:selectItem itemLabel="Para Comprobar" itemValue="2" />
 										<f:selectItem itemLabel="Otro" itemValue="0" />
@@ -70,7 +70,7 @@
 											listener="#{impresionChequeMB.changeText()}" />
 									</p:selectOneRadio>
 								</p:panelGrid>
-								<p:panelGrid columns="2" styleClass="ui-noborder">
+								<p:panelGrid columns="2" styleClass="ui-noborder" layout="tabular">
 									<h:outputText value="Nombre del Beneficiario:" />
 									<p:inputText id="beneficiarioInput" size="80"
 										value="#{impresionChequeMB.beneficiario}" />
@@ -79,7 +79,7 @@
 									value="#{impresionChequeMB.gastoText}" id="gastoText" />
 
 								<p:panelGrid columns="3"
-									styleClass="col-centered row-centered ui-noborder">
+									styleClass="col-centered row-centered ui-noborder" layout="tabular">
 									<p:commandButton id="generateportepdf"
 										onstart="PF('blockUIWidget').block()"
 										oncomplete="PF('blockUIWidget').unblock()"
@@ -98,12 +98,12 @@
 							</p:panelGrid>
 						</p:tab>
 						<p:tab title="Consultas de Cheque" id="consultaCheque">
-							<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+							<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
 								<p:panelGrid columns="10" styleClass="ui-noborder"
-									id="panelInputs">
+									id="panelInputs" layout="tabular">
 									<h:outputText value="Búsqueda por:" />
 									<p:selectOneRadio id="searchs"
-										value="#{impresionChequeMB.searchBy}" layout="grid"
+										value="#{impresionChequeMB.searchBy}" layout="responsive"
 										columns="1" styleClass="grid-radio">
 										<f:selectItem itemLabel="Fecha" itemValue="1" />
 										<f:selectItem itemLabel="Póliza" itemValue="2" />
@@ -157,7 +157,7 @@
 										maxlength="6" rendered="#{impresionChequeMB.searchByPoliza}"
 										size="6" required="true"
 										requiredMessage="El campo P&oacute;liza es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change" update="@this numeroAsn numeroInput " />
 									</p:inputText>
 									<!-- Controles de busqueda de numero de cheque -->
@@ -167,7 +167,7 @@
 										size="6" rendered="#{impresionChequeMB.searchByCheque}"
 										required="true"
 										requiredMessage="El campo N&uacute;mero Cheque es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change" update="@this  chequeInput chequeAsn" />
 									</p:inputText>
 									<!-- Controles de busqueda de mes -->
@@ -207,7 +207,7 @@
 										rendered="#{impresionChequeMB.searchByRango}" size="6"
 										required="true"
 										requiredMessage="El campo P&oacute;liza es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change" update="@this numeroAsn numeroInput " />
 									</p:inputText>
 									<h:outputText value="Al consecutivo"
@@ -217,12 +217,12 @@
 										rendered="#{impresionChequeMB.searchByRango}" size="6"
 										required="true"
 										requiredMessage="El campo P&oacute;liza es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change" update="@this" />
 									</p:inputText>
 								</p:panelGrid>
 								<p:panelGrid columns="3"
-									styleClass="col-centered row-centered ui-noborder">
+									styleClass="col-centered row-centered ui-noborder" layout="tabular">
 									<p:commandButton id="generateporte"
 										onstart="PF('blockUIWidget').block()"
 										oncomplete="PF('blockUIWidget').unblock()"
@@ -247,8 +247,8 @@
 							</p:panel>
 						</p:tab>
 						<p:tab title="Asignaci&oacute;n de cheque" id="aisgnacionCheque">
-							<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
-								<p:panelGrid columns="10" styleClass="ui-noborder">
+							<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
+								<p:panelGrid columns="10" styleClass="ui-noborder" layout="tabular">
 									<h:outputText value="Mes:" />
 									<p:selectOneMenu id="mesAsn" value="#{impresionChequeMB.mes}">
 										<f:selectItems value="#{impresionChequeMB.listMeses}"
@@ -267,19 +267,19 @@
 									<p:inputText id="numeroAsn" value="#{impresionChequeMB.numero}"
 										maxlength="6" size="6"
 										requiredMessage="El campo P&oacute;liza es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change" update="@this numero numeroInput " />
 									</p:inputText>
 									<h:outputText value="N&uacute;mero Cheque:" />
 									<p:inputText id="chequeAsn" value="#{impresionChequeMB.cheque}"
 										size="6"
 										requiredMessage="El campo N&uacute;mero Cheque es obligatorio">
-										<pe:keyFilter regEx="/[\d]/" />
+										<p:keyFilter regEx="/[\d]/" />
 										<p:ajax event="change" update="@this  chequeInput chequeAsn" />
 									</p:inputText>
 								</p:panelGrid>
 								<p:panelGrid columns="1"
-									styleClass="col-centered row-centered ui-noborder">
+									styleClass="col-centered row-centered ui-noborder" layout="tabular">
 
 									<p:commandButton id="asignar"
 										onstart="PF('blockUIWidget').block()"
@@ -300,14 +300,6 @@
 							desplegar el PDF. </object>
 					</p:panel>
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../reports/indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 		</ui:define>
 	</ui:composition>

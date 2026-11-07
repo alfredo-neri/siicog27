@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -14,10 +14,10 @@
 		<ui:define name="content">
 			<script type="text/javascript">
 		        function showStatus() {
-		            PF('statusDialog').show();
+		            PF('blockUIWidget').block();
 		        }
 		        function hideStatus() {
-		            PF('statusDialog').hide();
+		            PF('blockUIWidget').unblock();
 		        }
 		    </script>
 			<p:panel id="pDigitaliza"
@@ -32,7 +32,7 @@
 							<p:outputLabel for="organismo"
 								value="Seleccione una Opci&oacute;n" />
 							<p:selectOneRadio id="organismo"
-								value="#{edoAnalitoIngrePIntegradoImpMB.organismo}" layout="grid"
+								value="#{edoAnalitoIngrePIntegradoImpMB.organismo}" layout="responsive"
 								columns="1" required="true"
 								requiredMessage="Favor de seleccionar una opci&oacute;n de organismo">
 								<f:selectItem itemLabel="Ayuntamiento" itemValue="0" />
@@ -74,21 +74,13 @@
 					<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
 
 					<p:panelGrid id="grid" columns="2"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:outputLabel value="Seleccione un archivo:"></p:outputLabel>
 						<!-- 						10 MB   fileLimit="2"-->
 						<p:fileUpload
-							fileUploadListener="#{edoAnalitoIngrePIntegradoImpMB.handleFileUpload}"
-							mode="advanced" dragDropSupport="false" update="growl, downloadError"
-							sizeLimit="10000000" accept=".csv,.txt"
-							allowTypes="/(\.|\/)(csv|txt)$/"
-							invalidSizeMessage="Tamaño invalido de archivo."
-							invalidFileMessage="Tipo invalido de archivo."
-							cancelLabel="Cancelar" label="Elegir" uploadLabel="Correcto" />
-						<p:dialog modal="true" widgetVar="statusDialog" header="Status"
-							draggable="false" closable="false">
-							<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
-						</p:dialog>
+							listener="#{edoAnalitoIngrePIntegradoImpMB.handleFileUpload}"
+							mode="advanced" dragDrop="false" update="growl, downloadError" accept=".csv,.txt"
+							cancelLabel="Cancelar" label="Elegir" uploadLabel="Correcto"><p:validateFile sizeLimit="10000000" allowTypes="/(\.|\/)(csv|txt)$/"/></p:fileUpload>
 						<p:commandButton value="Descargar archivo de Errores" ajax="false" 
 							style="margin-top:10px;padding:5px;" id="downloadError"
 							onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)"

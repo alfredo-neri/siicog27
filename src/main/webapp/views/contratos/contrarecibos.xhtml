@@ -2,94 +2,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
-			<style>
-.no-border {
-	border: 0;
-}
-
-.input-max {
-	width: 100% !important;
-}
-
-.input-max>input {
-	width: 100% !important;
-}
-
-.input-90>input {
-	width: 90% !important;
-}
-
-.my-10 {
-	margin-right: 5px;
-}
-
-.link {
-	color: #428bca !important;
-	text-decoration: underline;
-}
-
-.block {
-	display: grid;
-	padding-right: 0 !important;
-}
-
-.flex {
-	display: flex;
-}
-
-.left-text {
-	text-align: left
-}
-
-.right-text {
-	text-align: right;
-}
-
-.row {
-	margin-top: 10px !important;
-}
-
-.row.no-margin {
-	margin-top: 0px !important;
-}
-
-.p0 {
-	padding: 0 !important;
-}
-
-.center {
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.select-one-menu label {
-	width: 100% !important;
-}
-
-.ui-panel .ui-panel-content {
-	padding: 0 !important;
-}
-
-.lista-detalles-header {
-	display: flex;
-	justify-content: right;
-	align-items: center;
-}
-
-.lista-detalles-header>input {
-	width: 40% !important;
-	margin-right: 5px;
-}
-</style>
+			<!--
+				SIICOG fase 2: estructura del prototipo (sicog-pantallas.html, "Administración de Contra-recibos").
+				Se conservan componentes, ids, valores, listeners y update de difem26. Cambios:
+				- El estilo en línea de la página se retiró (era del acomodo anterior con columnas de bootstrap).
+				- La espera usa PF('blockUIWidget').block()/unblock(): .show()/.hide() no existen en pe:blockUI y
+				  marcaban error de JavaScript en cada Guardar/Cancelar.
+				- La validación de fecha en el navegador usaba g.renderMessage (no existía "g"): ahora usa el aviso
+				  PF('g'), un p:growl que solo muestra esos mensajes.
+				- La búsqueda y el reporte del día salen de la cabecera y el pie de la tabla a la tarjeta (mismos ids).
+				- Columna "Cancelado" (texto) ahora es "Estado" con chip; el total de facturas se calcula en la vista.
+				- Guardar actualiza también :form:msn y :form:panelForm: antes el error de JavaScript de .show() hacía
+				  que el botón enviara la página completa y así se veían los mensajes; ya por AJAX no se mostraban.
+				Los diálogos de confirmación siguen fuera del formulario, como en difem26.
+			-->
 			<h:form id="form">
+				<p:growl id="g" widgetVar="g" for="g" showDetail="true" />
 				<p:remoteCommand name="buscar"
 					actionListener="#{contrarecibosMB.buscar}"
 					oncomplete="return false;" update=":form:dataGrid" />
@@ -103,408 +39,389 @@
 				<p:remoteCommand name="fechaPago" id="fechaPagoR"
 					actionListener="#{contrarecibosMB.updateFechaPago}"
 					oncomplete="return false;" update=":form:panel" />
-				<p:panel id="panel" header="Administración  de contra-recibos"
-					styleClass="green col-md-12 col-centered row-centered shadow-panel green container">
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page">
+					<!-- el bean lo pulsa por JavaScript (#form:showPdf) para generar el PDF del contra-recibo -->
 					<p:commandButton style="display: none" id="showPdf" ajax="false"
 						update=":form:msn :form:inlinePdf :form:panelForm :form:panelFacturas"
-						onstart="PF('blockUIWidget').show();"
-						oncomplete="PF('blockUIWidget').hide();"
+						onstart="PF('blockUIWidget').block();"
+						oncomplete="PF('blockUIWidget').unblock();"
 						action="#{contrarecibosMB.pdfContrarecibo}">
 					</p:commandButton>
+
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Presupuesto y finanzas / Tesorería</div>
+							<h1>Administración de Contra-recibos</h1>
+						</div>
+						<div class="sg-actions">
+							<p:link outcome="proveedores" styleClass="sg-btn-sm" title="Catálogo de proveedores">
+								<i class="pi pi-users" /> Proveedores
+							</p:link>
+							<p:link outcome="folioscontrarecibos" styleClass="sg-btn-sm" title="Folios de contra-recibos">
+								<i class="pi pi-list" /> Folios
+							</p:link>
+						</div>
+					</div>
+
 					<p:messages id="msn" showDetail="true" closable="true"
 						showSummary="false" />
 
-					<div class="row">
-						<div class="col-md-9 ui-noborder " />
-						<div class="col-md-3 ui-noborder right-text">
-							<p:link outcome="proveedores" value="Proveedores"
-								styleClass="my-10 link" />
-							<p:link outcome="folioscontrarecibos" value="Folios"
-								styleClass="my-10 link" />
-						</div>
-					</div>
-					<div class="row ">
-						<div class="col-md-9 bordered p0">
+					<div class="sg-cr-grid">
+						<!-- ===== Datos del contra-recibo ===== -->
+						<div class="sg-card">
 							<p:focus id="focusRecibo" />
-							<p:panel id="panelForm" styleClass="no-border">
-								<div class="row">
-									<div class="col-md-2 ui-noborder left-text block">
-										<h:outputText value="Folio" />
-										<p:inputText id="folio" maxlength="10" styleClass="input-max"
+							<h:panelGroup id="panelForm" layout="block">
+								<div class="sg-card-h">
+									<h2>Datos del contra-recibo</h2>
+									<h:outputText value="#{contrarecibosMB.recibo.id gt 0 ? 'Edición · folio ' += contrarecibosMB.recibo.folio : 'Nuevo'}"
+										styleClass="sg-chip #{contrarecibosMB.recibo.id gt 0 ? 'info' : 'mute'}" />
+								</div>
+								<div class="sg-card-b sg-cr-form">
+									<div class="sg-field c2">
+										<p:outputLabel for="folio" value="Folio" />
+										<p:inputText id="folio" maxlength="10" styleClass="mono"
 											value="#{contrarecibosMB.recibo.folio}"
 											onkeypress="if (event.keyCode == 13) {guardarReciboRemote(); return false; } if(event.keyCode == 27) { return false;}">
 										</p:inputText>
 									</div>
-									<div class="col-md-10 ui-noborder left-text block">
-										<h:outputText value="Elaboro" />
+									<div class="sg-field c4">
+										<p:outputLabel for="elaboro" value="Elaboró" />
 										<p:inputText id="elaboro" maxlength="100"
-											styleClass="input-max" onblur="value=value.toUpperCase()"
+											onblur="value=value.toUpperCase()"
 											onkeypress="if (event.keyCode == 13) {guardarReciboRemote(); return false; } if(event.keyCode == 27) { return false;}"
 											value="#{contrarecibosMB.recibo.elaboro}">
 										</p:inputText>
 									</div>
-
-								</div>
-								<div class="row">
-									<div class="col-md-12 ui-noborder left-text block">
-										<h:outputText value="Concepto" />
+									<div class="sg-field c6">
+										<p:outputLabel for="nombre" value="Concepto" />
 										<p:inputText id="nombre" maxlength="200"
-											styleClass="input-max" onblur="value=value.toUpperCase()"
+											onblur="value=value.toUpperCase()"
 											onkeypress="if (event.keyCode == 13) {guardarReciboRemote(); return false; } if(event.keyCode == 27) { return false;}"
 											value="#{contrarecibosMB.recibo.concepto}">
 										</p:inputText>
 									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12 ui-noborder left-text block">
-										<h:outputText value="Contrato y/o pedido" />
-										<p:inputText id="contratoPedido" styleClass="input-max"
+									<div class="sg-field c6">
+										<p:outputLabel for="contratoPedido" value="Contrato y/o pedido" />
+										<p:inputText id="contratoPedido" styleClass="mono"
 											onblur="value=value.toUpperCase()" maxlength="100"
 											onkeypress="if (event.keyCode == 13) {guardarReciboRemote(); return false; } if(event.keyCode == 27) { return false;}"
 											value="#{contrarecibosMB.recibo.contratoPedido}">
 										</p:inputText>
 									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-5 ui-noborder left-text ">
-										<div class="row no-margin">
-											<div class="col-md-4 ui-noborder left-text block">
-												<h:outputText value="Fecha Emición" />
-												<p:calendar id="fechaEmision" styleClass="input-max"
-													value="#{contrarecibosMB.recibo.fechaEmicion}"
-													maxlength="10" locale="es" size="10" pattern="dd/MM/yyyy"
-													required="true" mask="true"
-													requiredMessage="El campo de Fecha es requerido"
-													timeZone="" maxdate="#{contrarecibosMB.maxDate}"
-													converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
-													onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
-													<f:convertDateTime pattern="dd/MM/yyyy" />
-													<p:ajax event="dateSelect" oncomplete="fechaPago()"
-														process="@this" update="@this" />
-												</p:calendar>
-											</div>
-											<div class="col-md-8 ui-noborder left-text block">
-												<h:outputText value="Fecha Pago" />
-												<p:calendar id="fechaPago" styleClass="input-max"
-													value="#{contrarecibosMB.recibo.fechaPago}" maxlength="10"
-													locale="es" size="10" pattern="dd/MM/yyyy" required="true"
-													mask="true"
-													requiredMessage="El campo de Fecha es requerido"
-													timeZone="" maxdate="#{contrarecibosMB.maxDate}"
-													converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
-													onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
-													<f:convertDateTime pattern="dd/MM/yyyy" />
-												</p:calendar>
-											</div>
-										</div>
+									<div class="sg-field c3">
+										<p:outputLabel for="fechaEmision" value="Fecha de emisión" />
+										<p:calendar id="fechaEmision"
+											value="#{contrarecibosMB.recibo.fechaEmicion}"
+											maxlength="10" locale="es" size="10" pattern="dd/MM/yyyy"
+											required="true" mask="true"
+											requiredMessage="El campo de Fecha es requerido"
+											timeZone="" maxdate="#{contrarecibosMB.maxDate}"
+											converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+											onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){PF('g').renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 'error'}); this.focus(); }">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+											<p:ajax event="dateSelect" oncomplete="fechaPago()"
+												process="@this" update="@this" />
+										</p:calendar>
 									</div>
-									<div class="col-md-6 ui-noborder left-text block">
-										<h:outputText value="Fuente financiamiento" />
+									<div class="sg-field c3">
+										<p:outputLabel for="fechaPago" value="Fecha de pago" />
+										<p:calendar id="fechaPago"
+											value="#{contrarecibosMB.recibo.fechaPago}" maxlength="10"
+											locale="es" size="10" pattern="dd/MM/yyyy" required="true"
+											mask="true"
+											requiredMessage="El campo de Fecha es requerido"
+											timeZone="" maxdate="#{contrarecibosMB.maxDate}"
+											converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+											onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){PF('g').renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 'error'}); this.focus(); }">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:calendar>
+									</div>
+									<div class="sg-field c6">
+										<p:outputLabel for="fuenteFinanciamiento" value="Fuente de financiamiento" />
 										<p:selectOneMenu id="fuenteFinanciamiento"
-											styleClass="select-one-menu" style="width: 100% !important;"
 											converter="genericConverter"
 											value="#{contrarecibosMB.recibo.fuentef}">
 											<f:selectItems value="#{contrarecibosMB.fuentes}" var="area"
 												itemLabel="#{area.clvfte} #{area.nombref}" itemValue="#{area}" />
 										</p:selectOneMenu>
 									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12 ui-noborder left-text block">
-										<h:outputText value="Para su pago recibimos de :" />
+									<div class="sg-field c6">
+										<p:outputLabel for="proveedor" value="Para su pago recibimos de" />
 										<p:selectOneMenu id="proveedor" converter="genericConverter"
-											styleClass="select-one-menu" style="width: 100% !important;"
 											value="#{contrarecibosMB.recibo.proveedor}">
 											<f:selectItems value="#{contrarecibosMB.proveedores}"
 												var="area" itemLabel="#{area.nombreProveedor}"
 												itemValue="#{area}" />
 										</p:selectOneMenu>
 									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12 ui-noborder left-text block">
-										<h:outputText value="Observaciones" />
-										<p:inputTextarea rows="1" cols="175" id="obs" maxlength="200"
-											styleClass="input-max" value="#{contrarecibosMB.recibo.obs}"
+									<div class="sg-field c6">
+										<p:outputLabel for="obs" value="Observaciones" />
+										<p:inputTextarea rows="2" id="obs" maxlength="200"
+											value="#{contrarecibosMB.recibo.obs}"
 											onkeypress="if (event.keyCode == 13) {guardarReciboRemote(); return false; } if(event.keyCode == 27) { return false;}"
 											queryDelay="750" onblur="value=value.toUpperCase()" />
 									</div>
 								</div>
-							</p:panel>
-							<p:panelGrid columns="2"
-								styleClass=" ui-noborder center panel-buttons">
+							</h:panelGroup>
+							<div class="sg-card-b sg-actions" style="padding-top: 0;">
 								<p:commandButton value="Guardar"
-									update="dataGrid :form:focusFactura"
+									update="dataGrid :form:focusFactura :form:msn :form:panelForm"
 									action="#{contrarecibosMB.guardarRecibo}"
-									onclick="PF('blockUIWidget').show();"
-									oncomplete="PF('blockUIWidget').hide();"
-									styleClass="ui-confirmdialog-no " icon="ui-icon-disk" />
+									onclick="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();"
+									icon="pi pi-check" />
 								<p:commandButton value="Cancelar"
 									update=":form:focusFactura :form:msn :form:panelForm"
-									onclick="PF('blockUIWidget').show();"
-									oncomplete="PF('blockUIWidget').hide();"
+									onclick="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();"
 									action="#{contrarecibosMB.resetContrato}"
-									styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
-							</p:panelGrid>
+									styleClass="ui-button-outlined" icon="pi pi-times" />
+							</div>
 						</div>
-						<div class="col-md-3 bordered p0">
+
+						<!-- ===== Facturas ===== -->
+						<div class="sg-card">
+							<div class="sg-card-h">
+								<h2>Facturas</h2>
+								<span class="sg-note">Del contra-recibo guardado</span>
+							</div>
 							<p:focus id="focusFactura" />
-							<p:panel id="panelFacturas" styleClass="no-border">
-								<div class="row">
-									<div class="col-md-12 ui-noborder left-text block">
-										<h:outputText value="Numero Factura" />
-										<p:inputText id="numeroFactura" styleClass="input-max"
-											value="#{contrarecibosMB.facturaContraRecibo.numeroFactura}"
-											onkeypress="if (event.keyCode == 13) {guardarFacturaRemote(); return false; } if(event.keyCode == 27) { return false;}">
-										</p:inputText>
-									</div>
-									<div class="row">
-										<div class="col-md-12 ui-noborder left-text block">
-											<h:outputText value="Importe" />
-											<p:inputText id="importe" styleClass="input-max"
-												onkeypress="if (event.keyCode == 13) {guardarFacturaRemote(); return false; } if(event.keyCode == 27) { return false;}"
-												value="#{contrarecibosMB.facturaContraRecibo.importe}">
-												<f:convertNumber pattern="###,###,##0.00" type="number" />
-											</p:inputText>
-										</div>
-									</div>
+							<h:panelGroup id="panelFacturas" layout="block" styleClass="sg-card-b sg-fields sg-cr-factura">
+								<div class="sg-field">
+									<p:outputLabel for="numeroFactura" value="Número de factura" />
+									<p:inputText id="numeroFactura" styleClass="mono"
+										value="#{contrarecibosMB.facturaContraRecibo.numeroFactura}"
+										onkeypress="if (event.keyCode == 13) {guardarFacturaRemote(); return false; } if(event.keyCode == 27) { return false;}">
+									</p:inputText>
 								</div>
-							</p:panel>
-							<p:panelGrid columns="2"
-								styleClass=" ui-noborder center panel-buttons">
-								<p:commandButton value="Guardar"
+								<div class="sg-field">
+									<p:outputLabel for="importe" value="Importe" />
+									<p:inputText id="importe" styleClass="sg-num" style="text-align: right;" placeholder="0.00"
+										onkeypress="if (event.keyCode == 13) {guardarFacturaRemote(); return false; } if(event.keyCode == 27) { return false;}"
+										value="#{contrarecibosMB.facturaContraRecibo.importe}">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</p:inputText>
+								</div>
+							</h:panelGroup>
+							<div class="sg-card-b sg-actions" style="padding-top: 0;">
+								<p:commandButton value="Guardar factura"
 									update="dataGridFacturas :form:focusFactura :form:msn :form:panelFacturas"
 									actionListener="#{contrarecibosMB.guardarFactura}"
-									onclick="PF('blockUIWidget').show();"
-									oncomplete="PF('blockUIWidget').hide();"
-									styleClass="ui-confirmdialog-no " icon="ui-icon-disk" />
+									onclick="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();"
+									icon="pi pi-plus" />
 								<p:commandButton value="Cancelar"
 									update=":form:focusFactura :form:msn "
-									onclick="PF('blockUIWidget').show();"
-									oncomplete="PF('blockUIWidget').hide();"
+									onclick="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();"
 									action="#{contrarecibosMB.resetFactura}"
-									styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
-							</p:panelGrid>
+									styleClass="ui-button-outlined" icon="pi pi-times" />
+							</div>
 
 							<p:dataTable id="dataGridFacturas" var="object"
 								value="#{contrarecibosMB.facturasByRecibo}"
-								styleClass="et_datatable col-md-12 no-border "
-								emptyMessage="No existen registros" paginator="true" rows="5"
+								emptyMessage="Sin facturas. Agrega las facturas que ampara este contra-recibo."
+								paginator="true" rows="5"
 								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
 								widgetVar="dataGridFacturas" paginatorPosition="bottom"
+								paginatorAlwaysVisible="false"
 								rowIndexVar="rowIndexCaptura">
-								<p:column headerText="Numero factura" exportable="false"
-									width="40%" style="text-align: left!important;">
-									<p:outputLabel value="#{object.numeroFactura}" />
+								<p:column headerText="Número de factura" exportable="false">
+									<p:outputLabel value="#{object.numeroFactura}" styleClass="sg-code" />
 								</p:column>
-								<p:column headerText="Importe" exportable="false" width="40%"
-									style="text-align: left!important;">
-									<p:outputLabel value="#{object.importe}" />
+								<p:column headerText="Importe" exportable="false" style="width: 120px; text-align: right;">
+									<p:outputLabel value="#{object.importe}" styleClass="sg-num">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</p:outputLabel>
 								</p:column>
-								<p:column headerText="Acciones" exportable="false" width="20%"
-									styleClass="row-centered">
-									<div class="row no-margin">
-										<div class="col-md-4 ui-noborder left-text flex p0 ">
-											<p:commandLink id="deleteRow"
-												oncomplete="PF('confirmFileDeleteFactura').show()"
-												image="ui-icon ui-icon-close" title="Delete">
-												<f:setPropertyActionListener value="#{object}"
-													target="#{contrarecibosMB.facturaContraRecibo}" />
-												<h:outputText styleClass="ui-icon ui-icon-close" />
-											</p:commandLink>
-											<p:commandLink
-												update=":form:focusFactura :form:msn :form:panelFacturas"
-												image="ui-icon ui-icon-edit" title="Editar">
-												<f:setPropertyActionListener value="#{object}"
-													target="#{contrarecibosMB.facturaContraRecibo}" />
-												<h:outputText styleClass="ui-icon ui-icon-pencil" />
-											</p:commandLink>
-										</div>
+								<p:column headerText="Acciones" exportable="false" style="width: 90px;"
+									styleClass="sg-acciones-fila">
+									<p:commandLink
+										update=":form:focusFactura :form:msn :form:panelFacturas"
+										styleClass="sg-ico" title="Editar">
+										<f:setPropertyActionListener value="#{object}"
+											target="#{contrarecibosMB.facturaContraRecibo}" />
+										<i class="pi pi-pencil" />
+									</p:commandLink>
+									<p:commandLink id="deleteRow"
+										oncomplete="PF('confirmFileDeleteFactura').show()"
+										styleClass="sg-borrar" title="Eliminar">
+										<f:setPropertyActionListener value="#{object}"
+											target="#{contrarecibosMB.facturaContraRecibo}" />
+										<i class="pi pi-trash" />
+									</p:commandLink>
+								</p:column>
+								<f:facet name="footer">
+									<div class="sg-total-row">
+										<span>Total facturas</span>
+										<h:outputText value="#{empty contrarecibosMB.facturasByRecibo ? 0 : contrarecibosMB.facturasByRecibo.stream().map(f -> f.importe).sum()}">
+											<f:convertNumber pattern="###,###,##0.00" type="number" />
+										</h:outputText>
 									</div>
-								</p:column>
+								</f:facet>
 							</p:dataTable>
 						</div>
 					</div>
 
-					<p:dataTable id="dataGrid" var="object"
-						value="#{contrarecibosMB.recibos}"
-						styleClass="et_datatable col-md-12 no-border "
-						emptyMessage="No existen registros" paginator="true" rows="20"
-						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
-						widgetVar="dataGrid" paginatorPosition="bottom"
-						rowIndexVar="rowIndexCaptura">
-						<f:facet name="header">
-							<p:outputPanel styleClass="lista-detalles-header">
-								<h:outputText value="Busqueda: " />
-								<p:inputText id="inputBusqueda"
-									value="#{contrarecibosMB.busqueda}" placeholder="Ingrese texto"
+					<!-- ===== Contra-recibos registrados ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Contra-recibos registrados</h2>
+							<div class="sg-actions">
+								<p:inputText id="inputBusqueda" style="width: 300px;"
+									value="#{contrarecibosMB.busqueda}" placeholder="Buscar por folio, proveedor o concepto"
 									onkeypress="if (event.keyCode == 13) {buscar(); return false; } if(event.keyCode == 27) { return false;}">
 								</p:inputText>
-								<p:commandButton icon="ui-icon-search"
+								<p:commandButton icon="pi pi-search" title="Buscar"
 									actionListener="#{contrarecibosMB.buscar()}"
 									update=":form:dataGrid" />
-							</p:outputPanel>
-						</f:facet>
-						<p:column headerText="Folio" exportable="false" width="4%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.folio}" />
-						</p:column>
-						<p:column headerText="Contrato o pedido" exportable="false"
-							width="18%" style="text-align: left!important;">
-							<p:outputLabel value="#{object.contratoPedido}" />
-						</p:column>
-						<p:column headerText="Proveedor" exportable="false" width="18%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.proveedor.nombreProveedor}" />
-						</p:column>
-						<p:column headerText="Concepto" exportable="false" width="15%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.concepto}" />
-						</p:column>
-						<p:column headerText="Elaboro" exportable="false" width="10%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.elaboro}" />
-						</p:column>
-						<p:column headerText="Fecha Emicion" exportable="false" width="8%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.fechaEmicion}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
-							</p:outputLabel>
-						</p:column>
-						<p:column headerText="Fecha Pago" exportable="false" width="8%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.fechaPago}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
-							</p:outputLabel>
-						</p:column>
-						<p:column headerText="Fuente" exportable="false" width="5%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.fuentef.clvfte}" />
-						</p:column>
-						<p:column headerText="Cancelado" exportable="false" width="5%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.cancelado}" />
-						</p:column>
-						<p:column headerText="Acciones" exportable="false" width="5%"
-							styleClass="row-centered">
-							<div class="row no-margin">
-								<div class="col-md-4 ui-noborder left-text flex p0 ">
-									<p:commandLink id="deleteRow" update=":form:msn"
-										oncomplete="PF('confirmFileDelete').show()"
-										image="ui-icon ui-icon-close" title="Eliminar">
-										<f:setPropertyActionListener value="#{object.id}"
-											target="#{contrarecibosMB.idTemporal}" />
-										<h:outputText styleClass="ui-icon ui-icon-close" />
-									</p:commandLink>
-									<p:commandLink
-										update=":form:focusRecibo :form:msn :form:panelForm :form:dataGridFacturas"
-										action="#{contrarecibosMB.onEditRecibo}"
-										image="ui-icon ui-icon-edit" title="Editar">
-										<f:setPropertyActionListener value="#{object}"
-											target="#{contrarecibosMB.recibo}" />
-										<h:outputText styleClass="ui-icon ui-icon-pencil" />
-									</p:commandLink>
-									<p:commandLink
-										update=":form:focusRecibo :form:msn :form:panelForm :form:dataGrid"
-										action="#{contrarecibosMB.cacelarRecibo}"
-										image="ui-icon  ui-icon-cancel" title="Cancelar">
-										<f:setPropertyActionListener value="#{object.id}"
-											target="#{contrarecibosMB.idTemporal}" />
-										<h:outputText styleClass="ui-icon  ui-icon-cancel" />
-									</p:commandLink>
-								</div>
 							</div>
-						</p:column>
-						<p:column headerText="Reportes" exportable="false" width="5%"
-							styleClass="row-centered">
-							<div class="row no-margin">
-								<div class="col-md-4 ui-noborder left-text flex p0 ">
-									<h:commandLink actionListener="#{contrarecibosMB.showPdf}"
-										update=":form:msn :form:inlinePdf">
-										<f:setPropertyActionListener value="#{object.id}"
-											target="#{contrarecibosMB.idTemporal}" />
-										<p:graphicImage value="../reports/pdf.png" width="24" />
-									</h:commandLink>
-									<h:commandLink actionListener="#{contrarecibosMB.showPdfWhite}"
-										update=":form:msn :form:inlinePdf">
-										<f:setPropertyActionListener value="#{object.id}"
-											target="#{contrarecibosMB.idTemporal}" />
-										<p:graphicImage value="../reports/pdfGray.png" width="24" />
-									</h:commandLink>
-								</div>
+						</div>
+						<p:dataTable id="dataGrid" var="object" styleClass="sg-tabla-ancha"
+							value="#{contrarecibosMB.recibos}"
+							emptyMessage="No existen contra-recibos. Los que guardes aparecerán aquí."
+							paginator="true" rows="20"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							widgetVar="dataGrid" paginatorPosition="bottom"
+							rowIndexVar="rowIndexCaptura">
+							<p:column headerText="Folio" exportable="false" style="width: 60px;">
+								<p:outputLabel value="#{object.folio}" styleClass="sg-code" />
+							</p:column>
+							<p:column headerText="Contrato o pedido" exportable="false" style="width: 120px;">
+								<p:outputLabel value="#{object.contratoPedido}" styleClass="sg-code" />
+							</p:column>
+							<p:column headerText="Proveedor" exportable="false" style="width: 170px;">
+								<p:outputLabel value="#{object.proveedor.nombreProveedor}" />
+							</p:column>
+							<p:column headerText="Concepto" exportable="false" style="width: 200px;">
+								<p:outputLabel value="#{object.concepto}" />
+							</p:column>
+							<p:column headerText="Elaboró" exportable="false" style="width: 120px;">
+								<p:outputLabel value="#{object.elaboro}" />
+							</p:column>
+							<p:column headerText="Emisión" exportable="false" style="width: 84px;">
+								<p:outputLabel value="#{object.fechaEmicion}" styleClass="sg-num">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Pago" exportable="false" style="width: 84px;">
+								<p:outputLabel value="#{object.fechaPago}" styleClass="sg-num">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Fuente" exportable="false" style="width: 64px;">
+								<p:outputLabel value="#{object.fuentef.clvfte}" styleClass="sg-code" />
+							</p:column>
+							<p:column headerText="Estado" exportable="false" style="width: 84px;">
+								<h:outputText value="#{empty object.cancelado or empty object.cancelado.trim() ? 'Vigente' : object.cancelado}"
+									styleClass="sg-chip #{empty object.cancelado or empty object.cancelado.trim() ? 'ok' : 'bad'}" />
+							</p:column>
+							<p:column headerText="Acciones" exportable="false" style="width: 110px;"
+								styleClass="sg-acciones-fila">
+								<p:commandLink
+									update=":form:focusRecibo :form:msn :form:panelForm :form:dataGridFacturas"
+									action="#{contrarecibosMB.onEditRecibo}"
+									styleClass="sg-ico" title="Editar">
+									<f:setPropertyActionListener value="#{object}"
+										target="#{contrarecibosMB.recibo}" />
+									<i class="pi pi-pencil" />
+								</p:commandLink>
+								<p:commandLink
+									update=":form:focusRecibo :form:msn :form:panelForm :form:dataGrid"
+									action="#{contrarecibosMB.cacelarRecibo}"
+									styleClass="sg-ico" title="Cancelar / reactivar">
+									<f:setPropertyActionListener value="#{object.id}"
+										target="#{contrarecibosMB.idTemporal}" />
+									<i class="pi pi-ban" />
+								</p:commandLink>
+								<p:commandLink id="deleteRow" update=":form:msn"
+									oncomplete="PF('confirmFileDelete').show()"
+									styleClass="sg-borrar" title="Eliminar">
+									<f:setPropertyActionListener value="#{object.id}"
+										target="#{contrarecibosMB.idTemporal}" />
+									<i class="pi pi-trash" />
+								</p:commandLink>
+							</p:column>
+							<p:column headerText="Reportes" exportable="false" style="width: 74px;"
+								styleClass="sg-acciones-fila">
+								<h:commandLink actionListener="#{contrarecibosMB.showPdf}" styleClass="sg-ico"
+									title="Contra-recibo en PDF">
+									<f:setPropertyActionListener value="#{object.id}"
+										target="#{contrarecibosMB.idTemporal}" />
+									<i class="pi pi-file-pdf" />
+								</h:commandLink>
+								<h:commandLink actionListener="#{contrarecibosMB.showPdfWhite}" styleClass="sg-ico"
+									title="Contra-recibo en PDF sin fondo">
+									<f:setPropertyActionListener value="#{object.id}"
+										target="#{contrarecibosMB.idTemporal}" />
+									<i class="pi pi-file" />
+								</h:commandLink>
+							</p:column>
+						</p:dataTable>
+						<!-- ===== Reporte del dia y exportacion ===== -->
+						<div class="sg-card-b sg-actions sg-cr-pie">
+							<div class="sg-field">
+								<p:outputLabel for="dia" value="Reporte del día" />
+								<p:calendar id="dia" value="#{contrarecibosMB.dia}"
+									maxlength="10" locale="es" size="10" pattern="dd/MM/yyyy"
+									required="true" mask="true"
+									requiredMessage="El campo de Fecha es requerido" timeZone=""
+									maxdate="#{contrarecibosMB.maxDate}"
+									converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+									onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){PF('g').renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 'error'}); this.focus(); }">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:calendar>
 							</div>
-						</p:column>
-						<f:facet name="footer">
-							<p:calendar id="dia" value="#{contrarecibosMB.dia}"
-								maxlength="10" locale="es" size="10" pattern="dd/MM/yyyy"
-								required="true" mask="true" style="width:10%;"
-								requiredMessage="El campo de Fecha es requerido" timeZone=""
-								maxdate="#{contrarecibosMB.maxDate}"
-								converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
-								onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
-							</p:calendar>
-							<p:commandButton update=":form:msn :form:inlinePdf "
-								onstart="PF('blockUIWidget').show();"
-								oncomplete="PF('blockUIWidget').hide();"
-								action="#{contrarecibosMB.pdfContrareciboList}"
-								value="Reporte dia">
-							</p:commandButton>
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" styleClass="sg-btn-sm"
 								title="EXCEL">
-								<p:graphicImage value="../reports/excel.png" width="24" />
+								<i class="pi pi-file-excel" /> Excel
 								<p:fileDownload value="#{contrarecibosMB.fileXls}" />
 							</h:commandLink>
-						</f:facet>
-					</p:dataTable>
+							<p:commandButton update=":form:msn :form:inlinePdf "
+								onstart="PF('blockUIWidget').block();"
+								oncomplete="PF('blockUIWidget').unblock();"
+								action="#{contrarecibosMB.pdfContrareciboList}"
+								icon="pi pi-file-pdf" value="Reporte día">
+							</p:commandButton>
+						</div>
+					</div>
+
 					<p:panel id="inlinePdf" style="border:0px; "
-						visible="#{contrarecibosMB.uuid ne null}">
+						styleClass="sg-visor" visible="#{contrarecibosMB.uuid ne null}">
 						<object type="application/pdf"
-							style="border: 0px; margin-top: 10px;"
 							data="#{request.contextPath}/GetFileInline?uuid=#{contrarecibosMB.uuid}&amp;filename=#{contrarecibosMB.endFilename}"
-							height="480px" width="100%"> Tu browser no puede
+							height="640px" width="100%"> Tu browser no puede
 							desplegar el PDF. </object>
 					</p:panel>
-				</p:panel>
+				</h:panelGroup>
 			</h:form>
 
 			<p:confirmDialog widgetVar="confirmFileDelete"
-				message="Desea eliminar el recibo actual?" header="Confirmación"
-				severity="alert">
+				message="¿Desea eliminar el contra-recibo seleccionado y sus facturas?" header="Confirmación"
+				severity="warn">
 				<p:commandButton value="SI" label="SI"
-					style="margin-top:10px;padding:5px;"
-					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					styleClass="ui-confirmdialog-yes ui-button-danger" icon="pi pi-trash"
 					actionListener="#{contrarecibosMB.deleteContrato}"
 					oncomplete="PF('confirmFileDelete').hide();"
 					update=":form:dataGrid :form:msn :form:panelFacturas  :form:panelForm :form:dataGridFacturas" />
 				<p:commandButton value="NO" label="NO"
-					style="margin-top:10px;padding:5px;"
 					onclick="PF('confirmFileDelete').hide();"
-					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+					styleClass="ui-confirmdialog-no ui-button-outlined" icon="pi pi-times" />
 			</p:confirmDialog>
 			<p:confirmDialog widgetVar="confirmFileDeleteFactura"
-				message="Desea eliminar la factura actual?" header="Confirmación"
-				severity="alert">
+				message="¿Desea eliminar la factura seleccionada?" header="Confirmación"
+				severity="warn">
 				<p:commandButton value="SI" label="SI"
-					style="margin-top:10px;padding:5px;"
-					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					styleClass="ui-confirmdialog-yes ui-button-danger" icon="pi pi-trash"
 					actionListener="#{contrarecibosMB.deleteFactura}"
 					oncomplete="PF('confirmFileDeleteFactura').hide();"
 					update=":form:dataGridFacturas :form:msn :form:panelFacturas" />
 				<p:commandButton value="NO" label="NO"
 					onclick="PF('confirmFileDeleteFactura').hide();"
-					style="margin-top:10px;padding:5px;"
-					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+					styleClass="ui-confirmdialog-no ui-button-outlined" icon="pi pi-times" />
 			</p:confirmDialog>
 
-			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-				<h:panelGrid columns="2">
-					<h:graphicImage value="../reports/indice.png"
-						style="margin-right: 12px; vertical-align: middle;" />
-					<h:outputText value="Por favor espere..."
-						style="white-space: nowrap;" />
-				</h:panelGrid>
-			</pe:blockUI>
 		</ui:define>
 	</ui:composition>
 </h:body>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -22,11 +22,17 @@ span.input-number-small input {
 </style>
 			<h:form id="form1"
 				style="display: inline-block; margin-left: auto; margin-right: auto; text-align: left;">
-				<p:growl id="growlReportador" showDetail="true" sticky="true"
-					autoUpdate="true"></p:growl>
-				<p:panel id="panelReporte" style="text-align: center;"
-					header="Canalización de Participaciones Municipales al Sistema Descentralizado DIF"
-					styleClass="green col-md-9 col-md-offset-2 shadow-panel">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"><p:autoUpdate/></p:growl>
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Canalización de Participaciones Municipales al Sistema Descentralizado DIF</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<div class="row">
 
 						<p:panel styleClass="col-md-12 no-border"
@@ -43,7 +49,7 @@ span.input-number-small input {
 									listener="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.cambiarPagina}"
 									process="dataGrid"
 									update="dataGrid form1:mesInputOri form1:pnlBotonesCRUD" />
-								<p:panelGrid>
+								<p:panelGrid layout="tabular" columns="0">
 									<p:row>
 										<p:column rowspan="3">
 											<h:outputText
@@ -88,23 +94,23 @@ span.input-number-small input {
 												maxlength="13"
 												rendered="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.editando}">
 												<f:convertNumber pattern="###,###.##" for="txtSubsi" />
-												<pe:keyFilter mask="pnum" />
+												<p:keyFilter mask="pnum" />
 											</p:inputText> -->
-											<!-- <pe:inputNumber value="#{entity.subsi}" id="txtSubsi" maxValue="999999999999999"
+											<!-- <p:inputNumber value="#{entity.subsi}" id="txtSubsi" maxValue="999999999999999"
 											rendered="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.editando}"
 											decimalPlaces="2"
 											decimalSeparator="."
 																	
 											>
 											<f:convertNumber pattern="######.##"/>
-											<pe:keyFilter mask="pnum"></pe:keyFilter>
-											</pe:inputNumber> -->
+											<p:keyFilter mask="pnum"></p:keyFilter>
+											</p:inputNumber> -->
 											
-											<pe:inputNumber value="#{entity.subsi}"
+											<p:inputNumber value="#{entity.subsi}"
 												styleClass="input-number-small" decimalPlaces="2"
 												thousandSeparator="," decimalSeparator="."
 												rendered="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.editando}">
-											</pe:inputNumber>
+											</p:inputNumber>
 										</p:column>
 										<p:column>
 											<h:outputText value="#{entity.obssub}"
@@ -130,13 +136,13 @@ span.input-number-small input {
 												maxlength="13"
 												rendered="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.editando}">
 												<f:convertNumber pattern="###,###" for="txtSubsi" />
-												<pe:keyFilter mask="pnum" />
+												<p:keyFilter mask="pnum" />
 											</p:inputText> -->
-											<pe:inputNumber value="#{entity.toting}" id="txtToting"
+											<p:inputNumber value="#{entity.toting}" id="txtToting"
 												styleClass="input-number-small" decimalPlaces="2"
 												thousandSeparator="," decimalSeparator="."
 												rendered="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.editando}">
-											</pe:inputNumber>
+											</p:inputNumber>
 											
 											
 										</p:column>
@@ -155,7 +161,7 @@ span.input-number-small input {
 									</p:row>
 								</p:panelGrid>
 							</p:dataGrid>
-							<p:panelGrid styleClass="col-md-12">
+							<p:panelGrid styleClass="col-md-12" layout="tabular">
 								<h:panelGroup id="pnlBotonesCRUD">
 									<p:commandButton value="Salvar" icon="ui-icon-disk"
 										action="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.salvar}"
@@ -208,12 +214,12 @@ span.input-number-small input {
 											<f:selectItem itemValue="12" itemLabel="12" />
 										</p:selectOneMenu>
 										<p:spacer />
-										<p:commandButton id="generateportepdf"
+										<p:commandButton icon="pi pi-play" id="generateportepdf"
 											onstart="PF('blockUIWidget').block()"
 											action="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.createFilePdfInline}"
-											value="Correcto"
+											value="Generar"
 											oncomplete="PF('blockUIWidget').unblock(); $(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '64em');"
-											update="form1:inlinePdf :form1:growlReportador"
+											update="form1:visor :form1:growlReportador"
 											style="padding:2px;">
 										</p:commandButton>
 									</h:panelGrid>
@@ -221,26 +227,27 @@ span.input-number-small input {
 
 							</p:panel>
 						</div>
-						<p:panel id="inlinePdf" style="border:0px"
-							visible="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.uuid ne null}">
-
-							<object type="application/pdf" style="margin-top: 1em;"
-								data="#{request.contextPath}/GetFileInline?uuid=#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.uuid}&amp;filename=#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.endFilename}"
-								height="380px" width="100%"> Tu browser no puede
-								desplegar el PDF. </object>
-
-						</p:panel>
 					</div>
-				</p:panel>
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.uuid ne null}">
 
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+								<object type="application/pdf" style="margin-top: 1em;"
+									data="#{request.contextPath}/GetFileInline?uuid=#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.uuid}&amp;filename=#{indicadorMensualCanalizacionParticipacionesMunicipalesSistemaDescentralizadoDIFMB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
+
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+
 				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
 					message="Desea eliminar el registro actual?" header="Confirmación"
 					severity="alert">

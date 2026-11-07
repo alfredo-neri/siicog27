@@ -2,21 +2,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Avance Presupuestal de Egresos Anexo 3"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Avance Presupuestal de Egresos Anexo 3</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
 
-						<p:panelGrid columns="3" styleClass="ui-noborder">
+						<p:panelGrid columns="3" styleClass="ui-noborder" layout="tabular">
 
 							<h:outputText value="Mes: " for="mesInputOri" />
 							<p:selectOneMenu id="idDependencia" value="#{rF00912010MB.mes}">
@@ -38,25 +45,25 @@
 							</p:selectOneMenu>
 
 						</p:panelGrid>
-						<p:panelGrid columns="2" styleClass="ui-noborder green">
+						<p:panelGrid columns="2" styleClass="ui-noborder green" layout="tabular">
 							<!-- <p:commandButton value="Vista Previa" id="preView"
 								actionListener="#{rF00912010MB.preView}" icon="ui-icon-zoomout"
 								update=":form1:preViewTxt" onclick="PF('preViewTxtWg').show();" /> -->
-							<p:commandButton id="generateportepdf"
+							<p:commandButton icon="pi pi-play" id="generateportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
-								action="#{rF00912010MB.executeProcedure}" value="Correcto"
+								action="#{rF00912010MB.executeProcedure}" value="Generar"
 								ajax="false">
 							</p:commandButton>
 							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-								title="EXCEL">
-								<p:graphicImage value="excel.png" width="24" />
+								title="EXCEL" styleClass="sg-btn-sm">
+								<i class="pi pi-file-excel" /> Excel
 								<p:fileDownload value="#{rF00912010MB.fileXls}" />
 							</h:commandLink>
 						</p:panelGrid>
 					</p:panelGrid>
 
-					<p:panelGrid>
+					<p:panelGrid layout="tabular">
 						<p:outputLabel rendered="#{rF00912010MB.bPreView}"
 							style="max-height: 400px; min-height: 400px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
 							<p:inputTextarea cols="230" id="preViewTxt"
@@ -66,8 +73,9 @@
 								value="#{rF00912010MB.txtPreview}" />
 						</p:outputLabel>
 					</p:panelGrid>
-
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 
 			</h:form>
 

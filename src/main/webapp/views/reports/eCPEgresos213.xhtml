@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,50 +13,56 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Estado Comparativo Presupuestal de Egresos"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Estado Comparativo Presupuestal de Egresos</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 
-					<p:panelGrid columns="9" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="9" styleClass="col-centered ui-noborder" layout="tabular">
 
-						<p:panelGrid columns="4" styleClass="ui-noborder">
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 
-							<p:commandButton id="generateportepdf"
+							<p:commandButton icon="pi pi-play" id="generateportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
-								action="#{eCPEgresos213MB.createFilePdfInline}" value="Correcto"
-								update="form1:inlinePdf, :form1:growlReportador"
-								styleClass="btn btn-default">
+								action="#{eCPEgresos213MB.createFilePdfInline}" value="Generar"
+								update="form1:visor, :form1:growlReportador">
 							</p:commandButton>
 
 							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-								title="EXCEL">
-								<p:graphicImage value="excel.png" width="24" />
+								title="EXCEL" styleClass="sg-btn-sm">
+								<i class="pi pi-file-excel" /> Excel
 								<p:fileDownload value="#{eCPEgresos213MB.fileXls}" />
 							</h:commandLink>
 
 						</p:panelGrid>
 					</p:panelGrid>
 
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{eCPEgresos213MB.uuid ne null}">
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (eCPEgresos213MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{eCPEgresos213MB.uuid ne null}">
 
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{eCPEgresos213MB.uuid}&amp;filename=#{eCPEgresos213MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{eCPEgresos213MB.uuid}&amp;filename=#{eCPEgresos213MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
 
-					</p:panel>
-
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

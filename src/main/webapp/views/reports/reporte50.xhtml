@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -13,9 +13,16 @@
 			<h:form id="form1">
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<p:panel id="idPanel"
-					header="Evaluar el Desempeño Mensual del GEM, en la Transferencia de los Recursos a los Municipios"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="idPanel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Evaluar el Desempeño Mensual del GEM, en la Transferencia de los Recursos a los Municipios</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 						<p:commandButton value="Si" type="button"
 							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
@@ -31,7 +38,7 @@
 						rowIndexVar="rowIndex">
 
 						<p:column>
-							<p:panelGrid columns="4">
+							<p:panelGrid columns="4" layout="tabular">
 
 								<p:column>
 									<h:outputText value="Mensual" />
@@ -47,7 +54,7 @@
 										<p:ajax event="blur"
 											listener="#{reporte50MB.findMonth(objects.mensual, rowIndex)}"
 											update=":form1:object, :form1:messagesEdit, :form1:object:mensual"></p:ajax>
-										<pe:keyFilter for="mensual" mask="pint"></pe:keyFilter>
+										<p:keyFilter for="mensual" mask="pint"></p:keyFilter>
 
 										<f:convertNumber pattern="00" /> -->
 									<p:selectOneMenu id="idmesCon" size="18"
@@ -80,7 +87,7 @@
 
 									<p:inputText value="#{objects.ncbfism}" id="ncbfism"
 										disabled="#{reporte50MB.bReset}" maxlength="10">
-										<pe:keyFilter  regEx="/[0-9]{1,10}/"  />
+										<p:keyFilter  regEx="/[0-9]{1,10}/"  />
 									</p:inputText>
 								</p:column>
 								<p:column>
@@ -90,15 +97,15 @@
 								</p:column>
 								<p:column>
 
-									<!-- <pe:inputNumber value="#{objects.ncbfor}" id="ncbfor"
+									<!-- <p:inputNumber value="#{objects.ncbfor}" id="ncbfor"
 										disabled="#{reporte50MB.bReset}" maxValue="9999999999"
 										converter="#{Doube}" maxlength="10" decimalPlaces="0"
 										decimalSeparator="" thousandSeparator="">
 
-									</pe:inputNumber> -->
+									</p:inputNumber> -->
 									<p:inputText value="#{objects.ncbfor}" id="ncbfor"
 										disabled="#{reporte50MB.bReset}" maxlength="10" size="20"  >
-										<pe:keyFilter for="ncbfor" regEx="/[0-9]{1,10}/" mask="pint" />
+										<p:keyFilter for="ncbfor" regEx="/[0-9]{1,10}/" mask="pint" />
 									</p:inputText>
 								</p:column>
 								<p:column>
@@ -108,7 +115,7 @@
 									<p:inputText value="#{objects.mminfism}" id="mminfism"
 										disabled="#{reporte50MB.bReset}">
 										<f:convertNumber pattern="###,###,##0.00" type="number"  for="mminfor" />
-										<pe:keyFilter for="mminfism"  mask="pnum" />
+										<p:keyFilter for="mminfism"  mask="pnum" />
 									</p:inputText>
 								</p:column>
 								<p:column>
@@ -120,7 +127,7 @@
 									<p:inputText value="#{objects.mminfor}" id="mminfor"
 										disabled="#{reporte50MB.bReset}">
 										<f:convertNumber pattern="###,###,##0.00" type="number"  for="mminfor" />
-										<pe:keyFilter for="mminfor"  mask="pnum" />
+										<p:keyFilter for="mminfor"  mask="pnum" />
 									</p:inputText>
 								
 								
@@ -176,7 +183,7 @@
 										onkeypress="if(event.keyCode == 13){ return false; }" />
 								</p:column>
 							</p:panelGrid>
-							<p:panelGrid id="buttons">
+							<p:panelGrid id="buttons" layout="tabular">
 								<p:commandButton value="Modificar" id="modificar"
 									actionListener="#{reporte50MB.modify(rowIndex)}"
 									rendered="#{reporte50MB.bVisible}"
@@ -212,16 +219,8 @@
 						</p:column>
 
 					</p:dataTable>
-					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-						<h:panelGrid columns="2">
-							<h:graphicImage value="../catalogs/please_wait.gif"
-								style="margin-right: 12px; vertical-align: middle;" />
-							<h:outputText value="Por favor espere..."
-								style="white-space: nowrap;" />
-						</h:panelGrid>
-					</pe:blockUI>
 					<p:panelGrid id="pgrid2" columns="4"
-						styleClass="col-centered row-centered">
+						styleClass="col-centered row-centered" layout="tabular">
 						<h:outputText value="Mes a Consultar" for="idmesCon" />
 						<p:selectOneMenu id="idmesReporte" size="18"
 							value="#{reporte50MB.mes}">
@@ -232,9 +231,9 @@
 						<p:commandButton id="generateportepdf"
 							onstart="PF('blockUIWidget').block()"
 							oncomplete="PF('blockUIWidget').unblock()"
-							action="#{reporte50MB.generatePdf}" value="Correcto"
+							action="#{reporte50MB.generatePdf}" value="Generar"
 							icon="ui-icon-arrowthick-1-s"
-							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit">
+							update="form1:visor, :form1:idPanel, :form1:messagesEdit">
 
 						</p:commandButton>
 
@@ -246,16 +245,25 @@
 						</p:commandButton>
 
 					</p:panelGrid>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte50MB.uuid ne null}">
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte50MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte50MB.uuid ne null}">
 
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte50MB.uuid}&amp;filename=#{reporte50MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte50MB.uuid}&amp;filename=#{reporte50MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
 
-					</p:panel>
-				</p:panel>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 			<script>
 function maximo(campo,limite){

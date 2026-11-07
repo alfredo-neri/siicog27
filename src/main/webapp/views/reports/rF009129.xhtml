@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -17,11 +17,18 @@
 					<p:fileDownload value="#{rF009129MB.fileTxt}" />
 				</p:commandButton>
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Estado de Avance Presupuestal de Egresos por Dependencia Auxiliar y Fuente de Financiamiento"
-					styleClass="green col-md-7 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Estado de Avance Presupuestal de Egresos por Dependencia Auxiliar y Fuente de Financiamiento</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 
-					<p:panelGrid columns="7" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="7" styleClass="col-centered ui-noborder" layout="tabular">
 
 						<h:outputText value="Mes: " for="mesInputOri" />
 						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
@@ -49,7 +56,7 @@
 
 
 
-						<p:panelGrid columns="4" styleClass="ui-noborder">
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 							<!-- 	<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
 								title="PDF">
 								<p:graphicImage value="pdf.png" width="24" />
@@ -78,42 +85,42 @@
 									 -->
 
 
+							<p:commandButton value="Generar"
+								actionListener="#{rF009129MB.downloadTxt}"
+								update=":form1:growlReportador" icon="ui-icon-document" />
+
+
 							<p:commandButton id="generateportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
 								action="#{rF009129MB.viewTxt}" value="Vista Previa"
-								update="form1:inlinePdf, :form1:growlReportador"
+								update="form1:visor, :form1:growlReportador"
 								styleClass="btn btn-default">
 							</p:commandButton>
-
-
-							<p:commandButton value="Correcto"
-								actionListener="#{rF009129MB.downloadTxt}"
-								update=":form1:growlReportador" icon="ui-icon-document" />
 
 						</p:panelGrid>
 					</p:panelGrid>
 
 
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{rF009129MB.uuid ne null}">
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (rF009129MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{rF009129MB.uuid ne null}">
 
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{rF009129MB.uuid}&amp;filename=#{rF009129MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{rF009129MB.uuid}&amp;filename=#{rF009129MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
 
-					</p:panel>
-
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 
 		</ui:define>

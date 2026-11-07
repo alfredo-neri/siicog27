@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,11 +13,18 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Estado de Avance Presupuestal de Egresos Por Secretaría"
-					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Estado de Avance Presupuestal de Egresos Por Secretaría</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 
-					<p:panelGrid columns="6" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="6" styleClass="col-centered ui-noborder" layout="tabular">
 
 						<h:outputText value="Mes: " for="mesInputOri" />
 						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
@@ -37,7 +44,7 @@
 
 
 
-						<!-- <p:panelGrid columns="4" styleClass="ui-noborder">
+						<!-- <p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 
 							<h:commandLink  onclick="PrimeFaces.monitorDownload(start, stop);"
 								title="EXCEL">
@@ -63,7 +70,7 @@
 						<p:commandButton value="Vista Previa" id="preView"
 							actionListener="#{rF00912011MB.preView}" icon="ui-icon-zoomout"
 							update=":form1:preViewTxt" onclick="PF('preViewTxtWg').show();" />
-						<p:commandButton value="Correcto" ajax="false"
+						<p:commandButton value="Generar" ajax="false"
 							onclick="PrimeFaces.monitorDownload(start, stop);"
 							icon="ui-icon-arrowthick-1-s"
 							actionListener="#{rF00912011MB.downLoadFile}">
@@ -93,7 +100,7 @@
 
 					</p:panel>
  -->
-					<p:panelGrid>
+					<p:panelGrid layout="tabular">
 						<p:outputLabel rendered="#{rF00912011MB.bPreView}"
 							style="max-height: 400px; min-height: 400px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
 							<p:inputTextarea cols="270" id="preViewTxt"
@@ -107,7 +114,9 @@
 
 						</div> -->
 					</p:panelGrid>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 				<!-- <pe:blockUI widgetVar="blockUIWidget" centerX="false">
 					<h:panelGrid columns="2">
 						<h:graphicImage value="indice.png"

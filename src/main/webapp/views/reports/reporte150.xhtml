@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,10 +13,17 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<p:panel id="panelReporte"
-					header="Auditor&iacute;as Practicadas por la Contralor&iacute;a Municipal"
-					styleClass="green col-md-10 col-centered row-centered shadow-panel">
-					<p:panelGrid id="grid1" styleClass="col-centered">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Auditor&iacute;as Practicadas por la Contralor&iacute;a Municipal</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid id="grid1" styleClass="col-centered" layout="tabular" columns="0">
 						<p:row>
 							<p:column style="width : 20%; text-align: right;" />
 							<p:column style="width : 20%; text-align: right;">
@@ -46,7 +53,7 @@
 									rendered="#{reporte150MB.bLbl}">
 									<f:convertNumber pattern="###,##0" />
 								</p:outputLabel>
-								<pe:inputNumber id="numpolarm" decimalPlaces="0"
+								<p:inputNumber id="numpolarm" decimalPlaces="0"
 									value="#{reporte150MB.pm4111.nac}"
 									rendered="#{reporte150MB.bTxt}" maxValue="999999999"
 									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}" />
@@ -72,7 +79,7 @@
 									rendered="#{reporte150MB.bLbl}">
 									<f:convertNumber pattern="###,##0" />
 								</p:outputLabel>
-								<pe:inputNumber id="numtotpol" decimalPlaces="0"
+								<p:inputNumber id="numtotpol" decimalPlaces="0"
 									value="#{reporte150MB.pm4111.nap}"
 									rendered="#{reporte150MB.bTxt}" maxValue="999999999"
 									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}" />
@@ -88,7 +95,7 @@
 							</p:column>
 						</p:row>
 					</p:panelGrid>
-					<p:panelGrid id="buttons">
+					<p:panelGrid id="buttons" layout="tabular">
 						<p:commandButton value="Salvar"
 							actionListener="#{reporte150MB.save}"
 							update=":form1:panelReporte, :form1:messagesEdit"
@@ -107,7 +114,7 @@
 							actionListener="#{reporte150MB.add}" icon="ui-icon-circle-plus"
 							disabled="#{reporte150MB.bAdd}" />
 						<p:commandButton value="Borrar" id="borrar"
-							update=":form1:panelReporte, :form1:messagesEdit, :form1:inlinePdf"
+							update=":form1:panelReporte, :form1:messagesEdit, :form1:visor"
 							disabled="#{reporte150MB.bBorrar}" icon="ui-icon-trash"
 							actionListener="#{reporte150MB.delete}">
 							<p:confirm header="Confirmación"
@@ -118,23 +125,32 @@
 							actionListener="#{reporte150MB.cancel}"
 							icon="ui-icon-circle-close" disabled="#{reporte150MB.bLbl}" />
 					</p:panelGrid>
-					<p:panelGrid id="gridreport">
+					<p:panelGrid id="gridreport" layout="tabular">
 						<p:commandButton id="generateportepdf"
 							onstart="PF('blockUIWidget').block()"
-							action="#{reporte150MB.createFilePdfInline}" value="Correcto"
+							action="#{reporte150MB.createFilePdfInline}" value="Generar"
 							icon="ui-icon-circle-check"
 							oncomplete="PF('blockUIWidget').unblock(); $(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '64em');"
-							update="form1:inlinePdf :form1:messagesEdit" style="padding:2px;">
+							update="form1:visor :form1:messagesEdit" style="padding:2px;">
 						</p:commandButton>
 					</p:panelGrid>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte150MB.uuid ne null}">
-						<object type="application/pdf" style="margin-top: 1em;"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte150MB.uuid}&amp;filename=#{reporte150MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
-					</p:panel>
-				</p:panel>
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte150MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte150MB.uuid ne null}">
+								<object type="application/pdf" style="margin-top: 1em;"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte150MB.uuid}&amp;filename=#{reporte150MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 					<p:commandButton value="Si" type="button"
 						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

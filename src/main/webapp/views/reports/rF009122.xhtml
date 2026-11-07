@@ -2,10 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
+	xmlns:c="jakarta.tags.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -30,10 +30,17 @@
 					onclick="PrimeFaces.monitorDownload(start, stop);">
 					<p:fileDownload value="#{rF009122MB.excel}" />
 				</p:commandButton>
-				<p:panel id="panel"
-					header="Estado de Avance Presupuestal de Egresos por Finalidad"
-					styleClass="green col-md-6 col-centered row-centered shadow-panel">
-					<p:panelGrid styleClass="ui-noborder">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Estado de Avance Presupuestal de Egresos por Finalidad</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 						<p:row>
 							<p:column>
 								<h:outputText value="Mes: " for="mesInputOri" />
@@ -71,14 +78,14 @@
 								</p:commandButton> -->
 								<p:commandLink title="EXCEL" rendered="#{rF009122MB.banderaC}"
 									update=":form1:messagesEdit, :form1:downXls"
-									actionListener="#{rF009122MB.downloadXls}">
-									<p:graphicImage value="excel.png" width="24" />
+									actionListener="#{rF009122MB.downloadXls}" styleClass="sg-btn-sm">
+									<i class="pi pi-file-excel" /> Excel
 
 								</p:commandLink>
 								<p:commandLink actionListener="#{rF009122MB.downloadTxt}"
 									rendered="#{rF009122MB.banderaM}"
-									update=":form1:messagesEdit, :form1:downTxt" title="TXT">
-									<p:graphicImage value="txt.png" width="24" />
+									update=":form1:messagesEdit, :form1:downTxt" title="TXT" styleClass="sg-btn-sm">
+									<i class="pi pi-file" /> TXT
 
 								</p:commandLink>
 
@@ -91,7 +98,9 @@
 							</p:column>
 						</p:row>
 					</p:panelGrid>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 
 		</ui:define>

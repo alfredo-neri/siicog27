@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -15,7 +15,7 @@
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
 				<p:panel id="panelReporte" header="Auxiliar de Cuentas"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="6" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="6" styleClass="col-centered ui-noborder" layout="tabular">
 						<h:outputText value="Cuenta" />
 						<p:inputText value="#{auxiliarCuentaMB.cta}" size="4" maxlength="4" />
 						<h:outputText value="Mes: " for="mesInputOri" />
@@ -24,13 +24,7 @@
 							<f:selectItems value="#{auxiliarCuentaMB.listMes}" var="mes"
 								itemValue="#{mes.periodo}" itemLabel="#{mes.periodo}" />
 						</p:selectOneMenu>
-						<p:panelGrid columns="4" styleClass="ui-noborder">
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-								title="EXCEL">
-								<p:graphicImage value="../reports/excel.png" width="24" />
-								<p:fileDownload value="#{auxiliarCuentaMB.fileXls}" />
-							</h:commandLink>
-
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 							<p:commandButton id="generareportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
@@ -38,6 +32,12 @@
 								value="Correcto"
 								update="form1:inlinePdf, :form1:growlReportador">
 							</p:commandButton>
+
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload value="#{auxiliarCuentaMB.fileXls}" />
+							</h:commandLink>
 
 						</p:panelGrid>
 					</p:panelGrid>
@@ -53,14 +53,6 @@
 					</p:panel>
 
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../reports/indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 
 		</ui:define>

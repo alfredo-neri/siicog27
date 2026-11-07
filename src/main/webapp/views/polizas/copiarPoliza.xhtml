@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -79,7 +79,7 @@
 										disabled="#{polizaCopiarMB.render}" required="true"
 										requiredMessage="El campo POLIZA ORIGINAL - No. P&oacute;liza es requerido"
 										value="#{polizaCopiarMB.oriConpol}">
-										<pe:keyFilter for="polizaIniInputOri" mask="pint"></pe:keyFilter>
+										<p:keyFilter for="polizaIniInputOri" mask="pint"></p:keyFilter>
 										<f:convertNumber pattern="000000" />
 										<p:ajax event="blur" update="polizaIniInputOri"></p:ajax>
 									</p:inputText>
@@ -104,7 +104,7 @@
 										disabled="#{polizaCopiarMB.render}">
 										<f:selectItems value="#{polizaCopiarMB.listMes}" var="item"
 											itemValue="#{item.mes}" itemLabel="#{item.mes}" />
-										<p:ajax event="change" execute="@this"
+										<p:ajax event="change" process="@this"
 											listener="#{polizaCopiarMB.findConpol}"
 											update=":form1:polizaIniInputDest"></p:ajax>
 									</p:selectOneMenu>
@@ -118,7 +118,7 @@
 										<f:selectItems value="#{polizaCopiarMB.lisCattpo}"
 											var="itemTpo" itemValue="#{itemTpo.tippol}"
 											itemLabel="#{itemTpo.tippol}" />
-										<p:ajax event="change" execute="@this"
+										<p:ajax event="change" process="@this"
 											listener="#{polizaCopiarMB.findConpol}"
 											update=":form1:polizaIniInputDest"></p:ajax>
 									</p:selectOneMenu>
@@ -132,7 +132,7 @@
 										requiredMessage="El campo POLIZA DESTINO - No. P&oacute;liza es requerido"
 										disabled="true" value="#{polizaCopiarMB.destConpol}">
 										<f:convertNumber pattern="000000" />
-										<pe:keyFilter for="polizaIniInputDest" mask="pint"></pe:keyFilter>
+										<p:keyFilter for="polizaIniInputDest" mask="pint"></p:keyFilter>
 									</p:inputText>
 								</div>
 
@@ -156,14 +156,6 @@
 				</p:panel>
 				<br />
 				<br />
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../catalogs/please_wait.gif"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 		</ui:define>
 	</ui:composition>

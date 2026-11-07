@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -14,8 +14,8 @@
 
 			<h:form id="form1">
 				<p:remoteCommand name="onload" update=":form1:objects"
-					onstart="PF('blockUIWidget').block();"
-					oncomplete="PF('blockUIWidget').unblock();PF('tbCuentas').selectRow(0);" />
+					onstart="start();"
+					oncomplete="stop();PF('tbCuentas').selectRow(0);" />
 				<p:remoteCommand name="updateMsg" update=":form1:messagesEdit"
 					actionListener="#{consultaCuentasMB.validateStatus}" />
 				<p:remoteCommand name="findAcc"
@@ -118,14 +118,6 @@
 					</h:panelGrid>
 				</p:panel>
 
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../catalogs/please_wait.gif"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 
 				<br />
 

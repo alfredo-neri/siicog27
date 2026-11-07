@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -21,7 +21,7 @@
 					header="Estado de Cambios en la Situación Financiera"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
 
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder" layout="tabular">
 						<h:outputText value="Mes: " for="mesInputOri"
 							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
 						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
@@ -40,12 +40,7 @@
 							<f:selectItem itemValue="12" itemLabel="12" />
 						</p:selectOneMenu>
 
-						<p:panelGrid columns="4" styleClass="ui-noborder">
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-								title="EXCEL">
-								<p:graphicImage value="../reports/excel.png" width="24" />
-								<p:fileDownload value="#{estadoCambiosSFBCMB2.downloadXls()}" />
-							</h:commandLink>
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 							<p:commandButton id="generateportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
@@ -53,6 +48,11 @@
 								update="form1:inlinePdf, :form1:growlReportador"
 								>
 							</p:commandButton>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload value="#{estadoCambiosSFBCMB2.downloadXls()}" />
+							</h:commandLink>
 							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
 								title="TXT">
 								<p:graphicImage value="../reports/txt.png" width="24" />
@@ -68,14 +68,6 @@
 							desplegar el PDF. </object>
 					</p:panel>
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../reports/indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 
 		</ui:define>

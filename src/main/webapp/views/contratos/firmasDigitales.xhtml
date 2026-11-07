@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -34,9 +34,9 @@
 						showDetail="true" />
 					<p:focus id="focus" />
 					<p:panelGrid columns="2"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:panelGrid columns="1"
-							styleClass="col-centered row-centered ui-noborder ">
+							styleClass="col-centered row-centered ui-noborder " layout="tabular">
 							<p:panel id="panelDraw">
 								<p>Crea tu firma</p>
 								<div id="container">
@@ -55,15 +55,10 @@
 							<p:panel>
 								<p>Carga una imagen con tu firma</p>
 								<p:fileUpload id="fileCarga"
-									fileUploadListener="#{firmasDigitalesMB.handleFileUpload}"
-									mode="advanced" dragDropSupport="false" multiple="false"
+									listener="#{firmasDigitalesMB.handleFileUpload}"
+									mode="advanced" dragDrop="false" multiple="false"
 									update=":form1:messages fileCarga :form1:panelImg"
-									sizeLimit="10485760" fileLimit="1"
-									allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
-									invalidSizeMessage="Tamaño invalido de archivo."
-									invalidFileMessage="Tipo invalido de archivo."
-									fileLimitMessage="Solo se permite un archivo a la vez"
-									cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+									cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar"><p:validateFile sizeLimit="10485760" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" fileLimit="1"/>
 								</p:fileUpload>
 							</p:panel>
 						</p:panelGrid>

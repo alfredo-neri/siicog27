@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,47 +13,64 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Matriz de Ingresos"
-					styleClass="green col-md-10 col-centered row-centered shadow-panel">
-					<p:focus context="ctrlPanel" />
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder"
-						id="ctrlPanel">
-						<h:outputText value="Tipo Matriz: " for="mesInputOri" />
-						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
-							value="#{catalogMatrixIngresosMB.tipoMatriz}">
-							<f:selectItem itemLabel="Ingresos Devengados"
-								itemValue="D"></f:selectItem>
-							<f:selectItem itemLabel="Ingresos Recaudados"
-										  itemValue="R"></f:selectItem>
-						</p:selectOneMenu>
+				<!--
+					SIICOG: encabezado y tarjetas como Dependencias. Mismos ids (panelReporte, ctrlPanel,
+					mesInputOri, generateportepdf, objects), acción y update; «Correcto» pasa a «Generar» y el
+					título de la tabla (titleTable) va en el encabezado de la tarjeta.
+				-->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Matriz de Ingresos</h1>
+						</div>
+					</div>
 
-						<p:panelGrid columns="4" styleClass="ui-noborder">
+					<!-- ===== Tipo de matriz ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Tipo de matriz</h2>
+						</div>
+						<h:panelGroup id="ctrlPanel" layout="block" styleClass="sg-card-b">
+							<p:focus context="ctrlPanel" />
+							<div class="sg-fields" style="grid-template-columns: minmax(0, 280px);">
+								<div class="sg-field">
+									<p:outputLabel for="mesInputOri" value="Tipo de matriz" />
+									<p:selectOneMenu id="mesInputOri" editable="false"
+										value="#{catalogMatrixIngresosMB.tipoMatriz}">
+										<f:selectItem itemLabel="Ingresos Devengados"
+											itemValue="D"></f:selectItem>
+										<f:selectItem itemLabel="Ingresos Recaudados"
+											itemValue="R"></f:selectItem>
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="sg-actions" style="margin-top: 16px;">
+								<p:commandButton id="generateportepdf" icon="pi pi-play"
+									onstart="PF('blockUIWidget').block()"
+									oncomplete="PF('blockUIWidget').unblock()"
+									action="#{catalogMatrixIngresosMB.generateMatriz}"
+									value="Generar"
+									update="form1:growlReportador, :form1:objects, :form1:tituloMatriz" />
+							</div>
+						</h:panelGroup>
+					</div>
 
-							<p:commandButton id="generateportepdf"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()"
-								action="#{catalogMatrixIngresosMB.generateMatriz}"
-								value="Correcto"
-								update="form1:growlReportador, :form1:objects"
-								styleClass="btn btn-default">
-							</p:commandButton>
-
-						</p:panelGrid>
-					</p:panelGrid>
+					<!-- ===== Matriz ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2><h:outputText id="tituloMatriz" value="#{empty catalogMatrixIngresosMB.titleTable ? 'Matriz' : catalogMatrixIngresosMB.titleTable}" /></h2>
+						</div>
 					<p:dataTable id="objects" binding="#{table}" var="object"
-								 value="#{catalogMatrixIngresosMB.listMatrizIngresos}" styleClass="et_datatable green"
-								 emptyMessage="No hay registros" editable="true" paginator="true"
+								 value="#{catalogMatrixIngresosMB.listMatrizIngresos}" styleClass="et_datatable"
+								 emptyMessage="Elige el tipo de matriz y pulsa Generar." editable="true" paginator="true"
 								 rows="15"
 								 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 								 selectionMode="single" rowKey="#{object.id}">
 
-						<f:facet name="header">
-							<h:outputText value="#{catalogMatrixIngresosMB.titleTable}" />
-						</f:facet>
-
 						<p:column headerText="Consecutivo" width="7%">
-							<h:outputText value="#{object.consecutivo}" />
+							<h:outputText value="#{object.consecutivo}" styleClass="sg-code" />
 						</p:column>
 						<p:column headerText="Tipo - CRI" width="7%">
 							<h:outputText value="#{object.tipoCri}" />
@@ -80,15 +97,8 @@
 							<h:outputText value="#{object.cuentaAbono}" />
 						</p:column>
 					</p:dataTable>
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+					</div>
+				</h:panelGroup>
 			</h:form>
 
 		</ui:define>

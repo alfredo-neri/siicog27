@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,11 +13,19 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte" header="Resumen de Quincenas"
-					styleClass="green col-md-5 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Resumen de Quincenas</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder" layout="tabular">
 						<p:outputLabel id="lblNum" value="N&uacute;mero:" />
-						<pe:inputNumber id="num" decimalPlaces="0"
+						<p:inputNumber id="num" decimalPlaces="0"
 							value="#{reporte70MB.numero}" thousandSeparator=""
 							maxValue="999999" maxlength="6" size="6" />
 						<p:outputLabel id="lblMes" value="Mes:" />
@@ -25,8 +33,8 @@
 							<f:selectItems value="#{reporte70MB.listMes}" var="meses"
 								itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
 						</p:selectOneMenu>
-						<p:panelGrid columns="4" styleClass="ui-noborder">
-							<p:commandButton id="correcto" ajax="false" value="Correcto"
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
+							<p:commandButton icon="pi pi-play" id="correcto" ajax="false" value="Generar"
 								onclick="PrimeFaces.monitorDownload(start, stop);"
 								actionListener="#{reporte70MB.downLoadFile}"
 								update=":form1:growlReportador">
@@ -34,15 +42,9 @@
 							</p:commandButton>
 						</p:panelGrid>
 					</p:panelGrid>
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

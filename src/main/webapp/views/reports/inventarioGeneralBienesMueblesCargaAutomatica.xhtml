@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -16,28 +16,28 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Carga Autimatica de Bienes Muebles"
-					styleClass="green col-md-5 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Carga Autimatica de Bienes Muebles</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder" layout="tabular">
 
-						<p:fileUpload fileUploadListener="#{bean.handleFileUpload}"
-							id="file" mode="advanced" dragDropSupport="false"
-							update="growlReportador, form1:file" sizeLimit="4000000"
-							fileLimit="1" allowTypes="/(bienesm.)(csv)$/" accept=".csv"
+						<p:fileUpload listener="#{bean.handleFileUpload}"
+							id="file" mode="advanced" dragDrop="false"
+							update="growlReportador, form1:file" accept=".csv"
 							onstart="PF('blockUIWidget').block()"
 							oncomplete="PF('blockUIWidget').unblock()" label="Seleccionar"
-							cancelLabel="Cancelar" uploadLabel="Cargar" />
+							cancelLabel="Cancelar" uploadLabel="Cargar"><p:validateFile sizeLimit="4000000" allowTypes="/(bienesm.)(csv)$/" fileLimit="1"/></p:fileUpload>
 					</p:panelGrid>
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

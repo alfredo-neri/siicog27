@@ -2,67 +2,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+	xmlns:c="jakarta.tags.core"
+	xmlns:fmt="jakarta.tags.fmt">
 
 <h:body>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
 
-			<style>
-.ui-accordion .ui-accordion-header.ui-state-default {
-	margin-bottom: 2px;
-	border: 1px solid #E5E5E5;
-	background-color: ##b99056;
-	font-weight: bold;
-	color: #000;
-}
-
-.ui-tabs.ui-tabs-left>.ui-tabs-nav li a, .ui-tabs.ui-tabs-right>.ui-tabs-nav li a
-	{
-	width: 100%;
-}
-
-.ui-tabs-left>.ui-tabs-nav {
-	float: left;
-	width: 23%;
-	height: auto;
-	background-image: none;
-	padding-top: 5px;
-}
-
-.ui-datatable .ui-row-toggler {
-	cursor: pointer;
-	margin-left: -9px;
-}
-
-.ui-widget-header .ui-inputfield, .ui-widget-content .ui-inputfield {
-	font-weight: normal;
-	width: 100%;
-}
-
-label {
-	display: inline-block;
-	max-width: 100%;
-	margin-bottom: 0px;
-	font-weight: 700;
-}
-
-.ui-tabs.ui-widget-content {
-	background: transparent none;
-	border: 0 !important;
-}
-</style>
+			<!--
+				SIICOG fase 2: estructura del prototipo (sicog-pantallas.html, "Control Presupuestario").
+				La pantalla ya tenia la estructura del prototipo (FAM/PAD > area > acciones a la izquierda > contratos),
+				asi que no se cambian componentes, ids, listeners ni update: solo se agrega el encabezado y el aspecto
+				vive en siicog.css (clase sg-control). Se retiro el bloque <style> en linea (tenia un color invalido).
+			-->
 			<h:form id="form">
 
 				<p:growl id="messages" showDetail="true" sticky="true"></p:growl>
+				<div class="sg-page-h" style="margin-bottom: 20px;">
+					<div>
+						<div class="sg-crumbs">Presupuesto y finanzas / Control Presupuestal</div>
+						<h1>Control Presupuestario</h1>
+					</div>
+				</div>
 				<p:panel id="panelReporte" header="Control Presupuestario"
-					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+					styleClass="sg-control">
 
 					<p:panel id="fam" header="#{controlPresupuestalMB.fam.concepto}"
 						collapsed="#{controlPresupuestalMB.toggleFAM}" toggleSpeed="500"
@@ -287,7 +255,7 @@ label {
 
 									<p:tab title="#{obra.contrato.nombreObra}" id="accions">
 
-										<p:panelGrid style="width:100%;">
+										<p:panelGrid style="width:100%;" layout="tabular" columns="0">
 											<f:facet name="header">
 												<p:row>
 													<p:column rowspan="3">No. de Contrato</p:column>
@@ -382,7 +350,7 @@ label {
 
 											</p:column>
 											<p:rowExpansion>
-												<p:panelGrid style="width:100%;">
+												<p:panelGrid style="width:100%;" layout="tabular" columns="0">
 													<f:facet name="header">
 														<p:row>
 															<p:column style="width:20%">Estimaci&oacute;n</p:column>
@@ -491,9 +459,9 @@ label {
 							value="#{controlPresupuestalMB.listAccions}"
 							selection="#{controlPresupuestalMB.selectedAccions}"
 							rowKey="#{car.id}" style="margin-bottom:0"
-							emptyMessage="El Area seleccionada no cuenta con Acciones registradas.">
+							emptyMessage="El Area seleccionada no cuenta con Acciones registradas." selectionMode="multiple">
 							<f:facet name="header"> Acciones </f:facet>
-							<p:column selectionMode="multiple"
+							<p:column selectionBox="true"
 								style="width:8%;text-align:center" />
 							<p:column headerText="Clave" style="width:10%;text-align:center">
 								<h:outputText value="#{car.clave}" />
@@ -511,7 +479,7 @@ label {
 
 					<p:panel styleClass="col-centered row-centered" style="border:0em;">
 						<p:commandButton
-							style="color: #000; padding: .5em; background: #b99056; font-weight: bolder;"
+							style="color: #000; padding: .5em; background: var(--surface-2); font-weight: bolder;"
 							value="Registrar"
 							update=":secondForm:messagesAcciones, :form:fam"
 							actionListener="#{controlPresupuestalMB.saveAccion()}" />
@@ -541,7 +509,7 @@ label {
 											value="#{controlPresupuestalMB.fam.autorizadoAnual}">
 											<f:convertNumber type="currency" pattern="###,##0.00" />
 										</p:outputLabel>
-										<pe:inputNumber id="input1"
+										<p:inputNumber id="input1"
 											value="#{controlPresupuestalMB.fam.autorizadoAnual}"
 											decimalPlaces="2" decimalSeparator="." thousandSeparator="," />
 										<p:ajax event="save"
@@ -563,7 +531,7 @@ label {
 								<p:outputLabel value="#{presupuesto.presupuestoAutorizado}">
 									<f:convertNumber pattern="###,##0.00" />
 								</p:outputLabel>
-								<pe:inputNumber value="#{presupuesto.presupuestoAutorizado}"
+								<p:inputNumber value="#{presupuesto.presupuestoAutorizado}"
 									decimalPlaces="2" thousandSeparator="," decimalSeparator="." />
 								<p:ajax event="save"
 									update=":secondForm:table, :secondForm:messagesPresupuestoFAM, :form:fam"
@@ -572,7 +540,7 @@ label {
 						</p:column>
 
 						<p:rowExpansion>
-							<p:panelGrid>
+							<p:panelGrid layout="tabular" columns="0">
 								<p:dataTable var="accion" value="#{presupuesto.accions}">
 
 									<p:column headerText="Acción" width="70%">
@@ -584,7 +552,7 @@ label {
 											<p:outputLabel value="#{accion.autorizadoInicial}">
 												<f:convertNumber pattern="###,##0.00" />
 											</p:outputLabel>
-											<pe:inputNumber value="#{accion.autorizadoInicial}"
+											<p:inputNumber value="#{accion.autorizadoInicial}"
 												decimalPlaces="2" thousandSeparator="," decimalSeparator="." />
 											<p:ajax event="save"
 												listener="#{controlPresupuestalMB.updateFAM()}"
@@ -643,7 +611,7 @@ label {
 						</p:inputText>
 						<p:inputText id="float-input2" disabled="true"
 							value="#{controlPresupuestalMB.tcContrato.proveedor.nombreProveedor}" />
-						<pe:inputNumber id="float-input3" disabled="true"
+						<p:inputNumber id="float-input3" disabled="true"
 							decimalPlaces="2" thousandSeparator="," decimalSeparator="."
 							value="#{controlPresupuestalMB.tcContrato.importeAdquisicion}" />
 					</p:panelGrid>
@@ -659,7 +627,7 @@ label {
 					<p:panel styleClass="col-centered row-centered" style="border:0em;">
 						<p:commandButton value="Aceptar"
 							update=":secondForm:messagesContratosFam, :form:fam"
-							style="color: #000; padding: .5em; background: #b99056; font-weight: bold;"
+							style="color: #000; padding: .5em; background: var(--surface-2); font-weight: bold;"
 							actionListener="#{controlPresupuestalMB.saveContrato()}" />
 					</p:panel>
 				</p:dialog>
@@ -689,7 +657,7 @@ label {
 							converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
 							<f:convertDateTime pattern="dd/MM/yyyy" />
 						</p:calendar>
-						<pe:inputNumber id="float-input23" required="true"
+						<p:inputNumber id="float-input23" required="true"
 							decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 							requiredMessage="Favor de Ingresar el Importe de la Factura"
 							value="#{controlPresupuestalMB.contratoFactura.importeFactura}"
@@ -728,14 +696,14 @@ label {
 								listener="#{controlPresupuestalMB.changePoliza()}"
 								update="@this" />
 						</p:selectOneMenu>
-						<pe:inputNumber id="float-input26" required="true"
+						<p:inputNumber id="float-input26" required="true"
 							decimalPlaces="0" thousandSeparator="" maxlength="6"
 							requiredMessage="Favor de Ingresar un Número de Póliza"
 							value="#{controlPresupuestalMB.polizaSelected.conpol}"
 							autocomplete="off">
 							<p:ajax event="blur" update=":secondForm:fechaPoliza"
 								listener="#{controlPresupuestalMB.changePoliza()}" />
-						</pe:inputNumber>
+						</p:inputNumber>
 						<p:calendar id="fechaPoliza" locale="es" size="10" disabled="true"
 							style="width:70%" pattern="dd/MM/yyyy" mask="true" maxlength="10"
 							requiredMessage="Seleccione una fecha"
@@ -772,7 +740,7 @@ label {
 					<p:panel styleClass="col-centered row-centered" style="border:0em;">
 						<p:commandButton value="Aceptar"
 							update=":secondForm:messagesFacturasFam, :form:fam"
-							style="color: #000; padding: .5em; background: #b99056; font-weight: bolder;"
+							style="color: #000; padding: .5em; background: var(--surface-2); font-weight: bolder;"
 							actionListener="#{controlPresupuestalMB.saveFactura()}" />
 					</p:panel>
 				</p:dialog>
@@ -802,7 +770,7 @@ label {
 											value="#{controlPresupuestalMB.pad.autorizadoAnual}">
 											<f:convertNumber type="currency" pattern="###,##0.00" />
 										</p:outputLabel>
-										<pe:inputNumber id="input1"
+										<p:inputNumber id="input1"
 											value="#{controlPresupuestalMB.pad.autorizadoAnual}"
 											decimalPlaces="2" decimalSeparator="." thousandSeparator="," />
 										<p:ajax event="save"
@@ -820,7 +788,7 @@ label {
 								<p:outputLabel value="#{presupuesto.presupuestoAsignado}">
 									<f:convertNumber type="currency" pattern="###,##0.00" />
 								</p:outputLabel>
-								<pe:inputNumber value="#{presupuesto.presupuestoAsignado}"
+								<p:inputNumber value="#{presupuesto.presupuestoAsignado}"
 									decimalPlaces="2" thousandSeparator="," decimalSeparator="." />
 								<p:ajax event="save"
 									update=":thirdForm:table, :thirdForm:messagesPresupuestoPAD, :form:pad"
@@ -872,7 +840,7 @@ label {
 
 						<p:column>
 							<p:outputLabel value="Número de Acci&oacute;n:" />
-							<pe:inputNumber id="float-input2s6" required="true"
+							<p:inputNumber id="float-input2s6" required="true"
 								decimalPlaces="0" thousandSeparator="" maxlength="6"
 								requiredMessage="Error! Favor de Ingresar un Número de Acción."
 								value="#{controlPresupuestalMB.twObra.noAccion}"
@@ -903,7 +871,7 @@ label {
 						</p:column>
 						<p:column>
 							<p:outputLabel value="Monto Asignado:" />
-							<pe:inputNumber id="float-inputx23" required="true"
+							<p:inputNumber id="float-inputx23" required="true"
 								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 								requiredMessage="Error! Favor de Ingresar el Monto Asignado."
 								value="#{controlPresupuestalMB.twObra.asignado}"
@@ -911,7 +879,7 @@ label {
 						</p:column>
 						<p:column>
 							<p:outputLabel value="Monto Autorizado:" />
-							<pe:inputNumber id="float-cinput23" required="true"
+							<p:inputNumber id="float-cinput23" required="true"
 								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 								requiredMessage="Error! Favor de Ingresar el Monto Autorizado."
 								value="#{controlPresupuestalMB.twObra.autorizado}"
@@ -959,7 +927,7 @@ label {
 					<p:commandButton value="Registrar"
 						update=":thirdForm:messagesObras, :form:pad"
 						actionListener="#{controlPresupuestalMB.saveObra()}"
-						style="color: #000; position: absolute; right: 50%; padding: .5em; background: #b99056; font-weight: bold;" />
+						style="color: #000; position: absolute; right: 50%; padding: .5em; background: var(--surface-2); font-weight: bold;" />
 
 				</p:dialog>
 
@@ -977,7 +945,7 @@ label {
 
 						<p:column>
 							<p:outputLabel value="Autorizaci&oacute;n de Pago:" />
-							<pe:inputNumber id="float-isnput2s6" required="true"
+							<p:inputNumber id="float-isnput2s6" required="true"
 								decimalPlaces="0" thousandSeparator="" maxlength="6"
 								requiredMessage="Error! Favor de Ingresar la Autorización del Pago."
 								value="#{controlPresupuestalMB.twObraPago.autorizacionPago}"
@@ -992,7 +960,7 @@ label {
 						</p:column>
 						<p:column>
 							<p:outputLabel value="Importe Factura:" />
-							<pe:inputNumber id="flosat-inputx23" required="true"
+							<p:inputNumber id="flosat-inputx23" required="true"
 								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 								requiredMessage="Error! Favor de Ingresar el Importe de la Factura."
 								value="#{controlPresupuestalMB.twObraPago.importeFactura}"
@@ -1007,7 +975,7 @@ label {
 						</p:column>
 						<p:column>
 							<p:outputLabel value="Importe Afectaci&oacute;n Presupuestal:" />
-							<pe:inputNumber id="flosast-inputx23" required="true"
+							<p:inputNumber id="flosast-inputx23" required="true"
 								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 								requiredMessage="Error! Favor de Ingresar el Importe de la Afectaci&oacute;n Presupuestal."
 								value="#{controlPresupuestalMB.twObraPago.importeAfectacionPresupuestal}"
@@ -1059,7 +1027,7 @@ label {
 					<p:commandButton value="Registrar"
 						update=":thirdForm:messagesPagoObras, :form:pad"
 						actionListener="#{controlPresupuestalMB.savePagoObra()}"
-						style="color: #000; position: absolute; right: 50%; padding: .5em; background: #b99056; font-weight: bold;" />
+						style="color: #000; position: absolute; right: 50%; padding: .5em; background: var(--surface-2); font-weight: bold;" />
 				</p:dialog>
 
 				<p:dialog id="dialogContratosPad" header="Contratos"
@@ -1155,7 +1123,7 @@ label {
 									</p:column>
 									<p:column>
 										<p:outputLabel value="Importe:" />
-										<pe:inputNumber id="float-inputx23" required="true"
+										<p:inputNumber id="float-inputx23" required="true"
 											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
 											requiredMessage="Error! Favor de Ingresar el Importe."
 											value="#{controlPresupuestalMB.tcContratoPad.importe}"
@@ -1254,7 +1222,7 @@ label {
 							<p:commandButton value="Registrar"
 								update=":thirdForm:messagesContratosPad, :form:pad"
 								actionListener="#{controlPresupuestalMB.saveContratoPad()}"
-								style="color: #000; position: absolute; right: 50%; padding: .5em; background: #b99056; font-weight: bold;" />
+								style="color: #000; position: absolute; right: 50%; padding: .5em; background: var(--surface-2); font-weight: bold;" />
 
 						</p:tab>
 					</p:tabView>

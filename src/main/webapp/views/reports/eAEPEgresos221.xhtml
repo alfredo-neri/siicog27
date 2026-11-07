@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,13 +13,20 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header=" Estado Anal&iacute;tico del Ejercicio del Presupuesto de Egresos"
-					styleClass="green col-md-5 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Estado Anal&iacute;tico del Ejercicio del Presupuesto de Egresos</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder" layout="tabular">
 
-						<p:panelGrid columns="4" styleClass="ui-noborder">
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 
 							<h:outputText value="No. Decimales:" for="noDecimales" />
 							<p:selectOneMenu id="noDecimales" size="18" editable="false"
@@ -35,7 +42,7 @@
 								<f:selectItem itemValue="0" itemLabel="Pesos" />
 								<f:selectItem itemValue="1" itemLabel="Miles de Pesos" />
 							</p:selectOneMenu>
-							<p:commandButton value="Correcto" ajax="false" id="correcto"
+							<p:commandButton value="Generar" ajax="false" id="correcto"
 								onclick="PrimeFaces.monitorDownload(start, stop);"
 								actionListener="#{eAEPEgresos221MB.downLoadFile}"
 								update=":form1:growlReportador" icon="ui-icon-arrowthick-1-s">
@@ -44,16 +51,9 @@
 
 						</p:panelGrid>
 					</p:panelGrid>
-
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 
 		</ui:define>

@@ -2,193 +2,164 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
-			<style>
-.no-border {
-	border: 0;
-}
-
-.block {
-	display: grid;
-}
-
-.left-text {
-	text-align: left
-}
-
-.center {
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-}
-
-.ui-datatable .ui-datatable-header {
-	text-align: right !important;
-}
-
-.input-busqueda {
-	width: 40% !important;
-	margin-right: 5px;
-}
-</style>
-
-
+			<!--
+				SIICOG: estructura de Contra-recibos (encabezado, tarjeta de datos y tarjeta de lista con buscador).
+				Mismos ids (panel, msn, focus, panelForm, nombre, telefono, ipo, rfc, domicilio, panelButtons,
+				dataGrid, inputBusqueda, deleteRow), valores, acciones y update.
+			-->
 			<h:form id="form">
-				<p:panel id="panel"
-					header="Administración  de Proveedores/Contratista"
-					styleClass="green col-md-12 col-centered row-centered shadow-panel green container">
-					<p:messages id="msn" showDetail="true" closable="true"
-						showSummary="false" />
-					<p:remoteCommand name="buscar"
-						actionListener="#{proveedoresMB.buscar}" update=":form:dataGrid" />
-					<p:focus id="focus" />
-					<p:panel id="panelForm">
-						<div class="row">
-							<div class="col-md-7 ui-noborder left-text block">
-								<h:outputText value="Nombre Proveedor" />
-								<p:inputText id="nombre" maxlength="200"
-									onblur="value=value.toUpperCase()"
-									value="#{proveedoresMB.proveedor.nombreProveedor}">
-								</p:inputText>
-							</div>
-							<div class="col-md-3 ui-noborder left-text block">
-								<h:outputText value="Telefono" />
-								<p:inputText id="telefono" maxlength="15"
-									value="#{proveedoresMB.proveedor.telefono}">
-								</p:inputText>
-							</div>
-							<div class="col-md-2 ui-noborder left-text block">
-								<h:outputText value="Tipo" />
-								<p:selectOneRadio id="ipo"
-									value="#{proveedoresMB.proveedor.tipo}">
-									<f:selectItems value="#{proveedoresMB.tipos}" var="tipo"
-										itemLabel="#{tipo}" itemValue="#{tipo}" />
-								</p:selectOneRadio>
-							</div>
-						</div>
+				<p:remoteCommand name="buscar"
+					actionListener="#{proveedoresMB.buscar}" update=":form:dataGrid" />
+				<p:focus id="focus" />
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page">
 
-						<div class="row">
-							<div class="col-md-3 ui-noborder left-text block">
-								<h:outputText value="RFC" />
-								<p:inputText id="rfc" maxlength="13"
-									onblur="value=value.toUpperCase()"
-									value="#{proveedoresMB.proveedor.rfc}">
-								</p:inputText>
-							</div>
-							<div class="col-md-9 ui-noborder left-text block">
-								<h:outputText value="Domiciclio" />
-								<p:inputText id="domicilio" maxlength="200"
-									onblur="value=value.toUpperCase()"
-									value="#{proveedoresMB.proveedor.domicilioFiscal}">
-								</p:inputText>
-							</div>
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contratos / Catálogos</div>
+							<h1>Proveedores y Contratistas</h1>
 						</div>
-					</p:panel>
-					<p:panelGrid columns="2" id="panelButtons"
-						styleClass=" ui-noborder center panel-buttons">
-						<p:commandButton value="Guardar"
-							update=":form:focus :form:msn :form:panelForm :form:dataGrid"
-							action="#{proveedoresMB.guardarProveedor}"
-							styleClass="ui-confirmdialog-no " icon="ui-icon-disk" />
-						<p:commandButton value="Cancelar"
-							disabled="#{proveedoresMB.proveedor.id==null}"
-							update=":form:focus :form:msn :form:panelForm"
-							action="#{proveedoresMB.resetProveedor}"
-							styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
-					</p:panelGrid>
+					</div>
 
-					<p:dataTable id="dataGrid" var="object"
-						value="#{proveedoresMB.proveedores}"
-						styleClass="et_datatable col-md-12 no-border "
-						emptyMessage="No existen registros" paginator="true" rows="10"
-						rowsPerPageTemplate="5,10,20"
-						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						widgetVar="dataGrid" paginatorPosition="bottom"
-						rowIndexVar="rowIndexCaptura">
-						<f:facet name="header">
-							<p:outputPanel>
-								<h:outputText value="Busqueda: " />
-								<p:inputText id="inputBusqueda" styleClass="input-busqueda"
-									value="#{proveedoresMB.busqueda}" placeholder="Ingrese texto"
-									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) { return false;}">
+					<!-- ===== Datos del proveedor ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Datos del proveedor o contratista</h2>
+						</div>
+						<div class="sg-card-b">
+							<p:messages id="msn" showDetail="true" closable="true"
+								showSummary="false" />
+							<h:panelGroup id="panelForm" layout="block">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);">
+									<div class="sg-field">
+										<p:outputLabel for="nombre" value="Nombre del proveedor" />
+										<p:inputText id="nombre" maxlength="200"
+											onblur="value=value.toUpperCase()"
+											value="#{proveedoresMB.proveedor.nombreProveedor}">
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="telefono" value="Teléfono" />
+										<p:inputText id="telefono" maxlength="15" styleClass="mono"
+											value="#{proveedoresMB.proveedor.telefono}">
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="ipo" value="Tipo" />
+										<p:selectOneRadio id="ipo"
+											value="#{proveedoresMB.proveedor.tipo}">
+											<f:selectItems value="#{proveedoresMB.tipos}" var="tipo"
+												itemLabel="#{tipo}" itemValue="#{tipo}" />
+										</p:selectOneRadio>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="rfc" value="RFC" />
+										<p:inputText id="rfc" maxlength="13" styleClass="mono"
+											onblur="value=value.toUpperCase()"
+											value="#{proveedoresMB.proveedor.rfc}">
+										</p:inputText>
+									</div>
+									<div class="sg-field" style="grid-column: span 2;">
+										<p:outputLabel for="domicilio" value="Domicilio fiscal" />
+										<p:inputText id="domicilio" maxlength="200"
+											onblur="value=value.toUpperCase()"
+											value="#{proveedoresMB.proveedor.domicilioFiscal}">
+										</p:inputText>
+									</div>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup id="panelButtons" layout="block" styleClass="sg-actions" style="margin-top: 16px;">
+								<p:commandButton value="Guardar"
+									update=":form:focus :form:msn :form:panelForm :form:dataGrid"
+									action="#{proveedoresMB.guardarProveedor}"
+									icon="pi pi-save" />
+								<p:commandButton value="Cancelar"
+									disabled="#{proveedoresMB.proveedor.id==null}"
+									update=":form:focus :form:msn :form:panelForm"
+									action="#{proveedoresMB.resetProveedor}"
+									styleClass="ui-button-flat" icon="pi pi-times" />
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- ===== Proveedores registrados ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Proveedores y contratistas registrados</h2>
+							<div class="sg-actions">
+								<p:inputText id="inputBusqueda" style="width: 300px;"
+									value="#{proveedoresMB.busqueda}" placeholder="Buscar por nombre o RFC"
+									onkeypress="if (event.keyCode == 13) {buscar(); return false; } if(event.keyCode == 27) { return false;}">
 								</p:inputText>
-								<p:commandButton icon="ui-icon-search"
+								<p:commandButton icon="pi pi-search" title="Buscar"
 									actionListener="#{proveedoresMB.buscar}"
 									update=":form:dataGrid" />
-							</p:outputPanel>
-						</f:facet>
-						<p:column headerText="Nombre" exportable="false" width="30%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.nombreProveedor}" />
-						</p:column>
-						<p:column headerText="Tipo" exportable="false" width="10%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.tipo}" />
-						</p:column>
-						<p:column headerText="RFC" exportable="false" width="12%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.rfc}" />
-						</p:column>
-						<p:column headerText="Domicilio" exportable="false" width="35%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.domicilioFiscal}" />
-						</p:column>
-						<p:column headerText="Telefono" exportable="false" width="13%"
-							style="text-align: left!important;">
-							<p:outputLabel value="#{object.telefono}" />
-						</p:column>
-						<p:column headerText="Eliminar" exportable="false" width="5%"
-							styleClass="row-centered">
-							<p:commandLink id="deleteRow" update=":form:msn"
-								oncomplete="PF('confirmFileDelete').show()"
-								image="ui-icon ui-icon-close" title="Delete">
-								<f:setPropertyActionListener value="#{object}"
-									target="#{proveedoresMB.proveedor}" />
-								<h:outputText styleClass="ui-icon ui-icon-close" />
-							</p:commandLink>
-						</p:column>
-						<p:column headerText="Editar" exportable="false" width="5%">
-							<p:commandLink
-								update=":form:focus :form:msn :form:panelForm :form"
-								image="ui-icon ui-icon-edit" title="Editar">
-								<f:setPropertyActionListener value="#{object}"
-									target="#{proveedoresMB.proveedor}" />
-								<h:outputText styleClass="ui-icon ui-icon-pencil" />
-							</p:commandLink>
-						</p:column>
-					</p:dataTable>
-				</p:panel>
+							</div>
+						</div>
+						<p:dataTable id="dataGrid" var="object"
+							value="#{proveedoresMB.proveedores}"
+							emptyMessage="No existen proveedores. Los que guardes aparecerán aquí." paginator="true" rows="10"
+							rowsPerPageTemplate="5,10,20"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							widgetVar="dataGrid" paginatorPosition="bottom"
+							rowIndexVar="rowIndexCaptura">
+							<p:column headerText="Nombre" exportable="false">
+								<p:outputLabel value="#{object.nombreProveedor}" />
+							</p:column>
+							<p:column headerText="Tipo" exportable="false" style="width: 120px;">
+								<p:outputLabel value="#{object.tipo}" styleClass="sg-chip info" />
+							</p:column>
+							<p:column headerText="RFC" exportable="false" style="width: 150px;">
+								<p:outputLabel value="#{object.rfc}" styleClass="sg-code" />
+							</p:column>
+							<p:column headerText="Domicilio" exportable="false">
+								<p:outputLabel value="#{object.domicilioFiscal}" />
+							</p:column>
+							<p:column headerText="Teléfono" exportable="false" style="width: 130px;">
+								<p:outputLabel value="#{object.telefono}" styleClass="sg-code" />
+							</p:column>
+							<p:column headerText="Acciones" exportable="false" style="width: 100px;"
+								styleClass="sg-acciones-fila">
+								<p:commandLink
+									update=":form:focus :form:msn :form:panelForm :form"
+									styleClass="sg-ico" title="Editar">
+									<f:setPropertyActionListener value="#{object}"
+										target="#{proveedoresMB.proveedor}" />
+									<i class="pi pi-pencil" />
+								</p:commandLink>
+								<p:commandLink id="deleteRow" update=":form:msn"
+									oncomplete="PF('confirmFileDelete').show()"
+									styleClass="sg-borrar" title="Eliminar">
+									<f:setPropertyActionListener value="#{object}"
+										target="#{proveedoresMB.proveedor}" />
+									<i class="pi pi-trash" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</div>
+				</h:panelGroup>
 			</h:form>
 
 			<p:confirmDialog widgetVar="confirmFileDelete"
-				message="Desea eliminar el registro actual?" header="Confirmación"
-				severity="alert">
+				message="¿Desea eliminar el proveedor seleccionado?" header="Confirmación"
+				severity="warn">
 				<p:commandButton value="SI" label="SI"
-					style="margin-top:10px;padding:5px;"
-					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					styleClass="ui-confirmdialog-yes ui-button-danger" icon="pi pi-trash"
 					actionListener="#{proveedoresMB.deleteProveedor}"
 					oncomplete="PF('confirmFileDelete').hide();"
 					update=":form:dataGrid :form:msn " />
 				<p:commandButton value="NO" label="NO"
-					style="margin-top:10px;padding:5px;"
-					onclick="PF('confirmFileDeleteMeta').hide();"
-					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+					onclick="PF('confirmFileDelete').hide();"
+					styleClass="ui-confirmdialog-no ui-button-outlined" icon="pi pi-times" />
 			</p:confirmDialog>
-			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-				<h:panelGrid columns="2">
-					<h:graphicImage value="../reports/indice.png"
-						style="margin-right: 12px; vertical-align: middle;" />
-					<h:outputText value="Por favor espere..."
-						style="white-space: nowrap;" />
-				</h:panelGrid>
-			</pe:blockUI>
 		</ui:define>
 	</ui:composition>
 </h:body>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <f:metadata>
@@ -14,9 +14,18 @@
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
 			<h:form id="form">
-				<p:panel id="panel"
-					header="Clasificador por fuentes de financiamiento"
-					styleClass="green col-md-12 col-centered row-centered shadow-panel green container ">
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Clasificador por Fuentes de Financiamiento</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Fuentes de financiamiento</h2>
+						</div>
 					<p:messages id="msn" showDetail="true" closable="true"
 						showSummary="false" />
 					<p:dataTable var="object" value="#{fuenteFGobiernoMB.fuentes}"
@@ -27,19 +36,19 @@
 						widgetVar="cuentas" paginatorPosition="bottom">
 						<p:column headerText="Cuenta" exportable="false" width="4%"
 							style="text-align: left!important;">
-							<p:outputLabel value="#{object.cuenta}" />
+							<h:outputText value="#{object.cuenta}" styleClass="sg-code" />
 						</p:column>
-						<p:column headerText="scta" exportable="false" width="4%"
+						<p:column headerText="Scta" exportable="false" width="4%"
 							style="text-align: left!important;">
-							<p:outputLabel value="#{object.scta}" />
+							<h:outputText value="#{object.scta}" styleClass="sg-code" />
 						</p:column>
 						<p:column headerText="Sscta" exportable="false" width="4%"
 							style="text-align: left!important;">
-							<p:outputLabel value="#{object.sscta}" />
+							<h:outputText value="#{object.sscta}" styleClass="sg-code" />
 						</p:column>
 						<p:column headerText="Ssscta" exportable="false" width="4%"
 							style="text-align: left!important;">
-							<p:outputLabel value="#{object.ssscta}" />
+							<h:outputText value="#{object.ssscta}" styleClass="sg-code" />
 						</p:column>
 						<p:column headerText="Descripción" exportable="false" width="84%"
 							style="text-align: left!important;">
@@ -55,21 +64,25 @@
 							styleClass="row-centered">
 							<p:commandLink update=":form:msn :form:cuentas"
 								image="ui-icon ui-icon-close" action="#{fuenteFGobiernoMB.use}"
-								title="Delete">
+								title="Activar">
 								<f:setPropertyActionListener value="#{object}"
 									target="#{fuenteFGobiernoMB.selected}" />
 								<h:outputText styleClass="ui-icon  ui-icon-check" />
 							</p:commandLink>
 						</p:column>
 						<f:facet name="footer">
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							<div class="sg-export">
+							<span class="sg-note">Exportar:</span>
+							<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 								disabled="#{empty fuenteFGobiernoMB.fuentes}">
-								<p:graphicImage value="pdf.png" width="24" />
+								<i class="pi pi-file-pdf" /> PDF
 								<p:fileDownload value="#{fuenteFGobiernoMB.filePdf}" />
 							</h:commandLink>
+							</div>
 						</f:facet>
 					</p:dataTable>
-				</p:panel>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

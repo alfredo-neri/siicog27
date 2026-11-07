@@ -2,71 +2,103 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <h:body>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
+			<!--
+				SIICOG fase 2: estructura del prototipo (sicog-pantallas.html, "Pólizas Capturadas por Usuario").
+				Se conservan componentes, ids, valores, listeners y update de difem26. La vista previa sigue
+				siendo el texto que arma el bean (txtPreview); en el navegador se muestra además como tabla
+				(siicogTablaDeTexto en resources/siicog/siicog.js). Si el texto no trae columnas, se ve el texto.
+			-->
 			<h:form id="form1">
 				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="P&oacute;lizas Capturadas por Usuario"
-					styleClass="green col-md-6 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Consultas</div>
+							<h1>Pólizas Capturadas por Usuario</h1>
+						</div>
+					</div>
 
-						<p:panelGrid columns="6" styleClass="ui-noborder">
-
-							<h:outputText value="Mes: " for="mesInputOri" />
-							<p:selectOneMenu id="idDependencia"
-								value="#{polizasByUsuarioMB.mes}">
-								<f:selectItems value="#{polizasByUsuarioMB.listMes}" var="meses"
-									itemValue="#{meses.periodo}" itemLabel="#{meses.periodo}" />
-							</p:selectOneMenu>
-							<h:outputText value="Usuario: " for="user" />
-							<p:inputText id="user" value="#{polizasByUsuarioMB.user}" size="10" required="true" requiredMessage="Favor de ingresar un usuario"/>
-							
-							<p:commandButton value="Vista Previa" id="preView"
-								actionListener="#{polizasByUsuarioMB.preView}"
-								icon="ui-icon-zoomout"
-								update=":form1:preViewTxt,:form1:growlReportador"
-								onclick="PF('preViewTxtWg').show();" />
-							<p:commandButton value="Correcto" ajax="false" id="correcto"
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<p:commandButton value="Descargar" ajax="false" id="correcto" styleClass="ui-button-outlined"
 								onclick="PrimeFaces.monitorDownload(start, stop);"
 								actionListener="#{polizasByUsuarioMB.downLoadFile}"
-								update=":form1:growlReportador" icon="ui-icon-arrowthick-1-s">
+								update=":form1:growlReportador" icon="pi pi-download">
 								<p:fileDownload value="#{polizasByUsuarioMB.fileTxt}" />
 							</p:commandButton>
+							<div class="sg-actions" style="gap: 16px; align-items: flex-end;">
+								<div class="sg-field">
+									<p:outputLabel for="idDependencia" value="Mes" />
+									<p:selectOneMenu id="idDependencia" style="min-width: 140px;"
+										value="#{polizasByUsuarioMB.mes}">
+										<f:selectItems value="#{polizasByUsuarioMB.listMes}" var="meses"
+											itemValue="#{meses.periodo}" itemLabel="#{meses.periodo}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="user" value="Usuario" />
+									<p:inputText id="user" value="#{polizasByUsuarioMB.user}" size="10" required="true"
+										requiredMessage="Favor de ingresar un usuario" styleClass="mono" style="width: 200px;" />
+								</div>
+								<p:commandButton value="Vista previa" id="preView"
+									actionListener="#{polizasByUsuarioMB.preView}"
+									icon="pi pi-search"
+									update=":form1:previaTexto,:form1:growlReportador"
+									onclick="var w = PF('preViewTxtWg'); if (w &amp;&amp; w.show) { w.show(); }"
+									oncomplete="siicogResumenPolizas();" />
+							</div>
+						</div>
 
-						</p:panelGrid>
-					</p:panelGrid>
+						<!-- resumen y tabla que se arman en el navegador a partir del texto de la vista previa -->
+						<div class="sg-resumen" id="resumenPolizas" hidden="hidden">
+							<span class="sg-note">Usuario <b id="resUsuario"></b></span>
+							<span class="sg-note">Nombre <b id="resNombre"></b></span>
+							<span class="sg-note">Pólizas <b id="resTotal"></b></span>
+						</div>
+						<div id="tablaPolizas" class="sg-tabla-previa" hidden="hidden"></div>
 
-					<p:panelGrid>
-						<p:outputLabel rendered="#{polizasByUsuarioMB.bPreView}"
-							style="max-height: 400px; min-height: 400px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
-							<p:inputTextarea cols="80" id="preViewTxt"
-								style="font-family: monospace; font-size: 8pt;"
-								widgetVar="preViewTxtWg"
-								rendered="#{polizasByUsuarioMB.bPreView}" autoResize="true"
-								readonly="true" value="#{polizasByUsuarioMB.txtPreview}" />
-						</p:outputLabel>
-					</p:panelGrid>
+						<!-- contenedor siempre presente: el area de texto no existe hasta la primera vista previa,
+						     asi que se actualiza el contenedor y no el area (antes update=":form1:preViewTxt") -->
+						<h:panelGroup id="previaTexto" layout="block" styleClass="sg-texto-previa">
+							<p:outputLabel rendered="#{polizasByUsuarioMB.bPreView}">
+								<p:inputTextarea cols="80" id="preViewTxt"
+									style="font-family: monospace; font-size: 8pt;"
+									widgetVar="preViewTxtWg"
+									rendered="#{polizasByUsuarioMB.bPreView}" autoResize="true"
+									readonly="true" value="#{polizasByUsuarioMB.txtPreview}" />
+							</p:outputLabel>
+						</h:panelGroup>
+					</div>
 
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+				</h:panelGroup>
 
 			</h:form>
-
+			<script type="text/javascript">
+				// Convierte la vista previa en tabla y llena el resumen (usuario, nombre y numero de polizas)
+				function siicogResumenPolizas() {
+					var total = siicogTablaDeTexto('form1:preViewTxt', 'tablaPolizas');
+					var resumen = document.getElementById('resumenPolizas');
+					if (!total) {
+						resumen.hidden = true;
+						return;
+					}
+					var celdas = document.querySelectorAll('#tablaPolizas tbody tr:first-child td');
+					document.getElementById('resUsuario').textContent = celdas.length > 3 ? celdas[3].textContent : '';
+					document.getElementById('resNombre').textContent = celdas.length > 4 ? celdas[4].textContent : '';
+					document.getElementById('resTotal').textContent = total.toLocaleString('es-MX');
+					resumen.hidden = false;
+				}
+			</script>
 		</ui:define>
 	</ui:composition>
 </h:body>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -25,111 +25,88 @@
 					update="form1:objects, :form1:messagesEdit" />
 					 -->
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<center>
-					<div class="ui-grid ">
-						<div class="ui-grid-row"
-							style="align-content: center ! important; align-items: center; display: -moz-inline-box;">
-							<div class="ui-grid-col-4">
-								<p:panel id="panel" header="Contratos"
-									styleClass="green  col-centered row-centered shadow-panel"
-									style="width:95%">
+								<div class="sg-page">
+									<!-- ===== Encabezado de pantalla ===== -->
+									<div class="sg-page-h">
+										<div>
+											<div class="sg-crumbs">Contabilidad / Catálogos</div>
+											<h1>Catálogo de Contratos</h1>
+										</div>
+										<h:panelGroup id="panelButton" styleClass="sg-actions">
+											<p:commandButton icon="pi pi-plus" value="Nuevo registro"
+												update=":form1:objects, :form1:messagesEdit, :form1:focusTable"
+												actionListener="#{catalogContractsMB.insertRow}"
+												oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+										</h:panelGroup>
+									</div>
 
-									<h:panelGrid id="display_1" columns="2" cellpadding="4">
-
-										<h:outputText value="Clave del Contrato: " for="contractInput"
-											styleClass="control-label"
-											style="padding-left: 10px; padding-right: 10px;" />
-										<p:inputText id="contractInput" styleClass="form-control"
-											value="#{catalogContractsMB.beanFind.clvcto}" maxlength="4"
-											validatorMessage="El campo Clave de Contrato solo permite valores alfanum&eacute;ricos">
-											<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
-												for="contractInput" />
-											<p:ajax event="keyup"
-												update=":form1:messagesEdit, :form1:objects"
-												listener="#{catalogContractsMB.findValuesCatalog}" />
-										</p:inputText>
-
-										<h:outputText value="Descripci&oacute;n Contrato: "
-											styleClass="control-label" for="descInput"
-											style="padding-left: 10px; padding-right: 30px; margin-top: 30px;" />
-										<p:inputText id="descInput" styleClass="form-control"
-											value="#{catalogContractsMB.beanFind.nomobr}"
-											style="margin-top: 10px;" maxlength="304"
-											validatorMessage="El campo Descripci&oacute;n Contrato solo permite valores alfanum&eacute;ricos">
-											<f:validateRegex
-												pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
-												for="descInput" />
-											<p:ajax event="keyup"
-												update=":form1:messagesEdit, :form1:objects"
-												listener="#{catalogContractsMB.findValuesCatalog}" />
-										</p:inputText>
-
-										<p:outputPanel layout="block"
-											style="text-align: center; width: -moz-max-content;"
-											id="blockButtonsFind">
-											<br />
-
-											<p:commandButton value="Buscar" style="padding: 5px;"
-												update=":form1:objects, :form1:messagesEdit"
-												actionListener="#{catalogContractsMB.findValuesCatalog}"
-												onstart="PF('blockUIWidget').block()"
-												oncomplete="PF('blockUIWidget').unblock()" />
-
-											<p:commandButton value="Limpiar"
-												style="padding: 5px; margin-left: 5px;"
-												update=":form1:objects, :form1:display_1, :form1:messagesEdit"
-												actionListener="#{catalogContractsMB.findAllValuesCatalog}"
-												onstart="PF('blockUIWidget').block()"
-												oncomplete="PF('blockUIWidget').unblock()" />
-
-										</p:outputPanel>
-									</h:panelGrid>
-								</p:panel>
-							</div>
-							<div class="ui-grid-col-4">
-								<p:panel id="panelLabels"
-									styleClass="green row-centered shadow-panel"
-									style="width:100%;">
-									<br />
-									<br />
-									<p:selectOneRadio id="typeOrder" styleClass="form-control"
-										value="#{catalogContractsMB.typeOrder}" onchange="onChange();">
-										<f:selectItem itemLabel="Ordenado Por Contrato"
-											itemValue="contract" />
-										<br />
-										<f:selectItem itemLabel="Ordenado Por Contratista"
-											itemValue="supplier" />
-									</p:selectOneRadio>
-									<br />
-									<br />
-								</p:panel>
-							</div>
-						</div>
-					</div>
-				</center>
-				<pe:blockUI widgetVar="blockUIWidget">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Please wait..." style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-
-				<br />
-
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #E8ECED;">
-					<center>
-						<p:commandButton value="Nuevo Registro"
-							update=":form1:objects, :form1:messagesEdit, :form1:focusTable"
-							actionListener="#{catalogContractsMB.insertRow}"
-							oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
-					</center>
-				</p:panel>
+									<!-- ===== Buscar contrato ===== -->
+									<div class="sg-card">
+										<div class="sg-card-h">
+											<h2>Buscar contrato</h2>
+										</div>
+										<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+											<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+												<div class="sg-fields" style="grid-template-columns: minmax(0, 200px) minmax(0, 1fr) minmax(0, 300px);">
+													<div class="sg-field">
+														<p:outputLabel for="contractInput" value="Clave del Contrato" />
+														<p:inputText styleClass="mono" id="contractInput"
+															value="#{catalogContractsMB.beanFind.clvcto}" maxlength="4"
+															validatorMessage="El campo Clave de Contrato solo permite valores alfanum&eacute;ricos">
+															<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+																for="contractInput" />
+															<p:ajax event="keyup"
+																update=":form1:messagesEdit, :form1:objects"
+																listener="#{catalogContractsMB.findValuesCatalog}" />
+														</p:inputText>
+													</div>
+													<div class="sg-field">
+														<p:outputLabel for="descInput" value="Descripci&oacute;n Contrato" />
+														<p:inputText id="descInput"
+															value="#{catalogContractsMB.beanFind.nomobr}" maxlength="304"
+															validatorMessage="El campo Descripci&oacute;n Contrato solo permite valores alfanum&eacute;ricos">
+															<f:validateRegex
+																pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+																for="descInput" />
+															<p:ajax event="keyup"
+																update=":form1:messagesEdit, :form1:objects"
+																listener="#{catalogContractsMB.findValuesCatalog}" />
+														</p:inputText>
+													</div>
+													<div class="sg-field">
+														<p:outputLabel for="typeOrder" value="Ordenar por" />
+														<p:selectOneRadio id="typeOrder"
+															value="#{catalogContractsMB.typeOrder}" onchange="onChange();">
+															<f:selectItem itemLabel="Contrato"
+																itemValue="contract" />
+															<f:selectItem itemLabel="Contratista"
+																itemValue="supplier" />
+														</p:selectOneRadio>
+													</div>
+												</div>
+												<div class="sg-actions">
+													<p:commandButton icon="pi pi-search" value="Buscar"
+														update=":form1:objects, :form1:messagesEdit"
+														actionListener="#{catalogContractsMB.findValuesCatalog}"
+														onstart="PF('blockUIWidget').block()"
+														oncomplete="PF('blockUIWidget').unblock()" />
+													<p:commandButton styleClass="ui-button-flat" value="Limpiar"
+														update=":form1:objects, :form1:display_1, :form1:messagesEdit"
+														actionListener="#{catalogContractsMB.findAllValuesCatalog}"
+														onstart="PF('blockUIWidget').block()"
+														oncomplete="PF('blockUIWidget').unblock()" />
+												</div>
+											</h:panelGroup>
+										</h:panelGroup>
+									</div>
 				<!-- onclick="PF('contractsWdg').clearFilters();" -->
 
 				<p:focus context="objects" id="focusTable" />
 
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Contratos</h2>
+					</div>
 				<p:dataTable id="objects" binding="#{table}" var="object"
 					value="#{catalogContractsMB.list}" styleClass="et_datatable"
 					emptyMessage="No hay registros" editable="true" paginator="true"
@@ -138,7 +115,6 @@
 					selection="#{catalogContractsMB.rowSelected}" rowKey="#{object.id}"
 					selectionMode="single" widgetVar="contractsWdg">
 
-					<f:facet name="header">Contratos</f:facet>
 
 
 					<p:ajax event="rowEditInit"
@@ -169,7 +145,7 @@
 						style="width:5%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.clvprv}" />
+								<h:outputText value="#{object.clvprv}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText id="clvprv" value="#{object.clvprv}"
@@ -178,7 +154,7 @@
 									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
 
 									<f:convertNumber type="number" for="clvprv" />
-									<pe:keyFilter for="clvprv" mask="pint"></pe:keyFilter>
+									<p:keyFilter for="clvprv" mask="pint"></p:keyFilter>
 								</p:inputText>
 							</f:facet>
 						</p:cellEditor>
@@ -196,7 +172,7 @@
 						style="width:5%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.clvcto}" />
+								<h:outputText value="#{object.clvcto}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText id="clvcto" value="#{object.clvcto}"
@@ -249,7 +225,7 @@
 						style="width:5%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.clvobr}" />
+								<h:outputText value="#{object.clvobr}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText id="clvobr" value="#{object.clvobr}"
@@ -260,7 +236,7 @@
 									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
 
 									<f:validateDoubleRange minimum="1" for="nivcta" />
-									<pe:keyFilter for="clvobr" mask="pint"></pe:keyFilter>
+									<p:keyFilter for="clvobr" mask="pint"></p:keyFilter>
 								</p:inputText>
 							</f:facet>
 						</p:cellEditor>
@@ -341,7 +317,7 @@
 								</h:outputText>
 							</f:facet>
 							<f:facet name="input">
-								<pe:inputNumber id="moncto" value="#{object.moncto}"
+								<p:inputNumber id="moncto" value="#{object.moncto}"
 									style="width:100%" maxlength="19" required="true"
 									mask="true"
 									requiredMessage="El campo Monto del Contrato es requerido"
@@ -351,8 +327,8 @@
 									thousandSeparator=",">
 									
 									<p:ajax event="blur" update="moncto"></p:ajax>
-									<pe:keyFilter for="moncto" mask="money"></pe:keyFilter>
-								</pe:inputNumber>
+									<p:keyFilter for="moncto" mask="money"></p:keyFilter>
+								</p:inputNumber>
 							</f:facet>
 						</p:cellEditor>
 					</p:column>
@@ -388,84 +364,76 @@
 					</p:column>
 
 
-					<p:column headerText="Borrar" style="width:5%" exportable="false">
-						<center>
-							<p:commandLink
+					<p:column headerText="Acciones" exportable="false" style="width:110px;" styleClass="sg-acciones-fila">
+						<p:rowEditor />
+						<p:commandLink styleClass="sg-borrar" id="deleteRow"
 								update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
 								oncomplete="PF('confirmDeleteDlg').show()"
-								image="ui-icon ui-icon-close" title="Delete">
+								image="ui-icon ui-icon-close" title="Borrar">
 
 								<f:setPropertyActionListener value="#{object}"
 									target="#{catalogContractsMB.beanSelected}" />
 								<h:outputText styleClass="ui-icon ui-icon-close"
 									style="float:center;" />
 							</p:commandLink>
-						</center>
-					</p:column>
-
-					<p:column style="width:3%" exportable="false">
-
-						<p:rowEditor />
-
 					</p:column>
 
 
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogContractsMB.list}">
-							<p:graphicImage value="excel.png" width="24" />
+							<i class="pi pi-file-excel" /> Excel
 							<p:fileDownload value="#{catalogContractsMB.fileXls}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogContractsMB.list}">
-							<p:graphicImage value="pdf.png" width="24" />
-							<p:fileDownload value="#{catalogContractsMB.filePdf}" />
-						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogContractsMB.list}">
-							<p:graphicImage value="csv.png" width="24" />
-							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
-								fileName="MantenimientoContratos" pageOnly="false" />
-						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogContractsMB.list}">
-							<p:graphicImage value="txt.gif" width="24" />
+							<i class="pi pi-align-left" /> TXT
 							<p:fileDownload value="#{catalogContractsMB.file}" />
 						</h:commandLink>
 
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogContractsMB.list}">
+							<i class="pi pi-file-pdf" /> PDF
+							<p:fileDownload value="#{catalogContractsMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogContractsMB.list}">
+							<i class="pi pi-file" /> CSV
+							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="MantenimientoContratos" pageOnly="false" />
+						</h:commandLink>
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 				<p:commandButton id="hideButton2"
 					update=":form1:messagesEdit, :form1:objects"
 					onstart="PF('blockUIWidget').block()"
 					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar" update=":form1:objects"
 							actionListener="#{catalogContractsMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 
 				</p:dialog>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -13,6 +13,12 @@
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
 
+			<!--
+				SIICOG fase 2: estructura del prototipo (sicog-pantallas.html, "Mantenimiento de Pólizas").
+				Se conservan todos los componentes, ids, valores, listeners y update de difem26; solo cambia
+				el acomodo (tarjetas en lugar de p:panelGrid). Los contenedores que se actualizan por ajax
+				(panel, pgridData, pgrid2, pgrid3) siguen existiendo con el mismo id.
+			-->
 			<h:form id="form1">
 				<f:metadata>
 					<f:viewAction action="#{polizaMantenimientoMB3.checkF5}"
@@ -21,9 +27,7 @@
 				<p:remoteCommand id="uReten" name="uReten"
 					update=":formReten:numContrato, :formReten:beneficiario, :formReten:iSiva, formReten:tippolret, :formReten:mespolret, :formReten:iSiva, :formReten:renpolret" />
 
-
-				<p:panel id="panel" header="Mantenimiento de Polizas"
-					styleClass="green col-md-14 col-centered row-centered shadow-panel">
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page">
 					<p:growl id="messagesEdit" showDetail="true" widgetVar="g" />
 
 					<p:focus context="objects" id="focusTable" />
@@ -52,595 +56,569 @@
 					<p:remoteCommand name="errorChangeDate"
 						update=":form1:messagesEdit, :form1:focusFecpol" />
 
-					<p:panelGrid id="pgrid1"
-						styleClass="green row-centered shadow-panel" style="width:100%;">
-						<p:row>
-							<p:column style="text-align: center;">
-								<h:outputText value="A&ntilde;o" />
-							</p:column>
-							<p:column style="text-align: center;">
-								<h:outputText value="Tipo" />
-							</p:column>
-							<p:column style="text-align: center;">
-								<h:outputText value="Mes" />
-							</p:column>
-							<p:column style="text-align: center;">
-								<h:outputText value="Numero" />
-							</p:column>
-							<p:column style="text-align: center;">
-								<h:outputText value="Fecha" />
-							</p:column>
-							<p:column colspan="2" style="text-align: center;">
-								<h:outputText value="Status" />
-							</p:column>
-							<p:column colspan="4" style="text-align: center;">
-								<h:outputText value="Concepto" />
-							</p:column>
-							<p:column>
-								<h:outputText value="Captur&oacute;:" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{polizaMantenimientoMB3.polien.cappol}"
-									id="cappol" size="10" maxlength="10" disabled="true" />
-							</p:column>
-							<p:column>
-								<h:outputText value="Capturando" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{polizaMantenimientoMB3.lockUser}"
-									id="iduser" size="10" maxlength="10" disabled="true" />
-							</p:column>
-							<p:column>
-								<p:commandButton value="Eliminar Poliza" id="pdl"
-									onclick="PF('wingetPasswor').show(); resetPassMaintenance();"
-									icon="ui-icon-trash" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<h:outputText value="#{polizaMantenimientoMB3.year}" id="year" />
-							</p:column>
 
-							<p:column>
-								<p:selectOneMenu id="idPomantenimiento"
-									value="#{polizaMantenimientoMB3.polien.tippol}">
-									<f:selectItems value="#{polizaMantenimientoMB3.lisCattpo}"
-										var="po" itemValue="#{po.tippol}" itemLabel="#{po.tippol}" />
-									<p:ajax event="change"
-										listener="#{polizaMantenimientoMB3.updatePolicyNumber}"
-										update="idPomantenimiento lisconpol"></p:ajax>
-								</p:selectOneMenu>
-							</p:column>
-
-							<p:column>
-								<p:selectOneMenu id="selectmespoliza"
-									value="#{polizaMantenimientoMB3.polien.mespol}" required="true">
-									<f:selectItems value="#{polizaMantenimientoMB3.listMeses}"
-										var="m" itemValue="#{m.mes}" itemLabel="#{m.mes}" />
-									<p:ajax event="change"
-										listener="#{polizaMantenimientoMB3.updatePolicyNumber}"
-										update="selectmespoliza messagesEdit lisconpol"></p:ajax>
-								</p:selectOneMenu>
-							</p:column>
-
-							<p:column>
-								<h:inputText value="#{polizaMantenimientoMB3.polien.conpol}"
-									id="lisconpol" size="6" maxlength="6"
-									onkeypress="if (event.keyCode == 13) {document.getElementById('form1:findpoliza').click(); return false; }"
-									required="true"
-									converterMessage="Permite solo números mayores a cero"
-									validatorMessage="Permite solo números mayores a cero"
-									requiredMessage="Permite solo números mayores a cero">
-									<pe:keyFilter for="lisconpol" mask="pint"></pe:keyFilter>
-
-									<f:convertNumber pattern="000000" />
-								</h:inputText>
-							</p:column>
-							<p:focus context="fecpol" id="focusFecpol" for="fecpol" />
-							<p:column>
-								<p:calendar id="fecpol"
-									value="#{polizaMantenimientoMB3.polien.fecpol}" maxlength="10"
-									locale="es" size="10" pattern="dd/MM/yyyy" required="true"
-									mask="true" requiredMessage="El campo de Fecha es requerido"
-									timeZone="" disabled="#{polizaMantenimientoMB3.activButtons}"
-									maxdate="#{polizaMantenimientoMB3.maxDate}"
-									converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
-									onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
-									<p:ajax event="dateSelect"
-										listener="#{polizaMantenimientoMB3.onDateSelect}"
-										update=":form1:fecpol" />
-									<f:ajax event="change" execute="@this" render="fecpol"
-										listener="#{polizaMantenimientoMB3.dateChange}" />
-									<f:convertDateTime pattern="dd/MM/yyyy" />
-								</p:calendar>
-							</p:column>
-							<p:column>
-								<h:inputText value="#{polizaMantenimientoMB3.polien.stapol}"
-									id="stapol" size="1" maxlength="1" disabled="true" />
-							</p:column>
-							<p:column>
-								<h:inputText value="#{polizaMantenimientoMB3.polien.staafe}"
-									id="staafe" size="1" maxlength="1" disabled="true" />
-							</p:column>
-
-							<p:column rowspan="2" colspan="4">
-								<h:inputTextarea
-									value="#{polizaMantenimientoMB3.polien.polclv1}" rows="1"
-									id="concepto" cols="50"
-									disabled="#{polizaMantenimientoMB3.activButtons}">
-									<p:ajax event="blur" oncomplete="PF('saveConfirmWdt').show();"></p:ajax>
-								</h:inputTextarea>
-							</p:column>
-							<p:column>
-								<p:commandButton value="Crear" id="newpoliza"
-									actionListener="#{polizaMantenimientoMB3.createPolicy}"
-									update="panel objects" icon="ui-icon-newwin"
-									onstart="PF('blockUIWidget').block();"
-									oncomplete="PF('blockUIWidget').unblock();" />
-							</p:column>
-							<p:column>
-								<p:commandButton value="Buscar" id="findpoliza"
-									actionListener="#{polizaMantenimientoMB3.findPolice}"
-									async="true" update=":form1:panel, :form1:objects"
-									icon="ui-icon-search" onstart="PF('blockUIWidget').block();"
-									oncomplete="PF('blockUIWidget').unblock();" />
-							</p:column>
-							<p:column colspan="3">
-								<p:commandButton value="Primero" id="primero"
+					<!-- ===== Encabezado de pantalla: titulo, navegacion entre polizas y eliminar ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Pólizas</div>
+							<h1>Mantenimiento de Pólizas</h1>
+						</div>
+						<div class="sg-actions">
+							<span class="sg-btn-group" role="group" aria-label="Navegar pólizas">
+								<p:commandButton value="Primero" id="primero" title="Primera póliza"
+									styleClass="ui-button-outlined"
 									actionListener="#{polizaMantenimientoMB3.firstHead}"
 									disabled="#{polizaMantenimientoMB3.bloqueaBoton}" async="true"
-									update=":form1:objects, :form1:panel" icon="ui-icon-seek-first"
+									update=":form1:objects, :form1:panel" icon="pi pi-step-backward"
 									onstart="PF('blockUIWidget').block();"
 									oncomplete="PF('blockUIWidget').unblock();" />
-								<p:commandButton value="Anterior" id="anterior"
+								<p:commandButton value="Anterior" id="anterior" styleClass="ui-button-outlined"
 									update=":form1:objects, :form1:panel" async="true"
 									actionListener="#{polizaMantenimientoMB3.previusHead}"
-									icon="ui-icon-seek-prev" onstart="PF('blockUIWidget').block();"
+									icon="pi pi-chevron-left" onstart="PF('blockUIWidget').block();"
 									oncomplete="PF('blockUIWidget').unblock();" />
-								<p:commandButton value="Siguiente" id="siguiente"
+								<p:commandButton value="Siguiente" id="siguiente" styleClass="ui-button-outlined"
 									actionListener="#{polizaMantenimientoMB3.nextHead}"
 									async="true" update=":form1:panel, :form1:objects"
-									icon="ui-icon-seek-next" onstart="PF('blockUIWidget').block();"
+									icon="pi pi-chevron-right" iconPos="right" onstart="PF('blockUIWidget').block();"
 									oncomplete="PF('blockUIWidget').unblock();" />
-								<p:commandButton value="Ultimo" id="ultimo"
+								<p:commandButton value="Último" id="ultimo" title="Última póliza"
+									styleClass="ui-button-outlined"
 									update=":form1:objects, :form1:panel" async="true"
 									actionListener="#{polizaMantenimientoMB3.lastHead}"
-									icon="ui-icon-seek-end" onstart="PF('blockUIWidget').block();"
+									icon="pi pi-step-forward" iconPos="right" onstart="PF('blockUIWidget').block();"
 									oncomplete="PF('blockUIWidget').unblock();" />
-							</p:column>
-						</p:row>
-					</p:panelGrid>
-					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-						<h:panelGrid columns="2">
-							<h:graphicImage value="../catalogs/please_wait.gif"
-								style="margin-right: 12px; vertical-align: middle;" />
-							<h:outputText value="Por favor espere..."
-								style="white-space: nowrap;" />
-						</h:panelGrid>
-					</pe:blockUI>
-					<p:panelGrid id="pgridData" style="width:100%;">
-						<p:row>
-							<p:column>
-								<h:outputText value="Número Contrato" />
-							</p:column>
-							<p:column>
-								<h:outputText value="Número Factura" />
-							</p:column>
-							<p:column>
-								<h:outputText value="Número Proveedor" />
-							</p:column>
-							<p:column>
-								<h:outputText value="RFC" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>
-								<h:outputText value="#{polizaMantenimientoMB3.numcto}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{polizaMantenimientoMB3.numfac}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{polizaMantenimientoMB3.numprov}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{polizaMantenimientoMB3.rfc}" />
-							</p:column>
-						</p:row>
-					</p:panelGrid>
-					<p:focus for="objects" id="fcsObjects"></p:focus>
-					<p:dataTable id="objects" binding="#{table}" var="object"
-						value="#{polizaMantenimientoMB3.polideDataModel}"
-						resizableColumns="true" emptyMessage="No hay registros"
-						editable="#{polizaMantenimientoMB3.editableTable}"
-						selectionMode="single" rowKey="#{object.index}" scrollable="true"
-						paginator="true" lazy="true" rows="20" paginatorPosition="bottom"
-						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						style="margin-bottom:10px; padding: 0px 10px !important;"
-						selection="#{polizaMantenimientoMB3.polideSelect}"
-						widgetVar="polizasWdg" rowIndexVar="index">
-						<p:ajax event="rowEditInit"
-							listener="#{polizaMantenimientoMB3.onInitRowEdit}"
-							oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});" />
-						<p:ajax event="rowEdit"
-							listener="#{polizaMantenimientoMB3.onRowEdit}" immediate="true"
-							update=":form1:messagesEdit, :form1:objects, :formFlujoEfectivo:tippolflu, :formFlujoEfectivo:mespolflu, :formFlujoEfectivo:conpolflu, :formFlujoEfectivo:sumaflujoe, :formFlujoEfectivo:sumaflujobuff, :formFlujoEfectivo:renpolflu, :formFlujoEfectivo:ctafluTable, :form1:focusFecpol, :formReten:numContrato, :formReten:beneficiario, :formReten:iSiva, formReten:conpolret"
-							onstart="PF('blockUIWidget').block();"
-							oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
-							PF('blockUIWidget').unblock();
-							" />
-						<p:ajax event="rowEditCancel"
-							listener="#{polizaMantenimientoMB3.onRowCancel}"
-							update=":form1:messagesEdit, :form1:objects, :form1:polclv1, :form1:nomcta"
-							onstart=" $('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});"
-							oncomplete="jQuery('#form1\\:hideButton2').click();"
-							process="@this" />
-						<p:ajax event="rowSelect"
-							listener="#{polizaMantenimientoMB3.onRowSelect}"
-							update=":form1:pgrid2, :form1:nomcta, :form1:polclv1, :form1:pgridData"></p:ajax>
+							</span>
+							<p:commandButton value="Eliminar póliza" id="pdl"
+								styleClass="ui-button-danger ui-button-outlined"
+								onclick="PF('wingetPasswor').show(); resetPassMaintenance();"
+								icon="pi pi-trash" />
+						</div>
+					</div>
 
-						<p:ajax event="page" onstart="PF('blockUIWidget').block();"
-							oncomplete="PF('blockUIWidget').unblock();chagePage()"
-							listener="#{polizaMantenimientoMB3.changePage}" />
-
-						<p:column headerText="#" style="width:6%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.renpol}" id="renglon">
-										<f:convertNumber pattern="#.#" />
-									</h:outputText>
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="renpol" value="#{object.renpol}"
-										style="width:100%" maxlength="4"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}"
+					<!-- ===== Encabezado de la poliza ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Encabezado de la póliza</h2>
+							<span class="sg-note">
+								Capturó: <b><h:outputText value="#{polizaMantenimientoMB3.polien.cappol}" id="cappol" /></b>
+								&#160;·&#160; Capturando: <b><h:outputText value="#{polizaMantenimientoMB3.lockUser}" id="iduser" /></b>
+							</span>
+						</div>
+						<h:panelGroup id="pgrid1" layout="block" styleClass="sg-card-b">
+							<!-- fuera de la rejilla: p:focus genera un elemento que ocuparia una celda -->
+							<p:focus context="fecpol" id="focusFecpol" for="fecpol" />
+							<div class="sg-pol-grid">
+								<div class="sg-field">
+									<label>Año</label>
+									<h:outputText value="#{polizaMantenimientoMB3.year}" id="year" styleClass="sg-ro mono" />
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="idPomantenimiento" value="Tipo" />
+									<p:selectOneMenu id="idPomantenimiento"
+										value="#{polizaMantenimientoMB3.polien.tippol}">
+										<f:selectItems value="#{polizaMantenimientoMB3.lisCattpo}"
+											var="po" itemValue="#{po.tippol}" itemLabel="#{po.tippol}" />
+										<p:ajax event="change"
+											listener="#{polizaMantenimientoMB3.updatePolicyNumber}"
+											update="idPomantenimiento lisconpol"></p:ajax>
+									</p:selectOneMenu>
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="selectmespoliza" value="Mes" />
+									<p:selectOneMenu id="selectmespoliza"
+										value="#{polizaMantenimientoMB3.polien.mespol}" required="true">
+										<f:selectItems value="#{polizaMantenimientoMB3.listMeses}"
+											var="m" itemValue="#{m.mes}" itemLabel="#{m.mes}" />
+										<p:ajax event="change"
+											listener="#{polizaMantenimientoMB3.updatePolicyNumber}"
+											update="selectmespoliza messagesEdit lisconpol"></p:ajax>
+									</p:selectOneMenu>
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="lisconpol" value="Número" />
+									<h:inputText value="#{polizaMantenimientoMB3.polien.conpol}"
+										id="lisconpol" size="6" maxlength="6" styleClass="sg-inp mono"
+										onkeypress="if (event.keyCode == 13) {document.getElementById('form1:findpoliza').click(); return false; }"
 										required="true"
-										requiredMessage="El n&uacute;mero de rengl&oacute;n es requerido">
-										<pe:keyFilter for="renpol" mask="num" />
-										<p:ajax event="blur" update="renpol" />
-										<!-- <f:convertNumber pattern="#.#" /> -->
-									</p:inputText>
+										converterMessage="Permite solo números mayores a cero"
+										validatorMessage="Permite solo números mayores a cero"
+										requiredMessage="Permite solo números mayores a cero">
+										<p:keyFilter for="lisconpol" mask="pint"></p:keyFilter>
 
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+										<f:convertNumber pattern="000000" />
+									</h:inputText>
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="fecpol" value="Fecha" />
+									<p:calendar id="fecpol"
+										value="#{polizaMantenimientoMB3.polien.fecpol}" maxlength="10"
+										locale="es" size="10" pattern="dd/MM/yyyy" required="true"
+										mask="true" requiredMessage="El campo de Fecha es requerido"
+										timeZone="" disabled="#{polizaMantenimientoMB3.activButtons}"
+										maxdate="#{polizaMantenimientoMB3.maxDate}"
+										converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+										onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){PF('g').renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 'error'}); this.focus(); }">
+										<p:ajax event="dateSelect"
+											listener="#{polizaMantenimientoMB3.onDateSelect}"
+											update=":form1:fecpol" />
+										<f:ajax event="change" execute="@this" render="fecpol"
+											listener="#{polizaMantenimientoMB3.dateChange}" />
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:calendar>
+								</div>
+								<div class="sg-field">
+									<span class="sg-lbl">Status</span>
+									<div class="sg-pol-status">
+										<h:inputText value="#{polizaMantenimientoMB3.polien.stapol}" title="Status de la póliza"
+											id="stapol" size="1" maxlength="1" disabled="true" styleClass="sg-inp mono" />
+										<h:inputText value="#{polizaMantenimientoMB3.polien.staafe}" title="Status de afectación"
+											id="staafe" size="1" maxlength="1" disabled="true" styleClass="sg-inp mono" />
+									</div>
+								</div>
+								<div class="sg-field full">
+									<p:outputLabel for="concepto" value="Concepto" />
+									<h:inputTextarea
+										value="#{polizaMantenimientoMB3.polien.polclv1}" rows="2"
+										id="concepto" cols="50" styleClass="sg-inp"
+										disabled="#{polizaMantenimientoMB3.activButtons}">
+										<p:ajax event="blur" oncomplete="PF('saveConfirmWdt').show();"></p:ajax>
+									</h:inputTextarea>
+								</div>
+							</div>
 
-						<p:column headerText="Cuenta" style="width:5%">
-							<p:cellEditor>
-								<f:facet name="output">
+							<h:panelGroup id="pgridData" layout="block" styleClass="sg-fields"
+								style="grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));">
+								<div class="sg-field">
+									<span class="sg-lbl">Número de contrato</span>
+									<h:outputText value="#{polizaMantenimientoMB3.numcto}" styleClass="sg-ro mono" />
+								</div>
+								<div class="sg-field">
+									<span class="sg-lbl">Número de factura</span>
+									<h:outputText value="#{polizaMantenimientoMB3.numfac}" styleClass="sg-ro mono" />
+								</div>
+								<div class="sg-field">
+									<span class="sg-lbl">Número de proveedor</span>
+									<h:outputText value="#{polizaMantenimientoMB3.numprov}" styleClass="sg-ro mono" />
+								</div>
+								<div class="sg-field">
+									<span class="sg-lbl">RFC</span>
+									<h:outputText value="#{polizaMantenimientoMB3.rfc}" styleClass="sg-ro mono" />
+								</div>
+							</h:panelGroup>
 
-									<h:outputText value="#{object.cuenta}" />
+							<div class="sg-actions">
+								<p:commandButton value="Crear" id="newpoliza"
+									actionListener="#{polizaMantenimientoMB3.createPolicy}"
+									update="panel objects" icon="pi pi-plus"
+									onstart="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();" />
+								<p:commandButton value="Buscar" id="findpoliza" styleClass="ui-button-outlined"
+									actionListener="#{polizaMantenimientoMB3.findPolice}"
+									async="true" update=":form1:panel, :form1:objects"
+									icon="pi pi-search" onstart="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();" />
+							</div>
+						</h:panelGroup>
+					</div>
 
-								</f:facet>
-								<f:facet name="input">
+					<!-- ===== Movimientos ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Movimientos</h2>
+							<h:panelGroup id="movAcciones" styleClass="sg-actions">
+								<p:outputLabel for="rowid" value="Renglón" styleClass="sg-lbl" />
+								<h:inputText value="#{polizaMantenimientoMB3.renglon}" id="rowid"
+									maxlength="9" styleClass="sg-inp mono" style="width: 90px; height: 32px;"
+									onkeypress="if((!this.value || 0 === this.value.length) ){ if( event.keyCode == 9 || event.keyCode == 13){return false;}}if (event.keyCode == 13){document.getElementById('form1:hideButtonRow').click(); return false}">
+									<p:keyFilter for="rowid" mask="pint"></p:keyFilter>
+								</h:inputText>
+								<p:commandButton value="Adicionar" id="addpoliza"
+									actionListener="#{polizaMantenimientoMB3.createFirstRow}"
+									update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:pgrid2, :form1:fcsObjects"
+									icon="pi pi-plus"
+									disabled="#{polizaMantenimientoMB3.activButtons}" />
+								<p:commandButton value="Borrar" id="borrar" styleClass="ui-button-danger ui-button-outlined"
+									actionListener="#{polizaMantenimientoMB3.deleteRow}"
+									disabled="#{polizaMantenimientoMB3.activButtons}"
+									update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:pgrid2, :form1:pgrid3, :form1:movAcciones"
+									icon="pi pi-trash" onstart="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:findpoliza').click();" />
+							</h:panelGroup>
+						</div>
+						<p:focus for="objects" id="fcsObjects"></p:focus>
+						<p:dataTable id="objects" binding="#{table}" var="object" styleClass="sg-tabla-ancha"
+							value="#{polizaMantenimientoMB3.polideDataModel}"
+							resizableColumns="true" emptyMessage="No hay movimientos. Crea o busca una póliza para capturar sus renglones."
+							editable="#{polizaMantenimientoMB3.editableTable}"
+							selectionMode="single" rowKey="#{object.index}" scrollable="true"
+							paginator="true" lazy="true" rows="20" paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selection="#{polizaMantenimientoMB3.polideSelect}"
+							widgetVar="polizasWdg" rowIndexVar="index">
+							<p:ajax event="rowEditInit"
+								listener="#{polizaMantenimientoMB3.onInitRowEdit}"
+								oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});" />
+							<p:ajax event="rowEdit"
+								listener="#{polizaMantenimientoMB3.onRowEdit}" immediate="true"
+								update=":form1:messagesEdit, :form1:objects, :formFlujoEfectivo:tippolflu, :formFlujoEfectivo:mespolflu, :formFlujoEfectivo:conpolflu, :formFlujoEfectivo:sumaflujoe, :formFlujoEfectivo:sumaflujobuff, :formFlujoEfectivo:renpolflu, :formFlujoEfectivo:ctafluTable, :form1:focusFecpol, :formReten:numContrato, :formReten:beneficiario, :formReten:iSiva, formReten:conpolret"
+								onstart="PF('blockUIWidget').block();"
+								oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+								PF('blockUIWidget').unblock();
+								" />
+							<p:ajax event="rowEditCancel"
+								listener="#{polizaMantenimientoMB3.onRowCancel}"
+								update=":form1:messagesEdit, :form1:objects, :form1:polclv1, :form1:nomcta"
+								onstart=" $('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});"
+								oncomplete="jQuery('#form1\\:hideButton2').click();"
+								process="@this" />
+							<p:ajax event="rowSelect"
+								listener="#{polizaMantenimientoMB3.onRowSelect}"
+								update=":form1:pgrid2, :form1:nomcta, :form1:polclv1, :form1:pgridData"></p:ajax>
 
-									<p:inputText id="cuenta" value="#{object.cuenta}"
-										style="width:100%" maxlength="4"
-										ondblclick="PF('tbCuentas').clearFilters();PF('cuentascon').show(); return false;"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<pe:keyFilter for="cuenta" mask="int"></pe:keyFilter>
-										<p:ajax event="blur" update="cuenta"></p:ajax>
+							<p:ajax event="page" onstart="PF('blockUIWidget').block();"
+								oncomplete="PF('blockUIWidget').unblock();chagePage()"
+								listener="#{polizaMantenimientoMB3.changePage}" />
 
-									</p:inputText>
+							<p:column headerText="#" style="width:6%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.renpol}" id="renglon">
+											<f:convertNumber pattern="#.#" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="renpol" value="#{object.renpol}"
+											style="width:100%" maxlength="4"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}"
+											required="true"
+											requiredMessage="El n&uacute;mero de rengl&oacute;n es requerido">
+											<p:keyFilter for="renpol" mask="num" />
+											<p:ajax event="blur" update="renpol" />
+											<!-- <f:convertNumber pattern="#.#" /> -->
+										</p:inputText>
 
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-						<p:column headerText="Scta" style="width:10%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.scta}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="scta" value="#{object.scta}"
-										style="width:100%" maxlength="15"
-										onkeyup="this.value=this.value.toUpperCase();"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+							<p:column headerText="Cuenta" style="width:5%">
+								<p:cellEditor>
+									<f:facet name="output">
 
-										<p:ajax event="blur" update="scta"
-											listener="#{polizaMantenimientoMB3.scuentaChangeListener}"></p:ajax>
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+										<h:outputText value="#{object.cuenta}" />
 
-						<p:column headerText="Sscta" style="width:14%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.sscta}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="sscta" value="#{object.sscta}"
-										style="width:100%" maxlength="18"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+									</f:facet>
+									<f:facet name="input">
 
-										<p:ajax event="blur" update="sscta"
-											listener="#{polizaMantenimientoMB3.sscuentaChangeListener}"></p:ajax>
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+										<p:inputText id="cuenta" value="#{object.cuenta}"
+											style="width:100%" maxlength="4"
+											ondblclick="PF('tbCuentas').clearFilters();PF('cuentascon').show(); return false;"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+											<p:keyFilter for="cuenta" mask="int"></p:keyFilter>
+											<p:ajax event="blur" update="cuenta"></p:ajax>
 
-						<p:column headerText="Ssscta" style="width:5%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.ssscta}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="ssscta" value="#{object.ssscta}"
-										style="width:100%" maxlength="4"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<pe:keyFilter for="ssscta" mask="pint"></pe:keyFilter>
-										<p:ajax event="blur" update="ssscta"
-											listener="#{polizaMantenimientoMB3.ssscuentaChangeListener}"></p:ajax>
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+										</p:inputText>
 
-						<p:column headerText="Sssscta" style="width:5%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.sssscta}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="sssscta" value="#{object.sssscta}"
-										style="width:100%" maxlength="4"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<pe:keyFilter for="sssscta" mask="pint"></pe:keyFilter>
-										<p:ajax event="blur" update="sssscta, concep"
-											listener="#{polizaMantenimientoMB3.sssscuentaChangeListener}"></p:ajax>
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-						<p:column headerText="Concepto"
-							style="width:45%; text-align: left !important;">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.concep}" id="conceptoId"
-										style="text-align: left !important;" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="concep" value="#{object.concep}"
-										style="width:100%" maxlength="300"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<p:ajax event="blur" update="concep"></p:ajax>
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+							<p:column headerText="Scta" style="width:10%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.scta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="scta" value="#{object.scta}"
+											style="width:100%" maxlength="15"
+											onkeyup="this.value=this.value.toUpperCase();"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
 
-						<p:column headerText="RefPol" style="width:10%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.refpol}">
-										<f:convertNumber pattern="#" />
-									</h:outputText>
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="refpol" value="#{object.refpol}"
-										maxlength="200"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<p:ajax event="blur" update="refpol"></p:ajax>
+											<p:ajax event="blur" update="scta"
+												listener="#{polizaMantenimientoMB3.scuentaChangeListener}"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Sscta" style="width:14%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.sscta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="sscta" value="#{object.sscta}"
+											style="width:100%" maxlength="18"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+
+											<p:ajax event="blur" update="sscta"
+												listener="#{polizaMantenimientoMB3.sscuentaChangeListener}"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Ssscta" style="width:5%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.ssscta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="ssscta" value="#{object.ssscta}"
+											style="width:100%" maxlength="4"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+											<p:keyFilter for="ssscta" mask="pint"></p:keyFilter>
+											<p:ajax event="blur" update="ssscta"
+												listener="#{polizaMantenimientoMB3.ssscuentaChangeListener}"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Sssscta" style="width:5%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.sssscta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="sssscta" value="#{object.sssscta}"
+											style="width:100%" maxlength="4"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+											<p:keyFilter for="sssscta" mask="pint"></p:keyFilter>
+											<p:ajax event="blur" update="sssscta, concep"
+												listener="#{polizaMantenimientoMB3.sssscuentaChangeListener}"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Concepto"
+								style="width:45%; text-align: left !important;">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.concep}" id="conceptoId"
+											style="text-align: left !important;" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="concep" value="#{object.concep}"
+											style="width:100%" maxlength="300"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+											<p:ajax event="blur" update="concep"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="RefPol" style="width:10%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.refpol}">
+											<f:convertNumber pattern="#" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="refpol" value="#{object.refpol}"
+											maxlength="200"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+											<p:ajax event="blur" update="refpol"></p:ajax>
 
 
-									</p:inputText>
+										</p:inputText>
 
-								</f:facet>
-							</p:cellEditor>
+									</f:facet>
+								</p:cellEditor>
 
-						</p:column>
+							</p:column>
 
-						<p:column headerText="Dn" style="width:4%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.dn}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="dn" value="#{object.dn}" style="width:100%"
-										maxlength="1" onkeyup="this.value=this.value.toUpperCase();"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+							<p:column headerText="Dn" style="width:4%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.dn}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="dn" value="#{object.dn}" style="width:100%"
+											maxlength="1" onkeyup="this.value=this.value.toUpperCase();"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
 
-										<p:ajax event="blur" update="dn"></p:ajax>
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+											<p:ajax event="blur" update="dn"></p:ajax>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-						<p:column headerText="Cargo" style="width:12%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.canpol}" style="float:right;">
-										<f:convertNumber pattern="###,###,##0.00" type="number" />
-									</h:outputText>
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="canpol" widgetVar="canpol" value="#{object.canpol}"
-										style="width:100%" maxlength="15"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;} if(event.KeyCode == 9){if(this.value == null){this.value = 0.0;} return false;}">
-										<pe:keyFilter for="canpol" mask="num"></pe:keyFilter>
-										<p:ajax event="blur" update="canpol"></p:ajax>
-										<f:convertNumber pattern="###,###,##0.00" type="number" />
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+							<p:column headerText="Cargo" style="width:12%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.canpol}" style="float:right;">
+											<f:convertNumber pattern="###,###,##0.00" type="number" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="canpol" widgetVar="canpol" value="#{object.canpol}"
+											style="width:100%" maxlength="15"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;} if(event.KeyCode == 9){if(this.value == null){this.value = 0.0;} return false;}">
+											<p:keyFilter for="canpol" mask="num"></p:keyFilter>
+											<p:ajax event="blur" update="canpol"></p:ajax>
+											<f:convertNumber pattern="###,###,##0.00" type="number" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-						<p:column headerText="Abono" style="width:12%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.canpolh}" style="float:right;">
-										<f:convertNumber pattern="###,###,##0.00" type="number" />
-									</h:outputText>
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="canpolh" value="#{object.canpolh}"
-										style="width:100%" maxlength="15"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}if(event.KeyCode == 9){zeroCH(); return false;}">
-										<pe:keyFilter for="canpolh" mask="num"></pe:keyFilter>
-										<p:ajax event="blur" update="canpolh"></p:ajax>
-										<f:convertNumber pattern="###,###,##0.00" type="number" />
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+							<p:column headerText="Abono" style="width:12%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.canpolh}" style="float:right;">
+											<f:convertNumber pattern="###,###,##0.00" type="number" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="canpolh" value="#{object.canpolh}"
+											style="width:100%" maxlength="15"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}if(event.KeyCode == 9){zeroCH(); return false;}">
+											<p:keyFilter for="canpolh" mask="num"></p:keyFilter>
+											<p:ajax event="blur" update="canpolh"></p:ajax>
+											<f:convertNumber pattern="###,###,##0.00" type="number" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-						<p:column headerText="Cuenta Adicional" style="width:5%">
-							<p:cellEditor>
-								<f:facet name="output">
-									<h:outputText value="#{object.cuenta1}" />
-								</f:facet>
-								<f:facet name="input">
-									<p:inputText id="cuentaa" value="#{object.cuenta1}"
-										style="width:100%" maxlength="4"
-										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:objects span.ui-icon-check').last().click(); return false; } ">
+							<p:column headerText="Cuenta Adicional" style="width:5%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.cuenta1}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="cuentaa" value="#{object.cuenta1}"
+											style="width:100%" maxlength="4"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:objects span.ui-icon-check').last().click(); return false; } ">
 
-									</p:inputText>
-								</f:facet>
-							</p:cellEditor>
-						</p:column>
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-						<p:column width="5%">
-							<p:rowEditor></p:rowEditor>
-						</p:column>
-						<p:column visible="false">
-							<p:row>
-								<h:outputText id="nomctaHidden" value="#{object.nomcta}" />
-							</p:row>
-						</p:column>
-					</p:dataTable>
+							<p:column width="5%">
+								<p:rowEditor></p:rowEditor>
+							</p:column>
+							<p:column visible="false">
+								<p:row>
+									<h:outputText id="nomctaHidden" value="#{object.nomcta}" />
+								</p:row>
+							</p:column>
+						</p:dataTable>
+					</div>
 
-					<p:commandButton id="hideButton"
-						actionListener="#{polizaMantenimientoMB3.updateViewRowsAutoGenerated}"
-						update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000"
-						style="visibility: hidden;"
-						oncomplete="jQuery('div.ui-datatable-scrollable-body').scrollTop(jQuery('div.ui-datatable-scrollable-body').prop('scrollHeight'));" />
+					<!-- botones ocultos que la pagina y el bean disparan por JavaScript -->
+					<div class="sg-oculto" aria-hidden="true">
+						<p:commandButton id="hideButton"
+							actionListener="#{polizaMantenimientoMB3.updateViewRowsAutoGenerated}"
+							update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000"
+							style="visibility: hidden;"
+							oncomplete="jQuery('div.ui-datatable-scrollable-body').scrollTop(jQuery('div.ui-datatable-scrollable-body').prop('scrollHeight'));" />
 
-					<p:commandButton id="hideButton2"
-						actionListener="#{polizaMantenimientoMB3.succesCancelEdition}"
-						update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000, :form1:polclv1, :form1:nomcta"
-						style="visibility: hidden;" immediate="true" process="@parent" />
+						<p:commandButton id="hideButton2"
+							actionListener="#{polizaMantenimientoMB3.succesCancelEdition}"
+							update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000, :form1:polclv1, :form1:nomcta"
+							style="visibility: hidden;" immediate="true" process="@parent" />
 
-					<p:commandButton id="hideButton3"
-						actionListener="#{polizaMantenimientoMB3.goToLastPage}"
-						update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000, :form1:polclv1, :form1:nomcta, formReten:tippolret, :formReten:mespolret, :formReten:iSiva, :formReten:renpolret"
-						style="visibility: hidden;" immediate="true" process="@parent" />
+						<p:commandButton id="hideButton3"
+							actionListener="#{polizaMantenimientoMB3.goToLastPage}"
+							update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000, :form1:polclv1, :form1:nomcta, formReten:tippolret, :formReten:mespolret, :formReten:iSiva, :formReten:renpolret"
+							style="visibility: hidden;" immediate="true" process="@parent" />
 
-					<p:commandButton id="hideCleanButton" process="@this"
-						style="visibility: hidden;"
-						actionListener="#{polizaMantenimientoMB3.clean}" />
-					<p:panelGrid id="pgrid2" columns="6"
-						styleClass="green shadow-panel" style="width:100%;">
-						<h:outputText value="Nombre Concepto:" />
-						<h:inputText value="#{polizaMantenimientoMB3.nomSelectedConcept}"
-							id="polclv1" size="110" maxlength="100" disabled="true" />
-						<p:selectBooleanCheckbox id="repeatConcept"
-							value="#{polizaMantenimientoMB3.repeatConcept}"
-							itemLabel="Repetir Concepto">
-							<p:ajax update="repeatConcept" />
-						</p:selectBooleanCheckbox>
+						<p:commandButton id="hideCleanButton" process="@this"
+							style="visibility: hidden;"
+							actionListener="#{polizaMantenimientoMB3.clean}" />
 
-						<h:outputText value="Suma:" />
-						<h:inputText value="#{polizaMantenimientoMB3.polien.cdebe}"
-							id="sumaa" disabled="true" size="15" maxlength="15"
-							style="text-align:right;">
-							<f:convertNumber pattern="###,###,##0.00" type="number" />
-						</h:inputText>
-						<h:inputText id="sumac"
-							value="#{polizaMantenimientoMB3.polien.chaber}" size="15"
-							maxlength="15" disabled="true" style="text-align:right;">
-							<f:convertNumber pattern="###,###,##0.00" type="number" />
-						</h:inputText>
-
-						<h:outputText value="Nombre Cuenta:" />
-						<h:inputText value="#{polizaMantenimientoMB3.nomSelectedAcc}"
-							id="nomcta" size="110" maxlength="80" disabled="true" />
-
-						<h:outputText value="" />
-						<h:outputText value="Suma 8000:" />
-						<h:inputText value="#{polizaMantenimientoMB3.polien.ctc600}"
-							id="sumaA8000" disabled="true" size="15" maxlength="15"
-							style="text-align:right;">
-							<f:convertNumber pattern="###,###,##0.00" type="number" />
-
-						</h:inputText>
-						<h:inputText value="#{polizaMantenimientoMB3.polien.cta600}"
-							id="sumaB8000" disabled="true" size="15" maxlength="15"
-							style="text-align:right;">
-							<f:convertNumber pattern="###,###,##0.00" type="number" />
-						</h:inputText>
-					</p:panelGrid>
-
-					<p:panelGrid id="pgrid3" columns="12"
-						styleClass="green row-centered shadow-panel" style="width:100%;">
-						<!-- <p:commandButton value="Primero" id="firstRow"
-							icon="ui-icon-seek-first" style="visibility: hidden;"
-							actionListener="#{polizaMantenimientoMB3.changeFirstRow}"
-							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" />
-						<p:commandButton value="Anterior" id="prevRow"
-							icon="ui-icon-seek-prev" style="visibility: hidden;"
-							actionListener="#{polizaMantenimientoMB3.changePrevRow}"
-							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" />
-						<p:commandButton value="Siguiente" id="nextRow"
-							icon="ui-icon-seek-next" style="visibility: hidden;"
-							actionListener="#{polizaMantenimientoMB3.changeNextRow}"
-							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" />
-						<p:commandButton value="Ultimo" id="lastRow"
-							icon="ui-icon-seek-end" style="visibility: hidden;"
-							actionListener="#{polizaMantenimientoMB3.changeEndRow}"
-							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" /> -->
-
-						<h:outputText value="Renglon:" />
-						<h:inputText value="#{polizaMantenimientoMB3.renglon}" id="rowid"
-							maxlength="9"
-							onkeypress="if((!this.value || 0 === this.value.length) ){ if( event.keyCode == 9 || event.keyCode == 13){return false;}}if (event.keyCode == 13){document.getElementById('form1:hideButtonRow').click(); return false}">
-							<pe:keyFilter for="rowid" mask="pint"></pe:keyFilter>
-						</h:inputText>
 						<p:commandButton id="hideButtonRow"
 							update=":form1:objects, :form1:messagesEdit"
 							actionListener="#{polizaMantenimientoMB3.changeRow}"
 							style="visibility: hidden;" />
-						<p:commandButton value="Polizas Incorrectas" id="wrongbuton"
-							actionListener="#{polizaMantenimientoMB3.cleanWronPolicies}"
-							oncomplete="PF('wrongPoli').show();"
-							update=":formPolizaIncorrecta:wrongP, :formPolizaIncorrecta:wrongTable, :formPolizaIncorrecta:pgridWrongs, :formPolizaIncorrecta:wrongmes"
-							icon="ui-icon-closethick" />
-							<p:outputLabel for="tipoReporte" value="Tipo de Reporte:" />
-						<p:selectOneRadio id="tipoReporte"
-							value="#{polizaMantenimientoMB3.tipoReporte}" unselectable="true">
-							<f:selectItem itemLabel="Tipo A" itemValue="A" />
-							<f:selectItem itemLabel="Tipo B" itemValue="B" />
 
-						</p:selectOneRadio>
-							
-						<p:commandButton value="Imprimir Poliza" id="impresion"
-							style="margin-left: 47%; padding: 1px;"
-							actionListener="#{polizaMantenimientoMB3.createFilePdf}"
-							icon="ui-icon-print"
-							oncomplete="PF('blockUIWidget').unblock();PF('impPoliza').show();"
-							onstart="PF('blockUIWidget').block();"
-							update=":formImprimirPoliza:imPoliza" />
-						<p:commandButton value="Adicionar" id="addpoliza"
-							actionListener="#{polizaMantenimientoMB3.createFirstRow}"
-							update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:pgrid2, :form1:fcsObjects"
-							icon="ui-icon-plus"
-							disabled="#{polizaMantenimientoMB3.activButtons}" />
-						<p:commandButton value="Borrar" id="borrar"
-							actionListener="#{polizaMantenimientoMB3.deleteRow}"
-							disabled="#{polizaMantenimientoMB3.activButtons}"
-							update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:pgrid2, :form1:pgrid3"
-							icon="ui-icon-trash" onstart="PF('blockUIWidget').block();"
-							oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:findpoliza').click();" />
 						<p:commandButton id="hideButtonCreateRow"
 							update=":form1:objects, :form1:messagesEdit"
 							oncomplete="jQuery('#form1\\:objects tr').last().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});"
 							style="visibility: hidden;" />
-					</p:panelGrid>
-					
-				</p:panel>
+					</div>
+
+					<!-- ===== Concepto y cuenta del renglon / sumas ===== -->
+					<h:panelGroup id="pgrid2" layout="block" styleClass="sg-pol-bottom">
+						<div class="sg-card">
+							<div class="sg-card-b" style="gap: 14px;">
+								<div class="sg-field">
+									<p:outputLabel for="polclv1" value="Nombre del concepto" />
+									<h:inputText value="#{polizaMantenimientoMB3.nomSelectedConcept}"
+										id="polclv1" size="110" maxlength="100" disabled="true" styleClass="sg-inp" />
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="nomcta" value="Nombre de la cuenta" />
+									<h:inputText value="#{polizaMantenimientoMB3.nomSelectedAcc}"
+										id="nomcta" size="110" maxlength="80" disabled="true" styleClass="sg-inp" />
+								</div>
+								<p:selectBooleanCheckbox id="repeatConcept"
+									value="#{polizaMantenimientoMB3.repeatConcept}"
+									itemLabel="Repetir concepto en el siguiente renglón">
+									<p:ajax update="repeatConcept" />
+								</p:selectBooleanCheckbox>
+							</div>
+						</div>
+						<div class="sg-card">
+							<div class="sg-card-b">
+								<div class="sg-totals">
+									<span></span><span class="h">Cargo</span><span class="h">Abono</span>
+									<span class="sg-lbl">Suma</span>
+									<h:inputText value="#{polizaMantenimientoMB3.polien.cdebe}"
+										id="sumaa" disabled="true" size="15" maxlength="15" styleClass="v">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:inputText>
+									<h:inputText id="sumac"
+										value="#{polizaMantenimientoMB3.polien.chaber}" size="15"
+										maxlength="15" disabled="true" styleClass="v">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:inputText>
+									<span class="sg-lbl">Suma 8000</span>
+									<h:inputText value="#{polizaMantenimientoMB3.polien.ctc600}"
+										id="sumaA8000" disabled="true" size="15" maxlength="15" styleClass="v">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:inputText>
+									<h:inputText value="#{polizaMantenimientoMB3.polien.cta600}"
+										id="sumaB8000" disabled="true" size="15" maxlength="15" styleClass="v">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:inputText>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+
+					<!-- ===== Polizas incorrectas e impresion ===== -->
+					<h:panelGroup id="pgrid3" layout="block" styleClass="sg-card">
+						<div class="sg-card-b sg-pol-foot">
+							<p:commandButton value="Pólizas incorrectas" id="wrongbuton" styleClass="ui-button-outlined"
+								actionListener="#{polizaMantenimientoMB3.cleanWronPolicies}"
+								oncomplete="PF('wrongPoli').show();"
+								update=":formPolizaIncorrecta:wrongP, :formPolizaIncorrecta:wrongTable, :formPolizaIncorrecta:pgridWrongs, :formPolizaIncorrecta:wrongmes"
+								icon="pi pi-exclamation-triangle" />
+							<div class="sg-actions">
+								<p:outputLabel for="tipoReporte" value="Tipo de reporte" styleClass="sg-lbl" />
+								<p:selectOneRadio id="tipoReporte"
+									value="#{polizaMantenimientoMB3.tipoReporte}" unselectable="true">
+									<f:selectItem itemLabel="Tipo A" itemValue="A" />
+									<f:selectItem itemLabel="Tipo B" itemValue="B" />
+								</p:selectOneRadio>
+								<p:commandButton value="Imprimir póliza" id="impresion"
+									actionListener="#{polizaMantenimientoMB3.createFilePdf}"
+									icon="pi pi-print"
+									oncomplete="PF('blockUIWidget').unblock();PF('impPoliza').show();"
+									onstart="PF('blockUIWidget').block();"
+									update=":formImprimirPoliza:imPoliza" />
+							</div>
+						</div>
+					</h:panelGroup>
+
+				</h:panelGroup>
 			</h:form>
 
 			<h:form id="formImprimirPoliza" styleClass="green">
@@ -662,11 +640,11 @@
 			<h:form id="formConfirmDate" styleClass="green">
 				<p:dialog id="saveConfirmDate" widgetVar="saveConfirmDateWdt"
 					header="Confirma" modal="true" styleClass="green">
-					<p:panelGrid id="pgridSaveUpdateDate" columns="1">
+					<p:panelGrid id="pgridSaveUpdateDate" columns="1" layout="tabular">
 						<h:outputText
 							value="¿Desea guardar los cambios al encabezado de la p&oacute;liza?" />
 						<center>
-							<p:panelGrid id="pgridSaveUpdateDateButtons" columns="2">
+							<p:panelGrid id="pgridSaveUpdateDateButtons" columns="2" layout="tabular">
 								<p:commandButton value="Guardar"
 									update=":form1:messagesEdit, :form1:panel, form1:objects"
 									actionListener="#{polizaMantenimientoMB3.saveUpdateDate}"
@@ -684,11 +662,11 @@
 			<h:form id="formSaveConfirm" styleClass="green">
 				<p:dialog id="saveConfirm" widgetVar="saveConfirmWdt"
 					header="Confirma" modal="true" styleClass="green">
-					<p:panelGrid id="pgridSaveUpdate" columns="1">
+					<p:panelGrid id="pgridSaveUpdate" columns="1" layout="tabular">
 						<h:outputText
 							value="¿Desea guardar los cambios al encabezado de la p&oacute;liza?" />
 						<center>
-							<p:panelGrid id="pgridSaveUpdateButtons" columns="2">
+							<p:panelGrid id="pgridSaveUpdateButtons" columns="2" layout="tabular">
 								<p:commandButton value="Guardar"
 									update=":form1:messagesEdit, :form1:panel, form1:objects"
 									actionListener="#{polizaMantenimientoMB3.saveUpdate}"
@@ -705,7 +683,7 @@
 			<h:form id="formPanelValida" styleClass="green">
 				<p:dialog id="panelValida" widgetVar="wingetPasswor"
 					header="Valida Password" modal="true" styleClass="green">
-					<p:panelGrid id="pgridpass" columns="2">
+					<p:panelGrid id="pgridpass" columns="2" layout="tabular">
 						<h:outputText value="Password Administrador" />
 						<h:inputSecret id="validatePass"
 							value="#{polizaMantenimientoMB3.password}"
@@ -728,7 +706,7 @@
 						actionListener="#{polizaMantenimientoMB3.checkCatflu}"
 						update=":formFlujoEfectivo:ctafluTable"
 						style="visibility: hidden;" />
-					<p:panelGrid columns="8">
+					<p:panelGrid columns="8" layout="tabular">
 						<h:outputText value="Tipo:" />
 						<h:inputText value="#{polizaMantenimientoMB3.tippolflu}"
 							id="tippolflu" size="2" maxlength="2" disabled="true" />
@@ -778,12 +756,12 @@
 									</h:outputText>
 								</f:facet>
 								<f:facet name="input">
-									<pe:inputNumber id="oclvflu" value="#{o.clvflu}"
+									<p:inputNumber id="oclvflu" value="#{o.clvflu}"
 										emptyValue="00.00" decimalPlaces="2" decimalSeparator="."
 										required="true" maxlength="5" thousandSeparator=""
 										onkeypress="if((!this.value || 0 === this.value.length) ){ if( event.keyCode == 9 || event.keyCode == 13){return false;}} if (event.keyCode == 13){return false;} ">
 										<p:ajax event="blur" update="oclvflu"></p:ajax>
-									</pe:inputNumber>
+									</p:inputNumber>
 								</f:facet>
 							</p:cellEditor>
 						</p:column>
@@ -802,7 +780,7 @@
 									<p:inputText id="ocanflu" value="#{o.canflu}"
 										style="width:100%"
 										onkeypress="if(event.keyCode == 13){return false;}">
-										<pe:keyFilter for="ocanflu" mask="num"></pe:keyFilter>
+										<p:keyFilter for="ocanflu" mask="num"></p:keyFilter>
 										<p:ajax event="blur" update="ocanflu"></p:ajax>
 										<f:convertNumber pattern="###,###,##0.00" type="number" />
 									</p:inputText>
@@ -832,7 +810,7 @@
 					<br />
 					<br />
 					<center>
-						<p:panelGrid columns="4">
+						<p:panelGrid columns="4" layout="tabular">
 							<p:commandButton value="Agregar"
 								actionListener="#{polizaMantenimientoMB3.addAction}" id="add"
 								update=":formFlujoEfectivo:ctafluTable">
@@ -865,13 +843,13 @@
 							listener="#{polizaMantenimientoMB3.onCuentaRowDblClckSelect}"
 							oncomplete="PF('cuentascon').hide();"></p:ajax>
 
-						<p:column headerText="Cuenta" filterMatchMode="startswith"
+						<p:column headerText="Cuenta" filterMatchMode="startsWith"
 							filterBy="#{object3.cuenta}" width="6%" filterMaxLength="4">
 							<h:outputText value="#{object3.cuenta}" />
 						</p:column>
 
 						<p:column headerText="Scuenta" filterMaxLength="15"
-							filterBy="#{object3.scuenta}" filterMatchMode="startswith"
+							filterBy="#{object3.scuenta}" filterMatchMode="startsWith"
 							width="15%">
 							<h:outputText value="#{object3.scuenta}" />
 						</p:column>
@@ -896,10 +874,10 @@
 			<h:form id="formPolizaIncorrecta" styleClass="green">
 				<p:dialog header="P&oacute;lizas Incorrectas" widgetVar="wrongPoli"
 					id="wrongP" width="800" height="405">
-					<p:messages id="messages" showDetail="true" autoUpdate="true"
-						closable="true" />
+					<p:messages id="messages" showDetail="true"
+						closable="true"><p:autoUpdate/></p:messages>
 					<center>
-						<p:panelGrid columns="3" id="pgridWrongs">
+						<p:panelGrid columns="3" id="pgridWrongs" layout="tabular">
 							<h:outputText value="Mes:" />
 							<h:inputText value="#{polizaMantenimientoMB3.me}" id="wrongmes"
 								size="2" maxlength="2" />
@@ -963,7 +941,7 @@
 			<h:form id="formConfirmFF">
 				<p:dialog id="ffConfirm" widgetVar="ffConfirmWdt" header="Confirma"
 					modal="true" styleClass="green">
-					<p:panelGrid columns="8">
+					<p:panelGrid columns="8" layout="tabular">
 						<h:outputText value="Tipo:" />
 						<h:inputText value="#{polizaMantenimientoMB3.tippolflu}"
 							id="tippolRete" size="2" maxlength="2" disabled="true" />
@@ -979,11 +957,11 @@
 						<h:inputText value="#{polizaMantenimientoMB3.renpolflu}"
 							id="renpolRete" size="2" maxlength="2" disabled="true" />
 					</p:panelGrid>
-					<p:panelGrid id="pgridFfConfirm" columns="1">
+					<p:panelGrid id="pgridFfConfirm" columns="1" layout="tabular">
 						<h:outputText
 							value="El concepto tiene flujo de efectivo. ¿Desea editarlo?" />
 						<center>
-							<p:panelGrid id="pgridSaveUpdateButtons" columns="2">
+							<p:panelGrid id="pgridSaveUpdateButtons" columns="2" layout="tabular">
 								<p:commandButton value="Aceptar"
 									update=":formFlujoEfectivo:ctafluTable, :formFlujoEfectivo:tippolflu, :formFlujoEfectivo:mespolflu, :formFlujoEfectivo:conpolflu, :formFlujoEfectivo:sumaflujoe, :formFlujoEfectivo:renpolflu"
 									onstart="PF('flujoefectivo').show();"
@@ -998,7 +976,7 @@
 
 
 				<h:outputScript id="handleCloseScript" target="body">					
-					$(window).bind('unload', function(){						
+					$(window).on('unload', function(){						
 						jQuery('#form1\\:hideCleanButton').click();
 					});
 				</h:outputScript>
@@ -1012,7 +990,7 @@
 					styleClass="green">
 
 					<p:panelGrid columns="8"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<h:outputText value="Tipo:" />
 						<h:inputText value="#{polizaMantenimientoMB3.tippolReten}"
 							id="tippolret" size="2" maxlength="2" disabled="true" />
@@ -1029,12 +1007,12 @@
 							id="renpolret" size="2" maxlength="2" disabled="true" />
 					</p:panelGrid>
 					<p:panelGrid columns="2"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:row>
 							<p:outputLabel value="IMPORTE SIN IVA" />
 						</p:row>
 						<p:row>
-							<pe:inputNumber id="iSiva"
+							<p:inputNumber id="iSiva"
 								value="#{polizaMantenimientoMB3.tcRetencione.importeSinIva}"
 								maxValue="900" maxlength="4" symbol="%" symbolPosition="s"
 								required="true" emptyValue="empty" />
@@ -1048,7 +1026,7 @@
 								value="#{polizaMantenimientoMB3.tcRetencione.numContrato}"
 								onkeyup="this.value=this.value.toUpperCase();" required="true"
 								requiredMessage="Los Datos del Numero de Contrato son Obligatorios">
-								<pe:keyFilter regEx="/[0-9A-Z]/i" />
+								<p:keyFilter regEx="/[0-9A-Z]/i" />
 							</p:inputText>
 
 
@@ -1063,14 +1041,14 @@
 								id="beneficiario" rows="3" cols="30"
 								value="#{polizaMantenimientoMB3.tcRetencione.datosBeneficiario}"
 								queryDelay="750" minQueryLength="4">
-								<pe:keyFilter regEx="/[0-9A-Z ]/i" />
+								<p:keyFilter regEx="/[0-9A-Z ]/i" />
 							</p:inputTextarea>
 
 						</p:row>
 
 					</p:panelGrid>
 					<p:panelGrid columns="3"
-						styleClass="col-centered row-centered ui-noborder">
+						styleClass="col-centered row-centered ui-noborder" layout="tabular">
 						<p:commandButton value="Guardar" id="saveRetencion"
 							actionListener="#{polizaMantenimientoMB3.saveRetenciones}"
 							update=":form1:messagesEdit"

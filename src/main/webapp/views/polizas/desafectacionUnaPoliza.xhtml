@@ -2,10 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
+	xmlns:c="jakarta.tags.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -20,12 +20,7 @@
 					styleClass="green col-md-4 col-centered row-centered shadow-panel">
 					<p:growl id="messagesEdit" showDetail="true" sticky="true" />
 					<center>
-						<p:dialog id="modal" modal="true" widgetVar="statusDialog"
-							header="Status" draggable="false" closable="false"
-							resizable="false">
-							<p:graphicImage name="/images/ajaxloadingbar.gif"  />
-						</p:dialog>
-						<p:panelGrid id="pgrid2" columns="2">
+						<p:panelGrid id="pgrid2" columns="2" layout="tabular">
 							<h:inputSecret id="pass"
 								value="#{desafectacionUnaPolizaMB.password}" />
 							<p:commandButton value="Validar Password" ajax="false"
@@ -35,7 +30,7 @@
 					</center>
 
 					<center>
-						<p:panelGrid id="pgrid" columns="4">
+						<p:panelGrid id="pgrid" columns="4" layout="tabular">
 							<h:outputText value="Mes" />
 							<h:outputText value="Tipo" />
 							<h:outputText value="Numero" />
@@ -69,11 +64,11 @@
 			</h:form>
 			<script type="text/javascript">
 			    function start() {
-			        PF('statusDialog').show();
+			        PF('blockUIWidget').block();
 			     }
 			 
 			     function stop() {
-			         PF('statusDialog').hide();
+			         PF('blockUIWidget').unblock();
 			     }
            </script>
 		</ui:define>

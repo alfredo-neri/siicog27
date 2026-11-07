@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -57,16 +57,23 @@
 	         }
 	        </style>
 			<h:form id="form1" style="display: inline-block; margin-left: auto; margin-right: auto; ">
-				<p:growl id="growlReportador" showDetail="true" sticky="true" autoUpdate="true"></p:growl>
-				<p:panel id="panelReporte"
-					header="Mayor por cargos, abonos, referencia o fecha de las pólizas" style="height: 26em;"
-					styleClass="green shadow-panel container">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"><p:autoUpdate/></p:growl>
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Mayor por cargos, abonos, referencia o fecha de las pólizas</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<div class="col-md-12">
 						<div class="row">
 							<h:panelGrid columns="2" id="panel-filtros" style="">
 								<h:panelGrid columns="1" columnClasses="borderless">
 									<h:panelGrid columns="1" columnClasses="borderless">
-										<p:selectOneRadio layout="grid" columns="1" value="#{bean.clasificacion}" required="true">
+										<p:selectOneRadio layout="responsive" columns="1" value="#{bean.clasificacion}" required="true">
 							  	  	  		<f:selectItem itemLabel="Por cargos" itemValue="CANPOL"/>
 							  	  	  		<f:selectItem itemLabel="Por abonos" itemValue="CANPOLH"/>			  	  	  		
 							  	  	  		<f:selectItem itemLabel="Por referencia" itemValue="REFPOL"/>
@@ -74,7 +81,7 @@
 							  	  	  	</p:selectOneRadio>
 						  	  	  	</h:panelGrid>	
 					  	  	  	</h:panelGrid>	
-								<p:panelGrid styleClass="ui-noborder">
+								<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 									<p:row>
 										<p:column>
 											<h:outputText value="Cuenta"/>
@@ -147,19 +154,18 @@
 										
 										<p:column>
 											<h:panelGroup>
-												<p:commandLink actionListener="#{bean.createFileTxtInlineValidate}" title="TXT">
-													<p:graphicImage value="txt.png" width="24" />
-												</p:commandLink>
+												<p:commandButton icon="pi pi-play" id="generateportepdf"
+												    onstart="PF('blockUIWidget').block()"
+													action="#{bean.createFilePdfInlineValidate}"
+													value="Generar" update="form1:visor, :form1:growlReportador">
+												</p:commandButton>
 												<h:commandLink style="display:none;" id="donwloadTxt"
 													onclick="PrimeFaces.monitorDownload(start, stop);">
 													<p:fileDownload value="#{bean.fileTxt}"/>
 												</h:commandLink>	
-												<p:commandButton id="generateportepdf"
-												    onstart="PF('blockUIWidget').block()"
-													action="#{bean.createFilePdfInlineValidate}"
-													value="Correcto" update="form1:inlinePdf, :form1:growlReportador" 
-													styleClass="btn btn-default">
-												</p:commandButton>
+												<p:commandLink actionListener="#{bean.createFileTxtInlineValidate}" title="TXT" styleClass="sg-btn-sm">
+													<i class="pi pi-file" /> TXT
+												</p:commandLink>
 											</h:panelGroup>
 										</p:column>
 										
@@ -178,25 +184,26 @@
 								</p:panelGrid>
 							</h:panelGrid>
 						</div>
-						<p:panel id="inlinePdf" style="border:0px"	visible="#{bean.uuid ne null}">
-	
-							<object type="application/pdf" style="margin-top: 1em;"
-								data="#{request.contextPath}/GetFileInline?uuid=#{bean.uuid}&amp;filename=#{bean.endFilename}" height="380px" width="100%">
-								Tu browser no puede	desplegar el PDF.
-								</object>
-	
-						</p:panel>
 					</div>
-				</p:panel>
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (bean.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"	visible="#{bean.uuid ne null}">
+	
+								<object type="application/pdf" style="margin-top: 1em;"
+									data="#{request.contextPath}/GetFileInline?uuid=#{bean.uuid}&amp;filename=#{bean.endFilename}" height="640px" width="100%">
+									Tu browser no puede	desplegar el PDF.
+									</object>
+	
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 				
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 		</ui:define>
 	</ui:composition>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -15,7 +15,7 @@
 				<p:panel id="panelReporte"
 					header="CONAC - Estado de Variacion en la Hacienda Publica Patrimonio"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="2" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="2" styleClass="col-centered ui-noborder" layout="tabular">
 						<p:selectBooleanCheckbox
 							value="#{estadoVariacionHaciendaPublicaPatrimonioMB.acumulado}"
 							style="	display: flex;	align-items: center;	justify-items: center;"
@@ -30,7 +30,7 @@
 								update="panelReporte" />
 						</p:selectOneButton>
 					</p:panelGrid>
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder" layout="tabular">
 						<h:outputText value="Periodo: " for="trim"
 							rendered="#{not empty estadoVariacionHaciendaPublicaPatrimonioMB.periodos}" />
 						<p:selectOneMenu id="trim" editable="false"
@@ -41,19 +41,22 @@
 								value="#{estadoVariacionHaciendaPublicaPatrimonioMB.periodos}"
 								var="p" itemValue="#{p}" itemLabel="#{p.descripcion}" />
 						</p:selectOneMenu>
-						<p:panelGrid columns="4" styleClass="ui-noborder">
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 
 							
+									<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{estadoVariacionHaciendaPublicaPatrimonioMB.viewPdf}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>
 									<h:commandLink
 										onclick="PrimeFaces.monitorDownload(start, stop);"
 										title="EXCEL">
 										<p:graphicImage value="excel.png" width="24" />
 										<p:fileDownload value="#{estadoVariacionHaciendaPublicaPatrimonioMB.fileXls}" />
-									</h:commandLink>
-									<h:commandLink
-										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT" >
-										<p:graphicImage value="txt.png" width="24" />
-										<p:fileDownload value="#{estadoVariacionHaciendaPublicaPatrimonioMB.fileTxt}"/>
 									</h:commandLink>
 									<!-- 
 									<h:commandLink
@@ -63,14 +66,11 @@
 									</h:commandLink>
 									 -->
 
-							<p:commandButton id="generateportepdf"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()"
-								action="#{estadoVariacionHaciendaPublicaPatrimonioMB.viewPdf}"
-								value="Correcto"
-								update="form1:inlinePdf, :form1:growlReportador"
-								styleClass="btn btn-default">
-							</p:commandButton>
+							<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT" >
+										<p:graphicImage value="txt.png" width="24" />
+										<p:fileDownload value="#{estadoVariacionHaciendaPublicaPatrimonioMB.fileTxt}"/>
+									</h:commandLink>
 
 						</p:panelGrid>
 					</p:panelGrid>
@@ -84,12 +84,6 @@
 							desplegar el PDF. </object>
 					</p:panel>
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.gif"
-							style="margin-right: 12px; vertical-align: middle;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 		</ui:define>
 	</ui:composition>

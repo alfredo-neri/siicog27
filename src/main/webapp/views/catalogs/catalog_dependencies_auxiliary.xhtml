@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -20,84 +20,77 @@
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" /> 
 
-				<p:panel id="panel"
-					header=" Cat&aacute;logo de Dependencias Auxiliares Administrativas"
-					styleClass="green col-md-4 col-centered row-centered shadow-panel">
-					<br />
-					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Catálogo de Dependencias Auxiliares Administrativas</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton icon="pi pi-plus" value="Nuevo registro"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								actionListener="#{catalogDependenciesAuxiliaryMB.insertRow}"
+								oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+						</h:panelGroup>
+					</div>
 
-						<h:outputText value="Clave: " for="keyInput"
-							style="padding-left: 30px; padding-right: 30px;" /> 
-						<p:inputText id="keyInput"
-							value="#{catalogDependenciesAuxiliaryMB.beanFind.clave}"
-							maxlength="3"
-							validatorMessage="Clave solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
-								for="keyInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"  
-								listener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}" />
-						</p:inputText>
-
-						<h:outputText value="Nombre: " for="nameInput"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="nameInput"
-							value="#{catalogDependenciesAuxiliaryMB.beanFind.nombre}"
-							style="margin-top: 10px;" maxlength="200"
-							validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
-								for="nameInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}" />
-						</p:inputText>
-
-						<p:outputPanel layout="block" style="text-align:center">
-							<br />
-							<br />
-
-							<p:commandButton value="Buscar" style="padding: 5px;"
-								update=":form1:messagesEdit, :form1:objects, :form1:panel"
-								actionListener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()" />
-
-							<p:commandButton value="Limpiar" immediate="true"
-								style="padding: 5px; margin-left: 15px;"
-								update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:panel"
-								actionListener="#{catalogDependenciesAuxiliaryMB.findAllValuesCatalog}"
-								onstart="PF('blockUIWidget').block()" 
-								oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:keyInput').value=''; document.getElementById('form1:nameInput').value=''" />
-
-						</p:outputPanel>
-					</h:panelGrid>
-				</p:panel>
-
-
-				<pe:blockUI widgetVar="blockUIWidget">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Please wait..." style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-
-				<br />
-				<br />
-				<br />
-
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #E8ECED;">
-
-					<p:commandButton value="Nuevo Registro"
-						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
-						actionListener="#{catalogDependenciesAuxiliaryMB.insertRow}"
-						style="margin-left: 50%; padding: 5px;"
-						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
-				</p:panel>
+					<!-- ===== Buscar dependencia auxiliar ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar dependencia auxiliar</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 220px) minmax(0, 1fr);">
+									<div class="sg-field">
+										<p:outputLabel for="keyInput" value="Clave" />
+										<p:inputText styleClass="mono" id="keyInput"
+											value="#{catalogDependenciesAuxiliaryMB.beanFind.clave}"
+											maxlength="3"
+											validatorMessage="Clave solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+												for="keyInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"  
+												listener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="nameInput" value="Nombre" />
+										<p:inputText id="nameInput"
+											value="#{catalogDependenciesAuxiliaryMB.beanFind.nombre}" maxlength="200"
+											validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+												for="nameInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar"
+										update=":form1:messagesEdit, :form1:objects, :form1:panel"
+										actionListener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
+									<p:commandButton styleClass="ui-button-flat" value="Limpiar" immediate="true"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:panel"
+										actionListener="#{catalogDependenciesAuxiliaryMB.findAllValuesCatalog}"
+										onstart="PF('blockUIWidget').block()" 
+										oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:keyInput').value=''; document.getElementById('form1:nameInput').value=''" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
 
 				<p:focus context="objects" id="focusTable" />   
 
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Dependencias auxiliares</h2>
+					</div>
 				<p:dataTable id="objects" binding="#{table}" var="object"
 					value="#{catalogDependenciesAuxiliaryMB.list}"
 					styleClass="et_datatable" emptyMessage="No hay registros"
@@ -105,7 +98,6 @@
 					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					selectionMode="single" rowKey="#{object.id}">
 
-					<f:facet name="header">Cat&aacute;logo de Dependencias Auxiliares Administrativas</f:facet>
 
 					<p:ajax event="rowEdit"
 						listener="#{catalogDependenciesAuxiliaryMB.onRowEdit}"
@@ -122,7 +114,7 @@
 					<p:column headerText="Clave" exportable="false" style="width:5%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.clave}" />
+								<h:outputText value="#{object.clave}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText id="clave" value="#{object.clave}"
@@ -161,11 +153,12 @@
 						</p:cellEditor>
 					</p:column>
 
-					<p:column headerText="Borrar" style="width:5%" exportable="false">
-						<p:commandLink
+					<p:column headerText="Acciones" exportable="false" style="width:110px;" styleClass="sg-acciones-fila">
+						<p:rowEditor />
+						<p:commandLink styleClass="sg-borrar" id="deleteRow"
 							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
 							oncomplete="PF('confirmDeleteDlg').show()"
-							image="ui-icon ui-icon-close" title="Delete">
+							image="ui-icon ui-icon-close" title="Borrar">
 
 							<f:setPropertyActionListener value="#{object}"
 								target="#{catalogDependenciesAuxiliaryMB.beanSelected}" />
@@ -174,40 +167,39 @@
 						</p:commandLink>
 					</p:column>
 
-					<p:column style="width:5%" exportable="false">
-						<p:rowEditor />
-					</p:column>
-
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="excel.png" width="24" />
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file-excel" /> Excel
 							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.fileXls}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="pdf.png" width="24" />
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-align-left" /> TXT
+							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file-pdf" /> PDF
 							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.filePdf}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="csv.png" width="24" />
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file" /> CSV
 							<!--
 							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
 								fileName="DependenciasAuxiliaresAdm" pageOnly="false" />
 								-->
 							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.csvFile}" />
 						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.file}" />
-						</h:commandLink>
-
-
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 
 
@@ -215,24 +207,19 @@
 				<br />
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar"
 							update=":form1:objects, :form1:messagesEdit"
 							actionListener="#{catalogDependenciesAuxiliaryMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 
 				</p:dialog>

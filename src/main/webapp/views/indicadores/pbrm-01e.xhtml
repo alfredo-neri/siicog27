@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -23,7 +23,7 @@
 						<p:tab id="normal" title="Normal">
 
 							<p:panelGrid columns="4"
-								styleClass="col-centered row-centered ui-noborder">
+								styleClass="col-centered row-centered ui-noborder" layout="tabular">
 								<p:commandButton id="generateportepdf"
 									onstart="PF('blockUIWidget').block()"
 									oncomplete="PF('blockUIWidget').unblock()"
@@ -49,19 +49,19 @@
 
 						<p:tab id="anual" title="Anual">
 
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-								title="EXCEL">
-								<p:graphicImage value="../reports/excel.png" width="24" />
-								<p:fileDownload value="#{pbrm01eMB.fileXls}" />
-							</h:commandLink>&nbsp;&nbsp;&nbsp;
-
 							<p:commandButton id="generateportepdf2"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
 								action="#{pbrm01eMB.createFilePdfInline}" value="Correcto"
 								update="form1:inlinePdf, :form1:growlReportador"
 								styleClass="btn btn-default">
-							</p:commandButton>
+							</p:commandButton>&nbsp;&nbsp;&nbsp;
+
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload value="#{pbrm01eMB.fileXls}" />
+							</h:commandLink>
 						</p:tab>
 
 					</p:accordionPanel>
@@ -76,14 +76,6 @@
 
 					</p:panel>
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../reports/indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 
 		</ui:define>

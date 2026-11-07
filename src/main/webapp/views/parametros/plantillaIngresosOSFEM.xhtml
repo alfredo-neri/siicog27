@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -28,7 +28,7 @@
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
 					<p:fieldset style="margin-bottom:20px">
 						<p:panelGrid id="head" columns="2"
-							styleClass="row-centered ui-noborder">
+							styleClass="row-centered ui-noborder" layout="tabular">
 
 							<p style="text-align: left; color: #f00">
 								Campo CVETXT <br /> 1 = Cuenta se muestra en todos los archivos
@@ -41,15 +41,12 @@
 								onclick="PF('wingetPasswor').show(); resetPass();" />
 
 							<p:fileUpload
-								fileUploadListener="#{plantillaIngresosOsfemMB.handleFileUpload}"
-								mode="advanced" dragDropSupport="true" update="msgs"
-								rendered="#{!plantillaIngresosOsfemMB.objDisabled}"
-								sizeLimit="100000" fileLimit="3" uploadLabel="Cargar"
+								listener="#{plantillaIngresosOsfemMB.handleFileUpload}"
+								mode="advanced" dragDrop="true" update="msgs"
+								rendered="#{!plantillaIngresosOsfemMB.objDisabled}" uploadLabel="Cargar"
 								cancelLabel="Calcelar" label="Selecionar"
-								invalidFileMessage="Solo se permiten archivos CSV"
-								allowTypes="/(\.|\/)(csv)$/"
 								onstart="PF('blockUIWidget').block();"
-								oncomplete="PF('blockUIWidget').unblock(); refreshData();" />
+								oncomplete="PF('blockUIWidget').unblock(); refreshData();"><p:validateFile sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" fileLimit="3"/></p:fileUpload>
 						</p:panelGrid>
 
 						<p:dataTable id="object" var="objects"
@@ -152,19 +149,11 @@
 						</p:dataTable>
 
 					</p:fieldset>
-					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-						<h:panelGrid columns="2">
-							<h:graphicImage value="../catalogs/please_wait.gif"
-								style="margin-right: 12px; vertical-align: middle;" />
-							<h:outputText value="Por favor espere..."
-								style="white-space: nowrap;" />
-						</h:panelGrid>
-					</pe:blockUI>
 				</p:panel>
 				<p:dialog id="panelValida" widgetVar="wingetPasswor"
 					header="Valida Password" modal="true" styleClass="green">
 					<p:panelGrid id="pgridpass" columns="2"
-						styleClass="green col-md-8 col-centered row-centered ui-noborder">
+						styleClass="green col-md-8 col-centered row-centered ui-noborder" layout="tabular">
 						<h:outputText value="Password Administrador" />
 						<h:inputSecret id="validatePass"
 							value="#{plantillaIngresosOsfemMB.validaPass}"
@@ -177,14 +166,6 @@
 					</p:panelGrid>
 
 				</p:dialog>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../catalogs/please_wait.gif"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 			<script type="text/javascript">
 			     

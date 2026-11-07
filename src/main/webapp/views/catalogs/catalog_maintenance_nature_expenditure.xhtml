@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -26,90 +26,79 @@
 					update=":form1:messagesEdit, :form1:objects"
 					onstart="PF('blockUIWidget').block()"
 					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
 
-				<p:panel id="panel" header="Cat&aacute;logo de Naturaleza de Gasto"
-					styleClass="green col-md-4 col-centered row-centered shadow-panel">
-					<br />
-					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Catálogo de Naturaleza de Gasto</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton icon="pi pi-plus" value="Nuevo registro"
+								onclick="PF('wingetPasswor').show(); resetPass();" />
+						</h:panelGroup>
+					</div>
 
-						<h:outputText value="Clave" for="clvgasInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px;" />
-						<p:inputText id="clvgasInput" styleClass="form-control"
-							value="#{catalogNatureExpenditureMB.beanFind.clvgas}"
-							maxlength="4"
-							converterMessage="El campo Clave del Objeto de Gasto debe ser num&eacute;rico">
-							<f:convertNumber type="number" for="clvgasInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogNatureExpenditureMB.findValuesCatalog}" />
-						</p:inputText>
-
-
-						<h:outputText value="Nombre" for="nameInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="nameInput" styleClass="form-control"
-							value="#{catalogNatureExpenditureMB.beanFind.nomgas}"
-							style="margin-top: 10px;" maxlength="150"
-							validatorMessage="Nombre  solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚñÑ_-]*)\s*$"
-								for="nameInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogNatureExpenditureMB.findValuesCatalog}" />
-						</p:inputText>
-
-						<p:outputPanel layout="block"
-							style="text-align:center; aling:center">
-							<br />
-							<br />
-							<h:column></h:column>
-							<h:column></h:column>
-							<p:commandButton value="Buscar" style="padding: 5px;"
-								update=":form1:messagesEdit, :form1:objects"
-								actionListener="#{catalogNatureExpenditureMB.findValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()" />
-
-							<p:commandButton value="Limpiar"
-								style="padding: 5px; margin-left: 15px; "
-								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
-								actionListener="#{catalogNatureExpenditureMB.findAllValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								immediate="true"
-								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:nameInput').value='';document.getElementById('form1:clvgasInput').value='';" />
-
-						</p:outputPanel>
-					</h:panelGrid>
-
-				</p:panel>
-
-
-				<pe:blockUI widgetVar="blockUIWidget">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Please wait..." style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-
-				<br />
-
-
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #E8ECED;"
-					styleClass="col-centered row-centered">
-
-					<p:commandButton value="Nuevo Registro"
-						onclick="PF('wingetPasswor').show(); resetPass();" />
-				</p:panel>
+					<!-- ===== Buscar naturaleza de gasto ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar naturaleza de gasto</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 220px) minmax(0, 1fr);">
+									<div class="sg-field">
+										<p:outputLabel for="clvgasInput" value="Clave" />
+										<p:inputText styleClass="mono" id="clvgasInput"
+											value="#{catalogNatureExpenditureMB.beanFind.clvgas}"
+											maxlength="4"
+											converterMessage="El campo Clave del Objeto de Gasto debe ser num&eacute;rico">
+											<f:convertNumber type="number" for="clvgasInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogNatureExpenditureMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="nameInput" value="Nombre" />
+										<p:inputText id="nameInput"
+											value="#{catalogNatureExpenditureMB.beanFind.nomgas}" maxlength="150"
+											validatorMessage="Nombre  solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚñÑ_-]*)\s*$"
+												for="nameInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogNatureExpenditureMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar"
+										update=":form1:messagesEdit, :form1:objects"
+										actionListener="#{catalogNatureExpenditureMB.findValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
+									<p:commandButton styleClass="ui-button-flat" value="Limpiar"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+										actionListener="#{catalogNatureExpenditureMB.findAllValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										immediate="true"
+										oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:nameInput').value='';document.getElementById('form1:clvgasInput').value='';" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
 
 				<p:focus context="objects" id="focusTable" />
 
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Naturalezas de gasto</h2>
+					</div>
 				<p:dataTable id="objects" binding="#{table}" var="object"
 					value="#{catalogNatureExpenditureMB.list}"
 					styleClass="et_datatable" emptyMessage="No hay registros"
@@ -120,7 +109,6 @@
 					selection="#{catalogNatureExpenditureMB.beanSelected}"
 					widgetVar="natureExpWdg">
 
-					<f:facet name="header">Cat&aacute;logo de Naturaleza de Gasto</f:facet>
 
 					<p:ajax event="rowEdit"
 						listener="#{catalogNatureExpenditureMB.onRowEdit}"
@@ -139,7 +127,7 @@
 					<p:column headerText="Clave" exportable="false" style="width:5%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.clvgas}" />
+								<h:outputText value="#{object.clvgas}" styleClass="sg-code" />
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText id="clvgas" value="#{object.clvgas}"
@@ -198,43 +186,45 @@
 					</p:column> 
 -->
 
-					<p:column style="width:0%" exportable="false">
-						<p:rowEditor />
-					</p:column>
+					<p:column headerText="Acciones" exportable="false" style="width:90px;" styleClass="sg-acciones-fila"><p:rowEditor /></p:column>
 
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogNatureExpenditureMB.list}">
-							<p:graphicImage value="excel.png" width="24" />
+							<i class="pi pi-file-excel" /> Excel
 							<p:fileDownload value="#{catalogNatureExpenditureMB.fileXls}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogNatureExpenditureMB.list}">
-							<p:graphicImage value="pdf.png" width="24" />
+							<i class="pi pi-align-left" /> TXT
+							<p:fileDownload value="#{catalogNatureExpenditureMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogNatureExpenditureMB.list}">
+							<i class="pi pi-file-pdf" /> PDF
 							<p:fileDownload value="#{catalogNatureExpenditureMB.filePdf}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogNatureExpenditureMB.list}">
-							<p:graphicImage value="csv.png" width="24" />
+							<i class="pi pi-file" /> CSV
 
 							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
 								fileName="CatalogoNaturalezaGasto" pageOnly="false" />
 
 							<!-- 							<p:fileDownload value="#{catalogNatureExpenditureMB.csvFile}" /> -->
 						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogNatureExpenditureMB.list}">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogNatureExpenditureMB.file}" />
-						</h:commandLink>
-
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 				<br />
 				<br />
@@ -242,31 +232,26 @@
 
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar" update=":form1:objects"
 							actionListener="#{catalogNatureExpenditureMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 				</p:dialog>
 
 				<p:dialog id="panelValida" widgetVar="wingetPasswor"
-					header="Valida Password" modal="true" styleClass="green">
+					header="Contraseña de administrador" modal="true" styleClass="green">
 					<p:panelGrid id="pgridpass" columns="2"
-						styleClass="green col-md-4 col-centered row-centered ">
-						<h:outputText value="Password Administrador" />
+						styleClass="green col-md-4 col-centered row-centered " layout="tabular">
+						<h:outputText value="Contraseña" />
 						<h:inputSecret id="validatePass"
 							value="#{catalogNatureExpenditureMB.validatePass}"
 							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;}" />

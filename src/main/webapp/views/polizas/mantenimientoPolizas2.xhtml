@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -49,7 +49,7 @@
 						update=":form1:messagesEdit, :form1:focusFecpol" />
 
 					<p:panelGrid id="pgrid1"
-						styleClass="green row-centered shadow-panel" style="width:100%;">
+						styleClass="green row-centered shadow-panel" style="width:100%;" layout="tabular" columns="0">
 						<p:row>
 							<p:column style="text-align: center;">
 								<h:outputText value="A&ntilde;o" />
@@ -122,7 +122,7 @@
 									converterMessage="Permite solo números mayores a cero"
 									validatorMessage="Permite solo números mayores a cero"
 									requiredMessage="Permite solo números mayores a cero">
-									<pe:keyFilter for="lisconpol" mask="pint"></pe:keyFilter>
+									<p:keyFilter for="lisconpol" mask="pint"></p:keyFilter>
 
 									<f:convertNumber pattern="0000" />
 								</h:inputText>
@@ -137,7 +137,7 @@
 									maxdate="#{polizaMantenimientoMB2.maxDate}"
 									mindate="#{polizaMantenimientoMB2.minDate}"
 									converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
-									onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
+									onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){PF('g').renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 'error'}); this.focus(); }">
 									<p:ajax event="dateSelect"
 										listener="#{polizaMantenimientoMB2.onDateSelect}"
 										update=":form1:fecpol" />
@@ -242,7 +242,7 @@
 										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}"
 										required="true"
 										requiredMessage="El n&uacute;mero de rengl&oacute;n es requerido">
-										<pe:keyFilter for="renpol" mask="int"></pe:keyFilter>
+										<p:keyFilter for="renpol" mask="int"></p:keyFilter>
 										<p:ajax event="blur" update="renpol"></p:ajax>
 										<f:convertNumber pattern="#" />
 									</p:inputText>
@@ -264,7 +264,7 @@
 										style="width:100%" maxlength="4"
 										ondblclick="PF('tbCuentas').clearFilters();PF('cuentascon').show(); return false;"
 										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<pe:keyFilter for="cuenta" mask="int"></pe:keyFilter>
+										<p:keyFilter for="cuenta" mask="int"></p:keyFilter>
 										<p:ajax event="blur" update="cuenta, :formCuentas:tcuentas"
 											listener="#{polizaMantenimientoMB2.cuentaChangeListener}"></p:ajax>
 
@@ -318,7 +318,7 @@
 									<p:inputText id="ssscta" value="#{object.ssscta}"
 										style="width:100%" maxlength="4"
 										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<pe:keyFilter for="ssscta" mask="pint"></pe:keyFilter>
+										<p:keyFilter for="ssscta" mask="pint"></p:keyFilter>
 										<p:ajax event="blur" update="ssscta"
 											listener="#{polizaMantenimientoMB2.ssscuentaChangeListener}"></p:ajax>
 									</p:inputText>
@@ -335,7 +335,7 @@
 									<p:inputText id="sssscta" value="#{object.sssscta}"
 										style="width:100%" maxlength="4"
 										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
-										<pe:keyFilter for="sssscta" mask="pint"></pe:keyFilter>
+										<p:keyFilter for="sssscta" mask="pint"></p:keyFilter>
 										<p:ajax event="blur" update="sssscta, concep"
 											listener="#{polizaMantenimientoMB2.sssscuentaChangeListener}"></p:ajax>
 									</p:inputText>
@@ -376,7 +376,7 @@
 										requiredMessage="El campo RefPol es requerido y s&oacute;lo permite n&uacute;meros"
 										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
 										<p:ajax event="blur" update="refpol"></p:ajax>
-										<pe:keyFilter for="refpol" mask="pint"></pe:keyFilter>
+										<p:keyFilter for="refpol" mask="pint"></p:keyFilter>
 										<f:convertNumber pattern="#" />
 									</p:inputText>
 								</f:facet>
@@ -417,7 +417,7 @@
 										converterMessage="El Cargo debe ser num&eacute;rico">
 										<f:convertNumber pattern="###,###,##0.00" type="number"
 											minFractionDigits="0" />
-										<pe:keyFilter for="canpol" mask="num"></pe:keyFilter>
+										<p:keyFilter for="canpol" mask="num"></p:keyFilter>
 										<p:ajax event="blur" update="canpol"></p:ajax>
 									</p:inputText>
 								</f:facet>
@@ -437,7 +437,7 @@
 										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}if(event.KeyCode == 9){zeroCH(); return false;}"
 										converterMessage="El Abono debe ser num&eacute;rico">
 										<f:convertNumber pattern="###,###,##0.00" type="number" />
-										<pe:keyFilter for="canpolh" mask="num"></pe:keyFilter>
+										<p:keyFilter for="canpolh" mask="num"></p:keyFilter>
 										<p:ajax event="blur" update="canpolh"></p:ajax>
 									</p:inputText>
 								</f:facet>
@@ -483,7 +483,7 @@
 						ajax="false" immediate="true" process="@parent" />
 
 					<p:panelGrid id="pgrid2" columns="6"
-						styleClass="green shadow-panel" style="width:100%;">
+						styleClass="green shadow-panel" style="width:100%;" layout="tabular">
 						<h:outputText value="Nombre Concepto:" />
 						<h:inputText value="#{polizaMantenimientoMB2.nomSelectedConcept}"
 							id="polclv1" size="110" maxlength="100" disabled="true" />
@@ -532,7 +532,7 @@
 					</p:panelGrid>
 
 					<p:panelGrid id="pgrid3" columns="12"
-						styleClass="green row-centered shadow-panel" style="width:100%;">
+						styleClass="green row-centered shadow-panel" style="width:100%;" layout="tabular">
 						<p:commandButton value="Primero" id="firstRow"
 							icon="ui-icon-seek-first"
 							actionListener="#{polizaMantenimientoMB2.changeFirstRow}"
@@ -554,7 +554,7 @@
 						<h:inputText value="#{polizaMantenimientoMB2.renglon}" id="rowid"
 							maxlength="4"
 							onkeypress="if((!this.value || 0 === this.value.length) ){ if( event.keyCode == 9 || event.keyCode == 13){return false;}}if (event.keyCode == 13){document.getElementById('form1:hideButtonRow').click(); return false}">
-							<pe:keyFilter for="rowid" mask="pint"></pe:keyFilter>
+							<p:keyFilter for="rowid" mask="pint"></p:keyFilter>
 						</h:inputText>
 						<p:commandButton id="hideButtonRow" update=":form1:objects, :form1:messagesEdit"
 							actionListener="#{polizaMantenimientoMB2.changeRow}"
@@ -603,11 +603,11 @@
 			<h:form id="formConfirmDate" styleClass="green">
 				<p:dialog id="saveConfirmDate" widgetVar="saveConfirmDateWdt"
 					header="Confirma" modal="true" styleClass="green">
-					<p:panelGrid id="pgridSaveUpdateDate" columns="1">
+					<p:panelGrid id="pgridSaveUpdateDate" columns="1" layout="tabular">
 						<h:outputText
 							value="¿Desea guardar los cambios al encabezado de la p&oacute;liza?" />
 						<center>
-							<p:panelGrid id="pgridSaveUpdateDateButtons" columns="2">
+							<p:panelGrid id="pgridSaveUpdateDateButtons" columns="2" layout="tabular">
 								<p:commandButton value="Guardar"
 									update=":form1:messagesEdit, :form1:panel, form1:objects"
 									actionListener="#{polizaMantenimientoMB2.saveUpdateDate}"
@@ -625,11 +625,11 @@
 			<h:form id="formSaveConfirm" styleClass="green">
 				<p:dialog id="saveConfirm" widgetVar="saveConfirmWdt"
 					header="Confirma" modal="true" styleClass="green">
-					<p:panelGrid id="pgridSaveUpdate" columns="1">
+					<p:panelGrid id="pgridSaveUpdate" columns="1" layout="tabular">
 						<h:outputText
 							value="¿Desea guardar los cambios al encabezado de la p&oacute;liza?" />
 						<center>
-							<p:panelGrid id="pgridSaveUpdateButtons" columns="2">
+							<p:panelGrid id="pgridSaveUpdateButtons" columns="2" layout="tabular">
 								<p:commandButton value="Guardar"
 									update=":form1:messagesEdit, :form1:panel, form1:objects"
 									actionListener="#{polizaMantenimientoMB2.saveUpdate}"
@@ -646,7 +646,7 @@
 			<h:form id="formPanelValida" styleClass="green">
 				<p:dialog id="panelValida" widgetVar="wingetPasswor"
 					header="Valida Password" modal="true" styleClass="green">
-					<p:panelGrid id="pgridpass" columns="2">
+					<p:panelGrid id="pgridpass" columns="2" layout="tabular">
 						<h:outputText value="Password Administrador" />
 						<h:inputSecret id="validatePass"
 							value="#{polizaMantenimientoMB2.password}"
@@ -667,7 +667,7 @@
 						actionListener="#{polizaMantenimientoMB2.checkCatflu}"
 						update=":formFlujoEfectivo:ctafluTable"
 						style="visibility: hidden;" />
-					<p:panelGrid columns="8">
+					<p:panelGrid columns="8" layout="tabular">
 						<h:outputText value="Tipo:" />
 						<h:inputText value="#{polizaMantenimientoMB2.tippolflu}"
 							id="tippolflu" size="2" maxlength="2" disabled="true" />
@@ -717,12 +717,12 @@
 									</h:outputText>
 								</f:facet>
 								<f:facet name="input">
-									<pe:inputNumber id="oclvflu" value="#{o.clvflu}"
+									<p:inputNumber id="oclvflu" value="#{o.clvflu}"
 										emptyValue="00.00" decimalPlaces="2" decimalSeparator="."
 										maxlength="5" thousandSeparator=""
 										onkeypress="if((!this.value || 0 === this.value.length) ){ if( event.keyCode == 9 || event.keyCode == 13){return false;}} if (event.keyCode == 13){return false;} ">
 										<p:ajax event="blur" update="oclvflu"></p:ajax>
-									</pe:inputNumber>
+									</p:inputNumber>
 								</f:facet>
 							</p:cellEditor>
 						</p:column>
@@ -741,7 +741,7 @@
 									<p:inputText id="ocanflu" value="#{o.canflu}"
 										style="width:100%"
 										onkeypress="if(event.keyCode == 13){return false;}">
-										<pe:keyFilter for="ocanflu" mask="num"></pe:keyFilter>
+										<p:keyFilter for="ocanflu" mask="num"></p:keyFilter>
 										<p:ajax event="blur" update="ocanflu"></p:ajax>
 									</p:inputText>
 
@@ -770,7 +770,7 @@
 					<br />
 					<br />
 					<center>
-						<p:panelGrid columns="4">
+						<p:panelGrid columns="4" layout="tabular">
 							<p:commandButton value="Agregar"
 								actionListener="#{polizaMantenimientoMB2.addAction}" id="add"
 								update=":formFlujoEfectivo:ctafluTable">
@@ -803,7 +803,7 @@
 							listener="#{polizaMantenimientoMB2.onCuentaRowDblClckSelect}"
 							oncomplete="PF('cuentascon').hide();"></p:ajax>
 
-						<p:column headerText="Cuenta" filterMatchMode="startswith"
+						<p:column headerText="Cuenta" filterMatchMode="startsWith"
 							filterBy="#{object3.cuenta}" width="11%">
 							<h:outputText value="#{object3.cuenta}" />
 						</p:column>
@@ -832,10 +832,10 @@
 			<h:form id="formPolizaIncorrecta" styleClass="green">
 				<p:dialog header="P&oacute;lizas Incorrectas" widgetVar="wrongPoli"
 					id="wrongP" width="800" height="405">
-					<p:messages id="messages" showDetail="true" autoUpdate="true"
-						closable="true" />
+					<p:messages id="messages" showDetail="true"
+						closable="true"><p:autoUpdate/></p:messages>
 					<center>
-						<p:panelGrid columns="3" id="pgridWrongs">
+						<p:panelGrid columns="3" id="pgridWrongs" layout="tabular">
 							<h:outputText value="Mes:" />
 							<h:inputText value="#{polizaMantenimientoMB2.me}" id="wrongmes"
 								size="2" maxlength="2" />
@@ -894,11 +894,11 @@
 			<h:form id="formConfirmFF">
 				<p:dialog id="ffConfirm" widgetVar="ffConfirmWdt" header="Confirma"
 					modal="true" styleClass="green">
-					<p:panelGrid id="pgridFfConfirm" columns="1">
+					<p:panelGrid id="pgridFfConfirm" columns="1" layout="tabular">
 						<h:outputText
 							value="El concepto tiene flujo de efectivo. ¿Desea editarlo?" />
 						<center>
-							<p:panelGrid id="pgridSaveUpdateButtons" columns="2">
+							<p:panelGrid id="pgridSaveUpdateButtons" columns="2" layout="tabular">
 								<p:commandButton value="Aceptar"
 									update=":formFlujoEfectivo:ctafluTable, :formFlujoEfectivo:tippolflu, :formFlujoEfectivo:mespolflu, :formFlujoEfectivo:conpolflu, :formFlujoEfectivo:sumaflujoe, :formFlujoEfectivo:renpolflu"
 									onstart="PF('flujoefectivo').show();"

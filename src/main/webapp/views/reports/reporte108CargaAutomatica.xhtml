@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -11,10 +11,17 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="msgs" showDetail="true" sticky="true" />
-				<p:panel
-					styleClass="green col-md-5 col-centered row-centered shadow-panel"
-					header="Indicadores Trimestral de Tiempo de Respuesta a Emergencias en Seguridad Pública - Captura Automática">
-					<p:panelGrid id="cargar" styleClass="col-centered row-centered ">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Indicadores Trimestral de Tiempo de Respuesta a Emergencias en Seguridad Pública - Captura Automática</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid id="cargar" styleClass="col-centered row-centered " layout="tabular" columns="0">
 						<h:outputText
 							value="Si existen datos serán eliminados del trimestre seleccionado"
 							style="color:red" />
@@ -36,17 +43,17 @@
 						<p:row>
 							<p:column colspan="2">
 								<p:fileUpload id="csv"
-									fileUploadListener="#{reporte108CargaAutomaticaMB.handleFileUpload}"
-									mode="advanced" dragDropSupport="false" update=":form1:msgs"
-									sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" accept=".csv"
-									label="Elegir" uploadLabel="Cargar" cancelLabel="Cancelar"
-									invalidFileMessage="Archivo incorrecto, solo permite archivos .csv'">
+									listener="#{reporte108CargaAutomaticaMB.handleFileUpload}"
+									mode="advanced" dragDrop="false" update=":form1:msgs" accept=".csv"
+									label="Elegir" uploadLabel="Cargar" cancelLabel="Cancelar"><p:validateFile sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/"/>
 
 								</p:fileUpload>
 							</p:column>
 						</p:row>
 					</p:panelGrid>
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

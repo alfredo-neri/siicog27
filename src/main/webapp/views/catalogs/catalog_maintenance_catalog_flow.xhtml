@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -30,96 +30,76 @@
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
 
-				<p:panel id="panel" header="Cat&aacute;logo de Flujo"
-					styleClass="green col-md-4 col-centered row-centered shadow-panel">
-					<br />
-					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Catálogo de Flujo de Efectivo</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton icon="pi pi-plus" value="Nuevo registro"
+								update=":form1:objects, :form1:messagesEdit, :form1:focusTable"
+								onclick="PF('wingetPasswor').show(); resetPass();"
+								onmousedown="jQuery('.ui-paginator-first').click();" />
+						</h:panelGroup>
+					</div>
 
-						<!-- 						<p:outputLabel value="Clave del Flujo" for="groupInput" style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-							
-       					<p:autoComplete id="groupInput"  value="#{catalogMaintenanceFlowMB.catFluAut}"  
-       					 	completeMethod="#{catalogMaintenanceFlowMB.completeCatfluClv}" var="catFlow" itemLabel="#{catFlow.gruflu}"  
-       					 	itemValue="#{catFlow}" converter="catFlowConverter" forceSelection="true" 
-       					 	style="margin-top: 10px;" maxlength="5"
-							converterMessage="Grupo solo permite valores num&eacute;ricos">
-							<f:convertNumber type="number" for="groupInput" />
-							
-       					 </p:autoComplete> -->
-
-						<h:outputText value="Clave del Flujo" for="groupInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="groupInput" styleClass="form-control"
-							value="#{catalogMaintenanceFlowMB.beanFind.clvflu}"
-							style="margin-top: 10px;" maxlength="5"
-							converterMessage="El campo Clave del Flujo solo permite valores num&eacute;ricos">
-							<f:convertNumber type="number" for="groupInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogMaintenanceFlowMB.findValuesCatalog}" />
-						</p:inputText>
-
-						<h:outputText value="Nombre" for="nameInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="nameInput" styleClass="form-control"
-							value="#{catalogMaintenanceFlowMB.beanFind.nomflu}"
-							style="margin-top: 10px;" maxlength="160"
-							validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex
-								pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
-								for="nameInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogMaintenanceFlowMB.findValuesCatalog}" />
-						</p:inputText>
-
-						<p:outputPanel layout="block"
-							style="text-align:center; margin-left:2px">
-							<br />
-
-							<p:commandButton value="Buscar" style="padding: 5px;"
-								update=":form1:messagesEdit, :form1:objects"
-								actionListener="#{catalogMaintenanceFlowMB.findValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()" />
-
-							<p:commandButton value="Limpiar"
-								style="padding: 5px; margin-left: 15px;"
-								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
-								actionListener="#{catalogMaintenanceFlowMB.findAllValuesCatalog}"
-								immediate="true" onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:groupInput').value=''; document.getElementById('form1:nameInput').value='';" />
-
-						</p:outputPanel>
-
-					</h:panelGrid>
-				</p:panel>
-
-
-				<pe:blockUI widgetVar="blockUIWidget">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Please wait..." style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-
-				<br />
-
-
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #E8ECED;"
-					styleClass="col-centered row-centered">
-
-					<p:commandButton value="Nuevo Registro"
-						update=":form1:objects, :form1:messagesEdit, :form1:focusTable"
-						onclick="PF('wingetPasswor').show(); resetPass();"
-						onmousedown="jQuery('.ui-paginator-first').click();" />
-				</p:panel>
+					<!-- ===== Buscar flujo de efectivo ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar flujo de efectivo</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 220px) minmax(0, 1fr);">
+									<div class="sg-field">
+										<p:outputLabel for="groupInput" value="Clave del Flujo" />
+										<p:inputText styleClass="mono" id="groupInput"
+											value="#{catalogMaintenanceFlowMB.beanFind.clvflu}" maxlength="5"
+											converterMessage="El campo Clave del Flujo solo permite valores num&eacute;ricos">
+											<f:convertNumber type="number" for="groupInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogMaintenanceFlowMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="nameInput" value="Nombre" />
+										<p:inputText id="nameInput"
+											value="#{catalogMaintenanceFlowMB.beanFind.nomflu}" maxlength="160"
+											validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex
+												pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+												for="nameInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogMaintenanceFlowMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar"
+										update=":form1:messagesEdit, :form1:objects"
+										actionListener="#{catalogMaintenanceFlowMB.findValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
+									<p:commandButton styleClass="ui-button-flat" value="Limpiar"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+										actionListener="#{catalogMaintenanceFlowMB.findAllValuesCatalog}"
+										immediate="true" onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:groupInput').value=''; document.getElementById('form1:nameInput').value='';" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
 
 				<p:focus context="objects" id="focusTable" />
 
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Flujos de efectivo</h2>
+					</div>
 				<p:dataTable id="objects" var="object"
 					value="#{catalogMaintenanceFlowMB.list}" styleClass="et_datatable"
 					emptyMessage="No hay registros" editable="true" paginator="true"
@@ -129,7 +109,6 @@
 					selection="#{catalogMaintenanceFlowMB.beanSelected}"
 					widgetVar="objectsWdt">
 
-					<f:facet name="header">Cat&aacute;logo de Flujo</f:facet>
 
 					<p:ajax event="rowEditInit"
 						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
@@ -157,7 +136,7 @@
 						exportable="false" style="width:10%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{object.clvflu}">
+								<h:outputText value="#{object.clvflu}" styleClass="sg-code">
 									<f:convertNumber pattern="00.00" />
 								</h:outputText>
 
@@ -258,48 +237,52 @@
 
 
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogMaintenanceFlowMB.list}">
-							<p:graphicImage value="excel.png" width="24" />
+							<i class="pi pi-file-excel" /> Excel
 							<p:fileDownload value="#{catalogMaintenanceFlowMB.fileXls}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMaintenanceFlowMB.list}">
+							<i class="pi pi-align-left" /> TXT
+							<p:fileDownload value="#{catalogMaintenanceFlowMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogMaintenanceFlowMB.list}" >
-							<p:graphicImage value="pdf.png" width="24" />
+							<i class="pi pi-file-pdf" /> PDF
 							<p:fileDownload value="#{catalogMaintenanceFlowMB.filePdf}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							disabled="#{empty catalogMaintenanceFlowMB.list}" actionListener="#{catalogMaintenanceFlowMB.getFileCsvPl}">
-							<p:graphicImage value="csv.png" width="24" />
+							<i class="pi pi-file" /> CSV
 							<!-- <p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
 								fileName="MantenimientoCatalogoFlujo" pageOnly="false" /> -->
 								<p:fileDownload value="#{catalogMaintenanceFlowMB.csvByPl}" />
 						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogMaintenanceFlowMB.list}">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogMaintenanceFlowMB.file}" />
-						</h:commandLink>
-
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 				<p:commandButton id="hideButton"
 					update=":form1:messagesEdit, :form1:objects"
 					actionListener="#{catalogMaintenanceFlowMB.updateViewRowsAutoGenerated}"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 				<p:commandButton id="hideButton2"
 					update=":form1:messagesEdit, :form1:objects"
 					actionListener="#{catalogMaintenanceFlowMB.showSuccesMessage()}"
 					onstart="PF('blockUIWidget').block()"
 					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 
 
@@ -308,40 +291,35 @@
 					actionListener="#{catalogMaintenanceFlowMB.showCancelEdition()}"
 					onstart="PF('blockUIWidget').block()"
 					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
+					style="display: none;" />
 
 				<br />
 				<br />
 
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar" update=":form1:objects"
 							actionListener="#{catalogMaintenanceFlowMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5%;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 
 				</p:dialog>
 
 				<p:dialog id="panelValida" widgetVar="wingetPasswor"
-					closeOnEscape="true" header="Valida Password" modal="true"
+					closeOnEscape="true" header="Contraseña de administrador" modal="true"
 					styleClass="green">
 					<p:panelGrid id="pgridpass" columns="2"
-						styleClass="green col-md-4 col-centered row-centered ">
-						<h:outputText value="Password Administrador" />
+						styleClass="green col-md-4 col-centered row-centered " layout="tabular">
+						<h:outputText value="Contraseña" />
 						<h:inputSecret id="validatePass" 
 							value="#{catalogMaintenanceFlowMB.validatePass}"
 							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;} if(event.keyCode == 13){ validatePass(); return false;}" />

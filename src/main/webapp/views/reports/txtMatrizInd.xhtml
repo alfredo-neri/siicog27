@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -16,18 +16,26 @@
 
 				<p:growl id="growlReportador" showDetail="true" sticky="true" />
 
-				<p:panel id="panelReporte" header="Matriz de Indicadores-Genera TXT"
-					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Matriz de Indicadores-Genera TXT</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:panelGrid columns="3" styleClass="col-centered ui-noborder"
-						id="p1">
-						<p:panelGrid columns="4" styleClass="ui-noborder" id="pButtons">
+						id="p1" layout="tabular">
+						<p:panelGrid columns="4" styleClass="ui-noborder" id="pButtons" layout="tabular">
 
-							<p:commandButton value="Correcto" icon="ui-icon-arrowthick-1-s"
+							<p:commandButton value="Generar" icon="ui-icon-arrowthick-1-s"
 								actionListener="#{txtMatrizIndMB.process}"
 								oncomplete="triggerDownload()" update="form1">
 							</p:commandButton>
 
-							<p:commandButton value="Correcto" ajax="false" id="correcto" widgetVar="downbtn"
+							<p:commandButton value="Generar" ajax="false" id="correcto" widgetVar="downbtn"
 								onclick="PrimeFaces.monitorDownload(start, stop);"
 								actionListener="#{txtMatrizIndMB.downLoadFile}"
 								icon="ui-icon-arrowthick-1-s" style="display: none">
@@ -35,16 +43,9 @@
  							</p:commandButton>
 						</p:panelGrid>
 					</p:panelGrid>
-
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 
 		</ui:define>

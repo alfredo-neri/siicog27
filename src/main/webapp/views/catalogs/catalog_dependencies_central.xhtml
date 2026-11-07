@@ -2,15 +2,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
 
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
+			<!--
+				SIICOG fase 2: estructura del prototipo (sicog-pantallas.html, "Catálogo de Centros de Costo").
+				Se conservan componentes, ids, valores, listeners y update de difem26; cambian el acomodo
+				(tarjetas), los textos de encabezados y la presentación de las columnas en modo lectura.
+			-->
 			<h:form id="form1">
 
 				<p:remoteCommand name="onload"
@@ -19,300 +24,284 @@
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
 
-				<p:panel id="panel"
-					header="B&uacute;squeda Cat&aacute;logo de Dependencias Central"
-					styleClass="green col-md-4 col-centered row-centered shadow-panel">
-					<br />
-					<h:inputHidden
-						value="#{catalogDependenciesCentralMB.beanFind.idsector}"
-						id="idsector" />
-					<h:panelGrid id="display_1" columns="2" cellpadding="4">
 
-						<h:outputText value="Clave de la Dependecia" for="keyInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px;padding-right: 30px; " />
-						<p:inputText id="keyInput" styleClass="form-control"
-							value="#{catalogDependenciesCentralMB.beanFind.clvdep}"
-							maxlength="15"
-							validatorMessage="El campo Clave de la Dependencia solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
-								for="keyInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogDependenciesCentralMB.findValuesCatalog}" />
-						</p:inputText>
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Catálogo de Centros de Costo</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton value="Nuevo registro" icon="pi pi-plus"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								actionListener="#{catalogDependenciesCentralMB.insertRow}"
+								onclick="PF('dependenciesWdg').clearFilters();"
+								oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});
+							$(function(){PrimeFaces.focus('objects:clvdgm');});" />
+						</h:panelGroup>
+					</div>
 
-						<h:outputText value="Nombre de la Dependencia" for="nameInput"
-							styleClass="control-label"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="nameInput" styleClass="form-control"
-							value="#{catalogDependenciesCentralMB.beanFind.nomdep}"
-							style="margin-top: 10px;" maxlength="150"
-							validatorMessage="El campo Nombre de la Dependencia solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ,_-]*)\s*$"
-								for="nameInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogDependenciesCentralMB.findValuesCatalog}" />
-						</p:inputText>
+					<!-- ===== Buscar centro de costo ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar centro de costo</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:inputHidden
+								value="#{catalogDependenciesCentralMB.beanFind.idsector}"
+								id="idsector" />
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 220px) minmax(0, 1fr);">
+									<div class="sg-field">
+										<p:outputLabel for="keyInput" value="Clave del centro de costo" />
+										<p:inputText id="keyInput" styleClass="mono" placeholder="200C0101…"
+											value="#{catalogDependenciesCentralMB.beanFind.clvdep}"
+											maxlength="15"
+											validatorMessage="El campo Clave de la Dependencia solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+												for="keyInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogDependenciesCentralMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="nameInput" value="Nombre del centro de costo" />
+										<p:inputText id="nameInput" placeholder="Ej. Dirección de Atención a la Discapacidad"
+											value="#{catalogDependenciesCentralMB.beanFind.nomdep}"
+											maxlength="150"
+											validatorMessage="El campo Nombre de la Dependencia solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ,_-]*)\s*$"
+												for="nameInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogDependenciesCentralMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="sg-actions">
+									<p:commandButton value="Buscar" icon="pi pi-search"
+										update=":form1:messagesEdit, :form1:objects"
+										actionListener="#{catalogDependenciesCentralMB.findValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
 
-						<p:outputPanel layout="block" style="text-align:center">
+									<p:commandButton value="Limpiar" styleClass="ui-button-flat"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+										actionListener="#{catalogDependenciesCentralMB.findAllValuesCatalog}"
+										immediate="true" onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:keyInput').value='';document.getElementById('form1:nameInput').value='';" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
 
-							<br />
-							<br />
+					<p:focus context="objects" id="focusTable" />
 
-							<p:commandButton value="Buscar" style="padding: 5px;"
-								update=":form1:messagesEdit, :form1:objects"
-								actionListener="#{catalogDependenciesCentralMB.findValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()" />
+					<!-- ===== Centros de costo ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Centros de costo</h2>
+						</div>
+						<p:dataTable id="objects" binding="#{table}" var="object"
+							value="#{catalogDependenciesCentralMB.list}"
+							styleClass="et_datatable" emptyMessage="No hay registros"
+							editable="true" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single" rowKey="#{object.id}"
+							selection="#{catalogDependenciesCentralMB.rowSelected}"
+							filteredValue="#{catalogDependenciesCentralMB.filteredList}"
+							widgetVar="dependenciesWdg" rowStyleClass="#{object.ultniv eq 'N' ? 'sg-lv1' : ''}">
 
-							<p:commandButton value="Limpiar"
-								style="padding: 5px; margin-left: 15px;"
-								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
-								actionListener="#{catalogDependenciesCentralMB.findAllValuesCatalog}"
-								immediate="true" onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:keyInput').value='';document.getElementById('form1:nameInput').value='';" />
-
-						</p:outputPanel>
-					</h:panelGrid>
-				</p:panel>
-
-
-				<pe:blockUI widgetVar="blockUIWidget">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Please wait..." style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
-
-				<br />
-
-
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #8a2035"
-					styleClass="col-centered row-centered">
-
-					<p:commandButton value="Nuevo Registro"
-						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
-						actionListener="#{catalogDependenciesCentralMB.insertRow}"
-						onclick="PF('dependenciesWdg').clearFilters();"
-						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});
-						$(function(){PrimeFaces.focus('objects:clvdgm');});" />
-				</p:panel>
-
-				<p:focus context="objects" id="focusTable" />
-
-				<p:dataTable id="objects" binding="#{table}" var="object"
-					style="background-color: #8a2035"
-					value="#{catalogDependenciesCentralMB.list}"
-					styleClass="green et_datatable" emptyMessage="No hay registros"
-					editable="true" paginator="true" rows="10"
-					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-					selectionMode="single" rowKey="#{object.id}"
-					selection="#{catalogDependenciesCentralMB.rowSelected}"
-					filteredValue="#{catalogDependenciesCentralMB.filteredList}"
-					widgetVar="dependenciesWdg">
-
-					<f:facet name="header">Cat&aacute;logo de Dependencias Central</f:facet>
-					<p:ajax event="rowEditInit"
-						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')}); 
-							$('a[id$=deleteRow]').each(function(){$(this).css('visibility','hidden')});
-						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden'); $(this).css('pointer-events', 'none');});" />
-					<p:ajax event="rowEdit"
-						listener="#{catalogDependenciesCentralMB.onRowEdit}"
-						update=":form1:messagesEdit"
-						oncomplete="if (!args.validationFailed){$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
-						                                        $('a[id$=deleteRow]').each(function(){$(this).css('visibility','visible')});
-						                                        $('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible');});} 
-						            else {
-						            $('a[id$=deleteRow]').each(function(){$(this).css('visibility','hidden')});
-						}" />
-					<p:ajax event="rowEditCancel"
-						listener="#{catalogDependenciesCentralMB.onRowCancel}"
-						update=":form1:messagesEdit"
-						oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:hideButton4').click();"
-						onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible');});
-						$('a[id$=deleteRow]').each(function(){$(this).css('visibility','visible')});
-						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible');});" />
+							<p:ajax event="rowEditInit"
+								oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});
+									$('a[id$=deleteRow]').each(function(){$(this).css('visibility','hidden')});
+								$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden'); $(this).css('pointer-events', 'none');});" />
+							<p:ajax event="rowEdit"
+								listener="#{catalogDependenciesCentralMB.onRowEdit}"
+								update=":form1:messagesEdit"
+								oncomplete="if (!args.validationFailed){$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+								                                        $('a[id$=deleteRow]').each(function(){$(this).css('visibility','visible')});
+								                                        $('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible');});}
+								            else {
+								            $('a[id$=deleteRow]').each(function(){$(this).css('visibility','hidden')});
+								}" />
+							<p:ajax event="rowEditCancel"
+								listener="#{catalogDependenciesCentralMB.onRowCancel}"
+								update=":form1:messagesEdit"
+								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:hideButton4').click();"
+								onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible');});
+								$('a[id$=deleteRow]').each(function(){$(this).css('visibility','visible')});
+								$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible');});" />
 
 
-					<p:column headerText="Clave" visible="false" width="0"
-						style="aling:center" exportable="true">
-						<h:outputText value="#{object.clvdep}" style="aling:center" />
-					</p:column>
-
-
-					<p:column headerText="Clave" exportable="false" style="width:25px">
-
-						<p:cellEditor>
-							<f:facet name="output">
+							<p:column headerText="Clave" visible="false" width="0"
+								style="aling:center" exportable="true">
 								<h:outputText value="#{object.clvdep}" style="aling:center" />
-							</f:facet>
-							<f:facet name="input">
-								<p:inputText id="clvdep" value="#{object.clvdep}"
-									style="width:100%" maxlength="15" required="true"
-									requiredMessage="El campo Clave es requerido"
-									onkeyup="this.value=this.value.toUpperCase();"
-									validatorMessage="El campo Clave solo permite valores alfanum&eacute;ricos sin espacios"
-									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+							</p:column>
 
-									<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="clvdep" />
-									<p:ajax event="blur" update="clvdep"
-										listener="#{catalogDependenciesCentralMB.formateaClavedep}" />
-								</p:inputText>
-							</f:facet>
-						</p:cellEditor>
-					</p:column>
 
-					<p:column headerText="Nombre" visible="false" width="0"
-						exportable="true">
-						<h:outputText value="#{object.nomdep}" />
-					</p:column>
+							<p:column headerText="Clave" exportable="false" style="width:190px">
 
-					<p:column headerText="Nombre" exportable="false"
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.clvdep}" styleClass="sg-code" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="clvdep" value="#{object.clvdep}"
+											style="width:100%" maxlength="15" required="true"
+											requiredMessage="El campo Clave es requerido"
+											onkeyup="this.value=this.value.toUpperCase();"
+											validatorMessage="El campo Clave solo permite valores alfanum&eacute;ricos sin espacios"
+											onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
 
-						style="width:150px">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="clvdep" />
+											<p:ajax event="blur" update="clvdep"
+												listener="#{catalogDependenciesCentralMB.formateaClavedep}" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
 
-						<p:cellEditor>
-							<f:facet name="output">
+							<p:column headerText="Nombre" visible="false" width="0"
+								exportable="true">
 								<h:outputText value="#{object.nomdep}" />
-							</f:facet>
-							<f:facet name="input">
-								<p:inputText id="nomdep" value="#{object.nomdep}"
-									style="width:100%" maxlength="150" required="true"
-									requiredMessage="El campo Nombre es requerido"
-									validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos"
-									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
-									<f:validateRegex
-										pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
-										for="nomdep" />
-								</p:inputText>
-							</f:facet>
-						</p:cellEditor>
-					</p:column>
-					<p:column headerText="Nivel" visible="false" width="0"
-						exportable="true">
-						<h:outputText value="#{object.ultniv}" />
-					</p:column>
+							</p:column>
 
-					<p:column headerText="Nivel" exportable="false" style="width:5px">
-						<p:cellEditor>
-							<f:facet name="output">
+							<p:column headerText="Nombre" exportable="false">
+
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.nomdep}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="nomdep" value="#{object.nomdep}"
+											style="width:100%" maxlength="150" required="true"
+											requiredMessage="El campo Nombre es requerido"
+											validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos"
+											onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+											<f:validateRegex
+												pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+												for="nomdep" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Nivel" visible="false" width="0"
+								exportable="true">
 								<h:outputText value="#{object.ultniv}" />
+							</p:column>
+
+							<p:column headerText="Nivel" exportable="false" style="width:90px">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{object.ultniv}" title="#{object.ultniv eq 'S' ? 'Último nivel' : 'Nivel de agrupación'}"
+											styleClass="sg-chip #{object.ultniv eq 'S' ? 'cian' : 'info'}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="ultniv" value="#{object.ultniv}"
+											style="width:100%" maxlength="1" required="true"
+											onkeyup="this.value=this.value.toUpperCase();"
+											requiredMessage="El campo Nivel es requerido"
+											validatorMessage="El campo Nivel solo permite S o N"
+											onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+											<f:validateRegex pattern="^\s*([NS]*)\s*$" for="ultniv" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<!-- Acciones: editar (rowEditor) y borrar en la misma columna, como en el prototipo -->
+							<!-- p:rowEditor debe quedar como hijo directo de la celda: PrimeFaces 16 escucha "td > div.ui-row-editor > a" -->
+							<p:column headerText="Acciones" exportable="false" style="width:110px;" styleClass="sg-acciones-fila">
+									<p:rowEditor />
+									<p:commandLink id="deleteRow" styleClass="sg-borrar"
+										update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+										oncomplete="PF('confirmDeleteDlg').show()"
+										title="Borrar">
+
+										<f:setPropertyActionListener value="#{object}"
+											target="#{catalogDependenciesCentralMB.beanSelected}" />
+										<h:outputText styleClass="ui-icon ui-icon-close" />
+
+									</p:commandLink>
+							</p:column>
+
+
+							<f:facet name="footer">
+								<div class="sg-export">
+									<span class="sg-note">Exportar:</span>
+									<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" styleClass="sg-btn-sm"
+										disabled="#{empty catalogDependenciesCentralMB.list}">
+										<i class="pi pi-file-excel" /> Excel
+										<p:fileDownload value="#{catalogDependenciesCentralMB.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" styleClass="sg-btn-sm"
+										disabled="#{empty catalogDependenciesCentralMB.list}"
+										actionListener="#{catalogDependenciesCentralMB.getFileTxtPl}">
+										<i class="pi pi-align-left" /> TXT
+										<p:fileDownload value="#{catalogDependenciesCentralMB.txtByPl}" />
+									</h:commandLink>
+
+									<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" styleClass="sg-btn-sm"
+										disabled="#{empty catalogDependenciesCentralMB.list}">
+										<i class="pi pi-file-pdf" /> PDF
+										<p:fileDownload value="#{catalogDependenciesCentralMB.filePdf}" />
+									</h:commandLink>
+
+									<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" styleClass="sg-btn-sm"
+										disabled="#{empty catalogDependenciesCentralMB.list}"
+										actionListener="#{catalogDependenciesCentralMB.getFileCsvPl}">
+										<i class="pi pi-file" /> CSV
+										<p:fileDownload value="#{catalogDependenciesCentralMB.csvByPl}" />
+									</h:commandLink>
+								</div>
 							</f:facet>
-							<f:facet name="input">
-								<p:inputText id="ultniv" value="#{object.ultniv}"
-									style="width:100%" maxlength="1" required="true"
-									onkeyup="this.value=this.value.toUpperCase();"
-									requiredMessage="El campo Nivel es requerido"
-									validatorMessage="El campo Nivel solo permite S o N"
-									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
-									<f:validateRegex pattern="^\s*([NS]*)\s*$" for="ultniv" />
-								</p:inputText>
-							</f:facet>
-						</p:cellEditor>
-					</p:column>
 
-					<p:column headerText="Borrar" exportable="false" width="5%">
-						<p:commandLink id="deleteRow"
-							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
-							oncomplete="PF('confirmDeleteDlg').show()"
-							image="ui-icon ui-icon-close" title="Delete">
+						</p:dataTable>
+					</div>
+				</div>
 
-							<f:setPropertyActionListener value="#{object}"
-								target="#{catalogDependenciesCentralMB.beanSelected}" />
-							<h:outputText styleClass="ui-icon ui-icon-close" />
+				<!-- botones ocultos que la pagina y el bean disparan por JavaScript -->
+				<div class="sg-oculto" aria-hidden="true">
+					<p:commandButton id="hideButton2"
+						update=":form1:messagesEdit, :form1:objects"
+						actionListener="#{catalogDependenciesCentralMB.showSuccesMessage()}"
+						onstart="PF('blockUIWidget').block()"
+						oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+						style="visibility: hidden;" />
 
-						</p:commandLink>
-					</p:column>
+					<p:commandButton id="hideButton3"
+						update=":form1:messagesEdit, :form1:objects"
+						actionListener="#{catalogDependenciesCentralMB.showErrorMessage()}"
+						onstart="PF('blockUIWidget').block()"
+						oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+						style="visibility: hidden;" />
 
-					<p:column exportable="false" width="5%">
-						<p:rowEditor />
-					</p:column>
-
-
-					<f:facet name="footer">
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogDependenciesCentralMB.list}">
-							<p:graphicImage value="excel.png" width="24" />
-							<p:fileDownload value="#{catalogDependenciesCentralMB.fileXls}" />
-						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogDependenciesCentralMB.list}">
-							<p:graphicImage value="pdf.png" width="24" />
-							<p:fileDownload value="#{catalogDependenciesCentralMB.filePdf}" />
-						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogDependenciesCentralMB.list}"
-							actionListener="#{catalogDependenciesCentralMB.getFileCsvPl}">
-							<p:graphicImage value="csv.png" width="24" />
-
-							<p:fileDownload value="#{catalogDependenciesCentralMB.csvByPl}" />
-						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-							disabled="#{empty catalogDependenciesCentralMB.list}"
-							actionListener="#{catalogDependenciesCentralMB.getFileTxtPl}">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogDependenciesCentralMB.txtByPl}" />
-						</h:commandLink>
-
-
-					</f:facet>
-
-				</p:dataTable>
-
-				<p:commandButton id="hideButton2"
-					update=":form1:messagesEdit, :form1:objects"
-					actionListener="#{catalogDependenciesCentralMB.showSuccesMessage()}"
-					onstart="PF('blockUIWidget').block()"
-					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
-
-				<p:commandButton id="hideButton3"
-					update=":form1:messagesEdit, :form1:objects"
-					actionListener="#{catalogDependenciesCentralMB.showErrorMessage()}"
-					onstart="PF('blockUIWidget').block()"
-					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
-
-				<p:commandButton id="hideButton4"
-					update=":form1:messagesEdit, :form1:objects"
-					actionListener="#{catalogDependenciesCentralMB.showCancelEdition()}"
-					onstart="PF('blockUIWidget').block()"
-					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
-					style="visibility: hidden;" />
-
-				<br />
-				<br />
+					<p:commandButton id="hideButton4"
+						update=":form1:messagesEdit, :form1:objects"
+						actionListener="#{catalogDependenciesCentralMB.showCancelEdition()}"
+						onstart="PF('blockUIWidget').block()"
+						oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+						style="visibility: hidden;" />
+				</div>
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar"
 							update=":form1:messagesEdit, :form1:objects"
 							actionListener="#{catalogDependenciesCentralMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 				</p:dialog>
-
-
-
 
 			</h:form>
 		</ui:define>

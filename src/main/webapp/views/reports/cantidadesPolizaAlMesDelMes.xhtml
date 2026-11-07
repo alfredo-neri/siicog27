@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -19,14 +19,22 @@
 						<p:fileDownload value="#{cantidadesPolizaAlMesDelMesMB.fileTxt}" />
 					</p:commandButton>
 					
-				<p:panel id="panelReporte" header="Flujos Al Mes y Del Mes"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Flujos Al Mes y Del Mes</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
 					
 					
-						<p:panelGrid columns="9" styleClass="ui-noborder">
+						<p:panelGrid columns="9" styleClass="ui-noborder" layout="tabular">
 							<h:outputText value="Clasificación" />
-							<p:selectOneRadio id="inputClasificacion" layout="grid"
+							<p:selectOneRadio id="inputClasificacion" layout="responsive"
 								columns="1"
 								value="#{cantidadesPolizaAlMesDelMesMB.delMesOrAlMes}" style="">
 								<f:selectItem itemLabel="Al Mes" itemValue="A" />
@@ -57,7 +65,7 @@
 								icon="ui-icon-zoomout"
 								update=":form1:preViewTxt,:form1:growlReportador"
 								onclick="PF('preViewTxtWg').show();" />
-							<p:commandButton id="correcto"  value="Correcto"
+							<p:commandButton id="correcto"  value="Generar"
 								
 								icon="ui-icon-document"
 								actionListener="#{cantidadesPolizaAlMesDelMesMB.downloadTxt}"
@@ -65,13 +73,13 @@
 								
 							</p:commandButton>
 						</p:panelGrid>
-						<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+						<p:panelGrid columns="1" styleClass="col-centered ui-noborder" layout="tabular">
 							<p:inputText id="inputNomflu" style="text-align:center;"
 								disabled="true"
 								value="#{cantidadesPolizaAlMesDelMesMB.catflu.nomflu}" size="50"></p:inputText>
 						</p:panelGrid>
 					</p:panelGrid>
-					<p:panelGrid>
+					<p:panelGrid layout="tabular">
 						<p:outputLabel
 							rendered="#{cantidadesPolizaAlMesDelMesMB.bPreView}"
 							style="max-height: 400px; width: 900px; overflow-y: scroll; padding-bottom: 10px;">
@@ -84,15 +92,9 @@
 
 						</p:outputLabel>
 					</p:panelGrid>
-				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

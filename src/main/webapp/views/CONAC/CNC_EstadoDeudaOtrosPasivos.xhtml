@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -15,7 +15,7 @@
 				<p:panel id="panelReporte"
 					header="CONAC - Estado Anal&iacute;tico de la Deuda y Otros Pasivos"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="2" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="2" styleClass="col-centered ui-noborder" layout="tabular">
 						<!-- <p:selectBooleanCheckbox
 							value="#{cNCEstadoDeudaOtrosPasivosMB.acumulado}"
 							style="	display: flex;	align-items: center;	justify-items: center;"
@@ -30,7 +30,7 @@
 								update="panelReporte" />
 						</p:selectOneButton>
 					</p:panelGrid>
-					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder" layout="tabular">
 						<h:outputText value="Periodo: " for="mesInputOri"
 							rendered="#{not empty cNCEstadoDeudaOtrosPasivosMB.periodos}" />
 						<p:selectOneMenu id="mesInputOri" editable="false"
@@ -40,6 +40,13 @@
 							<f:selectItems value="#{cNCEstadoDeudaOtrosPasivosMB.periodos}"
 								var="p" itemValue="#{p}" itemLabel="#{p.descripcion}" />
 						</p:selectOneMenu>
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{cNCEstadoDeudaOtrosPasivosMB.createFilePdfInline}"
+							value="Correcto" update="form1:inlinePdf, :form1:growlReportador"
+							styleClass="btn btn-default">
+						</p:commandButton>
 						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
 							title="EXCEL">
 							<p:graphicImage value="../reports/excel.png" width="24" />
@@ -50,13 +57,6 @@
 							<p:graphicImage value="../reports/txt.png" width="24" />
 							<p:fileDownload value="#{cNCEstadoDeudaOtrosPasivosMB.fileTxt}" />
 						</h:commandLink>
-						<p:commandButton id="generateportepdf"
-							onstart="PF('blockUIWidget').block()"
-							oncomplete="PF('blockUIWidget').unblock()"
-							action="#{cNCEstadoDeudaOtrosPasivosMB.createFilePdfInline}"
-							value="Correcto" update="form1:inlinePdf, :form1:growlReportador"
-							styleClass="btn btn-default">
-						</p:commandButton>
 
 
 					</p:panelGrid>
@@ -70,14 +70,6 @@
 					</p:panel>
 
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../reports/indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 
 		</ui:define>

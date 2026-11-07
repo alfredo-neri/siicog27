@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -16,8 +16,8 @@
 				<p:panel id="panelReporte"
 					header="PbRM-01d Ficha T&eacute;cnica de Diseño de Indicadores"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
-						<p:panelGrid columns="5" styleClass="ui-noborder">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder" layout="tabular">
+						<p:panelGrid columns="5" styleClass="ui-noborder" layout="tabular">
 							<p:commandButton id="generateportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
@@ -35,18 +35,18 @@
 									itemValue="#{trim.periodo}"></f:selectItems>
 							</p:selectOneMenu>
 							
-							 <p:commandButton id="generareportetxt"
+							 <h:commandLink
+								onclick="PrimeFaces.monitorDownload(start, stop);" title="EXCEL" >
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{pbrm01dMB.fileXls}" />
+							</h:commandLink>
+							
+							<p:commandButton id="generareportetxt"
 								value="Generar Archivo TXT" ajax="false"
 								styleClass="btn btn-default" update=":form1:growlReportador"
 								onclick="PrimeFaces.monitorDownload(start, stop);">
 								<p:fileDownload value="#{pbrm01dMB.file}" />
 							</p:commandButton>
-							
-							<h:commandLink
-								onclick="PrimeFaces.monitorDownload(start, stop);" title="EXCEL" >
-								<p:graphicImage value="excel.png" width="24" />
-								<p:fileDownload value="#{pbrm01dMB.fileXls}" />
-							</h:commandLink>
 						</p:panelGrid>
 					</p:panelGrid>
 					<p:panel id="inlinePdf" style="border:0px"
@@ -59,14 +59,6 @@
 
 					</p:panel>
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="../reports/indice.png"
-							style="margin-right: 12px; vertical-align: middle;" />
-						<h:outputText value="Por favor espere..."
-							style="white-space: nowrap;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 
 		</ui:define>

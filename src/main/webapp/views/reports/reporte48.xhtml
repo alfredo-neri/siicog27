@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -14,9 +14,16 @@
 			<h:form id="form1">
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<p:panel id="idPanel"
-					header="Reportes de Indicadores Mensual de Tasa de Recaudación de los Derechos de Agua Potable"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="idPanel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Reportes de Indicadores Mensual de Tasa de Recaudación de los Derechos de Agua Potable</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 
 					<p:dataTable id="object" var="objects"
 						value="#{reporte48MB.listPm50}" binding="#{table}"
@@ -26,7 +33,7 @@
 						widgetVar="pm5011Wdg" rowIndexVar="rowIndex">
 
 						<p:column>
-							<p:panelGrid>
+							<p:panelGrid layout="tabular" columns="0">
 								<p:row>
 									<p:column style="text-align: right;">
 										<h:outputText value="Mensual:" />
@@ -58,7 +65,7 @@
 									<p:column>
 										<p:inputText value="#{objects.tcc}" id="tcc" size="15"
 											disabled="#{reporte48MB.btxts}">
-											<pe:keyFilter mask="pint" />
+											<p:keyFilter mask="pint" />
 										</p:inputText>
 									</p:column>
 									<p:column>
@@ -74,7 +81,7 @@
 									<p:column>
 										<p:inputText value="#{objects.tcr}" id="tcr" size="15"
 											disabled="#{reporte48MB.btxts}">
-											<pe:keyFilter mask="pint" />
+											<p:keyFilter mask="pint" />
 										</p:inputText>
 									</p:column>
 									<p:column>
@@ -83,7 +90,7 @@
 									</p:column>
 								</p:row>
 							</p:panelGrid>
-							<p:panelGrid id="idGrid2">
+							<p:panelGrid id="idGrid2" layout="tabular">
 								<p:commandButton value="Modificar" id="modificar"
 									icon="ui-icon-tag"
 									actionListener="#{reporte48MB.modify(rowIndex)}"
@@ -120,11 +127,11 @@
 						</p:column>
 
 					</p:dataTable>
-					<p:panelGrid id="idGrid2" columns="3" styleClass="col-centered">
+					<p:panelGrid id="idGrid2" columns="3" styleClass="col-centered" layout="tabular">
 						<h:outputText value="Mes a Consultar:" />
 						<p:inputText id="idMesPdf" value="#{reporte48MB.mes}" size="2" 
 							maxlength="2">
-							<pe:keyFilter for="idMesPdf" mask="pint"></pe:keyFilter>
+							<p:keyFilter for="idMesPdf" mask="pint"></p:keyFilter>
 							<f:convertNumber pattern="00" />
 						</p:inputText>
 
@@ -137,9 +144,9 @@
 							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
 							styleClass="btn btn-default">
 						</p:commandButton> -->
-						<p:commandButton value="Correcto" id="generateportepdf"
+						<p:commandButton icon="pi pi-play" value="Generar" id="generateportepdf"
 							action="#{reporte48MB.viewPdf}"
-							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit" />
+							update="form1:visor, :form1:idPanel, :form1:messagesEdit" />
 
 					</p:panelGrid>
 					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
@@ -148,16 +155,25 @@
 						<p:commandButton value="No" type="button"
 							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 					</p:confirmDialog>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte48MB.uuid ne null}">
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte48MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte48MB.uuid ne null}">
 
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte48MB.uuid}&amp;filename=#{reporte48MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte48MB.uuid}&amp;filename=#{reporte48MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
 
-					</p:panel>
-				</p:panel>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -13,9 +13,16 @@
 			<h:form id="form1">
 
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<p:panel id="idPanel"
-					header="Reportes de Indicadores de aguas residuales tratadas"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="idPanel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Reportes de Indicadores de aguas residuales tratadas</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:dataTable id="object" var="objects"
 						value="#{reporte130MB.listPm2611}" binding="#{table}"
 						styleClass="et_datatable" emptyMessage="No hay registros"
@@ -24,7 +31,7 @@
 						widgetVar="pm2511Wdg" paginatorPosition="top"
 						rowIndexVar="rowIndex">
 						<p:column>
-							<p:panelGrid id="idGrid1">
+							<p:panelGrid id="idGrid1" layout="tabular" columns="0">
 								<p:row>
 									<p:column style="width : 35%; text-align: right;">
 										<h:outputText value="Semestre  " />
@@ -63,14 +70,14 @@
 									<p:column style="text-align: left;">
 										<p:outputLabel value="#{objects.voltra}" id="lblAgua"
 											rendered="#{reporte130MB.bLbl}">
-											<pe:keyFilter for="lblAgua" mask="pnum" />
+											<p:keyFilter for="lblAgua" mask="pnum" />
 											<f:convertNumber pattern="###,###,##0.00" type="number" />
 										</p:outputLabel>
-										<pe:inputNumber value="#{objects.voltra}" id="txtAgua"
+										<p:inputNumber value="#{objects.voltra}" id="txtAgua"
 											rendered="#{reporte130MB.bTxt}"
 											onkeypress="if (event.keyCode == 13) {return false;}">
 											<f:convertNumber pattern="##0.00" type="number" />
-										</pe:inputNumber>
+										</p:inputNumber>
 									</p:column>
 									<p:column style="text-align: left;">
 										<!-- //<p:outputLabel 
@@ -91,15 +98,15 @@
 
 										<p:outputLabel value="#{objects.voltot}" id="lblPoblacion"
 											rendered="#{reporte130MB.bLbl}">
-											<pe:keyFilter for="lblPoblacion" mask="pnum" />
+											<p:keyFilter for="lblPoblacion" mask="pnum" />
 											<f:convertNumber pattern="###,###,##0.00" type="number" />
 										</p:outputLabel>
 
-										<pe:inputNumber value="#{objects.voltot}" id="txtPoblacion"
+										<p:inputNumber value="#{objects.voltot}" id="txtPoblacion"
 											rendered="#{reporte130MB.bTxt}"
 											onkeypress="if (event.keyCode == 13) {return false;}">
 											<f:convertNumber pattern="##0.00" type="number" />
-										</pe:inputNumber>
+										</p:inputNumber>
 									</p:column>
 
 									<p:column style="text-align: left;">
@@ -113,7 +120,7 @@
 								</p:row>
 
 							</p:panelGrid>
-							<p:panelGrid id="buttons">
+							<p:panelGrid id="buttons" layout="tabular">
 								<p:commandButton value="Salvar"
 									actionListener="#{reporte130MB.save(rowIndex)}"
 									update=":form1:object, :form1:messagesEdit, :form1:ctri"
@@ -145,30 +152,39 @@
 							</p:panelGrid>
 						</p:column>
 					</p:dataTable>
-					<p:panelGrid id="idGrid5">
+					<p:panelGrid id="idGrid5" layout="tabular">
 						<h:outputText value="Semestre a Consultar: " />
 						<p:selectOneMenu value="#{reporte130MB.conTrim}" id="ctri">
 							<f:selectItems var="tri" value="#{reporte130MB.comboTri}"
 								itemValue="#{tri.semes}" itemLabel="#{tri.semes}" />
 						</p:selectOneMenu>
-						<p:commandButton value="Correcto" id="correcto"
+						<p:commandButton value="Generar" id="correcto"
 							onstart="PF('blockUIWidget').block()"
 							oncomplete="PF('blockUIWidget').unblock()"
 							icon="ui-icon-circle-arrow-s"
-							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							update="form1:visor, :form1:idPanel, :form1:messagesEdit"
 							actionListener="#{reporte130MB.createFilePdfInline}" />
 
 					</p:panelGrid>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte130MB.uuid ne null}">
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte130MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte130MB.uuid ne null}">
 
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte130MB.uuid}&amp;filename=#{reporte130MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte130MB.uuid}&amp;filename=#{reporte130MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
 
-					</p:panel>
-				</p:panel>
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 
 				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 					<p:commandButton value="SI" type="button"

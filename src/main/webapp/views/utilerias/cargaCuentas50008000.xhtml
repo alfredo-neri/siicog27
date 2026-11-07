@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -29,7 +29,7 @@
 						<p:tab title="Carga Manual">
 							<p:panelGrid columns="4"
 								styleClass="col-centered row-centered ui-noborder"
-								id="panelGrid1">
+								id="panelGrid1" layout="tabular">
 								<p:outputLabel value="CUENTA" />
 								<p:outputLabel value="SCTA" />
 								<p:outputLabel value="SSCTA" />
@@ -44,7 +44,7 @@
 									id="ssscta" mask="9999" />
 							</p:panelGrid>
 							<p:panelGrid columns="5"
-								styleClass="col-centered row-centered ui-noborder">
+								styleClass="col-centered row-centered ui-noborder" layout="tabular">
 								<p:commandButton value="Correcto"
 									actionListener="#{cargacuenta58MB.load}"
 									update=":form1:growl, form1:petanaPrincipal:cta, :form1:petanaPrincipal:scta, :form1:petanaPrincipal:sscta, :form1:petanaPrincipal:ssscta" />
@@ -52,14 +52,10 @@
 						</p:tab>
 						<p:tab title="Carga Automatica" id="cAuto">
 							<p:fileUpload
-								fileUploadListener="#{cargacuenta58MB.handleFileUpload}"
-								mode="advanced" dragDropSupport="false"
-								update=":form1:growl, :form1:petanaPrincipal:downTxt"
-								sizeLimit="1000000000000" accept=".txt"
-								allowTypes="/(\.|\/)(txt)$/"
-								invalidSizeMessage="Tamaño invalido de archivo."
-								invalidFileMessage="Tipo invalido de archivo."
-								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar" />
+								listener="#{cargacuenta58MB.handleFileUpload}"
+								mode="advanced" dragDrop="false"
+								update=":form1:growl, :form1:petanaPrincipal:downTxt" accept=".txt"
+								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar"><p:validateFile sizeLimit="1000000000000" allowTypes="/(\.|\/)(txt)$/"/></p:fileUpload>
 							<!-- <p:commandButton value="Descargar Archivo" ajax="false"
 								id="download" icon="ui-icon-arrowthick-1-s"
 								disabled="#{cargacuenta58MB.active}"

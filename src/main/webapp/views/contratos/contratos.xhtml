@@ -2,13 +2,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+	xmlns:c="jakarta.tags.core"
+	xmlns:fmt="jakarta.tags.fmt">
 <h:body>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="content">
@@ -287,7 +287,7 @@
 											<div class="col-md-3 ui-noborder left-text block">
 												<p:outputLabel value="Importe Adquisición:"
 													for="importeAdquisicion" />
-												<pe:inputNumber id="importeAdquisicion" minValue="0"
+												<p:inputNumber id="importeAdquisicion" minValue="0"
 													maxValue="999999999999999.99" decimalPlaces="2"
 													value="#{product.contrato.importeAdquisicion}"
 													thousandSeparator="," decimalSeparator="."
@@ -514,7 +514,7 @@
 														<div class="col-md-12">
 															<div class="col-md-6 ui-noborder left-text block">
 																<p:outputLabel value="Giro:" for="giro" />
-																<pe:inputNumber id="giro" minValue="0" maxValue="9999"
+																<p:inputNumber id="giro" minValue="0" maxValue="9999"
 																	value="#{adqui.giro.clvgas}" thousandSeparator=""
 																	decimalPlaces="0" disabled="true" />
 															</div>
@@ -833,7 +833,7 @@
 												styleClass="col-centered row-centered">
 												<!-- col-md-3  -->
 												<p:panelGrid
-													styleClass="col-centered row-centered ui-noborder">
+													styleClass="col-centered row-centered ui-noborder" layout="tabular" columns="0">
 													<!--  -->
 													<p:row>
 														<p:column style="text-align:right; font-weight: bold;">
@@ -862,12 +862,12 @@
 																rendered="#{!contratosMB.editable}">
 																<f:convertNumber pattern="###,##0.00" locale="es_MX" />
 															</h:outputText>
-															<pe:inputNumber value="#{car.precio}"
+															<p:inputNumber value="#{car.precio}"
 																rendered="#{contratosMB.editable}" decimalPlaces="2"
 																decimalSeparator="." thousandSeparator="," minValue="0">
 																<p:ajax event="blur" update="@form"
 																	listener="#{contratosMB.calculaTotalProducto}" />
-															</pe:inputNumber>
+															</p:inputNumber>
 														</p:column>
 													</p:row>
 
@@ -880,13 +880,13 @@
 																rendered="#{!contratosMB.editable}">
 																<f:convertNumber pattern="###,##0.00" locale="es_MX" />
 															</h:outputText>
-															<pe:inputNumber value="#{car.iva}" minValue="0"
+															<p:inputNumber value="#{car.iva}" minValue="0"
 																maxlength="100" rendered="#{contratosMB.editable}"
 																decimalPlaces="2" decimalSeparator="."
 																thousandSeparator=",">
 																<p:ajax event="blur" update="@form"
 																	listener="#{contratosMB.calculaTotalProducto}" />
-															</pe:inputNumber>
+															</p:inputNumber>
 														</p:column>
 													</p:row>
 
@@ -899,7 +899,7 @@
 																rendered="#{!contratosMB.editable}">
 																<f:convertNumber pattern="###,##0.00" locale="es_MX" />
 															</h:outputText>
-															<pe:inputNumber thousandSeparator=","
+															<p:inputNumber thousandSeparator=","
 																decimalSeparator="." decimalPlaces="2"
 																value="#{car.total}" rendered="#{contratosMB.editable}"
 																disabled="true" />
@@ -1124,7 +1124,7 @@
 						<h5 style="display: block ruby;">
 							<p:selectOneRadio id="correctos"
 								value="#{contratosMB.revison.correcto}" columns="1"
-								layout="grid">
+								layout="responsive">
 								<f:selectItem itemLabel="Si" itemValue="true" />
 								<f:selectItem itemLabel="No" itemValue="false" />
 							</p:selectOneRadio>
@@ -1303,14 +1303,6 @@
 					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
 			</p:confirmDialog>
 
-			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-				<h:panelGrid columns="2">
-					<h:graphicImage value="../reports/indice.png"
-						style="margin-right: 12px; vertical-align: middle;" />
-					<h:outputText value="Por favor espere..."
-						style="white-space: nowrap;" />
-				</h:panelGrid>
-			</pe:blockUI>
 		</ui:define>
 	</ui:composition>
 </h:body>

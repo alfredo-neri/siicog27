@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -19,7 +19,7 @@
 				<p:panel id="panelReporte"
 					header="CONAC - Estado de Cambios en la Situaci&oacute;n Financiera"
 					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:panelGrid columns="2" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="2" styleClass="col-centered ui-noborder" layout="tabular">
 						<p:selectOneButton value="#{cNCEstadoCambiosSFMB.tipoPeriodo}">
 							<f:selectItems value="#{cNCEstadoCambiosSFMB.tiposPeridos}"
 								var="p" itemValue="#{p}" itemLabel="#{p}" />
@@ -28,7 +28,7 @@
 								update="panelReporte" />
 						</p:selectOneButton>
 					</p:panelGrid>
-					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder" layout="tabular">
 						<h:outputText value="Periodo: " for="trim"
 							rendered="#{not empty cNCEstadoCambiosSFMB.periodos}" />
 						<p:selectOneMenu id="trim" editable="false"
@@ -39,12 +39,7 @@
 								itemValue="#{p}" itemLabel="#{p.descripcion}" />
 						</p:selectOneMenu>
 
-						<p:panelGrid columns="4" styleClass="ui-noborder">
-							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
-								title="EXCEL">
-								<p:graphicImage value="excel.png" width="24" />
-								<p:fileDownload value="#{cNCEstadoCambiosSFMB.downloadXls()}" />
-							</h:commandLink>
+						<p:panelGrid columns="4" styleClass="ui-noborder" layout="tabular">
 							<p:commandButton id="generateportepdf"
 								onstart="PF('blockUIWidget').block()"
 								oncomplete="PF('blockUIWidget').unblock()"
@@ -52,6 +47,11 @@
 								update="form1:inlinePdf, :form1:growlReportador"
 								styleClass="btn btn-default">
 							</p:commandButton>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{cNCEstadoCambiosSFMB.downloadXls()}" />
+							</h:commandLink>
 						</p:panelGrid>
 					</p:panelGrid>
 					<p:panel id="inlinePdf" style="border:0px"
@@ -62,12 +62,6 @@
 							desplegar el PDF. </object>
 					</p:panel>
 				</p:panel>
-				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
-					<h:panelGrid columns="2">
-						<h:graphicImage value="indice.gif"
-							style="margin-right: 12px; vertical-align: middle;" />
-					</h:panelGrid>
-				</pe:blockUI>
 			</h:form>
 
 		</ui:define>

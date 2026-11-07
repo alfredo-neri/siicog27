@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -19,65 +19,70 @@
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
 
 				<p:focus context="objects" id="focusTable" />
-				<p:panel id="panel" header="B&uacute;squeda de Temas de Desarrollo"
-					style="width:40%;"
-					styleClass="green  col-centered row-centered shadow-panel">
+				<div class="sg-page">
+					<!-- ===== Encabezado de pantalla ===== -->
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Contabilidad / Catálogos</div>
+							<h1>Catálogo de Temas de Desarrollo</h1>
+						</div>
+						<h:panelGroup id="panelButton" styleClass="sg-actions">
+							<p:commandButton icon="pi pi-plus" value="Nuevo registro"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								actionListener="#{catalogThemeGrowthMB.insertRow}"
+								oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+						</h:panelGroup>
+					</div>
 
-					<h:panelGrid id="display_1" columns="2" cellpadding="4">
-
-						<h:outputText value="Cvetemas" for="keyInput"
-							style="padding-left: 30px; padding-right: 30px;" />
-						<p:inputText id="keyInput"
-							value="#{catalogThemeGrowthMB.beanFind.cvetemas}" maxlength="8"
-							validatorMessage="cvetemas solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="keyInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogThemeGrowthMB.findValuesCatalog}" />
-						</p:inputText>
-
-						<h:outputText value="Tema" for="nameInput"
-							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
-						<p:inputText id="nameInput"
-							value="#{catalogThemeGrowthMB.beanFind.tema}"
-							style="margin-top: 10px;" maxlength="2"
-							validatorMessage="Tema solo permite valores alfanum&eacute;ricos">
-							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
-								for="nameInput" />
-							<p:ajax event="keyup"
-								update=":form1:messagesEdit, :form1:objects"
-								listener="#{catalogThemeGrowthMB.findValuesCatalog}" />
-						</p:inputText>
-
-						<br />
-						<p:outputPanel layout="block" style="text-align:center">
-
-							<br />
-
-							<p:commandButton value="Buscar" style="padding: 5px;"
-								update=":form1:messagesEdit, :form1:objects"
-								actionListener="#{catalogThemeGrowthMB.findValuesCatalog}" />
-
-							<p:commandButton value="Limpiar"
-								style="padding: 5px; margin-left: 15px;"
-								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
-								actionListener="#{catalogThemeGrowthMB.findAllValuesCatalog}"
-								onstart="PF('blockUIWidget').block()"
-								oncomplete="PF('blockUIWidget').unblock()" />
-
-						</p:outputPanel>
-					</h:panelGrid>
-				</p:panel>
-				<br />
-				<p:panel id="panelButton"
-					style="width:100%; background-color: #E8ECED;">
-
-					<p:commandButton value="Nuevo Registro"
-						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
-						actionListener="#{catalogThemeGrowthMB.insertRow}"
-						style="margin-left: 50%; padding: 5px;"
-						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
-				</p:panel>
+					<!-- ===== Buscar tema de desarrollo ===== -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Buscar tema de desarrollo</h2>
+						</div>
+						<h:panelGroup id="panel" layout="block" styleClass="sg-card-b">
+							<h:panelGroup id="display_1" layout="block" style="display: grid; gap: 16px;">
+								<div class="sg-fields" style="grid-template-columns: minmax(0, 220px) minmax(0, 220px);">
+									<div class="sg-field">
+										<p:outputLabel for="keyInput" value="Cvetemas" />
+										<p:inputText styleClass="mono" id="keyInput"
+											value="#{catalogThemeGrowthMB.beanFind.cvetemas}" maxlength="8"
+											validatorMessage="cvetemas solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="keyInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogThemeGrowthMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+									<div class="sg-field">
+										<p:outputLabel for="nameInput" value="Tema" />
+										<p:inputText styleClass="mono" id="nameInput"
+											value="#{catalogThemeGrowthMB.beanFind.tema}" maxlength="2"
+											validatorMessage="Tema solo permite valores alfanum&eacute;ricos">
+											<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+												for="nameInput" />
+											<p:ajax event="keyup"
+												update=":form1:messagesEdit, :form1:objects"
+												listener="#{catalogThemeGrowthMB.findValuesCatalog}" />
+										</p:inputText>
+									</div>
+								</div>
+								<div class="sg-actions">
+									<p:commandButton icon="pi pi-search" value="Buscar"
+										update=":form1:messagesEdit, :form1:objects"
+										actionListener="#{catalogThemeGrowthMB.findValuesCatalog}" />
+									<p:commandButton styleClass="ui-button-flat" value="Limpiar"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+										actionListener="#{catalogThemeGrowthMB.findAllValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				<div class="sg-card">
+					<div class="sg-card-h">
+						<h2>Temas de desarrollo</h2>
+					</div>
 				<p:dataTable id="objects" binding="#{table}" var="objects"
 					value="#{catalogThemeGrowthMB.list}" styleClass="et_datatable"
 					emptyMessage="No hay registros" editable="true" paginator="true"
@@ -85,7 +90,6 @@
 					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					selectionMode="single" rowKey="#{objects.id}">
 
-					<f:facet name="header">Cat&aacute;logo de Temas de Desarrollo</f:facet>
 
 					<p:ajax event="rowEdit"
 						listener="#{catalogThemeGrowthMB.onRowEdit}"
@@ -235,73 +239,69 @@
 						</p:cellEditor>
 					</p:column>
 
-					<p:column headerText="Borrar" style="width:5%" exportable="false">
-						<p:commandLink
+					<p:column headerText="Acciones" exportable="false" style="width:110px;" styleClass="sg-acciones-fila">
+						<p:rowEditor />
+						<p:commandLink styleClass="sg-borrar" id="deleteRow"
 							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
 							oncomplete="PF('confirmDeleteDlg').show()"
-							image="ui-icon ui-icon-close" title="Delete">
+							image="ui-icon ui-icon-close" title="Borrar">
 							<f:setPropertyActionListener value="#{objects}"
 								target="#{catalogThemeGrowthMB.beanSelected}" />
 							<h:outputText styleClass="ui-icon ui-icon-close" />
 						</p:commandLink>
 					</p:column>
 
-					<p:column style="width:5%" exportable="false">
-						<p:rowEditor />
-					</p:column>
-
 					<f:facet name="footer">
+						<div class="sg-export">
+						<span class="sg-note">Exportar:</span>
 
-						<p:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="excel.png" width="24" />
+						<p:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file-excel" /> Excel
 							<p:fileDownload value="#{catalogThemeGrowthMB.fileXls}" />
 						</p:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="pdf.png" width="24" />
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-align-left" /> TXT
+							<p:fileDownload value="#{catalogThemeGrowthMB.file}" />
+						</h:commandLink>
+
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<i class="pi pi-file-pdf" /> PDF
 							<p:fileDownload value="#{catalogThemeGrowthMB.filePdf}" />
 						</h:commandLink>
 
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						<h:commandLink styleClass="sg-btn-sm" onclick="PrimeFaces.monitorDownload(start, stop);"
 							actionListener="#{catalogThemeGrowthMB.getFileCsvPl}">
-							<p:graphicImage value="csv.png" width="24" />
+							<i class="pi pi-file" /> CSV
 							<p:fileDownload value="#{catalogThemeGrowthMB.csvByPl}" />
 
 							<!-- <p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
 								fileName="TemasDesarrollo" pageOnly="false" /> -->
 						</h:commandLink>
-
-						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
-							<p:graphicImage value="txt.gif" width="24" />
-							<p:fileDownload value="#{catalogThemeGrowthMB.file}" />
-						</h:commandLink>
-
+						</div>
 					</f:facet>
 
 				</p:dataTable>
+				</div>
+				</div>
 
 				<br />
 				<br />
 
 				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
-					resizable="false" width="400" height="90" showEffect="clip"
+					resizable="false" width="400" showEffect="clip"
 					hideEffect="clip" modal="true">
 
-					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
-						style="padding-left: 30px; padding-right: 30px;" />
-					<br />
-					<br />
+					<h:outputText value="¿Está seguro de eliminar el registro?" />
 					<p:outputPanel id="panelDelete" layout="block"
-						style="text-align:center">
+						style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
 
+						<p:commandButton value="Cancelar" styleClass="ui-button-flat"
+							onclick="PF('confirmDeleteDlg').hide()" type="button" />
 						<p:commandButton value="Aceptar"
 							update=":form1:messagesEdit, :form1:objects"
 							actionListener="#{catalogThemeGrowthMB.delete}"
-							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
-
-						<p:commandButton value="Cancelar"
-							onclick="PF('confirmDeleteDlg').hide()" type="button"
-							style="padding: 5px; margin-left: 15px;" />
+							oncomplete="PF('confirmDeleteDlg').hide()" />
 					</p:outputPanel>
 				</p:dialog>
 

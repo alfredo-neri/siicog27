@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -20,13 +20,16 @@
 					action="#{reportadortxtMB.initNombreDinamico}" autoRun="true"
 					update="panel" />
 
-				<p:panel id="panel" header="#{reportadortxtMB.nombreReporte}"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel">
-					<p:dialog id="modal" modal="true" widgetVar="statusDialog"
-						header="Procesando..." draggable="false" closable="false"
-						resizable="false">
-						<p:graphicImage name="/images/ajaxloadingbar.gif" />
-					</p:dialog>
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>#{reportadortxtMB.nombreReporte}</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<br />
 					<br />
 					<p:commandButton id="generareportetxt" style="padding: 3px;"
@@ -40,15 +43,17 @@
 					<br />
 					<br />
 					<br />
-				</p:panel>
+						</div>
+					</div>
+				</h:panelGroup>
 			</h:form>
 			<script type="text/javascript">
 			    function start() {
-			        PF('statusDialog').show();
+			        PF('blockUIWidget').block();
 			     }
 			 
 			     function stop() {
-			         PF('statusDialog').hide();
+			         PF('blockUIWidget').unblock();
 			     }
            </script>
 

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" 
-xmlns:h="http://java.sun.com/jsf/html" 
-xmlns:ui="http://java.sun.com/jsf/facelets" 
-xmlns:f="http://java.sun.com/jsf/core" 
+xmlns:h="jakarta.faces.html" 
+xmlns:ui="jakarta.faces.facelets" 
+xmlns:f="jakarta.faces.core" 
 xmlns:p="http://primefaces.org/ui" 
 xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -109,8 +109,17 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 					}
 	            </style>
 	            <h:form id="form1" style="display: inline-block; margin-left: auto; margin-right: auto; ">
-	                <p:growl id="growlReportador" showDetail="true" sticky="true" autoUpdate="true"></p:growl>
-	                <p:panel id="panelReporte" header="Captura Manual de Recaudación del Impuesto Predial" style="height: 57em;" styleClass="green shadow-panel container">
+	                <p:growl id="growlReportador" showDetail="true" sticky="true"><p:autoUpdate/></p:growl>
+	                <!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+	                <h:panelGroup id="panelReporte" layout="block" styleClass="sg-page sg-reporte">
+	                	<div class="sg-page-h">
+	                		<div>
+	                			<div class="sg-crumbs">Reportes</div>
+	                			<h1>Captura Manual de Recaudación del Impuesto Predial</h1>
+	                		</div>
+	                	</div>
+	                	<div class="sg-card">
+	                		<div class="sg-card-b sg-rep">
 						<p:dataGrid id="dataGrid" var="entity"
 							value="#{capturaRecaudacionImpuestoPredialMB.masterList}"
 							styleClass="et_datatable col-md-12 no-border"
@@ -126,7 +135,7 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 								
 							<div class="row">
 								<div class="col-12 col-xs-12 col-sm-12 col-12-md col-lg-12 col-xs-12" style="text-align:center; text-align: -moz-center;" >
-								<p:panelGrid columns="2" styleClass="ui-noborder" style="height: 3em;">
+								<p:panelGrid columns="2" styleClass="ui-noborder" style="height: 3em;" layout="tabular">
 									<h:outputText value="Mes:"/>
 									<h:panelGroup style="width:4em;display:block;">
 										<h:outputText value="#{entity.mes}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando or entity.id  > 0}" style="width:4em;display: block;"/>
@@ -136,9 +145,9 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 									</h:panelGroup>
 								</p:panelGrid>
 								<h:panelGroup id="panel-filtros">
-									<p:panelGrid columns="2">
+									<p:panelGrid columns="2" layout="tabular">
 									
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 											<h:outputText value="Ingreso Mensual del Año Actual" style="margin-top:1em;margin-left: 4em;display: inline-block;height: 2.8em;"/>
 										<p:row style="height: 3em;border-top: 1px solid #dddddd;">
 											<p:column>
@@ -151,7 +160,7 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 													<p:inputText  value="#{entity.nctasdmes}" styleClass="" style="width:13.8em;" decimalPlaces="0"
 														decimalSeparator="" thousandSeparator="" minValue="0" maxlength="9"
 														maxValue="999999999" rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-														<pe:keyFilter mask="pint" />
+														<p:keyFilter mask="pint" />
 													</p:inputText>
 												</h:panelGroup>
 											</p:column>
@@ -164,10 +173,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.impuestos}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.impuestos}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.impuestos}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>	
@@ -179,10 +188,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.recargos}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.recargos}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.recargos}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>	
@@ -194,10 +203,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.multas}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.multas}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.multas}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -209,10 +218,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.gastosejec}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.gastosejec}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.gastosejec}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -224,10 +233,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.otros}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.otros}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.otros}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -239,10 +248,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.indemni}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.indemni}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.indemni}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -254,10 +263,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.rdelmes}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.rdelmes}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.rdelmes}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -269,15 +278,15 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.ralmes}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.ralmes}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.ralmes}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
 									</p:panelGrid>
-									<p:panelGrid styleClass="ui-noborder">
+									<p:panelGrid styleClass="ui-noborder" layout="tabular" columns="0">
 										<h:outputText value="Ingreso de Años Anteriores" style="margin-top:1em;margin-left: 9em;display: inline-block;height: 2.8em;"/>
 										<p:row style="height: 3em;border-top: 1px solid #dddddd;">
 											<p:column>
@@ -290,7 +299,7 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 													<p:inputText  value="#{entity.nctasanterior}" styleClass="" style="width:13.8em;" decimalPlaces="0"
 														decimalSeparator="" thousandSeparator="" minValue="0" maxlength="9"
 														maxValue="999999999" rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-														<pe:keyFilter mask="pint" />
+														<p:keyFilter mask="pint" />
 													</p:inputText>
 												</h:panelGroup>
 											</p:column>
@@ -303,10 +312,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.impuestosa}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.impuestosa}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.impuestosa}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>	
@@ -318,10 +327,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.recargosa}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.recargosa}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.recargosa}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>	
@@ -333,10 +342,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.multasa}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.multasa}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.multasa}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -348,10 +357,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.gastosejeca}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.gastosejeca}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.gastosejeca}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -363,10 +372,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.otrosa}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.otrosa}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.otrosa}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -378,10 +387,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.indemnia}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.indemnia}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.indemnia}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -393,10 +402,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.rdeaa}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.rdeaa}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.rdeaa}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -408,10 +417,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 											<p:column>
 												<h:panelGroup style="width:14em;display:block;">
 													<h:outputText value="#{entity.racumaa}" rendered="#{!capturaRecaudacionImpuestoPredialMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
-													<pe:inputNumber value="#{entity.racumaa}" maxlength="9" style="width:12em;"
+													<p:inputNumber value="#{entity.racumaa}" maxlength="9" style="width:12em;"
 														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
 														rendered="#{capturaRecaudacionImpuestoPredialMB.editando}">
-													</pe:inputNumber>
+													</p:inputNumber>
 												</h:panelGroup>
 											</p:column>
 										</p:row>
@@ -444,14 +453,10 @@ xmlns:pe="http://primefaces.org/ui/extensions">
 										disabled="#{!capturaRecaudacionImpuestoPredialMB.editando}"
 										update="dataGrid pnlBotonesCRUD" />
 								</h:panelGroup>
-	                </p:panel>
+	                		</div>
+	                	</div>
+	                </h:panelGroup>
 	
-	                <pe:blockUI widgetVar="blockUIWidget" centerX="false">
-	                    <h:panelGrid columns="2">
-	                        <h:graphicImage value="indice.png" style="margin-right: 12px; vertical-align: middle;" />
-	                        <h:outputText value="Por favor espere..." style="white-space: nowrap;" />
-	                    </h:panelGrid>
-	                </pe:blockUI>
 			        <p:confirmDialog widgetVar="confirmFileDeleteMeta"
 						message="Desea eliminar el registro actual?"
 						header="Confirmación" severity="alert">

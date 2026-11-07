@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
@@ -19,12 +19,7 @@
 				<p:panel id="panel"
 					styleClass="green col-md-11 col-centered row-centered shadow-panel"
 					header="Importar P&oacute;lizas (N&oacute;mina, Ingresos, Otros...)">
-					<p:dialog id="modal" modal="true" widgetVar="statusDialog"
-						header="Status" draggable="false" closable="false"
-						resizable="false">
-						<p:graphicImage name="/images/ajaxloadingbar.gif" />
-					</p:dialog>
-					<p:panelGrid styleClass="col-centered row-centered" id="display_1">
+					<p:panelGrid styleClass="col-centered row-centered" id="display_1" layout="tabular" columns="0">
 					<h:outputText value="Clave: " for="claveInput"
 										style="padding-left: 5px; padding-right: 10px; margin-top: 30px; margin: 30px;" />
 
@@ -39,7 +34,7 @@
 						<p:row>
 							<p:column>
 									
-								<p:panelGrid columns="5" styleClass="ui-noborder" layout="grid">
+								<p:panelGrid columns="5" styleClass="ui-noborder" layout="tabular">
 									<p:panelGrid columns="1" styleClass="ui-noborder" layout="grid">
 										<h:outputText value="Mes: " for="mesInputOri" id="mesLabel"
 											rendered="#{importarPolizaMB.render}"
@@ -75,7 +70,7 @@
 											rendered="#{importarPolizaMB.render}" required="true"
 											requiredMessage="El numero de poliza es requerido"
 											value="#{importarPolizaMB.iNumero}">
-											<pe:keyFilter for="polizaIniInputOri" mask="pint"></pe:keyFilter>
+											<p:keyFilter for="polizaIniInputOri" mask="pint"></p:keyFilter>
 											<f:convertNumber pattern="0000" />
 										</p:inputText>
 									</p:panelGrid>
@@ -92,7 +87,7 @@
 										</p:calendar>
 									</p:panelGrid>
 								</p:panelGrid>
-								<p:panelGrid columns="5" styleClass="ui-noborder" layout="grid">
+								<p:panelGrid columns="5" styleClass="ui-noborder" layout="tabular">
 									<p:panelGrid columns="1" styleClass="ui-noborder" layout="grid">
 										<h:outputText value="Revisar/Cargar: " for="revloadInput"
 											rendered="#{importarPolizaMB.render}"
@@ -110,8 +105,7 @@
 										<p:fileUpload value="#{importarPolizaMB.file}" mode="simple"
 											id="archivo" label="..." required="true"
 											requiredMessage="El archivo es requerdio"
-											sizeLimit="20000000000"
-											disabled="#{importarPolizaMB.objDisabled}" skinSimple="true" />
+											disabled="#{importarPolizaMB.objDisabled}" skinSimple="true"><p:validateFile sizeLimit="20000000000"/></p:fileUpload>
 									</p:panelGrid>
 									<p:panelGrid columns="1" styleClass="ui-noborder" layout="grid"
 										style="margin-top: 1%">
@@ -147,7 +141,7 @@
 
 									<h:outputText value="Aplicar momentos contables:"
 										style="padding-left: 30px;  color:red;" />
-									<p:selectOneRadio id="momentoContRBG" layout="grid" columns="1"
+									<p:selectOneRadio id="momentoContRBG" layout="responsive" columns="1"
 										disabled="#{importarPolizaMB.objDisabled}" required="true"
 										requiredMessage="Seleccione un Momento Contable"
 										value="#{importarPolizaMB.iBoxes}">
@@ -170,7 +164,7 @@
 							</p:column>
 						</p:row>
 					</p:panelGrid>
-					<p:panelGrid styleClass="col-centered row-centered" id="grid2">
+					<p:panelGrid styleClass="col-centered row-centered" id="grid2" layout="tabular">
 
 					</p:panelGrid>
 
@@ -188,11 +182,11 @@
 			</h:form>
 			<script type="text/javascript">
 				function start() {
-					PF('statusDialog').show();
+					PF('blockUIWidget').block();
 				}
 
 				function stop() {
-					PF('statusDialog').hide();
+					PF('blockUIWidget').unblock();
 				}
 			</script>
 		</ui:define>

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
@@ -13,9 +13,16 @@
 		<ui:define name="content">
 			<h:form id="form1">
 				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
-				<p:panel id="panel"
-					styleClass="green col-md-9 col-centered row-centered shadow-panel"
-					header="Indicadores Anual de Transparencia en el Ámbito Municipal">
+				<!-- SIICOG fase 3: marco de la Balanza de Comprobacion (encabezado + tarjeta); antes p:panel con header -->
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page sg-reporte">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Reportes</div>
+							<h1>Indicadores Anual de Transparencia en el Ámbito Municipal</h1>
+						</div>
+					</div>
+					<div class="sg-card">
+						<div class="sg-card-b sg-rep">
 					<p:dataTable id="object" var="objects"
 						value="#{reporte155MB.listPm4011}" binding="#{table}"
 						styleClass="et_datatable" emptyMessage="No hay registros"
@@ -24,7 +31,7 @@
 						widgetVar="pm4011Wdg" rowIndexVar="rowIndex">
 						<p:ajax event="page" listener="#{reporte155MB.chagePage}" />
 						<p:column>
-							<p:panelGrid id="buttons" styleClass="col-centered">
+							<p:panelGrid id="buttons" styleClass="col-centered" layout="tabular" columns="0">
 								<p:row>
 									<p:column>
 										<p:commandButton value="Modificar" id="update"
@@ -62,7 +69,7 @@
 									</p:column>
 								</p:row>
 							</p:panelGrid>
-							<p:panelGrid id="panelAnual" styleClass="col-centered">
+							<p:panelGrid id="panelAnual" styleClass="col-centered" layout="tabular" columns="0">
 
 								<p:row>
 									<p:column style="width: 5%">
@@ -80,7 +87,7 @@
 									<p:column style="width: 10%">
 										<p:outputLabel id="lblClvreq" value="#{objects.clvreq}"
 											rendered="#{!reporte155MB.bEdit}" />
-										<pe:inputNumber id="txtClvreq" value="#{objects.clvreq}"
+										<p:inputNumber id="txtClvreq" value="#{objects.clvreq}"
 											minValue="0" decimalPlaces="0" decimalSeparator=""
 											maxValue="99" maxlength="2" size="2"
 											rendered="#{reporte155MB.bEdit}" required="true" requiredMessage="La clave es obligatoria"/>
@@ -101,7 +108,7 @@
 								</p:row>
 
 							</p:panelGrid>
-							<p:panelGrid id="details">
+							<p:panelGrid id="details" layout="tabular" columns="0">
 								<p:row>
 									<p:column>
 										<p:row>
@@ -161,27 +168,18 @@
 							</p:panelGrid>
 						</p:column>
 					</p:dataTable>
-					<p:panelGrid styleClass="col-centered row-centered">
+					<p:panelGrid styleClass="col-centered row-centered" layout="tabular" columns="0">
 						<p:row>
 							<p:column>
-								<p:commandButton value="Correcto" id="correcto"
+								<p:commandButton value="Generar" id="correcto"
 									onstart="PF('blockUIWidget').block()"
 									oncomplete="PF('blockUIWidget').unblock()"
 									icon="ui-icon-circle-arrow-s"
-									update="form1:inlinePdf,  :form1:messagesEdit"
+									update="form1:visor,  :form1:messagesEdit"
 									actionListener="#{reporte155MB.createFilePdfInline}" />
 							</p:column>
 						</p:row>
 					</p:panelGrid>
-					<p:panel id="inlinePdf" style="border:0px"
-						visible="#{reporte155MB.uuid ne null}">
-
-						<object type="application/pdf"
-							data="#{request.contextPath}/GetFileInline?uuid=#{reporte155MB.uuid}&amp;filename=#{reporte155MB.endFilename}"
-							height="380px" width="100%"> Tu browser no puede
-							desplegar el PDF. </object>
-
-					</p:panel>
 					
 					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 						<p:commandButton value="Si" type="button"
@@ -189,7 +187,25 @@
 						<p:commandButton value="No" type="button"
 							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 					</p:confirmDialog>
-				</p:panel>
+						</div>
+						<!-- SIICOG fase 3: visor oscuro de la Balanza: siempre visible, con aviso mientras no hay reporte -->
+						<h:panelGroup id="visor" layout="block" styleClass="sg-visor">
+							<h:panelGroup layout="block" styleClass="sg-visor-vacio" rendered="#{not (reporte155MB.uuid ne null)}">
+								<i class="pi pi-file-pdf" />
+								<span>Elige los filtros y pulsa <b>Generar</b> para ver el reporte.</span>
+							</h:panelGroup>
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{reporte155MB.uuid ne null}">
+
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{reporte155MB.uuid}&amp;filename=#{reporte155MB.endFilename}"
+									height="640px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
+
+							</p:panel>
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>
