@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-01-20T12:57:40 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte116_txt" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="07fd6345-0842-46de-9e0e-af93eca665b1">
+<jasperReport name="reporte116_txt" language="java" columnCount="1" dpi="72" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="07fd6345-0842-46de-9e0e-af93eca665b1" ignorePagination="true">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ReportesFer"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -17,8 +14,7 @@
 	<parameter name="TRIMESTRE" class="java.lang.Integer"/>
 	<parameter name="IDSECTOR" class="java.lang.Integer"/>
 	<parameter name="CLAVE" class="java.lang.String"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT 
+	<query language="SQL"><![CDATA[SELECT 
 nvl(TO_CHAR(c.anoemp),'') anoemp,
 nvl(i.periodo,'') periodo,
 nvl(i.cveind,'') cveind,
@@ -34,8 +30,7 @@ INNER JOIN pm2211 p ON c.idsector = p.idsector
 WHERE  i.cveind = 37
 AND p.idsector = $P{IDSECTOR}
 AND p.trimestre = $P{TRIMESTRE}
-AND c.anoemp = $P{ANOEMP}]]>
-	</queryString>
+AND c.anoemp = $P{ANOEMP}]]></query>
 	<field name="ANOEMP" class="java.lang.String"/>
 	<field name="PERIODO" class="java.lang.String"/>
 	<field name="CVEIND" class="java.math.BigDecimal"/>
@@ -45,27 +40,23 @@ AND c.anoemp = $P{ANOEMP}]]>
 	<field name="TAJ" class="java.lang.String"/>
 	<field name="OBSAJB" class="java.lang.String"/>
 	<field name="OBSTAJ" class="java.lang.String"/>
-	<variable name="xmes" class="java.util.List" resetType="None">
-		<variableExpression><![CDATA[java.util.Arrays.asList("03","06","09","12")]]></variableExpression>
+	<variable name="xmes" resetType="None" class="java.util.List">
+		<expression><![CDATA[java.util.Arrays.asList("03","06","09","12")]]></expression>
 		<initialValueExpression><![CDATA[new java.util.ArrayList()]]></initialValueExpression>
 	</variable>
-	<variable name="xdia" class="java.util.List" resetType="None">
-		<variableExpression><![CDATA[java.util.Arrays.asList("31","30","30","31")]]></variableExpression>
+	<variable name="xdia" resetType="None" class="java.util.List">
+		<expression><![CDATA[java.util.Arrays.asList("31","30","30","31")]]></expression>
 		<initialValueExpression><![CDATA[new java.util.ArrayList()]]></initialValueExpression>
 	</variable>
 	<variable name="xfecha" class="java.lang.String">
-		<variableExpression><![CDATA[$V{xmes}.get($P{TRIMESTRE})+"/"+$V{xdia}.get($P{TRIMESTRE})+"/"+$P{ANOEMP}]]></variableExpression>
+		<expression><![CDATA[$V{xmes}.get($P{TRIMESTRE})+"/"+$V{xdia}.get($P{TRIMESTRE})+"/"+$P{ANOEMP}]]></expression>
 	</variable>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+	<background splitType="Stretch"/>
 	<detail>
 		<band height="15" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="555" height="15" uuid="881bb7f7-e3d7-498d-8ece-5b35ae38ab02">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textFieldExpression><![CDATA["\""+$P{CLAVE}.substring(0,1)+"\"|"+
+			<element kind="textField" uuid="881bb7f7-e3d7-498d-8ece-5b35ae38ab02" x="0" y="0" width="555" height="15" stretchType="NoStretch">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<expression><![CDATA["\""+$P{CLAVE}.substring(0,1)+"\"|"+
 "\""+$P{CLAVE}.substring(2,4)+"\"|"+
 $F{ANOEMP}+"|"+
 "\""+$F{PERIODO}+"\"|"+
@@ -77,8 +68,8 @@ $F{AJB}+"|"+
 $F{ACUAJB}+"|"+
 $F{TAJ}+"|"+
 "\""+$F{OBSAJB}+"\"|"+
-"\""+$F{OBSTAJ}+"\""]]></textFieldExpression>
-			</textField>
+"\""+$F{OBSTAJ}+"\""]]></expression>
+			</element>
 		</band>
 	</detail>
 </jasperReport>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.13.0.final using JasperReports Library version 6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pbrm01d" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1c4efa10-c1d3-40cd-b664-f539d2c487cf">
+<jasperReport name="pbrm01d" language="java" columnCount="1" dpi="72" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1c4efa10-c1d3-40cd-b664-f539d2c487cf">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gem22"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -57,12 +55,11 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="DatasetVariables" whenResourceMissingType="Empty" uuid="a41eaf5c-4899-43e0-9150-04d2ad13075e">
+	<dataset name="DatasetVariables" whenResourceMissingType="Empty" uuid="a41eaf5c-4899-43e0-9150-04d2ad13075e">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gem2020Local"/>
 		<parameter name="idFicha" class="java.lang.Long"/>
-		<queryString language="SQL">
-			<![CDATA[SELECT  FV.CODIGO, V.NOMVAR, FV.UNIDAD_MEDIDA, FV.OPERACION, FV.META_ANUAL, 
+		<query language="SQL"><![CDATA[SELECT  FV.CODIGO, V.NOMVAR, FV.UNIDAD_MEDIDA, FV.OPERACION, FV.META_ANUAL, 
         SUM(DECODE (P.PERIODO, 1, VT.PROGRAMADA, 0)) PROGRAMADA_1,
         SUM(DECODE (P.PERIODO, 2, VT.PROGRAMADA, 0)) PROGRAMADA_2,
         SUM(DECODE (P.PERIODO, 3, VT.PROGRAMADA, 0)) PROGRAMADA_3,
@@ -73,8 +70,7 @@
     INNER JOIN TC_PERIODO P ON P.ID = VT.ID_PERIODO
 WHERE FV.ID_FICHA=$P{idFicha}
 GROUP BY FV.CODIGO, V.NOMVAR, FV.UNIDAD_MEDIDA, FV.OPERACION, FV.META_ANUAL
-ORDER BY FV.CODIGO ASC]]>
-		</queryString>
+ORDER BY FV.CODIGO ASC]]></query>
 		<field name="CODIGO" class="java.lang.Integer">
 			<property name="com.jaspersoft.studio.field.label" value="CODIGO"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="TC_FICHA_VARIABLES"/>
@@ -107,20 +103,18 @@ ORDER BY FV.CODIGO ASC]]>
 		<field name="PROGRAMADA_4" class="java.math.BigDecimal">
 			<property name="com.jaspersoft.studio.field.label" value="PROGRAMADA_4"/>
 		</field>
-	</subDataset>
-	<subDataset name="DatasetTotalesVariables" uuid="94b5bdf5-3124-4910-a930-d358d6a41c77">
+	</dataset>
+	<dataset name="DatasetTotalesVariables" uuid="94b5bdf5-3124-4910-a930-d358d6a41c77">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gem2020Local"/>
 		<parameter name="idFicha" class="java.lang.Long"/>
-		<queryString language="SQL">
-			<![CDATA[SELECT  NVL(SUM(DECODE(P.PERIODO, 1, FT.PROGRAMADA,0)),0) PROGRMADA_1,
+		<query language="SQL"><![CDATA[SELECT  NVL(SUM(DECODE(P.PERIODO, 1, FT.PROGRAMADA,0)),0) PROGRMADA_1,
         NVL(SUM(DECODE(P.PERIODO, 2, FT.PROGRAMADA,0)),0) PROGRMADA_2,
         NVL(SUM(DECODE(P.PERIODO, 3, FT.PROGRAMADA,0)),0) PROGRMADA_3,
         NVL(SUM(DECODE(P.PERIODO, 4, FT.PROGRAMADA,0)),0) PROGRMADA_4
   FROM TC_FICHA_TRIMESTRES FT
   INNER JOIN TC_PERIODO P ON P.ID = FT.ID_PERIODO
-WHERE ID_FICHA=$P{idFicha}]]>
-		</queryString>
+WHERE ID_FICHA=$P{idFicha}]]></query>
 		<field name="PROGRMADA_1" class="java.math.BigDecimal">
 			<property name="com.jaspersoft.studio.field.label" value="PROGRMADA_1"/>
 		</field>
@@ -134,9 +128,9 @@ WHERE ID_FICHA=$P{idFicha}]]>
 			<property name="com.jaspersoft.studio.field.label" value="PROGRMADA_4"/>
 		</field>
 		<variable name="metaAnual" class="java.math.BigDecimal">
-			<variableExpression><![CDATA[$F{PROGRMADA_1}.add($F{PROGRMADA_2}).add($F{PROGRMADA_3}).add($F{PROGRMADA_4})]]></variableExpression>
+			<expression><![CDATA[$F{PROGRMADA_1}.add($F{PROGRMADA_2}).add($F{PROGRMADA_3}).add($F{PROGRMADA_4})]]></expression>
 		</variable>
-	</subDataset>
+	</dataset>
 	<parameter name="year" class="java.lang.Integer"/>
 	<parameter name="sector" class="java.lang.Integer"/>
 	<parameter name="imagenPath" class="java.lang.String"/>
@@ -151,8 +145,7 @@ WHERE ID_FICHA=$P{idFicha}]]>
 	<parameter name="firmaN4" class="java.lang.String"/>
 	<parameter name="firmaL5" class="java.lang.String"/>
 	<parameter name="firmaN5" class="java.lang.String"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT F.ID, DG.CLAVE, DG.NOMBRE, DA.CLAVE CLAVE_AUX, DA.NOMBRE NOMBRE_AUX,	MU.CAMPO7 PROGRAMA, MU.CAMPO6 NOMBRE_PROGRAMA, 
+	<query language="SQL"><![CDATA[SELECT F.ID, DG.CLAVE, DG.NOMBRE, DA.CLAVE CLAVE_AUX, DA.NOMBRE NOMBRE_AUX,	MU.CAMPO7 PROGRAMA, MU.CAMPO6 NOMBRE_PROGRAMA, 
 		MU.CAMPO8 OBJETIVO_PROGRAMA, CPD.CVETEMAS, CPD.DESCRIPCION SUBTEMA_DESCRIPCION, MIR.CODIGO, MIR.NOMIND, 
 		N.FORMULA, N.FRECUENCIA, N.MEDIOS_VERIFICACION, N.TIPO, F.INTERPRETACION, F.DIMENSION, F.AMBITO, 
       	F.COBERTURA, F.FACTOR, F.DESCRIPCION_FACTOR, F.DESCRIPCION_RESULTADOS, F.EVALUACION_INDICADOR, 
@@ -172,8 +165,7 @@ WHERE ID_FICHA=$P{idFicha}]]>
 	INNER JOIN MIR ON MIR.CODIGO = N.CODIGO_INDICADOR
 
 WHERE M.ID_SECTOR=$P{sector}
-ORDER BY DG.CLAVE, DA.CLAVE, MU.CAMPO7, CPD.CVETEMAS, MIR.CODIGO ASC]]>
-	</queryString>
+ORDER BY DG.CLAVE, DA.CLAVE, MU.CAMPO7, CPD.CVETEMAS, MIR.CODIGO ASC]]></query>
 	<field name="ID" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.label" value="ID"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="TC_FICHA"/>
@@ -295,997 +287,600 @@ ORDER BY DG.CLAVE, DA.CLAVE, MU.CAMPO7, CPD.CVETEMAS, MIR.CODIGO ASC]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="CPD"/>
 	</field>
 	<group name="GroupFirmas" footerPosition="CollateAtBottom">
-		<groupExpression><![CDATA[$F{ID}]]></groupExpression>
+		<expression><![CDATA[$F{ID}]]></expression>
 		<groupFooter>
 			<band height="60">
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="632" y="0" width="120" height="30" uuid="ef4559af-b99b-4e72-a3a5-2cf9ed98020e">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
-					</reportElement>
+				<element kind="textField" uuid="ef4559af-b99b-4e72-a3a5-2cf9ed98020e" x="632" y="0" width="120" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas}==3 ? $P{firmaL3}  : $P{noFirmas}==4 ? $P{firmaL4}  : $P{firmaL5}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="314" y="0" width="125" height="30" uuid="e537700e-0ce9-4725-8335-80eb7af58506">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas} ==1 || $P{noFirmas} == 3 ||  $P{noFirmas} == 5]]></printWhenExpression>
-					</reportElement>
+					<expression><![CDATA[$P{noFirmas}==3 ? $P{firmaL3}  : $P{noFirmas}==4 ? $P{firmaL4}  : $P{firmaL5}]]></expression>
+				</element>
+				<element kind="textField" uuid="e537700e-0ce9-4725-8335-80eb7af58506" x="314" y="0" width="125" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas} ==1 || $P{noFirmas} == 3 ||  $P{noFirmas} == 5]]></printWhenExpression>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas}==1 ? $P{firmaL1} : $P{noFirmas}==3 ? $P{firmaL2} :   $P{noFirmas}==5 ? $P{firmaL3} : ""]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="470" y="30" width="125" height="30" uuid="b7029e88-85d0-4baa-b067-cb89dd6c1687">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas}==2 ? $P{firmaN2}  : $P{noFirmas}==4 ? $P{firmaN3}  : $P{firmaN4}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="0" y="30" width="125" height="30" uuid="2eff7295-a2fc-463f-94b4-2d50d8c0ab99">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{firmaN1}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="155" y="30" width="125" height="30" uuid="5293cd03-fb30-4ce9-91b2-a69bb163c452">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas} == 2 ? $P{firmaN1} :$P{firmaN2}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="314" y="30" width="125" height="30" uuid="ab88e85a-9747-4f51-bf87-202de8677901">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas} ==1 || $P{noFirmas} == 3 ||  $P{noFirmas} == 5]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas}==1 ? $P{firmaN1} : $P{noFirmas}==3 ? $P{firmaN2} :   $P{noFirmas}==5 ? $P{firmaN3} : ""]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="632" y="30" width="120" height="30" uuid="2f2d4c1e-d74d-43f2-9adf-6921986f6fca">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas}==3 ? $P{firmaN3}  : $P{noFirmas}==4 ? $P{firmaN4}  : $P{firmaN5}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="125" height="30" uuid="457a1b7d-1146-4d84-b383-25ee0132020d">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
-					</reportElement>
+					<expression><![CDATA[$P{noFirmas}==1 ? $P{firmaL1} : $P{noFirmas}==3 ? $P{firmaL2} :   $P{noFirmas}==5 ? $P{firmaL3} : ""]]></expression>
+				</element>
+				<element kind="textField" uuid="b7029e88-85d0-4baa-b067-cb89dd6c1687" x="470" y="30" width="125" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
+					<expression><![CDATA[$P{noFirmas}==2 ? $P{firmaN2}  : $P{noFirmas}==4 ? $P{firmaN3}  : $P{firmaN4}]]></expression>
+				</element>
+				<element kind="textField" uuid="2eff7295-a2fc-463f-94b4-2d50d8c0ab99" x="0" y="30" width="125" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
+					<expression><![CDATA[$P{firmaN1}]]></expression>
+				</element>
+				<element kind="textField" uuid="5293cd03-fb30-4ce9-91b2-a69bb163c452" x="155" y="30" width="125" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
+					<expression><![CDATA[$P{noFirmas} == 2 ? $P{firmaN1} :$P{firmaN2}]]></expression>
+				</element>
+				<element kind="textField" uuid="ab88e85a-9747-4f51-bf87-202de8677901" x="314" y="30" width="125" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas} ==1 || $P{noFirmas} == 3 ||  $P{noFirmas} == 5]]></printWhenExpression>
+					<expression><![CDATA[$P{noFirmas}==1 ? $P{firmaN1} : $P{noFirmas}==3 ? $P{firmaN2} :   $P{noFirmas}==5 ? $P{firmaN3} : ""]]></expression>
+				</element>
+				<element kind="textField" uuid="2f2d4c1e-d74d-43f2-9adf-6921986f6fca" x="632" y="30" width="120" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
+					<expression><![CDATA[$P{noFirmas}==3 ? $P{firmaN3}  : $P{noFirmas}==4 ? $P{firmaN4}  : $P{firmaN5}]]></expression>
+				</element>
+				<element kind="textField" uuid="457a1b7d-1146-4d84-b383-25ee0132020d" x="0" y="0" width="125" height="30" stretchType="ElementGroupHeight" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas} >= 3]]></printWhenExpression>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{firmaL1}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="470" y="0" width="125" height="30" uuid="652b9691-304e-44ed-b9ea-a9c50c492a2a">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
-					</reportElement>
+					<expression><![CDATA[$P{firmaL1}]]></expression>
+				</element>
+				<element kind="textField" uuid="652b9691-304e-44ed-b9ea-a9c50c492a2a" x="470" y="0" width="125" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas}==2 ? $P{firmaL2}  : $P{noFirmas}==4 ? $P{firmaL3}  : $P{firmaL4}]]></textFieldExpression>
-				</textField>
-				<textField evaluationTime="Report" isBlankWhenNull="true">
-					<reportElement x="155" y="0" width="125" height="30" uuid="2b5bdb82-2b56-4638-bfd7-6c63abbdd22d">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
-					</reportElement>
+					<expression><![CDATA[$P{noFirmas}==2 ? $P{firmaL2}  : $P{noFirmas}==4 ? $P{firmaL3}  : $P{firmaL4}]]></expression>
+				</element>
+				<element kind="textField" uuid="2b5bdb82-2b56-4638-bfd7-6c63abbdd22d" x="155" y="0" width="125" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" bold="false" blankWhenNull="true" hTextAlign="Center">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{noFirmas}==2 ||  $P{noFirmas} == 4 || $P{noFirmas} == 5]]></printWhenExpression>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
-					<textElement textAlignment="Center">
-						<font fontName="Arial" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{noFirmas} == 2 ? $P{firmaL1} :$P{firmaL2}]]></textFieldExpression>
-				</textField>
+					<expression><![CDATA[$P{noFirmas} == 2 ? $P{firmaL1} :$P{firmaL2}]]></expression>
+				</element>
 			</band>
 		</groupFooter>
 	</group>
-	<group name="GroupFicha" isStartNewPage="true">
-		<groupExpression><![CDATA[$F{ID}]]></groupExpression>
+	<group name="GroupFicha" startNewPage="true">
+		<expression><![CDATA[$F{ID}]]></expression>
 		<groupHeader>
 			<band height="90">
-				<staticText>
-					<reportElement x="0" y="0" width="180" height="15" uuid="ae3a0b40-4d3e-4e3f-8004-54bfef0cd34b">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				<element kind="staticText" uuid="ae3a0b40-4d3e-4e3f-8004-54bfef0cd34b" x="0" y="0" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Plan o Desarrollo / Eje Transversal:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="0" y="60" width="180" height="15" uuid="93566652-131c-46d1-b3da-9855b0f1b76f">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="staticText" uuid="93566652-131c-46d1-b3da-9855b0f1b76f" x="0" y="60" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Proyecto:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="75" width="572" height="15" uuid="9f2063d0-ed4e-457b-857d-cc18e8b21c9b"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{OBJETIVO_PROGRAMA}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="280" y="30" width="472" height="15" uuid="c4225c13-b71f-4ca2-ac21-3c8d5a58509d"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{SUBTEMA_DESCRIPCION}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="60" width="100" height="15" uuid="6cd8cd8d-3d34-4fa3-8233-f6dc1fcb3948"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{PROGRAMA}.substring(10)]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="0" y="30" width="180" height="15" uuid="acd11ab5-05db-4677-b37e-5a2f991ec9ae">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="9f2063d0-ed4e-457b-857d-cc18e8b21c9b" x="180" y="75" width="572" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{OBJETIVO_PROGRAMA}]]></expression>
+				</element>
+				<element kind="textField" uuid="c4225c13-b71f-4ca2-ac21-3c8d5a58509d" x="280" y="30" width="472" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{SUBTEMA_DESCRIPCION}]]></expression>
+				</element>
+				<element kind="textField" uuid="6cd8cd8d-3d34-4fa3-8233-f6dc1fcb3948" x="180" y="60" width="100" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{PROGRAMA}.substring(10)]]></expression>
+				</element>
+				<element kind="staticText" uuid="acd11ab5-05db-4677-b37e-5a2f991ec9ae" x="0" y="30" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Sub Tema de Desarrollo:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="0" width="100" height="15" uuid="90bb2b6a-9903-4910-bfc4-b1aed8c03e4a"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{CVETEMAS}.substring(0,4)]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="0" y="15" width="180" height="15" uuid="fdd00842-682d-4222-afce-33129fc51555">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="90bb2b6a-9903-4910-bfc4-b1aed8c03e4a" x="180" y="0" width="100" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{CVETEMAS}.substring(0,4)]]></expression>
+				</element>
+				<element kind="staticText" uuid="fdd00842-682d-4222-afce-33129fc51555" x="0" y="15" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Tema de Desarrollo:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="0" y="45" width="180" height="15" uuid="66074840-8c31-4a24-a447-7645fdba6db6">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="staticText" uuid="66074840-8c31-4a24-a447-7645fdba6db6" x="0" y="45" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Programa Presupuestario:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="30" width="100" height="15" uuid="649218ff-1d0e-4972-89ab-dd195ab73505"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{CVETEMAS}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="0" y="75" width="180" height="15" uuid="16f5e937-029b-47a2-84e1-0fee3dba3352">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="649218ff-1d0e-4972-89ab-dd195ab73505" x="180" y="30" width="100" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{CVETEMAS}]]></expression>
+				</element>
+				<element kind="staticText" uuid="16f5e937-029b-47a2-84e1-0fee3dba3352" x="0" y="75" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Objectivo del Programa Presupuestario:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="15" width="100" height="15" uuid="d364fead-d941-4a20-aa32-e51d6ab06234"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{CVETEMAS}.substring(0,6)]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="280" y="45" width="472" height="15" uuid="3aa3449d-c6f9-4d97-8146-8ce439c7ef83"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{NOMBRE_PROGRAMA}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="45" width="100" height="15" uuid="2c1001e4-a093-4e28-93d1-ccb347f18b2b"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{PROGRAMA}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="280" y="0" width="472" height="15" uuid="e89fc79a-a44b-4cdd-9e94-4d873d31e0e5"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{EJE_DESCRIPCION}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="280" y="15" width="472" height="15" uuid="d7ffd23f-7063-4cfe-aee0-9d8430a2ba6e"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{TEMA_DESCRIPCION}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="280" y="60" width="472" height="15" uuid="aca9289f-f68f-47b9-8c4c-af4e12ab9380"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{PROYECTO_DESCRIPCION}]]></textFieldExpression>
-				</textField>
+				</element>
+				<element kind="textField" uuid="d364fead-d941-4a20-aa32-e51d6ab06234" x="180" y="15" width="100" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{CVETEMAS}.substring(0,6)]]></expression>
+				</element>
+				<element kind="textField" uuid="3aa3449d-c6f9-4d97-8146-8ce439c7ef83" x="280" y="45" width="472" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{NOMBRE_PROGRAMA}]]></expression>
+				</element>
+				<element kind="textField" uuid="2c1001e4-a093-4e28-93d1-ccb347f18b2b" x="180" y="45" width="100" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{PROGRAMA}]]></expression>
+				</element>
+				<element kind="textField" uuid="e89fc79a-a44b-4cdd-9e94-4d873d31e0e5" x="280" y="0" width="472" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{EJE_DESCRIPCION}]]></expression>
+				</element>
+				<element kind="textField" uuid="d7ffd23f-7063-4cfe-aee0-9d8430a2ba6e" x="280" y="15" width="472" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{TEMA_DESCRIPCION}]]></expression>
+				</element>
+				<element kind="textField" uuid="aca9289f-f68f-47b9-8c4c-af4e12ab9380" x="280" y="60" width="472" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{PROYECTO_DESCRIPCION}]]></expression>
+				</element>
 			</band>
 			<band height="75">
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="0" width="100" height="15" uuid="bb6fd10d-4ecd-4eac-a300-401dfd77e33e"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{CLAVE}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="180" y="15" width="100" height="15" uuid="6e3bf49e-9f89-4842-957c-a91650f236f6"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{CLAVE_AUX}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="0" y="15" width="180" height="15" uuid="705b33b1-5117-452e-8bbd-9c4ebabf76e1">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				<element kind="textField" uuid="bb6fd10d-4ecd-4eac-a300-401dfd77e33e" x="180" y="0" width="100" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{CLAVE}]]></expression>
+				</element>
+				<element kind="textField" uuid="6e3bf49e-9f89-4842-957c-a91650f236f6" x="180" y="15" width="100" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{CLAVE_AUX}]]></expression>
+				</element>
+				<element kind="staticText" uuid="705b33b1-5117-452e-8bbd-9c4ebabf76e1" x="0" y="15" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Dependecia Auxiliar:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="280" y="15" width="472" height="15" uuid="196b24a7-242f-4bfc-af42-5b35302fb8d2"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{NOMBRE_AUX}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement mode="Opaque" x="0" y="30" width="752" height="15" backcolor="#CDCDCD" uuid="df81634c-ef05-4fee-a1fb-6a412aff664f">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
+				</element>
+				<element kind="textField" uuid="196b24a7-242f-4bfc-af42-5b35302fb8d2" x="280" y="15" width="472" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{NOMBRE_AUX}]]></expression>
+				</element>
+				<element kind="staticText" uuid="df81634c-ef05-4fee-a1fb-6a412aff664f" x="0" y="30" width="752" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Center" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
-					</textElement>
 					<text><![CDATA[Estructura del Indicador]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="0" y="60" width="170" height="15" uuid="17f645af-1385-4499-a73a-d42b35d1ac1e">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="staticText" uuid="17f645af-1385-4499-a73a-d42b35d1ac1e" x="0" y="60" width="170" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Fórmula de Cálculo:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="0" y="0" width="180" height="15" uuid="a56e131b-f910-4161-8d2a-beae7d15f61f">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="staticText" uuid="a56e131b-f910-4161-8d2a-beae7d15f61f" x="0" y="0" width="180" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Dependecia General:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="170" y="45" width="582" height="15" uuid="2a9ba3a1-a84e-4612-8f22-8b7eb95b7835"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{NOMIND}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="170" y="60" width="582" height="15" uuid="c34fbcab-51f3-4b7b-93d4-14053d04aefa"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{FORMULA}]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="280" y="0" width="472" height="15" uuid="44d48d17-a33d-4d81-84ae-f81b945205cc"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="0" y="45" width="170" height="15" uuid="2707571f-3ecc-4144-8d14-b08bd6e17fe2">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="2a9ba3a1-a84e-4612-8f22-8b7eb95b7835" x="170" y="45" width="582" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{NOMIND}]]></expression>
+				</element>
+				<element kind="textField" uuid="c34fbcab-51f3-4b7b-93d4-14053d04aefa" x="170" y="60" width="582" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{FORMULA}]]></expression>
+				</element>
+				<element kind="textField" uuid="44d48d17-a33d-4d81-84ae-f81b945205cc" x="280" y="0" width="472" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{NOMBRE}]]></expression>
+				</element>
+				<element kind="staticText" uuid="2707571f-3ecc-4144-8d14-b08bd6e17fe2" x="0" y="45" width="170" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Nombre del Indicador:]]></text>
-				</staticText>
+				</element>
 			</band>
 			<band height="30">
-				<staticText>
-					<reportElement x="0" y="0" width="170" height="15" uuid="bf1846f2-5edd-4885-bb30-e37987e18928">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				<element kind="staticText" uuid="bf1846f2-5edd-4885-bb30-e37987e18928" x="0" y="0" width="170" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Interpretación:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="170" y="0" width="582" height="15" uuid="b88501dc-5c61-40e2-be85-bc75bfa99590"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{INTERPRETACION}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="0" y="15" width="170" height="15" uuid="e5a50fff-1c62-46bc-b816-3b95409bb032">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="b88501dc-5c61-40e2-be85-bc75bfa99590" x="170" y="0" width="582" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{INTERPRETACION}]]></expression>
+				</element>
+				<element kind="staticText" uuid="e5a50fff-1c62-46bc-b816-3b95409bb032" x="0" y="15" width="170" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Dimesión que atender:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="170" y="15" width="342" height="15" uuid="4e6cf14b-0f69-47b4-b0ef-c3662bc9248d"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{DIMENSION}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="512" y="15" width="120" height="15" uuid="12655c5d-3928-4257-bb68-6c172979c121">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="4e6cf14b-0f69-47b4-b0ef-c3662bc9248d" x="170" y="15" width="342" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{DIMENSION}]]></expression>
+				</element>
+				<element kind="staticText" uuid="12655c5d-3928-4257-bb68-6c172979c121" x="512" y="15" width="120" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Frecuencia de Medición:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="632" y="15" width="120" height="15" uuid="522270d0-b245-4ba2-a28e-a414bd911b2c"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{FRECUENCIA}]]></textFieldExpression>
-				</textField>
+				</element>
+				<element kind="textField" uuid="522270d0-b245-4ba2-a28e-a414bd911b2c" x="632" y="15" width="120" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{FRECUENCIA}]]></expression>
+				</element>
 			</band>
 			<band height="15">
-				<staticText>
-					<reportElement x="0" y="0" width="170" height="15" uuid="74c92e75-97fe-4b6c-b84d-58a52ac16cf9">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				<element kind="staticText" uuid="74c92e75-97fe-4b6c-b84d-58a52ac16cf9" x="0" y="0" width="170" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Factor de Comparación:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement x="170" y="0" width="582" height="15" uuid="d887e0f9-e9c0-4205-9150-b286a0fd5bd6"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{FACTOR}]]></textFieldExpression>
-				</textField>
+				</element>
+				<element kind="textField" uuid="d887e0f9-e9c0-4205-9150-b286a0fd5bd6" x="170" y="0" width="582" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" pattern="#,##0.00" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{FACTOR}]]></expression>
+				</element>
 			</band>
 			<band height="15">
-				<staticText>
-					<reportElement x="0" y="0" width="170" height="15" uuid="3892a2d0-e6a0-4cd5-b0a5-3a08ea0b85b0">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				<element kind="staticText" uuid="3892a2d0-e6a0-4cd5-b0a5-3a08ea0b85b0" x="0" y="0" width="170" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Descripción del Factor de Comparación:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="170" y="0" width="342" height="15" uuid="c9eebd09-14d0-43b3-ab5a-8cea4c9f7938"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{DESCRIPCION_FACTOR}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="512" y="0" width="120" height="15" uuid="4f5e81e4-9b3f-4ac0-b05e-f2787299c5b8">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				</element>
+				<element kind="textField" uuid="c9eebd09-14d0-43b3-ab5a-8cea4c9f7938" x="170" y="0" width="342" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{DESCRIPCION_FACTOR}]]></expression>
+				</element>
+				<element kind="staticText" uuid="4f5e81e4-9b3f-4ac0-b05e-f2787299c5b8" x="512" y="0" width="120" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Tipo de Indicador:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="632" y="0" width="120" height="15" uuid="562c0398-b1cc-48ff-901d-a4910770fa3c"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{TIPO}]]></textFieldExpression>
-				</textField>
+				</element>
+				<element kind="textField" uuid="562c0398-b1cc-48ff-901d-a4910770fa3c" x="632" y="0" width="120" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{TIPO}]]></expression>
+				</element>
 			</band>
 			<band height="15">
-				<staticText>
-					<reportElement x="0" y="0" width="170" height="15" uuid="0eb17349-bc94-4769-bb86-48940a0878e0">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
+				<element kind="staticText" uuid="0eb17349-bc94-4769-bb86-48940a0878e0" x="0" y="0" width="170" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Right" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<text><![CDATA[Linea Base:]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="170" y="0" width="582" height="15" uuid="0c505728-c166-41a3-a99f-59bd8bd3f209"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{LINEA_BASE}]]></textFieldExpression>
-				</textField>
+				</element>
+				<element kind="textField" uuid="0c505728-c166-41a3-a99f-59bd8bd3f209" x="170" y="0" width="582" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle">
+					<expression><![CDATA[$F{LINEA_BASE}]]></expression>
+				</element>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="15">
-				<componentElement>
-					<reportElement x="357" y="0" width="395" height="15" uuid="9bcc81e1-833b-4719-b58a-a3ca7701d491">
-						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-						<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
-						<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
-						<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-						<datasetRun subDataset="DatasetTotalesVariables" uuid="daacc9bb-d665-4739-a94d-45ea8b5b1835">
-							<datasetParameter name="idFicha">
-								<datasetParameterExpression><![CDATA[$F{ID}]]></datasetParameterExpression>
-							</datasetParameter>
+				<element kind="component" uuid="9bcc81e1-833b-4719-b58a-a3ca7701d491" x="357" y="0" width="395" height="15" stretchType="NoStretch">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<component kind="table">
+						<datasetRun uuid="daacc9bb-d665-4739-a94d-45ea8b5b1835" subDataset="DatasetTotalesVariables">
+							<parameter name="idFicha">
+								<expression><![CDATA[$F{ID}]]></expression>
+							</parameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>
-						<jr:column width="95" uuid="4a64347a-064c-4a52-874b-a75f1c3d86e7">
+						<column kind="single" uuid="4a64347a-064c-4a52-874b-a75f1c3d86e7" width="95">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-							<jr:detailCell style="Table 1_TD" height="15">
+							<detailCell height="15" style="Table 1_TD">
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								<property name="com.jaspersoft.studio.unit.height" value="px"/>
-								<box>
+								<box style="Table 1_TD">
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<staticText>
-									<reportElement x="0" y="0" width="95" height="15" uuid="ae864579-2e85-41c3-9213-ce10d70cec18"/>
+								<element kind="staticText" uuid="ae864579-2e85-41c3-9213-ce10d70cec18" x="0" y="0" width="95" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right" vTextAlign="Middle">
 									<box>
 										<topPen lineWidth="1.0"/>
 									</box>
-									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="Arial" size="8"/>
-									</textElement>
 									<text><![CDATA[Resultado Esperado:]]></text>
-								</staticText>
-							</jr:detailCell>
-						</jr:column>
-						<jr:column width="60" uuid="37e78ba6-cfbf-47ce-b3c4-7ed8c736b12b">
+								</element>
+							</detailCell>
+						</column>
+						<column kind="single" uuid="37e78ba6-cfbf-47ce-b3c4-7ed8c736b12b" width="60">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-							<jr:detailCell style="Table 1_TD" height="15">
+							<detailCell height="15" style="Table 1_TD">
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<textField textAdjust="ScaleFont" pattern="#,##0.00">
-									<reportElement x="0" y="0" width="60" height="15" uuid="d2687af8-7266-4b02-9666-3c934ba203e0">
-										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-									</reportElement>
-									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="Arial" size="8"/>
-										<paragraph rightIndent="1"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{PROGRMADA_1}]]></textFieldExpression>
-								</textField>
-							</jr:detailCell>
-						</jr:column>
-						<jr:column width="60" uuid="dc0cbaa2-3139-464e-992b-a0bed209d25b">
+								<element kind="textField" uuid="d2687af8-7266-4b02-9666-3c934ba203e0" x="0" y="0" width="60" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									<paragraph rightIndent="1"/>
+									<expression><![CDATA[$F{PROGRMADA_1}]]></expression>
+								</element>
+							</detailCell>
+						</column>
+						<column kind="single" uuid="dc0cbaa2-3139-464e-992b-a0bed209d25b" width="60">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-							<jr:detailCell style="Table 1_TD" height="15">
-								<textField textAdjust="ScaleFont" pattern="#,##0.00">
-									<reportElement x="0" y="0" width="60" height="15" uuid="de1bded3-9309-4090-b5da-1effe611ff46">
-										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-									</reportElement>
-									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="Arial" size="8"/>
-										<paragraph rightIndent="1"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{PROGRMADA_2}]]></textFieldExpression>
-								</textField>
-							</jr:detailCell>
-						</jr:column>
-						<jr:column width="60" uuid="fbeb31dd-f545-43b9-8713-2e0aaa2fbc96">
+							<detailCell height="15" style="Table 1_TD">
+								<element kind="textField" uuid="de1bded3-9309-4090-b5da-1effe611ff46" x="0" y="0" width="60" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									<paragraph rightIndent="1"/>
+									<expression><![CDATA[$F{PROGRMADA_2}]]></expression>
+								</element>
+							</detailCell>
+						</column>
+						<column kind="single" uuid="fbeb31dd-f545-43b9-8713-2e0aaa2fbc96" width="60">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
-							<jr:detailCell style="Table 1_TD" height="15">
-								<textField textAdjust="ScaleFont" pattern="#,##0.00">
-									<reportElement x="0" y="0" width="60" height="15" uuid="7211b235-de05-4379-a4d8-e6eacb816eaa">
-										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-									</reportElement>
-									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="Arial" size="8"/>
-										<paragraph rightIndent="1"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{PROGRMADA_3}]]></textFieldExpression>
-								</textField>
-							</jr:detailCell>
-						</jr:column>
-						<jr:column width="60" uuid="ed1cf6d7-5e06-4a4e-a697-b8c35348e77a">
+							<detailCell height="15" style="Table 1_TD">
+								<element kind="textField" uuid="7211b235-de05-4379-a4d8-e6eacb816eaa" x="0" y="0" width="60" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									<paragraph rightIndent="1"/>
+									<expression><![CDATA[$F{PROGRMADA_3}]]></expression>
+								</element>
+							</detailCell>
+						</column>
+						<column kind="single" uuid="ed1cf6d7-5e06-4a4e-a697-b8c35348e77a" width="60">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
-							<jr:detailCell style="Table 1_TD" height="15">
-								<textField textAdjust="ScaleFont" pattern="#,##0.00">
-									<reportElement x="0" y="0" width="60" height="15" uuid="21a48efb-5999-4051-b41c-8411ee8f4cbc">
-										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-									</reportElement>
-									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="Arial" size="8"/>
-										<paragraph rightIndent="1"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{PROGRMADA_4}]]></textFieldExpression>
-								</textField>
-							</jr:detailCell>
-						</jr:column>
-						<jr:column width="60" uuid="fb290fd6-cb68-4681-8077-b2f8e4f42448">
+							<detailCell height="15" style="Table 1_TD">
+								<element kind="textField" uuid="21a48efb-5999-4051-b41c-8411ee8f4cbc" x="0" y="0" width="60" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									<paragraph rightIndent="1"/>
+									<expression><![CDATA[$F{PROGRMADA_4}]]></expression>
+								</element>
+							</detailCell>
+						</column>
+						<column kind="single" uuid="fb290fd6-cb68-4681-8077-b2f8e4f42448" width="60">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
-							<jr:detailCell style="Table 1_TD" height="15">
-								<textField textAdjust="ScaleFont" pattern="#,##0.00">
-									<reportElement x="0" y="0" width="60" height="15" uuid="288bfed1-b857-4401-b209-6ea6ea9b17b2">
-										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-									</reportElement>
-									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="Arial" size="8"/>
-										<paragraph rightIndent="1"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$V{metaAnual}]]></textFieldExpression>
-								</textField>
-							</jr:detailCell>
-						</jr:column>
-					</jr:table>
-				</componentElement>
+							<detailCell height="15" style="Table 1_TD">
+								<element kind="textField" uuid="288bfed1-b857-4401-b209-6ea6ea9b17b2" x="0" y="0" width="60" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									<paragraph rightIndent="1"/>
+									<expression><![CDATA[$V{metaAnual}]]></expression>
+								</element>
+							</detailCell>
+						</column>
+					</component>
+				</element>
 			</band>
 			<band height="15">
-				<textField textAdjust="StretchHeight">
-					<reportElement x="0" y="0" width="752" height="15" uuid="4c5c87b6-0835-4ac9-974c-f9bade54296b"/>
-					<textElement>
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Descripción de la Meta Anual: " +($F{DESCRIPCION_META_ANUAL} == null ? "" : $F{DESCRIPCION_META_ANUAL})]]></textFieldExpression>
-				</textField>
+				<element kind="textField" uuid="4c5c87b6-0835-4ac9-974c-f9bade54296b" x="0" y="0" width="752" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight">
+					<expression><![CDATA["Descripción de la Meta Anual: " +($F{DESCRIPCION_META_ANUAL} == null ? "" : $F{DESCRIPCION_META_ANUAL})]]></expression>
+				</element>
 			</band>
 			<band height="15">
-				<textField textAdjust="StretchHeight">
-					<reportElement x="0" y="0" width="752" height="15" uuid="054f2a48-a0c4-4a4c-a76f-d9eeccfec9cb"/>
-					<textElement>
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Medios de Verificación: " + ($F{MEDIOS_VERIFICACION} == null ? "" : $F{MEDIOS_VERIFICACION})]]></textFieldExpression>
-				</textField>
+				<element kind="textField" uuid="054f2a48-a0c4-4a4c-a76f-d9eeccfec9cb" x="0" y="0" width="752" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight">
+					<expression><![CDATA["Medios de Verificación: " + ($F{MEDIOS_VERIFICACION} == null ? "" : $F{MEDIOS_VERIFICACION})]]></expression>
+				</element>
 			</band>
 			<band height="15">
-				<textField textAdjust="StretchHeight">
-					<reportElement x="0" y="0" width="752" height="15" uuid="53383cc9-83ec-47ca-92d0-8a53deac0697"/>
-					<textElement>
-						<font fontName="Arial" size="9"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Metas de Actividad Relacionadas y Avance: " + ($F{METAS_ACCION} == null ? "" : $F{METAS_ACCION})]]></textFieldExpression>
-				</textField>
+				<element kind="textField" uuid="53383cc9-83ec-47ca-92d0-8a53deac0697" x="0" y="0" width="752" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight">
+					<expression><![CDATA["Metas de Actividad Relacionadas y Avance: " + ($F{METAS_ACCION} == null ? "" : $F{METAS_ACCION})]]></expression>
+				</element>
 			</band>
 		</groupFooter>
 	</group>
-	<pageHeader>
-		<band height="50">
-			<textField>
-				<reportElement mode="Opaque" x="110" y="20" width="522" height="30" backcolor="#CDCDCD" uuid="a67bbae6-252c-42f9-84b3-9204352dea77">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA["PBRM-01d FICHA TECNICA DE DISEÑO DE INDICADORES ESTRATÉGICOS O DE GESTION " + $P{year}]]></textFieldExpression>
-			</textField>
-			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
-				<reportElement x="0" y="0" width="50" height="50" uuid="7f5ab101-ed49-4cb5-8938-cefa01521c58">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<imageExpression><![CDATA[$P{imagenPath}]]></imageExpression>
-			</image>
-		</band>
+	<pageHeader height="50">
+		<element kind="textField" uuid="a67bbae6-252c-42f9-84b3-9204352dea77" x="110" y="20" width="522" height="30" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Center" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["PBRM-01d FICHA TECNICA DE DISEÑO DE INDICADORES ESTRATÉGICOS O DE GESTION " + $P{year}]]></expression>
+		</element>
+		<element kind="image" uuid="7f5ab101-ed49-4cb5-8938-cefa01521c58" x="0" y="0" width="50" height="50" stretchType="NoStretch" hImageAlign="Center" vImageAlign="Middle" onErrorType="Blank">
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<expression><![CDATA[$P{imagenPath}]]></expression>
+		</element>
 	</pageHeader>
 	<detail>
 		<band height="40" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="752" height="15" backcolor="#CDCDCD" uuid="9cd8e20b-0d26-4a1e-839c-d931e9d6672d">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
+			<element kind="staticText" uuid="9cd8e20b-0d26-4a1e-839c-d931e9d6672d" x="0" y="0" width="752" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10"/>
-				</textElement>
 				<text><![CDATA[Calendarización Trimestral]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="262" y="15" width="95" height="15" backcolor="#CDCDCD" uuid="49d72877-6d7b-4d5e-a90f-b1d61c9befde">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+			</element>
+			<element kind="staticText" uuid="49d72877-6d7b-4d5e-a90f-b1d61c9befde" x="262" y="15" width="95" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Unidad de Medida]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="452" y="15" width="60" height="15" backcolor="#CDCDCD" uuid="f40088c6-ab24-411e-81dd-604e30cc32d4">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+			</element>
+			<element kind="staticText" uuid="f40088c6-ab24-411e-81dd-604e30cc32d4" x="452" y="15" width="60" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Trimestre 1]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="512" y="15" width="60" height="15" backcolor="#CDCDCD" uuid="c1e706a8-f2ed-4270-917f-c3ecb510c586">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+			</element>
+			<element kind="staticText" uuid="c1e706a8-f2ed-4270-917f-c3ecb510c586" x="512" y="15" width="60" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Trimestre 2]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="357" y="15" width="95" height="15" backcolor="#CDCDCD" uuid="c8afbabd-e164-44ef-8fc1-21691ae36626">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+			</element>
+			<element kind="staticText" uuid="c8afbabd-e164-44ef-8fc1-21691ae36626" x="357" y="15" width="95" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Tipo Operación]]></text>
-			</staticText>
-			<componentElement>
-				<reportElement x="0" y="30" width="752" height="10" isRemoveLineWhenBlank="true" uuid="81220ef4-21af-41d3-a1f3-a4a7db3e5388">
-					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
-					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
-					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="DatasetVariables" uuid="1472912c-5bc7-4423-9250-f117cf3d7dab">
-						<datasetParameter name="idFicha">
-							<datasetParameterExpression><![CDATA[$F{ID}]]></datasetParameterExpression>
-						</datasetParameter>
+			</element>
+			<element kind="component" uuid="81220ef4-21af-41d3-a1f3-a4a7db3e5388" x="0" y="30" width="752" height="10" stretchType="NoStretch" removeLineWhenBlank="true">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<component kind="table">
+					<datasetRun uuid="1472912c-5bc7-4423-9250-f117cf3d7dab" subDataset="DatasetVariables">
+						<parameter name="idFicha">
+							<expression><![CDATA[$F{ID}]]></expression>
+						</parameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:column width="262" uuid="eb8b4156-6f73-472c-b751-185f95c5665d">
+					<column kind="single" uuid="eb8b4156-6f73-472c-b751-185f95c5665d" width="262">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<property name="com.jaspersoft.studio.layout"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<textField textAdjust="StretchHeight">
-								<reportElement x="0" y="0" width="262" height="10" uuid="b8f9d073-8249-455e-a5d7-c6ce628bb3e9">
-									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-								</reportElement>
-								<textElement>
-									<font fontName="Arial" size="8"/>
-									<paragraph leftIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{NOMVAR}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="95" uuid="69c1ea64-ca02-454e-9f98-6b3d5b6c4946">
+							<element kind="textField" uuid="b8f9d073-8249-455e-a5d7-c6ce628bb3e9" x="0" y="0" width="262" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="StretchHeight">
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								<paragraph leftIndent="1"/>
+								<expression><![CDATA[$F{NOMVAR}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="69c1ea64-ca02-454e-9f98-6b3d5b6c4946" width="95">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<textField textAdjust="StretchHeight">
-								<reportElement x="0" y="0" width="95" height="10" uuid="cc8af690-0f88-4cfe-9b48-91a6efbf33a8">
-									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-								</reportElement>
-								<textElement>
-									<font fontName="Arial" size="8"/>
-									<paragraph leftIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{UNIDAD_MEDIDA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="95" uuid="e1b2a330-a1c3-4216-9d3f-23c588695532">
+							<element kind="textField" uuid="cc8af690-0f88-4cfe-9b48-91a6efbf33a8" x="0" y="0" width="95" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="StretchHeight">
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+								<paragraph leftIndent="1"/>
+								<expression><![CDATA[$F{UNIDAD_MEDIDA}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="e1b2a330-a1c3-4216-9d3f-23c588695532" width="95">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<textField textAdjust="StretchHeight">
-								<reportElement x="0" y="0" width="95" height="10" uuid="4de1d75c-58dd-4b79-b53d-7b341517b041">
-									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-								</reportElement>
-								<textElement>
-									<font fontName="Arial" size="8"/>
-									<paragraph leftIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{OPERACION}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="60" uuid="0d873b4b-b3c4-4eaf-9c59-5f79d28a7201">
+							<element kind="textField" uuid="4de1d75c-58dd-4b79-b53d-7b341517b041" x="0" y="0" width="95" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="StretchHeight">
+								<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+								<paragraph leftIndent="1"/>
+								<expression><![CDATA[$F{OPERACION}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="0d873b4b-b3c4-4eaf-9c59-5f79d28a7201" width="60">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<textField textAdjust="ScaleFont" pattern="#,##0.00">
-								<reportElement x="0" y="0" width="60" height="10" uuid="0ed91850-ceaf-4ba9-8022-45bbcb1c20e2">
-									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-								</reportElement>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-									<paragraph rightIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{PROGRAMADA_1}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="60" uuid="ab2f5d5c-8132-463a-b534-a93fb7aacb06">
+							<element kind="textField" uuid="0ed91850-ceaf-4ba9-8022-45bbcb1c20e2" x="0" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right">
+								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								<paragraph rightIndent="1"/>
+								<expression><![CDATA[$F{PROGRAMADA_1}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="ab2f5d5c-8132-463a-b534-a93fb7aacb06" width="60">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<textField textAdjust="ScaleFont" pattern="#,##0.00">
-								<reportElement x="0" y="0" width="60" height="10" uuid="cebf5fb6-6b71-4e91-88f5-e7d8df392f71">
-									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-								</reportElement>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-									<paragraph rightIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{PROGRAMADA_2}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="60" uuid="cef1a7c8-e516-4f89-825a-6c204afc217c">
+							<element kind="textField" uuid="cebf5fb6-6b71-4e91-88f5-e7d8df392f71" x="0" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right">
+								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								<paragraph rightIndent="1"/>
+								<expression><![CDATA[$F{PROGRAMADA_2}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="cef1a7c8-e516-4f89-825a-6c204afc217c" width="60">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<textField textAdjust="ScaleFont" pattern="#,##0.00">
-								<reportElement x="0" y="0" width="60" height="10" uuid="40282cd6-c93d-4f8a-bf0d-d2e255de7f61">
-									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-								</reportElement>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-									<paragraph rightIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{PROGRAMADA_3}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="60" uuid="7e0eaba9-213f-4b24-8686-b9f9e456fa63">
+							<element kind="textField" uuid="40282cd6-c93d-4f8a-bf0d-d2e255de7f61" x="0" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right">
+								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								<paragraph rightIndent="1"/>
+								<expression><![CDATA[$F{PROGRAMADA_3}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="7e0eaba9-213f-4b24-8686-b9f9e456fa63" width="60">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<textField textAdjust="ScaleFont" pattern="#,##0.00">
-								<reportElement x="0" y="0" width="60" height="10" uuid="b3e8dd4a-5838-4021-90cd-360a25ea3678">
-									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-								</reportElement>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-									<paragraph rightIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{PROGRAMADA_4}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="60" uuid="24eaaff5-ac6f-4856-b21a-53d7796295d1">
+							<element kind="textField" uuid="b3e8dd4a-5838-4021-90cd-360a25ea3678" x="0" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right">
+								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								<paragraph rightIndent="1"/>
+								<expression><![CDATA[$F{PROGRAMADA_4}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="24eaaff5-ac6f-4856-b21a-53d7796295d1" width="60">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
-						<jr:detailCell style="Table_TD" height="10">
+						<detailCell height="10" style="Table_TD">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<textField textAdjust="ScaleFont" pattern="#,##0.00">
-								<reportElement x="0" y="0" width="60" height="10" uuid="8f06a6e7-78e9-4d34-ab3b-7759e1a2a314">
-									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-								</reportElement>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-									<paragraph rightIndent="1"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{META_ANUAL}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
-			<staticText>
-				<reportElement mode="Opaque" x="692" y="15" width="60" height="15" backcolor="#CDCDCD" uuid="259f4664-c46e-497b-8a43-f458087e6807">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+							<element kind="textField" uuid="8f06a6e7-78e9-4d34-ab3b-7759e1a2a314" x="0" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" textAdjust="ScaleFont" pattern="#,##0.00" hTextAlign="Right">
+								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								<paragraph rightIndent="1"/>
+								<expression><![CDATA[$F{META_ANUAL}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+			</element>
+			<element kind="staticText" uuid="259f4664-c46e-497b-8a43-f458087e6807" x="692" y="15" width="60" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Meta Anual]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="0" y="15" width="262" height="15" backcolor="#CDCDCD" uuid="e384667a-bcb3-45b3-925d-283814298a77">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+			</element>
+			<element kind="staticText" uuid="e384667a-bcb3-45b3-925d-283814298a77" x="0" y="15" width="262" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Variables de Indicador]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="572" y="15" width="60" height="15" backcolor="#CDCDCD" uuid="5835cb5f-9ba5-4bdd-b120-e79d76f3020b">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+			</element>
+			<element kind="staticText" uuid="5835cb5f-9ba5-4bdd-b120-e79d76f3020b" x="572" y="15" width="60" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Trimestre 3]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="632" y="15" width="60" height="15" backcolor="#CDCDCD" uuid="7b22da98-bd72-4e14-a73c-283b101a60f3">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+			</element>
+			<element kind="staticText" uuid="7b22da98-bd72-4e14-a73c-283b101a60f3" x="632" y="15" width="60" height="15" backcolor="#CDCDCD" mode="Opaque" stretchType="NoStretch" fontName="Arial" fontSize="9.0" hTextAlign="Center" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-				</textElement>
 				<text><![CDATA[Trimestre 4]]></text>
-			</staticText>
+			</element>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</band>
 	</detail>
-	<pageFooter>
-		<band height="10" splitType="Immediate">
-			<textField>
-				<reportElement x="632" y="0" width="60" height="10" uuid="30469944-b042-4320-9cb3-d83a55bea791">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Página  " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement x="692" y="0" width="60" height="10" uuid="adeda2d7-4406-47b9-9d21-8d59b7ebf1c7">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="572" y="0" width="60" height="10" uuid="71e150df-a816-4ee8-b1f8-1d90adbef4e0">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement>
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="452" y="0" width="120" height="10" uuid="d59f2d2e-5d8f-4c32-94d3-73bbee0586c6">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<text><![CDATA[Fecha de Elaboración:]]></text>
-			</staticText>
-		</band>
+	<pageFooter height="10" splitType="Immediate">
+		<element kind="textField" uuid="30469944-b042-4320-9cb3-d83a55bea791" x="632" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<expression><![CDATA["Página  " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="adeda2d7-4406-47b9-9d21-8d59b7ebf1c7" x="692" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<expression><![CDATA[" de " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="71e150df-a816-4ee8-b1f8-1d90adbef4e0" x="572" y="0" width="60" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" pattern="dd/MM/yyyy">
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="staticText" uuid="d59f2d2e-5d8f-4c32-94d3-73bbee0586c6" x="452" y="0" width="120" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<text><![CDATA[Fecha de Elaboración:]]></text>
+		</element>
 	</pageFooter>
 </jasperReport>

@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
-<!-- 2017-01-09T16:16:18 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DesempenioMensualFISMtxt" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0fd571e7-c5f0-4d6c-a1d5-e2196dc8cb51">
+<jasperReport name="DesempenioMensualFISMtxt" language="java" columnCount="1" dpi="72" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0fd571e7-c5f0-4d6c-a1d5-e2196dc8cb51">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gemdb_linux"/>
 	<property name="net.sf.jasperreports.export.text.character.width" value="5.238"/>
@@ -11,16 +8,14 @@
 	<parameter name="SECTOR" class="java.lang.Integer"/>
 	<parameter name="CLAVE" class="java.lang.String"/>
 	<parameter name="ANO" class="java.lang.Integer"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT 	PM5411.MENSUAL, PM5411.MASIMUN, PM5411.MMINMES, PM5411.OBYACMES,
+	<query language="SQL"><![CDATA[SELECT 	PM5411.MENSUAL, PM5411.MASIMUN, PM5411.MMINMES, PM5411.OBYACMES,
 		PM5411.MAUTOBYAC, PM5411.MEJEMES, PM5411.MAUTOB, PM5411.SESIONES,
 		PM5411.PARTCIU, PM5411.OBSERVA,
 		CONCTB.ANOEMP
 FROM PM5411 PM5411 INNER JOIN CONCTB CONCTB
 	ON PM5411.IDSECTOR = CONCTB.IDSECTOR
 WHERE PM5411.MENSUAL = $P{MES}
-AND PM5411.IDSECTOR = $P{SECTOR}]]>
-	</queryString>
+AND PM5411.IDSECTOR = $P{SECTOR}]]></query>
 	<field name="MENSUAL" class="java.lang.Integer"/>
 	<field name="MASIMUN" class="java.math.BigDecimal"/>
 	<field name="MMINMES" class="java.math.BigDecimal"/>
@@ -33,7 +28,7 @@ AND PM5411.IDSECTOR = $P{SECTOR}]]>
 	<field name="OBSERVA" class="java.lang.String"/>
 	<field name="ANOEMP" class="java.lang.Integer"/>
 	<variable name="REPORTE_TXT" class="java.lang.String">
-		<variableExpression><![CDATA[(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(0,1)+"\"":"\"\"")
+		<expression><![CDATA[(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(0,1)+"\"":"\"\"")
 +"|"+(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(1,4)+"\"":"\"\"")
 +"|"+(($P{ANO}!= null)?$P{ANO}:"")
 +"|\"M\"|"+
@@ -69,20 +64,14 @@ AND PM5411.IDSECTOR = $P{SECTOR}]]>
 +(($F{MAUTOB}!= null)?$F{MAUTOB}.intValue():"")+"|"
 +(($F{SESIONES}!= null)?$F{SESIONES}.intValue():"")+"|"
 +"\"\"|"
-+"\""+(($F{OBSERVA}!= null)?$F{OBSERVA}:"")+"\""]]></variableExpression>
++"\""+(($F{OBSERVA}!= null)?$F{OBSERVA}:"")+"\""]]></expression>
 	</variable>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+	<background splitType="Stretch"/>
 	<detail>
 		<band height="30" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="800" height="30" uuid="4787fc18-cc10-4a52-a27a-28c346d2fa12"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{REPORTE_TXT}]]></textFieldExpression>
-			</textField>
+			<element kind="textField" uuid="4787fc18-cc10-4a52-a27a-28c346d2fa12" x="0" y="0" width="800" height="30" stretchType="NoStretch" fontName="Arial" vTextAlign="Middle">
+				<expression><![CDATA[$V{REPORTE_TXT}]]></expression>
+			</element>
 		</band>
 	</detail>
 </jasperReport>

@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-03-23T12:04:07 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="acumulado" pageWidth="102" pageHeight="180" whenNoDataType="AllSectionsNoDetail" columnWidth="102" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0b1af52b-e851-4e28-84de-f9a19f434971">
+<jasperReport name="acumulado" language="java" columnCount="1" dpi="72" pageWidth="102" pageHeight="180" whenNoDataType="AllSectionsNoDetail" columnWidth="102" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0b1af52b-e851-4e28-84de-f9a19f434971">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB-SERVER"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -21,8 +18,7 @@
 	<parameter name="sector" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
-		<![CDATA[select (select CASE $P{mes} WHEN 1 THEN sum(P.toeje1_1)
+	<query language="SQL"><![CDATA[select (select CASE $P{mes} WHEN 1 THEN sum(P.toeje1_1)
           WHEN 2 THEN sum(P.toeje1_1+P.toeje1_2)
           WHEN 3 THEN sum(P.toeje1_1+P.toeje1_2+P.toeje1_3) 
           WHEN 4 THEN SUM(P.toeje1_1+P.toeje1_2+P.toeje1_3+P.toeje1_4) 
@@ -127,73 +123,44 @@
          where  p.IDSECTOR= 1 
          and substr(p.PARTIDA,4,1) <> '0' )
           
-          from SYSIBM.SYSDUMMY1]]>
-	</queryString>
+          from SYSIBM.SYSDUMMY1]]></query>
 	<field name="S3511D" class="java.math.BigDecimal"/>
 	<field name="S3512D" class="java.math.BigDecimal"/>
 	<field name="S3532D" class="java.math.BigDecimal"/>
 	<field name="S6000D" class="java.math.BigDecimal"/>
 	<field name="TOTAL" class="java.math.BigDecimal"/>
 	<field name="TOTALEGRESOS" class="java.math.BigDecimal"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+	<background splitType="Stretch"/>
 	<detail>
 		<band height="180" splitType="Stretch">
+			<element kind="textField" uuid="adefd764-ed9e-41b1-b8ac-1c1596437da2" x="0" y="-1" width="100" height="27" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00#" hTextAlign="Right" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<paragraph leftIndent="1" rightIndent="2"/>
+				<expression><![CDATA[($F{S3511D}!= null)?$F{S3511D}:"0.00 "]]></expression>
+			</element>
+			<element kind="textField" uuid="ebb5b5b4-7ca0-41fe-8597-86c41b92cbfb" x="0" y="29" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00#" hTextAlign="Right" vTextAlign="Middle">
+				<paragraph leftIndent="1" rightIndent="2"/>
+				<expression><![CDATA[($F{S3512D}!= null)?$F{S3512D}:"0.00 "]]></expression>
+			</element>
+			<element kind="textField" uuid="f40505bf-73ba-476f-991d-de9e2330e7cf" x="0" y="59" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00#" hTextAlign="Right" vTextAlign="Middle">
+				<paragraph leftIndent="1" rightIndent="2"/>
+				<expression><![CDATA[($F{S3532D}!= null)?$F{S3532D}:"0.00 "]]></expression>
+			</element>
+			<element kind="textField" uuid="135c31a0-c6df-454f-9c7e-4bdeffe9b608" x="0" y="89" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00#" hTextAlign="Right" vTextAlign="Middle">
+				<paragraph leftIndent="1" rightIndent="2"/>
+				<expression><![CDATA[($F{S6000D}!= null)?$F{S6000D}:"0.00 "]]></expression>
+			</element>
+			<element kind="textField" uuid="3192194f-1a3e-4d75-aa0d-04c4f8245aa2" x="0" y="119" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00#" underline="true" hTextAlign="Right" vTextAlign="Middle">
+				<paragraph leftIndent="1" rightIndent="2"/>
+				<expression><![CDATA[($F{TOTAL}!= null)?$F{TOTAL}:"0.00 "]]></expression>
+			</element>
+			<element kind="textField" uuid="08192303-0a88-46bd-9eb9-d1aeb8bb52c8" x="1" y="150" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00#" underline="true" hTextAlign="Right" vTextAlign="Middle">
+				<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<paragraph leftIndent="1" rightIndent="2"/>
+				<expression><![CDATA[($F{TOTALEGRESOS}!=null)?($F{TOTALEGRESOS}):(BigDecimal.ZERO)]]></expression>
+			</element>
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<textField pattern="#,##0.00#">
-				<reportElement x="0" y="-1" width="100" height="27" uuid="adefd764-ed9e-41b1-b8ac-1c1596437da2">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-					<paragraph leftIndent="1" rightIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($F{S3511D}!= null)?$F{S3511D}:"0.00 "]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00#">
-				<reportElement x="0" y="29" width="100" height="30" uuid="ebb5b5b4-7ca0-41fe-8597-86c41b92cbfb"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-					<paragraph leftIndent="1" rightIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($F{S3512D}!= null)?$F{S3512D}:"0.00 "]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00#">
-				<reportElement x="0" y="59" width="100" height="30" uuid="f40505bf-73ba-476f-991d-de9e2330e7cf"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-					<paragraph leftIndent="1" rightIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($F{S3532D}!= null)?$F{S3532D}:"0.00 "]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00#">
-				<reportElement x="0" y="89" width="100" height="30" uuid="135c31a0-c6df-454f-9c7e-4bdeffe9b608"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9"/>
-					<paragraph leftIndent="1" rightIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($F{S6000D}!= null)?$F{S6000D}:"0.00 "]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00#">
-				<reportElement x="0" y="119" width="100" height="30" uuid="3192194f-1a3e-4d75-aa0d-04c4f8245aa2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isUnderline="true"/>
-					<paragraph leftIndent="1" rightIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($F{TOTAL}!= null)?$F{TOTAL}:"0.00 "]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00#">
-				<reportElement x="1" y="150" width="100" height="30" uuid="08192303-0a88-46bd-9eb9-d1aeb8bb52c8">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isUnderline="true"/>
-					<paragraph leftIndent="1" rightIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($F{TOTALEGRESOS}!=null)?($F{TOTALEGRESOS}):(BigDecimal.ZERO)]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
 </jasperReport>

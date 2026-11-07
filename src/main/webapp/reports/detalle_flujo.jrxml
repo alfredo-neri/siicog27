@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="detalle_flujo" pageWidth="500" pageHeight="40" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6f2ad6aa-a757-46ed-a829-276ec930f725">
+<jasperReport name="detalle_flujo" language="java" columnCount="1" dpi="72" pageWidth="500" pageHeight="40" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6f2ad6aa-a757-46ed-a829-276ec930f725">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gem Local 2020"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="pMESPOL" class="java.lang.Integer">
@@ -18,8 +16,7 @@
 	<parameter name="pIDSECTOR" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
-	<queryString>
-		<![CDATA[SELECT 
+	<query language="sql"><![CDATA[SELECT 
 	 GEMUSER.POLIEN.TIPPOL,
 	 GEMUSER.POLIEN.MESPOL,
 	 GEMUSER.POLIEN.CONPOL,
@@ -51,49 +48,34 @@ GROUP BY
 	GEMUSER.POLIEN.MESPOL,
 	GEMUSER.POLIEN.CONPOL,
 	GEMUSER.POLIDE.RENPOL,
-    GEMUSER.POLIFL.CLVFLU]]>
-	</queryString>
+    GEMUSER.POLIFL.CLVFLU]]></query>
 	<field name="TIPPOL" class="java.lang.String"/>
 	<field name="MESPOL" class="java.lang.Integer"/>
 	<field name="CONPOL" class="java.lang.Integer"/>
 	<field name="RENPOL" class="java.math.BigDecimal"/>
 	<field name="CLVFLU" class="java.math.BigDecimal"/>
 	<field name="CANFLU" class="java.math.BigDecimal"/>
-	<variable name="CANFLU1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
-		<variableExpression><![CDATA[$F{CANFLU}]]></variableExpression>
+	<variable name="CANFLU1" resetType="Column" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{CANFLU}]]></expression>
 	</variable>
-	<variable name="CANFLU2" class="java.math.BigDecimal" resetType="Group" resetGroup="RenglonGroup" calculation="Sum">
-		<variableExpression><![CDATA[$F{CANFLU}]]></variableExpression>
+	<variable name="CANFLU2" resetType="Group" calculation="Sum" resetGroup="RenglonGroup" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{CANFLU}]]></expression>
 	</variable>
 	<group name="RenglonGroup">
-		<groupExpression><![CDATA[$F{CLVFLU}]]></groupExpression>
+		<expression><![CDATA[$F{CLVFLU}]]></expression>
 		<groupFooter>
 			<band height="10">
-				<textField pattern="#,##0.00#">
-					<reportElement x="180" y="0" width="38" height="10" uuid="ecf74d57-b2f8-41b3-b059-1d9876576ef6">
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement>
-						<font fontName="Arial" size="7"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{CLVFLU}]]></textFieldExpression>
-				</textField>
-				<textField pattern="#,##0.00#">
-					<reportElement x="218" y="0" width="42" height="10" uuid="e8b49e85-2213-4547-b9c3-1e904ebd0aec"/>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" size="7"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{CANFLU2}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="78" y="0" width="102" height="10" uuid="6f276328-fbb5-4f58-b265-5287d936c9eb">
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" size="7" isBold="true"/>
-					</textElement>
+				<element kind="textField" uuid="ecf74d57-b2f8-41b3-b059-1d9876576ef6" x="180" y="0" width="38" height="10" stretchType="NoStretch" fontName="Arial" fontSize="7.0" pattern="#,##0.00#">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<expression><![CDATA[$F{CLVFLU}]]></expression>
+				</element>
+				<element kind="textField" uuid="e8b49e85-2213-4547-b9c3-1e904ebd0aec" x="218" y="0" width="42" height="10" stretchType="NoStretch" fontName="Arial" fontSize="7.0" pattern="#,##0.00#" hTextAlign="Right">
+					<expression><![CDATA[$V{CANFLU2}]]></expression>
+				</element>
+				<element kind="staticText" uuid="6f276328-fbb5-4f58-b265-5287d936c9eb" x="78" y="0" width="102" height="10" stretchType="NoStretch" fontName="Arial" fontSize="7.0" bold="true" hTextAlign="Right">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<text><![CDATA[Flujo de Efectivo:]]></text>
-				</staticText>
+				</element>
 			</band>
 		</groupFooter>
 	</group>

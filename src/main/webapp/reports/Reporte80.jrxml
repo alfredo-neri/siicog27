@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
-<!-- 2023-10-25T23:51:01 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte80" pageWidth="807" pageHeight="566" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="751" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" uuid="38a6ac06-7489-4b82-8dad-c92e4556eed2">
+<jasperReport name="Reporte80" language="java" columnCount="1" dpi="72" pageWidth="807" pageHeight="566" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="751" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" uuid="38a6ac06-7489-4b82-8dad-c92e4556eed2">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="serverLinux26"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -15,8 +12,8 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="xmes" class="java.lang.Integer">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+	<parameter name="xmes" class="java.lang.Integer"
+		><description><![CDATA[]]></description>
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="xssscta" class="java.lang.String"/>
@@ -26,8 +23,7 @@
 	<parameter name="anio" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[2016]]></defaultValueExpression>
 	</parameter>
-	<queryString>
-		<![CDATA[SELECT SUM(COALESCE("GEMUSER"."POLIDE"."CANPOL", 0.00)) AS CANPOL, SUM(COALESCE("GEMUSER"."POLIDE"."CANPOLH", 0.00)) AS CANPOLH, "GEMUSER"."POLIDE"."MESPOL"  
+	<query language="sql"><![CDATA[SELECT SUM(COALESCE("GEMUSER"."POLIDE"."CANPOL", 0.00)) AS CANPOL, SUM(COALESCE("GEMUSER"."POLIDE"."CANPOLH", 0.00)) AS CANPOLH, "GEMUSER"."POLIDE"."MESPOL"  
 FROM "GEMUSER"."POLIDE" 
 WHERE 
 	 "GEMUSER"."POLIDE"."MESPOL" <= $P{xmes} 
@@ -36,113 +32,68 @@ WHERE
 	 AND ( 
 	 "GEMUSER"."POLIDE"."CUENTA" LIKE '827%' 
 	 OR "GEMUSER"."POLIDE"."CUENTA" LIKE '825%') AND SUBSTR("GEMUSER"."POLIDE"."CUENTA",4,1)  <> '0' AND "GEMUSER"."POLIDE"."SSSCTA" LIKE CONCAT(COALESCE($P{xssscta}, ''), '%')
-GROUP BY "GEMUSER"."POLIDE"."MESPOL" ORDER BY "GEMUSER"."POLIDE"."MESPOL"]]>
-	</queryString>
+GROUP BY "GEMUSER"."POLIDE"."MESPOL" ORDER BY "GEMUSER"."POLIDE"."MESPOL"]]></query>
 	<field name="CANPOL" class="java.math.BigDecimal"/>
 	<field name="CANPOLH" class="java.math.BigDecimal"/>
 	<field name="MESPOL" class="java.lang.Integer"/>
-	<variable name="CANPOL1" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{CANPOL}]]></variableExpression>
+	<variable name="CANPOL1" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{CANPOL}]]></expression>
 	</variable>
-	<variable name="CANPOLH1" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{CANPOLH}]]></variableExpression>
+	<variable name="CANPOLH1" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{CANPOLH}]]></expression>
 	</variable>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band splitType="Stretch"/>
-	</title>
-	<pageHeader>
-		<band splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band splitType="Stretch"/>
-	</columnHeader>
+	<background splitType="Stretch"/>
+	<title splitType="Stretch"/>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader splitType="Stretch"/>
 	<detail>
 		<band height="10" splitType="Stretch">
-			<subreport>
-				<reportElement key="" positionType="Float" isPrintRepeatedValues="false" x="-28" y="0" width="806" height="10" uuid="fdba250e-5527-4648-9cae-8c7a22ea0b6b">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<subreportParameter name="xmes">
-					<subreportParameterExpression><![CDATA[$F{MESPOL}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="xssscta">
-					<subreportParameterExpression><![CDATA[$P{xssscta}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="IDSECTOR">
-					<subreportParameterExpression><![CDATA[$P{IDSECTOR}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="anio">
-					<subreportParameterExpression><![CDATA[$P{anio}]]></subreportParameterExpression>
-				</subreportParameter>
+			<element kind="subreport" uuid="fdba250e-5527-4648-9cae-8c7a22ea0b6b" key="" x="-28" y="0" width="806" height="10" positionType="Float" stretchType="NoStretch" printRepeatedValues="false">
+				<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<parameter name="xmes">
+					<expression><![CDATA[$F{MESPOL}]]></expression>
+				</parameter>
+				<parameter name="xssscta">
+					<expression><![CDATA[$P{xssscta}]]></expression>
+				</parameter>
+				<parameter name="IDSECTOR">
+					<expression><![CDATA[$P{IDSECTOR}]]></expression>
+				</parameter>
+				<parameter name="anio">
+					<expression><![CDATA[$P{anio}]]></expression>
+				</parameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["Reporte80_1DetalleXMes.jasper"]]></subreportExpression>
-			</subreport>
+				<expression><![CDATA["Reporte80_1DetalleXMes.jasper"]]></expression>
+			</element>
 		</band>
 	</detail>
-	<columnFooter>
-		<band splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band splitType="Stretch"/>
-	</pageFooter>
-	<summary>
-		<band height="36" splitType="Stretch">
-			<textField>
-				<reportElement x="370" y="24" width="79" height="12" uuid="bf2d7e8c-24a7-47dc-abe3-481fb6b2dcb8">
-					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new DecimalFormat("###,###,##0.00").format(($V{CANPOL1} != null ) ? $V{CANPOL1} : 0.00)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="449" y="24" width="79" height="12" uuid="83183cef-3dc0-48c2-81f0-90c083e5c814">
-					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
-					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new DecimalFormat("###,###,##0.00").format(($V{CANPOLH1} != null ) ? $V{CANPOLH1} : 0.00)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="528" y="24" width="79" height="12" uuid="af5e3108-c41d-4dfd-8836-3171a6ba3981">
-					<property name="com.jaspersoft.studio.unit.width" value="cm"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new DecimalFormat("###,###,##0.00").format(($V{CANPOLH1} != null  && $V{CANPOL1} != null) ? ($V{CANPOL1}.intValue() - $V{CANPOLH1}.intValue()) : 0.00)]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="370" y="12" width="79" height="12" uuid="80cf9566-e0e0-4419-a991-3dfb597f20a6">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<text><![CDATA[TOTAL CARGOS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="449" y="12" width="79" height="12" uuid="f69673bf-4d83-4056-afa1-774d6ebcae0a"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<text><![CDATA[TOTAL ABONOS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="528" y="12" width="79" height="12" uuid="47a4063d-c736-4350-a05e-9764941d0594"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<text><![CDATA[DIFERENCIA]]></text>
-			</staticText>
-		</band>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter splitType="Stretch"/>
+	<summary height="36" splitType="Stretch">
+		<element kind="textField" uuid="bf2d7e8c-24a7-47dc-abe3-481fb6b2dcb8" x="370" y="24" width="79" height="12" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<expression><![CDATA[new DecimalFormat("###,###,##0.00").format(($V{CANPOL1} != null ) ? $V{CANPOL1} : 0.00)]]></expression>
+		</element>
+		<element kind="textField" uuid="83183cef-3dc0-48c2-81f0-90c083e5c814" x="449" y="24" width="79" height="12" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+			<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+			<expression><![CDATA[new DecimalFormat("###,###,##0.00").format(($V{CANPOLH1} != null ) ? $V{CANPOLH1} : 0.00)]]></expression>
+		</element>
+		<element kind="textField" uuid="af5e3108-c41d-4dfd-8836-3171a6ba3981" x="528" y="24" width="79" height="12" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.width" value="cm"/>
+			<expression><![CDATA[new DecimalFormat("###,###,##0.00").format(($V{CANPOLH1} != null  && $V{CANPOL1} != null) ? ($V{CANPOL1}.intValue() - $V{CANPOLH1}.intValue()) : 0.00)]]></expression>
+		</element>
+		<element kind="staticText" uuid="80cf9566-e0e0-4419-a991-3dfb597f20a6" x="370" y="12" width="79" height="12" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<text><![CDATA[TOTAL CARGOS]]></text>
+		</element>
+		<element kind="staticText" uuid="f69673bf-4d83-4056-afa1-774d6ebcae0a" x="449" y="12" width="79" height="12" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Right"
+			><text><![CDATA[TOTAL ABONOS]]></text>
+		</element>
+		<element kind="staticText" uuid="47a4063d-c736-4350-a05e-9764941d0594" x="528" y="12" width="79" height="12" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Right"
+			><text><![CDATA[DIFERENCIA]]></text>
+		</element>
 	</summary>
 </jasperReport>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.13.0.final using JasperReports Library version 6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteNomina21" pageWidth="1380" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1380" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="96b07db0-45b4-42e6-9fc3-70aad29a8277">
+<jasperReport name="ReporteNomina21" language="java" columnCount="1" dpi="72" pageWidth="1380" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1380" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="96b07db0-45b4-42e6-9fc3-70aad29a8277">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ServerLinux"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -8,15 +6,14 @@
 	<property name="net.sf.jasperreports.export.text.character.height" value="14.948"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<parameter name="MES" class="java.lang.Integer">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+	<parameter name="MES" class="java.lang.Integer"
+		><description><![CDATA[]]></description>
 	</parameter>
-	<parameter name="sector" class="java.lang.Integer">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+	<parameter name="sector" class="java.lang.Integer"
+		><description><![CDATA[]]></description>
 	</parameter>
 	<parameter name="anio" class="java.lang.String"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT partida AS PART, nomgas AS descripcion,
+	<query language="SQL"><![CDATA[SELECT partida AS PART, nomgas AS descripcion,
 SUM(AUTO1_1+AUTO1_2+AUTO1_3+AUTO1_4+AUTO1_5+AUTO1_6+AUTO1_7+AUTO1_8+AUTO1_9+AUTO1_10+AUTO1_11+AUTO1_12) aprobado,
 CASE $P{MES} WHEN 1 THEN SUM(AMPLI1_1)
 	   WHEN 2 THEN SUM(AMPLI1_1+AMPLI1_2)
@@ -178,8 +175,7 @@ FROM paso p inner join natgas n on partida=clvgas
 AND p.idsector=n.idsector
 WHERE p.idsector = $P{sector}
 and (p.partida >='1000' and p.partida<'2000')
-GROUP BY partida, nomgas]]>
-	</queryString>
+GROUP BY partida, nomgas]]></query>
 	<field name="PART" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
 	<field name="APROBADO" class="java.math.BigDecimal"/>
@@ -191,35 +187,35 @@ GROUP BY partida, nomgas]]>
 	<field name="PAGADO" class="java.math.BigDecimal"/>
 	<field name="EJERCIDO" class="java.math.BigDecimal"/>
 	<field name="POREJERCER" class="java.math.BigDecimal"/>
-	<variable name="Suma" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{APROBADO}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="Suma" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{APROBADO}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalAmpliacion" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{AMPLIACION}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalAmpliacion" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{AMPLIACION}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalReduccion" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{REDUCCION}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalReduccion" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{REDUCCION}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalModificado" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{MODIFICADO}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalModificado" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{MODIFICADO}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalComprometido" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{COMPROMETIDO}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalComprometido" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{COMPROMETIDO}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalDevengado" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{DEVENGADO}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalDevengado" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{DEVENGADO}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalPagado" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{PAGADO}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalPagado" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{PAGADO}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalEjercido" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{EJERCIDO}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalEjercido" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{EJERCIDO}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="TotalPorEjercer" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{POREJERCER}:BigDecimal.ZERO]]></variableExpression>
+	<variable name="TotalPorEjercer" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[($F{PART}.substring(1).equals("000"))?$F{POREJERCER}:BigDecimal.ZERO]]></expression>
 	</variable>
-	<variable name="cabecera" class="java.lang.String" resetType="None">
-		<variableExpression><![CDATA[($P{MES} == 1) ? "ESTADO DE AVANCE PRESUPUESTAL DE EGRESOS DEL 1 DE ENERO DE "+$P{anio}+" AL 31 DE ENERO DE "+$P{anio}: (
+	<variable name="cabecera" resetType="None" class="java.lang.String">
+		<expression><![CDATA[($P{MES} == 1) ? "ESTADO DE AVANCE PRESUPUESTAL DE EGRESOS DEL 1 DE ENERO DE "+$P{anio}+" AL 31 DE ENERO DE "+$P{anio}: (
 	($P{MES} == 2) ? "ESTADO DE AVANCE PRESUPUESTAL DE EGRESOS DEL 1 DE ENERO DE "+$P{anio}+" AL 28 DE FEBRERO DE "+$P{anio}  	: (
 		($P{MES} == 3) ? "ESTADO DE AVANCE PRESUPUESTAL DE EGRESOS DEL 1 DE ENERO DE "+$P{anio}+" AL 31 DE MARZO DE "+$P{anio}: (
 			($P{MES} == 4) ? "ESTADO DE AVANCE PRESUPUESTAL DE EGRESOS DEL 1 DE ENERO DE "+$P{anio}+" AL 30 DE ABRIL DE "+$P{anio}: (
@@ -241,341 +237,159 @@ GROUP BY partida, nomgas]]>
 			)
 		)
 	)
-)]]></variableExpression>
+)]]></expression>
 	</variable>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band splitType="Stretch"/>
-	</title>
-	<pageHeader>
-		<band height="40" splitType="Stretch">
+	<background splitType="Stretch"/>
+	<title splitType="Stretch"/>
+	<pageHeader height="40" splitType="Stretch">
+		<element kind="textField" uuid="e34b1d8a-909a-45e4-8753-a933cd127984" x="1340" y="30" width="22" height="10" stretchType="NoStretch" fontName="Arial" fontSize="7.0" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="staticText" uuid="0b3b3369-184f-44e9-8a1c-09427c9e9bc9" x="1306" y="30" width="30" height="10" stretchType="NoStretch" fontName="Arial" fontSize="7.0" hTextAlign="Right" vTextAlign="Middle">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<textField>
-				<reportElement x="1340" y="30" width="22" height="10" uuid="e34b1d8a-909a-45e4-8753-a933cd127984"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="1306" y="30" width="30" height="10" uuid="0b3b3369-184f-44e9-8a1c-09427c9e9bc9">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="7"/>
-				</textElement>
-				<text><![CDATA[HOJA:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="0" y="16" width="1362" height="13" uuid="2cdf0153-91d1-452e-93ed-b7fa8c6a4b5f">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="Arial" size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{cabecera}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="340" y="30" width="666" height="10" uuid="497cd6c6-aac1-40bf-abce-293b76cec0a6">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[GLOBAL]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="-15" width="1362" height="15" uuid="5dd3e104-4e35-409e-a03d-2b1b0a4d0833">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Arial" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA DE FINANZAS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="5" width="1362" height="10" uuid="a7a8ceba-bb45-45ea-ae5b-e210649b0853"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="Arial" size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[CONTADURIA GENERAL GUBERNAMENTAL]]></text>
-			</staticText>
-		</band>
+			<text><![CDATA[HOJA:]]></text>
+		</element>
+		<element kind="textField" uuid="2cdf0153-91d1-452e-93ed-b7fa8c6a4b5f" x="0" y="16" width="1362" height="13" stretchType="NoStretch" fontName="Arial" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Top">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<expression><![CDATA[$V{cabecera}]]></expression>
+		</element>
+		<element kind="staticText" uuid="497cd6c6-aac1-40bf-abce-293b76cec0a6" x="340" y="30" width="666" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" bold="true" hTextAlign="Center">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<text><![CDATA[GLOBAL]]></text>
+		</element>
+		<element kind="staticText" uuid="5dd3e104-4e35-409e-a03d-2b1b0a4d0833" x="0" y="-15" width="1362" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Bottom">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<text><![CDATA[SECRETARIA DE FINANZAS]]></text>
+		</element>
+		<element kind="staticText" uuid="a7a8ceba-bb45-45ea-ae5b-e210649b0853" x="0" y="5" width="1362" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Top"
+			><text><![CDATA[CONTADURIA GENERAL GUBERNAMENTAL]]></text>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 	</pageHeader>
-	<columnHeader>
-		<band height="34" splitType="Stretch">
+	<columnHeader height="34" splitType="Stretch">
+		<element kind="staticText" uuid="b9422809-52ec-4cea-97c7-c7ad63360fe3" x="0" y="3" width="25" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0">
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<text><![CDATA[PART]]></text>
+		</element>
+		<element kind="staticText" uuid="e4f74e08-4d7d-4993-a645-ea6cab4cfaa8" x="30" y="3" width="280" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0"
+			><text><![CDATA[DESCRIPCION]]></text>
+		</element>
+		<element kind="staticText" uuid="72be304d-a6ae-4a05-8d55-f792b0760747" x="320" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[APROBADO]]></text>
+		</element>
+		<element kind="staticText" uuid="07ee54f8-a14b-498a-917a-0c9caa922841" x="436" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[AMPLIACION]]></text>
+		</element>
+		<element kind="staticText" uuid="14c5cac0-b9bf-4427-9e0c-cd858d329a23" x="551" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[REDUCCION]]></text>
+		</element>
+		<element kind="staticText" uuid="bc451786-813f-4c29-827b-6a81e77ee4c5" x="666" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[MODIFICADO]]></text>
+		</element>
+		<element kind="staticText" uuid="99cccb64-f43b-4646-9b6c-1be017f4e5de" x="781" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[COMPROMETIDO]]></text>
+		</element>
+		<element kind="staticText" uuid="58d8107a-3453-41ed-adbd-3682fcb31a04" x="897" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[DEVENGADO]]></text>
+		</element>
+		<element kind="staticText" uuid="89b1355f-066e-4265-a0dc-77509f73b201" x="1012" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[PAGADO]]></text>
+		</element>
+		<element kind="staticText" uuid="6a14817c-628b-4c44-a72e-374f8031208a" x="1132" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right"
+			><text><![CDATA[EJERCIDO]]></text>
+		</element>
+		<element kind="staticText" uuid="bfc31882-286a-4711-9323-840b6a01faf2" x="1252" y="3" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<staticText>
-				<reportElement x="0" y="3" width="25" height="10" uuid="b9422809-52ec-4cea-97c7-c7ad63360fe3">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement>
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[PART]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="30" y="3" width="280" height="10" uuid="e4f74e08-4d7d-4993-a645-ea6cab4cfaa8"/>
-				<textElement>
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[DESCRIPCION]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="320" y="3" width="110" height="10" uuid="72be304d-a6ae-4a05-8d55-f792b0760747"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[APROBADO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="436" y="3" width="110" height="10" uuid="07ee54f8-a14b-498a-917a-0c9caa922841"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[AMPLIACION]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="551" y="3" width="110" height="10" uuid="14c5cac0-b9bf-4427-9e0c-cd858d329a23"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[REDUCCION]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="666" y="3" width="110" height="10" uuid="bc451786-813f-4c29-827b-6a81e77ee4c5"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[MODIFICADO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="781" y="3" width="110" height="10" uuid="99cccb64-f43b-4646-9b6c-1be017f4e5de"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[COMPROMETIDO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="897" y="3" width="110" height="10" uuid="58d8107a-3453-41ed-adbd-3682fcb31a04"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[DEVENGADO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="1012" y="3" width="110" height="10" uuid="89b1355f-066e-4265-a0dc-77509f73b201"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[PAGADO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="1132" y="3" width="110" height="10" uuid="6a14817c-628b-4c44-a72e-374f8031208a"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[EJERCIDO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="1252" y="3" width="110" height="10" uuid="bfc31882-286a-4711-9323-840b6a01faf2">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[POR EJERCER]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="16" width="1362" height="7" uuid="84d7c332-297a-401c-ade8-b90c4952f3a8"/>
-				<textElement>
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<text><![CDATA[---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------]]></text>
-			</staticText>
-		</band>
+			<text><![CDATA[POR EJERCER]]></text>
+		</element>
+		<element kind="staticText" uuid="84d7c332-297a-401c-ade8-b90c4952f3a8" x="0" y="16" width="1362" height="7" stretchType="NoStretch" fontName="Arial" fontSize="6.0"
+			><text><![CDATA[---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 	</columnHeader>
 	<detail>
 		<band height="12" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="25" height="12" uuid="b019c797-8770-4ee4-9f4b-68bba06c9542">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement>
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PART}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="30" y="0" width="280" height="12" uuid="034d6165-b0a8-494c-b861-6de70c91c268"/>
-				<textElement>
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="320" y="0" width="110" height="12" uuid="19e17dc5-4023-471b-9d52-cd27b21b2750"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{APROBADO}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="436" y="0" width="110" height="12" uuid="ad94c4ee-05c3-4bfb-94fb-47135a598285"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{AMPLIACION}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="551" y="0" width="110" height="12" uuid="1f29a640-61ef-4ddf-be53-fff8f87a2132"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{REDUCCION}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="666" y="0" width="110" height="12" uuid="473f13df-2d43-4c6a-a41e-bad3e866efbc"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{MODIFICADO}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="781" y="0" width="110" height="12" uuid="069be599-3e07-4a45-8318-c407defd473c"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{COMPROMETIDO}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="897" y="0" width="110" height="12" uuid="67de2452-3d14-46e6-a54e-195118ee42f8"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{DEVENGADO}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="1012" y="0" width="110" height="12" uuid="ecaaa075-f2d8-4ba5-9710-0a9fd38a25fc">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PAGADO}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="1132" y="0" width="110" height="12" uuid="134be68f-3048-45eb-a0ee-b583489e4b2c"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{EJERCIDO}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="1252" y="0" width="110" height="12" uuid="96f40879-565a-4131-bec7-2f544168956d"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{POREJERCER}]]></textFieldExpression>
-			</textField>
+			<element kind="textField" uuid="b019c797-8770-4ee4-9f4b-68bba06c9542" x="0" y="0" width="25" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" blankWhenNull="true">
+				<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<expression><![CDATA[$F{PART}]]></expression>
+			</element>
+			<element kind="textField" uuid="034d6165-b0a8-494c-b861-6de70c91c268" x="30" y="0" width="280" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" blankWhenNull="true">
+				<expression><![CDATA[$F{DESCRIPCION}]]></expression>
+			</element>
+			<element kind="textField" uuid="19e17dc5-4023-471b-9d52-cd27b21b2750" x="320" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{APROBADO}]]></expression>
+			</element>
+			<element kind="textField" uuid="ad94c4ee-05c3-4bfb-94fb-47135a598285" x="436" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{AMPLIACION}]]></expression>
+			</element>
+			<element kind="textField" uuid="1f29a640-61ef-4ddf-be53-fff8f87a2132" x="551" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{REDUCCION}]]></expression>
+			</element>
+			<element kind="textField" uuid="473f13df-2d43-4c6a-a41e-bad3e866efbc" x="666" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{MODIFICADO}]]></expression>
+			</element>
+			<element kind="textField" uuid="069be599-3e07-4a45-8318-c407defd473c" x="781" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{COMPROMETIDO}]]></expression>
+			</element>
+			<element kind="textField" uuid="67de2452-3d14-46e6-a54e-195118ee42f8" x="897" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{DEVENGADO}]]></expression>
+			</element>
+			<element kind="textField" uuid="ecaaa075-f2d8-4ba5-9710-0a9fd38a25fc" x="1012" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<expression><![CDATA[$F{PAGADO}]]></expression>
+			</element>
+			<element kind="textField" uuid="134be68f-3048-45eb-a0ee-b583489e4b2c" x="1132" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{EJERCIDO}]]></expression>
+			</element>
+			<element kind="textField" uuid="96f40879-565a-4131-bec7-2f544168956d" x="1252" y="0" width="110" height="12" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<expression><![CDATA[$F{POREJERCER}]]></expression>
+			</element>
 		</band>
 	</detail>
-	<summary>
-		<band height="12" splitType="Stretch">
+	<summary height="12" splitType="Stretch">
+		<element kind="textField" uuid="74ecb6b1-cce6-415a-ba52-630a84b30083" x="320" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="320" y="2" width="110" height="10" uuid="74ecb6b1-cce6-415a-ba52-630a84b30083">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{Suma}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="30" y="2" width="280" height="10" uuid="fa5e094c-c644-41a3-a126-66f6d4e17e97">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-					<paragraph firstLineIndent="0" rightIndent="15"/>
-				</textElement>
-				<text><![CDATA[TOTAL:]]></text>
-			</staticText>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="436" y="2" width="110" height="10" uuid="dd0526ad-962c-4952-b6ae-6fd651a89d2f"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalAmpliacion}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="551" y="2" width="110" height="10" uuid="73d0c71c-14f8-436f-9799-651127457447">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalReduccion}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="666" y="2" width="110" height="10" uuid="f175fca9-d36e-4637-8ce4-220eedf57e24"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalModificado}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="781" y="2" width="110" height="10" uuid="47fc09d2-f53f-4188-9c0e-d26d172550af">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalComprometido}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="897" y="2" width="110" height="10" uuid="c3d55dd8-2bb1-4094-b270-5f96d4d6c5db">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalDevengado}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="1012" y="2" width="110" height="10" uuid="8a32d367-b1e9-41a5-85e8-c5c069702b6a">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalPagado}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="1132" y="2" width="110" height="10" uuid="5798574f-0076-442a-ba39-80cb37e92a61">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalEjercido}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="1252" y="2" width="110" height="10" uuid="a47567fd-2ccc-4db5-9a80-d50b2d36e6b8">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalPorEjercer}]]></textFieldExpression>
-			</textField>
-		</band>
+			<expression><![CDATA[$V{Suma}]]></expression>
+		</element>
+		<element kind="staticText" uuid="fa5e094c-c644-41a3-a126-66f6d4e17e97" x="30" y="2" width="280" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<paragraph firstLineIndent="0" rightIndent="15"/>
+			<text><![CDATA[TOTAL:]]></text>
+		</element>
+		<element kind="textField" uuid="dd0526ad-962c-4952-b6ae-6fd651a89d2f" x="436" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<expression><![CDATA[$V{TotalAmpliacion}]]></expression>
+		</element>
+		<element kind="textField" uuid="73d0c71c-14f8-436f-9799-651127457447" x="551" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<expression><![CDATA[$V{TotalReduccion}]]></expression>
+		</element>
+		<element kind="textField" uuid="f175fca9-d36e-4637-8ce4-220eedf57e24" x="666" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<expression><![CDATA[$V{TotalModificado}]]></expression>
+		</element>
+		<element kind="textField" uuid="47fc09d2-f53f-4188-9c0e-d26d172550af" x="781" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<expression><![CDATA[$V{TotalComprometido}]]></expression>
+		</element>
+		<element kind="textField" uuid="c3d55dd8-2bb1-4094-b270-5f96d4d6c5db" x="897" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<expression><![CDATA[$V{TotalDevengado}]]></expression>
+		</element>
+		<element kind="textField" uuid="8a32d367-b1e9-41a5-85e8-c5c069702b6a" x="1012" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<expression><![CDATA[$V{TotalPagado}]]></expression>
+		</element>
+		<element kind="textField" uuid="5798574f-0076-442a-ba39-80cb37e92a61" x="1132" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<expression><![CDATA[$V{TotalEjercido}]]></expression>
+		</element>
+		<element kind="textField" uuid="a47567fd-2ccc-4db5-9a80-d50b2d36e6b8" x="1252" y="2" width="110" height="10" stretchType="NoStretch" fontName="Arial" fontSize="6.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<expression><![CDATA[$V{TotalPorEjercer}]]></expression>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 	</summary>
 </jasperReport>

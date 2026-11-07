@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EdoFOperacion" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="775429a7-b53d-47ed-94f2-052dc4aa9584">
+<jasperReport name="EdoFOperacion" language="java" columnCount="1" dpi="72" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="775429a7-b53d-47ed-94f2-052dc4aa9584">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEM_LUNUX"/>
 	<parameter name="pMes" class="java.lang.Integer"/>
@@ -8,8 +6,7 @@
 	<parameter name="pMesAnt" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[$P{pMes}-1]]></defaultValueExpression>
 	</parameter>
-	<queryString>
-		<![CDATA[SELECT DECIMAL( CLVFLU, 24,2)CLVFLU ,NOMFLU, SUM(CANFLU_ANT) CANFLU_ANT, SUM(CANFLU_ACT) CANFLU_ACT  FROM (	
+	<query language="sql"><![CDATA[SELECT DECIMAL( CLVFLU, 24,2)CLVFLU ,NOMFLU, SUM(CANFLU_ANT) CANFLU_ANT, SUM(CANFLU_ACT) CANFLU_ACT  FROM (	
 	SELECT	CF.CLVFLU, 
 			PF.MESPOL, 
 			CF.NOMFLU,
@@ -23,228 +20,163 @@
 	GROUP BY CF.CLVFLU,
 	         CF.NOMFLU,
 	         PF.MESPOL )T1
-GROUP BY CLVFLU,NOMFLU]]>
-	</queryString>
+GROUP BY CLVFLU,NOMFLU]]></query>
 	<field name="CLVFLU" class="java.math.BigDecimal"/>
 	<field name="NOMFLU" class="java.lang.String"/>
 	<field name="CANFLU_ANT" class="java.math.BigDecimal"/>
 	<field name="CANFLU_ACT" class="java.math.BigDecimal"/>
-	<variable name="vSumO" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[IF($F{CLVFLU}.doubleValue()<20,$F{CANFLU_ACT},0.00 )]]></variableExpression>
+	<variable name="vSumO" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[IF($F{CLVFLU}.doubleValue()<20,$F{CANFLU_ACT},0.00 )]]></expression>
 	</variable>
-	<variable name="vSumA" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[IF($F{CLVFLU}.doubleValue()>20,$F{CANFLU_ACT},0.00 )]]></variableExpression>
+	<variable name="vSumA" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[IF($F{CLVFLU}.doubleValue()>20,$F{CANFLU_ACT},0.00 )]]></expression>
 	</variable>
 	<variable name="vRestaActu" class="java.math.BigDecimal">
-		<variableExpression><![CDATA[$V{vSumO}.subtract($V{vSumA})]]></variableExpression>
+		<expression><![CDATA[$V{vSumO}.subtract($V{vSumA})]]></expression>
 		<initialValueExpression><![CDATA[$V{vRestaActu}==null?new BigDecimal(0.00):$V{vRestaActu}]]></initialValueExpression>
 	</variable>
-	<variable name="vSumAnt" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[IF($F{CLVFLU}.doubleValue()<20,$F{CANFLU_ANT},new BigDecimal(0.00))]]></variableExpression>
+	<variable name="vSumAnt" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[IF($F{CLVFLU}.doubleValue()<20,$F{CANFLU_ANT},new BigDecimal(0.00))]]></expression>
 	</variable>
-	<variable name="vSumAntA" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[IF($F{CLVFLU}.doubleValue()>20,$F{CANFLU_ANT},new BigDecimal(0.00))]]></variableExpression>
+	<variable name="vSumAntA" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[IF($F{CLVFLU}.doubleValue()>20,$F{CANFLU_ANT},new BigDecimal(0.00))]]></expression>
 	</variable>
 	<variable name="vRestaAct" class="java.math.BigDecimal">
-		<variableExpression><![CDATA[$V{vSumAnt}.subtract($V{vSumAntA})]]></variableExpression>
+		<expression><![CDATA[$V{vSumAnt}.subtract($V{vSumAntA})]]></expression>
 		<initialValueExpression><![CDATA[$V{vRestaAct}==null?new BigDecimal(0.00):$V{vRestaAct}]]></initialValueExpression>
 	</variable>
 	<group name="GroupoOrigen">
-		<groupExpression><![CDATA[$F{CLVFLU}.doubleValue()<20]]></groupExpression>
+		<expression><![CDATA[$F{CLVFLU}.doubleValue()<20]]></expression>
 		<groupHeader>
 			<band height="15">
 				<printWhenExpression><![CDATA[$F{CLVFLU}.doubleValue()<20]]></printWhenExpression>
-				<staticText>
-					<reportElement x="0" y="0" width="572" height="15" uuid="94a20768-9d75-400c-8163-70bd9853e0c3">
-						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-					</reportElement>
+				<element kind="staticText" uuid="94a20768-9d75-400c-8163-70bd9853e0c3" x="0" y="0" width="572" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" bold="true" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true"/>
-						<paragraph leftIndent="0"/>
-					</textElement>
+					<paragraph leftIndent="0"/>
 					<text><![CDATA[Origen]]></text>
-				</staticText>
+				</element>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="GroupAplicacion">
-		<groupExpression><![CDATA[$F{CLVFLU}.doubleValue()>20]]></groupExpression>
+		<expression><![CDATA[$F{CLVFLU}.doubleValue()>20]]></expression>
 		<groupHeader>
 			<band height="15">
 				<printWhenExpression><![CDATA[$F{CLVFLU}.doubleValue()>20]]></printWhenExpression>
-				<staticText>
-					<reportElement x="0" y="0" width="572" height="15" uuid="8116dc7b-d10e-4b1c-a52e-3a0c71d3798f">
-						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					</reportElement>
+				<element kind="staticText" uuid="8116dc7b-d10e-4b1c-a52e-3a0c71d3798f" x="0" y="0" width="572" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" bold="true" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true"/>
-						<paragraph leftIndent="0"/>
-					</textElement>
+					<paragraph leftIndent="0"/>
 					<text><![CDATA[Aplicación]]></text>
-				</staticText>
+				</element>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="GroupTotales"/>
-	<columnHeader>
-		<band height="15" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="572" height="15" uuid="174d43ce-d893-4a55-be71-79e3bd93249d">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
-					<paragraph leftIndent="0"/>
-				</textElement>
-				<text><![CDATA[Flujos de Efectivo de las Actividades de Operación]]></text>
-			</staticText>
-		</band>
+	<columnHeader height="15" splitType="Stretch">
+		<element kind="staticText" uuid="174d43ce-d893-4a55-be71-79e3bd93249d" x="0" y="0" width="572" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" bold="true" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<paragraph leftIndent="0"/>
+			<text><![CDATA[Flujos de Efectivo de las Actividades de Operación]]></text>
+		</element>
 	</columnHeader>
 	<detail>
 		<band height="15">
 			<printWhenExpression><![CDATA[$F{CLVFLU}.doubleValue()<20]]></printWhenExpression>
-			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="392" height="15" uuid="f6e0959f-7e8d-4d61-869f-bf8957367737">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+			<element kind="textField" uuid="f6e0959f-7e8d-4d61-869f-bf8957367737" x="0" y="0" width="392" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" blankWhenNull="true" hTextAlign="Left">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box>
 					<leftPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMFLU}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="392" y="0" width="90" height="15" uuid="af0d673e-5a5e-4809-a5fc-65fdabfa9a00">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<expression><![CDATA[$F{NOMFLU}]]></expression>
+			</element>
+			<element kind="textField" uuid="af0d673e-5a5e-4809-a5fc-65fdabfa9a00" x="392" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box rightPadding="2"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CANFLU_ACT}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="482" y="0" width="90" height="15" uuid="808df492-ce41-448d-bd0c-0eeebed4e1e4">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<expression><![CDATA[$F{CANFLU_ACT}]]></expression>
+			</element>
+			<element kind="textField" uuid="808df492-ce41-448d-bd0c-0eeebed4e1e4" x="482" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box rightPadding="2">
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CANFLU_ANT}]]></textFieldExpression>
-			</textField>
+				<expression><![CDATA[$F{CANFLU_ANT}]]></expression>
+			</element>
 		</band>
 		<band height="15">
 			<printWhenExpression><![CDATA[$F{CLVFLU}.doubleValue()>20]]></printWhenExpression>
-			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="392" height="15" uuid="9839ed66-3b3e-44f6-8501-9de479ae202a">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+			<element kind="textField" uuid="9839ed66-3b3e-44f6-8501-9de479ae202a" x="0" y="0" width="392" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" blankWhenNull="true" hTextAlign="Left">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<box>
 					<leftPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMFLU}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="392" y="0" width="90" height="15" uuid="f8660e21-c7c1-45e6-99a4-5c54aebc1b91">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<expression><![CDATA[$F{NOMFLU}]]></expression>
+			</element>
+			<element kind="textField" uuid="f8660e21-c7c1-45e6-99a4-5c54aebc1b91" x="392" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box rightPadding="2"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CANFLU_ACT}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="482" y="0" width="90" height="15" uuid="907559c9-ff36-4d6c-9386-ff684bc4a033">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<expression><![CDATA[$F{CANFLU_ACT}]]></expression>
+			</element>
+			<element kind="textField" uuid="907559c9-ff36-4d6c-9386-ff684bc4a033" x="482" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<box rightPadding="2">
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CANFLU_ANT}]]></textFieldExpression>
-			</textField>
+				<expression><![CDATA[$F{CANFLU_ANT}]]></expression>
+			</element>
 		</band>
 	</detail>
-	<pageFooter>
-		<band height="15">
-			<staticText>
-				<reportElement x="0" y="0" width="392" height="15" uuid="9c767625-dada-4a14-9115-38a96725559f">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<leftPen lineWidth="1.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
-					<paragraph leftIndent="0"/>
-				</textElement>
-				<text><![CDATA[Flujos Netos de Efectivo por Actividades de Operación]]></text>
-			</staticText>
-			<textField pattern="#,##0.00">
-				<reportElement x="392" y="0" width="90" height="15" uuid="c669a1a4-7a26-47d9-9764-c4c1088a2782">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{vRestaActu}==null? new BigDecimal(0.00):$V{vRestaActu}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement x="482" y="0" width="90" height="15" uuid="d2e2b208-f8d4-4957-ae81-47f4019a85f6">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box rightPadding="2">
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{vRestaAct}==null? new BigDecimal(0.00):$V{vRestaAct}]]></textFieldExpression>
-			</textField>
-		</band>
+	<pageFooter height="15">
+		<element kind="staticText" uuid="9c767625-dada-4a14-9115-38a96725559f" x="0" y="0" width="392" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" bold="true" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<box>
+				<leftPen lineWidth="1.0"/>
+			</box>
+			<paragraph leftIndent="0"/>
+			<text><![CDATA[Flujos Netos de Efectivo por Actividades de Operación]]></text>
+		</element>
+		<element kind="textField" uuid="c669a1a4-7a26-47d9-9764-c4c1088a2782" x="392" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<box rightPadding="2"/>
+			<expression><![CDATA[$V{vRestaActu}==null? new BigDecimal(0.00):$V{vRestaActu}]]></expression>
+		</element>
+		<element kind="textField" uuid="d2e2b208-f8d4-4957-ae81-47f4019a85f6" x="482" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<box rightPadding="2">
+				<rightPen lineWidth="1.0"/>
+			</box>
+			<expression><![CDATA[$V{vRestaAct}==null? new BigDecimal(0.00):$V{vRestaAct}]]></expression>
+		</element>
 	</pageFooter>
 </jasperReport>

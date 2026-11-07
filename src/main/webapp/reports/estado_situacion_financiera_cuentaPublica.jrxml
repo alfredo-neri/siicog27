@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="estado_situacion_financiera_detallado" pageWidth="890" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="850" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" isIgnorePagination="true" uuid="5549b96e-6899-4281-8538-6e0115e10aa1">
+<jasperReport name="estado_situacion_financiera_detallado" language="java" columnCount="1" dpi="72" pageWidth="890" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="850" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="5549b96e-6899-4281-8538-6e0115e10aa1" ignorePagination="true">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB24.jrdax"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -120,15 +118,14 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="activos" uuid="c3c0ecb8-8de7-4129-9a3c-aa8b888b0c0a">
+	<dataset name="activos" uuid="c3c0ecb8-8de7-4129-9a3c-aa8b888b0c0a">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LENOVO PRUEBAS"/>
 		<parameter name="sSqlActivos" class="java.lang.String"/>
 		<parameter name="month" class="java.lang.String"/>
 		<parameter name="year" class="java.lang.Integer"/>
 		<parameter name="monthAnt" class="java.lang.String"/>
-		<queryString language="SQL">
-			<![CDATA[SELECT
+		<query language="SQL"><![CDATA[SELECT
 	DECODE(SUBSTR(T1.CUENTA, 1,	2),	'11',1,	2) GRUPO,
 	T1.CUENTA,
 	MA.NOMMAY NOMCTA,
@@ -169,8 +166,7 @@ WHERE
 	MA.CUENTA = T1.CUENTA
 ORDER BY
 	1,
-	2]]>
-		</queryString>
+	2]]></query>
 		<field name="GRUPO" class="java.lang.Integer">
 			<property name="com.jaspersoft.studio.field.name" value="GRUPO"/>
 			<property name="com.jaspersoft.studio.field.label" value="GRUPO"/>
@@ -194,28 +190,28 @@ ORDER BY
 			<property name="com.jaspersoft.studio.field.label" value="SALDO_ANTE"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="TC_CUENTAANTERIOR"/>
 		</field>
-		<variable name="totalActual" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDOACTUAL}]]></variableExpression>
+		<variable name="totalActual" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDOACTUAL}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
-		<variable name="totalAnterior" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDO_ANTE}]]></variableExpression>
+		<variable name="totalAnterior" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDO_ANTE}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
 		<variable name="sSqlActivos" class="java.lang.String"/>
-		<variable name="totalActivoActual" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDOACTUAL}]]></variableExpression>
+		<variable name="totalActivoActual" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDOACTUAL}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
-		<variable name="totalActivoAnterior" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDO_ANTE}]]></variableExpression>
+		<variable name="totalActivoAnterior" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDO_ANTE}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
 		<group name="GRUPO">
-			<groupExpression><![CDATA[$F{GRUPO}]]></groupExpression>
+			<expression><![CDATA[$F{GRUPO}]]></expression>
 		</group>
-	</subDataset>
-	<subDataset name="pasivos" uuid="fc7b497f-0889-4f01-b6b7-aef9b5b073cf">
+	</dataset>
+	<dataset name="pasivos" uuid="fc7b497f-0889-4f01-b6b7-aef9b5b073cf">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LENOVO PRUEBAS"/>
 		<parameter name="sSqlPasivos" class="java.lang.String"/>
@@ -223,8 +219,7 @@ ORDER BY
 		<parameter name="month" class="java.lang.String"/>
 		<parameter name="year" class="java.lang.Integer"/>
 		<parameter name="monthAnt" class="java.lang.String"/>
-		<queryString language="SQL">
-			<![CDATA[SELECT DECODE(SUBSTR(T1.CUENTA,1,2), '21', 1, 2) GRUPO,        
+		<query language="SQL"><![CDATA[SELECT DECODE(SUBSTR(T1.CUENTA,1,2), '21', 1, 2) GRUPO,        
 	T1.CUENTA,        MA.NOMMAY NOMCTA,       
 	 T1.SALINI_ANT - T1.CARGOS_ANT + ABONOS_ANT SALDO_ANTE,       
 	  T1.SALINI - T1.CARGOS + ABONOS SALDOACTUAL      
@@ -247,8 +242,7 @@ WHERE
 	  AND SUBSTR(CU.CUENTA,3,1) <> '0'                             
 	  AND CU.SCTA = ''                
 	  AND SUBSTR(CU.CUENTA,1,2) IN ('21','22')         ) T1,           
-	MAYCTA MA  WHERE MA.CUENTA = T1.CUENTA  ORDER BY 1, 2]]>
-		</queryString>
+	MAYCTA MA  WHERE MA.CUENTA = T1.CUENTA  ORDER BY 1, 2]]></query>
 		<field name="GRUPO" class="java.lang.Integer">
 			<property name="com.jaspersoft.studio.field.name" value="GRUPO"/>
 			<property name="com.jaspersoft.studio.field.label" value="GRUPO"/>
@@ -272,28 +266,28 @@ WHERE
 			<property name="com.jaspersoft.studio.field.label" value="SALDO_ANTE"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="TC_CUENTAANTERIOR"/>
 		</field>
-		<variable name="totalMes" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDOACTUAL}]]></variableExpression>
+		<variable name="totalMes" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDOACTUAL}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
-		<variable name="totalEstimado" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDO_ANTE}]]></variableExpression>
+		<variable name="totalEstimado" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDO_ANTE}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
 		<variable name="sSqlPasivos" class="java.lang.String"/>
-		<variable name="totalActualPasivo" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDOACTUAL}]]></variableExpression>
+		<variable name="totalActualPasivo" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDOACTUAL}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
-		<variable name="totalAnteriorPasivo" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDO_ANTE}]]></variableExpression>
+		<variable name="totalAnteriorPasivo" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDO_ANTE}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
 		<group name="GRUPO">
-			<groupExpression><![CDATA[$F{GRUPO}]]></groupExpression>
+			<expression><![CDATA[$F{GRUPO}]]></expression>
 		</group>
-	</subDataset>
-	<subDataset name="hacienda" uuid="96f8b0c7-caf1-4683-a269-b5e1494f03b6">
+	</dataset>
+	<dataset name="hacienda" uuid="96f8b0c7-caf1-4683-a269-b5e1494f03b6">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LENOVO PRUEBAS"/>
 		<parameter name="sSqlHacienda" class="java.lang.String"/>
@@ -301,8 +295,7 @@ WHERE
 		<parameter name="year" class="java.lang.Integer"/>
 		<parameter name="cuenta3211Act" class="java.math.BigDecimal"/>
 		<parameter name="cuenta3211Ant" class="java.math.BigDecimal"/>
-		<queryString language="SQL">
-			<![CDATA[SELECT DECODE(SUBSTR(T1.CUENTA,1,2), '31', 1, '32', 2, 3) GRUPO,        
+		<query language="SQL"><![CDATA[SELECT DECODE(SUBSTR(T1.CUENTA,1,2), '31', 1, '32', 2, 3) GRUPO,        
 T1.CUENTA,        MA.NOMMAY NOMCTA,   
 DECODE(T1.CUENTA,'3210', FN_GET_CUENTA_3211(9, 'a'),  T1.SALINI_ANTI - T1.CARGOS_ANT + ABONOS_ANT)     SALDO_ANTE,       
 DECODE(T1.CUENTA,'3210', FN_GET_CUENTA_3211(12, 'a'), T1.SALINI - T1.CARGOS + ABONOS) SALDOACTUAL      
@@ -319,8 +312,7 @@ FROM CUENTA CU, CUENTA_ANTERIOR CA
  WHERE CU.CUENTA = CA.CUENTA AND
   SUBSTR(CU.CUENTA,4,1) = '0'                             AND SUBSTR(CU.CUENTA,3,1) <> '0'                             AND CU.SCTA = ''                AND SUBSTR(CU.CUENTA,1,2) IN ('31','32', '33')         ) T1,          
  MAYCTA MA  WHERE  MA.CUENTA = T1.CUENTA
- ORDER BY 1, 2]]>
-		</queryString>
+ ORDER BY 1, 2]]></query>
 		<field name="NOMCTA" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.name" value="NOMCTA"/>
 			<property name="com.jaspersoft.studio.field.label" value="NOMCTA"/>
@@ -340,26 +332,26 @@ FROM CUENTA CU, CUENTA_ANTERIOR CA
 			<property name="com.jaspersoft.studio.field.label" value="GRUPO"/>
 		</field>
 		<field name="CUENTA" class="java.lang.String"/>
-		<variable name="totalActual" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDOACTUAL}]]></variableExpression>
+		<variable name="totalActual" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDOACTUAL}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
-		<variable name="totalAnterior" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDO_ANTE}]]></variableExpression>
+		<variable name="totalAnterior" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDO_ANTE}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
-		<variable name="totalActualHacienda" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDOACTUAL}]]></variableExpression>
+		<variable name="totalActualHacienda" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDOACTUAL}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
-		<variable name="totalAnteriorHacienda" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALDO_ANTE}]]></variableExpression>
+		<variable name="totalAnteriorHacienda" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{SALDO_ANTE}]]></expression>
 			<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 		</variable>
 		<group name="GRUPO">
-			<groupExpression><![CDATA[$F{GRUPO}]]></groupExpression>
+			<expression><![CDATA[$F{GRUPO}]]></expression>
 		</group>
-	</subDataset>
+	</dataset>
 	<parameter name="ente" class="java.lang.String"/>
 	<parameter name="sSqlActivos" class="java.lang.String"/>
 	<parameter name="sSqlPasivos" class="java.lang.String"/>
@@ -373,8 +365,7 @@ FROM CUENTA CU, CUENTA_ANTERIOR CA
 	<parameter name="monthAnt" class="java.lang.String"/>
 	<parameter name="cuenta3211Act" class="java.math.BigDecimal"/>
 	<parameter name="cuenta3211Ant" class="java.math.BigDecimal"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT (SUM(T3.VAN4)-SUM(T3.VAN5)) TOTAL_ANT, (SUM(T3.VACT4)-SUM(T3.VACT5)) TOTAL_ACT FROM
+	<query language="SQL"><![CDATA[SELECT (SUM(T3.VAN4)-SUM(T3.VAN5)) TOTAL_ANT, (SUM(T3.VACT4)-SUM(T3.VACT5)) TOTAL_ACT FROM
  (SELECT  CASE WHEN T2.GRUPO='4' THEN SUM(T2.VMANT) ELSE 0.00 END VAN4, 
  CASE WHEN T2.GRUPO='5' THEN SUM(T2.VMANT) ELSE 0.00 END VAN5, CASE WHEN T2.GRUPO='4' 
  THEN SUM(T2.VMACT) ELSE 0.00 END VACT4, CASE WHEN T2.GRUPO='5' THEN SUM(T2.VMACT)ELSE 0.00 END VACT5 
@@ -388,8 +379,7 @@ SUM(CA.CARGOS_1+ CA.CARGOS_2+ CA.CARGOS_3+ CA.CARGOS_4+CA.CARGOS_5+ CA.CARGOS_6+
  SUM(C.ABONOS_1+ C.ABONOS_2+ C.ABONOS_3+ C.ABONOS_4+C.ABONOS_5+ C.ABONOS_6+ C.ABONOS_7+ C.ABONOS_8+C.ABONOS_9+ C.ABONOS_10+ C.ABONOS_11+ C.ABONOS_12) ABONOS_ACT 
   FROM CUENTA C,CUENTA_ANTERIOR CA
  WHERE  C.CUENTA = CA.CUENTA AND  C.IDSECTOR=2 AND (	(	(SUBSTR(C.CUENTA,1,1) =4 AND 			 SUBSTR(C.CUENTA,4,1)<>'0') 	 	OR 			(SUBSTR(C.CUENTA,1,1) = 5 AND 			 SUBSTR(C.CUENTA,2,1) > 0) 		) AND
-	C.SCTA ='') GROUP BY C.CUENTA, C.SALINI ORDER BY C.CUENTA)T1)T2 GROUP BY T2.GRUPO )T3]]>
-	</queryString>
+	C.SCTA ='') GROUP BY C.CUENTA, C.SALINI ORDER BY C.CUENTA)T1)T2 GROUP BY T2.GRUPO )T3]]></query>
 	<field name="TOTAL_ANT" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="TOTAL_ANT"/>
 		<property name="com.jaspersoft.studio.field.label" value="TOTAL_ANT"/>
@@ -401,605 +391,436 @@ SUM(CA.CARGOS_1+ CA.CARGOS_2+ CA.CARGOS_3+ CA.CARGOS_4+CA.CARGOS_5+ CA.CARGOS_6+
 	<variable name="totalActualActivo" class="java.math.BigDecimal"/>
 	<variable name="totalAntActivo" class="java.math.BigDecimal"/>
 	<variable name="totalActualHacienda" class="java.math.BigDecimal">
-		<variableExpression><![CDATA[$F{TOTAL_ACT}]]></variableExpression>
+		<expression><![CDATA[$F{TOTAL_ACT}]]></expression>
 	</variable>
 	<variable name="totalAntAHacienda" class="java.math.BigDecimal">
-		<variableExpression><![CDATA[$F{TOTAL_ANT}]]></variableExpression>
+		<expression><![CDATA[$F{TOTAL_ANT}]]></expression>
 	</variable>
 	<variable name="totalActual" class="java.math.BigDecimal"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band height="60">
-			<textField>
-				<reportElement mode="Transparent" x="0" y="15" width="860" height="15" backcolor="#ADADAD" uuid="6aef6de8-b8ab-4ac8-95c4-cdc6da0efe84">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineColor="#ADADAD"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Estado de Situación Financiera"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Transparent" x="0" y="30" width="860" height="15" backcolor="#ADADAD" uuid="6fc731de-2da1-404d-98f6-bbd0d0bdf0e6">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineColor="#ADADAD"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Al 31 de Diciembre de " + $P{year} + " y " + ($P{year}-1)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Transparent" x="0" y="0" width="860" height="15" backcolor="#ADADAD" uuid="db8dacac-3975-46e4-aeeb-ec359ec61c37">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineColor="#ADADAD"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{ente}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Transparent" x="0" y="45" width="860" height="15" backcolor="#ADADAD" uuid="72ceb310-7337-4ccf-913f-b4d86b82f733">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineColor="#ADADAD"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["(Pesos)"]]></textFieldExpression>
-			</textField>
-		</band>
+	<background splitType="Stretch"/>
+	<title height="60">
+		<element kind="textField" uuid="6aef6de8-b8ab-4ac8-95c4-cdc6da0efe84" x="0" y="15" width="860" height="15" backcolor="#ADADAD" mode="Transparent" stretchType="NoStretch" fontSize="8.0" bold="true" hTextAlign="Center">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box>
+				<pen lineColor="#ADADAD"/>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["Estado de Situación Financiera"]]></expression>
+		</element>
+		<element kind="textField" uuid="6fc731de-2da1-404d-98f6-bbd0d0bdf0e6" x="0" y="30" width="860" height="15" backcolor="#ADADAD" mode="Transparent" stretchType="NoStretch" fontSize="8.0" bold="true" hTextAlign="Center">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box>
+				<pen lineColor="#ADADAD"/>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["Al 31 de Diciembre de " + $P{year} + " y " + ($P{year}-1)]]></expression>
+		</element>
+		<element kind="textField" uuid="db8dacac-3975-46e4-aeeb-ec359ec61c37" x="0" y="0" width="860" height="15" backcolor="#ADADAD" mode="Transparent" stretchType="NoStretch" fontSize="8.0" bold="true" hTextAlign="Center">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box>
+				<pen lineColor="#ADADAD"/>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$P{ente}]]></expression>
+		</element>
+		<element kind="textField" uuid="72ceb310-7337-4ccf-913f-b4d86b82f733" x="0" y="45" width="860" height="15" backcolor="#ADADAD" mode="Transparent" stretchType="NoStretch" fontSize="8.0" bold="true" hTextAlign="Center">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<box>
+				<pen lineColor="#ADADAD"/>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["(Pesos)"]]></expression>
+		</element>
 	</title>
 	<detail>
 		<band height="60" splitType="Stretch">
-			<componentElement>
-				<reportElement x="0" y="0" width="440" height="60" uuid="38803f89-d463-45dd-a035-c9061d9be65b">
-					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
-					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
-					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
-				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="activos" uuid="c65b7958-b6ef-41e6-b829-e40c74632654">
-						<datasetParameter name="sSqlActivos">
-							<datasetParameterExpression><![CDATA[$P{sSqlActivos}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="month">
-							<datasetParameterExpression><![CDATA[$P{month}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="year">
-							<datasetParameterExpression><![CDATA[$P{year}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="monthAnt">
-							<datasetParameterExpression><![CDATA[$P{monthAnt}]]></datasetParameterExpression>
-						</datasetParameter>
+			<element kind="component" uuid="38803f89-d463-45dd-a035-c9061d9be65b" x="0" y="0" width="440" height="60" stretchType="NoStretch">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				<component kind="table">
+					<datasetRun uuid="c65b7958-b6ef-41e6-b829-e40c74632654" subDataset="activos">
+						<parameter name="sSqlActivos">
+							<expression><![CDATA[$P{sSqlActivos}]]></expression>
+						</parameter>
+						<parameter name="month">
+							<expression><![CDATA[$P{month}]]></expression>
+						</parameter>
+						<parameter name="year">
+							<expression><![CDATA[$P{year}]]></expression>
+						</parameter>
+						<parameter name="monthAnt">
+							<expression><![CDATA[$P{monthAnt}]]></expression>
+						</parameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-						<returnValue fromVariable="totalActual" toVariable="totalActualActivo" calculation="Sum"/>
+						<returnValue toVariable="totalActualActivo" calculation="Sum" fromVariable="totalActual"/>
 					</datasetRun>
-					<jr:column width="220" uuid="fd35717b-d729-428b-8931-a63dab0d8225">
+					<column kind="single" uuid="fd35717b-d729-428b-8931-a63dab0d8225" width="220">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="220" height="20" uuid="23d72ba0-75df-4d61-88e1-92ccd6876426"/>
-									<textElement>
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} == 1 ? "Activo Circulante" : "Activo no Circulante"]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:groupFooter groupName="GRUPO">
-							<jr:cell style="Table_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="220" height="20" uuid="de368885-9037-42bb-9e44-b6150d392f40"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} == 1 ? "Total del Activo Circulante" : "Total Activo no Circulante"]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupFooter>
-						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
-							<textField>
-								<reportElement mode="Opaque" x="0" y="0" width="220" height="20" uuid="b3eb2e11-8124-4fa2-b1e3-5a151312c17b"/>
+						<groupHeader groupName="GRUPO">
+							<cell height="20" style="Table_CH">
+								<element kind="textField" uuid="23d72ba0-75df-4d61-88e1-92ccd6876426" x="0" y="0" width="220" height="20" mode="Opaque" stretchType="NoStretch" bold="true">
+									<expression><![CDATA[$F{GRUPO} == 1 ? "Activo Circulante" : "Activo no Circulante"]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<groupFooter groupName="GRUPO">
+							<cell height="20" style="Table_CH">
+								<element kind="textField" uuid="de368885-9037-42bb-9e44-b6150d392f40" x="0" y="0" width="220" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Right">
+									<expression><![CDATA[$F{GRUPO} == 1 ? "Total del Activo Circulante" : "Total Activo no Circulante"]]></expression>
+								</element>
+							</cell>
+						</groupFooter>
+						<columnFooter height="20" rowSpan="1" style="Table_CH">
+							<element kind="textField" uuid="b3eb2e11-8124-4fa2-b1e3-5a151312c17b" x="0" y="0" width="220" height="20" mode="Opaque" stretchType="NoStretch" fontSize="10.0" bold="true" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font size="10" isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA["Total del Activo"]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField>
-								<reportElement x="0" y="0" width="220" height="20" uuid="1c83188d-a7b8-468f-835a-bfce466f3cfd"/>
-								<textFieldExpression><![CDATA["     "+$F{NOMCTA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="110" uuid="5b39de01-76d5-4edc-896a-031f0619ec5b">
+								<expression><![CDATA["Total del Activo"]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table_TD">
+							<element kind="textField" uuid="1c83188d-a7b8-468f-835a-bfce466f3cfd" x="0" y="0" width="220" height="20" stretchType="NoStretch">
+								<expression><![CDATA["     "+$F{NOMCTA}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="5b39de01-76d5-4edc-896a-031f0619ec5b" width="110">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="110" height="20" uuid="d02d388a-ba99-4368-8349-78105b8470a2"/>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO}==1 ? $P{year}:""]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:groupFooter groupName="GRUPO">
-							<jr:cell style="Table_CH" height="20">
-								<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
-									<reportElement mode="Opaque" x="0" y="0" width="110" height="20" uuid="e9c27ac2-c177-44d1-8669-233b057c23dd"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$V{totalActual}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActual}]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupFooter>
-						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
-							<textField pattern="#,##0.0">
-								<reportElement mode="Opaque" x="0" y="0" width="110" height="20" uuid="94ba59f5-1406-4b26-a568-4b94461b6cfc"/>
-								<textElement textAlignment="Right">
-									<font size="10" isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{totalActivoActual}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActivoActual}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField pattern="#,##0.0">
-								<reportElement x="0" y="0" width="110" height="20" uuid="a1ef6b73-ddf2-408d-ad54-0b385630629f"/>
-								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$F{SALDOACTUAL}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDOACTUAL}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="110" uuid="a4cbf68f-5839-4d43-83ef-369c7c354956">
+						<groupHeader groupName="GRUPO">
+							<cell height="20" style="Table_CH">
+								<element kind="textField" uuid="d02d388a-ba99-4368-8349-78105b8470a2" x="0" y="0" width="110" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<expression><![CDATA[$F{GRUPO}==1 ? $P{year}:""]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<groupFooter groupName="GRUPO">
+							<cell height="20" style="Table_CH">
+								<element kind="textField" uuid="e9c27ac2-c177-44d1-8669-233b057c23dd" x="0" y="0" width="110" height="20" mode="Opaque" stretchType="NoStretch" evaluationTime="Group" pattern="#,##0.0" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+									<expression><![CDATA[$V{totalActual}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActual}]]></expression>
+								</element>
+							</cell>
+						</groupFooter>
+						<columnFooter height="20" rowSpan="1" style="Table_CH">
+							<element kind="textField" uuid="94ba59f5-1406-4b26-a568-4b94461b6cfc" x="0" y="0" width="110" height="20" mode="Opaque" stretchType="NoStretch" fontSize="10.0" pattern="#,##0.0" bold="true" hTextAlign="Right">
+								<expression><![CDATA[$V{totalActivoActual}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActivoActual}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table_TD">
+							<element kind="textField" uuid="a1ef6b73-ddf2-408d-ad54-0b385630629f" x="0" y="0" width="110" height="20" stretchType="NoStretch" pattern="#,##0.0" hTextAlign="Right">
+								<expression><![CDATA[$F{SALDOACTUAL}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDOACTUAL}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="a4cbf68f-5839-4d43-83ef-369c7c354956" width="110">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="110" height="20" uuid="5ee51235-2f11-4068-a777-0aad697a5900"/>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} == 1 ? $P{year}-1:""]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:groupFooter groupName="GRUPO">
-							<jr:cell style="Table_CH" height="20">
-								<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
-									<reportElement mode="Opaque" x="0" y="0" width="110" height="20" uuid="c7f3668e-6a70-461b-9e64-c6b1f36e791a"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$V{totalAnterior}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalAnterior}]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupFooter>
-						<jr:columnFooter style="Table_CH" height="20" rowSpan="1">
-							<textField pattern="#,##0.0">
-								<reportElement mode="Opaque" x="0" y="0" width="110" height="20" uuid="710d8eb5-7314-49e9-915c-3070842f3347">
-									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-								</reportElement>
-								<textElement textAlignment="Right">
-									<font size="10" isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{totalActivoAnterior}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActivoAnterior}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField pattern="#,##0.0">
-								<reportElement x="0" y="0" width="110" height="20" uuid="f70eb0b0-115a-4d93-af3d-7a837c0434f4"/>
-								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$F{SALDO_ANTE}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDO_ANTE}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
-			<componentElement>
-				<reportElement mode="Opaque" x="440" y="0" width="420" height="60" uuid="e3289e59-a641-470d-a006-aa51a3f38ba4">
-					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
-					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
-					<property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
-				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="pasivos" uuid="1f45477c-aa98-407d-ad23-a20f8fce54bf">
-						<datasetParameter name="sSqlPasivos">
-							<datasetParameterExpression><![CDATA[$P{sSqlPasivos}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="month">
-							<datasetParameterExpression><![CDATA[$P{month}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="year">
-							<datasetParameterExpression><![CDATA[$P{year}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="monthAnt">
-							<datasetParameterExpression><![CDATA[$P{monthAnt}]]></datasetParameterExpression>
-						</datasetParameter>
+						<groupHeader groupName="GRUPO">
+							<cell height="20" style="Table_CH">
+								<element kind="textField" uuid="5ee51235-2f11-4068-a777-0aad697a5900" x="0" y="0" width="110" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<expression><![CDATA[$F{GRUPO} == 1 ? $P{year}-1:""]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<groupFooter groupName="GRUPO">
+							<cell height="20" style="Table_CH">
+								<element kind="textField" uuid="c7f3668e-6a70-461b-9e64-c6b1f36e791a" x="0" y="0" width="110" height="20" mode="Opaque" stretchType="NoStretch" evaluationTime="Group" pattern="#,##0.0" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+									<expression><![CDATA[$V{totalAnterior}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalAnterior}]]></expression>
+								</element>
+							</cell>
+						</groupFooter>
+						<columnFooter height="20" rowSpan="1" style="Table_CH">
+							<element kind="textField" uuid="710d8eb5-7314-49e9-915c-3070842f3347" x="0" y="0" width="110" height="20" mode="Opaque" stretchType="NoStretch" fontSize="10.0" pattern="#,##0.0" bold="true" hTextAlign="Right">
+								<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+								<expression><![CDATA[$V{totalActivoAnterior}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActivoAnterior}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table_TD">
+							<element kind="textField" uuid="f70eb0b0-115a-4d93-af3d-7a837c0434f4" x="0" y="0" width="110" height="20" stretchType="NoStretch" pattern="#,##0.0" hTextAlign="Right">
+								<expression><![CDATA[$F{SALDO_ANTE}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDO_ANTE}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+			</element>
+			<element kind="component" uuid="e3289e59-a641-470d-a006-aa51a3f38ba4" x="440" y="0" width="420" height="60" mode="Opaque" stretchType="NoStretch">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
+				<component kind="table">
+					<datasetRun uuid="1f45477c-aa98-407d-ad23-a20f8fce54bf" subDataset="pasivos">
+						<parameter name="sSqlPasivos">
+							<expression><![CDATA[$P{sSqlPasivos}]]></expression>
+						</parameter>
+						<parameter name="month">
+							<expression><![CDATA[$P{month}]]></expression>
+						</parameter>
+						<parameter name="year">
+							<expression><![CDATA[$P{year}]]></expression>
+						</parameter>
+						<parameter name="monthAnt">
+							<expression><![CDATA[$P{monthAnt}]]></expression>
+						</parameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-						<returnValue fromVariable="totalActualPasivo" toVariable="totalActualActivo"/>
-						<returnValue fromVariable="totalAnteriorPasivo" toVariable="totalAntActivo"/>
+						<returnValue toVariable="totalActualActivo" fromVariable="totalActualPasivo"/>
+						<returnValue toVariable="totalAntActivo" fromVariable="totalAnteriorPasivo"/>
 					</datasetRun>
-					<jr:column width="200" uuid="2a0459d1-fa69-4824-bda5-6cce1d926961">
+					<column kind="single" uuid="2a0459d1-fa69-4824-bda5-6cce1d926961" width="200">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table 2_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="f3c2bfc6-aa43-41fd-809f-68b6c4a22e6e"/>
-									<textElement>
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} ==1 ? "Pasivo Circulante" : "Pasivo no Circulante"]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:groupFooter groupName="GRUPO">
-							<jr:cell style="Table 2_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="64decfc9-4cb7-4925-8629-7cddf0b93c2e"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} ==1 ? "Total del Pasivo Circulante" :"Total Pasivo no Circulante"]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupFooter>
-						<jr:columnFooter style="Table 2_CH" height="20" rowSpan="1">
-							<textField>
-								<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="19f33956-c734-4882-a27e-b2905d63b6d3"/>
-								<textElement textAlignment="Right">
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA["Total del Pasivo"]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 2_TD" height="20">
-							<textField>
-								<reportElement x="0" y="0" width="200" height="20" uuid="0d97c325-3645-4d95-bd61-0856b0701136"/>
-								<textFieldExpression><![CDATA["     " +$F{NOMCTA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="120" uuid="b0cc08ef-1ce4-4e3d-a858-5fc1b46780b3">
+						<groupHeader groupName="GRUPO">
+							<cell height="20" style="Table 2_CH">
+								<element kind="textField" uuid="f3c2bfc6-aa43-41fd-809f-68b6c4a22e6e" x="0" y="0" width="200" height="20" mode="Opaque" stretchType="NoStretch" bold="true">
+									<expression><![CDATA[$F{GRUPO} ==1 ? "Pasivo Circulante" : "Pasivo no Circulante"]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<groupFooter groupName="GRUPO">
+							<cell height="20" style="Table 2_CH">
+								<element kind="textField" uuid="64decfc9-4cb7-4925-8629-7cddf0b93c2e" x="0" y="0" width="200" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Right">
+									<expression><![CDATA[$F{GRUPO} ==1 ? "Total del Pasivo Circulante" :"Total Pasivo no Circulante"]]></expression>
+								</element>
+							</cell>
+						</groupFooter>
+						<columnFooter height="20" rowSpan="1" style="Table 2_CH">
+							<element kind="textField" uuid="19f33956-c734-4882-a27e-b2905d63b6d3" x="0" y="0" width="200" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Right">
+								<expression><![CDATA["Total del Pasivo"]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table 2_TD">
+							<element kind="textField" uuid="0d97c325-3645-4d95-bd61-0856b0701136" x="0" y="0" width="200" height="20" stretchType="NoStretch">
+								<expression><![CDATA["     " +$F{NOMCTA}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="b0cc08ef-1ce4-4e3d-a858-5fc1b46780b3" width="120">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table 2_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="120" height="20" uuid="9f333fab-767d-4468-abbc-df361c4a96d9"/>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} ==1 ? $P{year}:""]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:groupFooter groupName="GRUPO">
-							<jr:cell style="Table 2_CH" height="20">
-								<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
-									<reportElement mode="Opaque" x="0" y="0" width="120" height="20" uuid="b4f57ca7-06d7-4f6c-ad89-5cb04ba891f9"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$V{totalMes}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalMes}]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupFooter>
-						<jr:columnFooter style="Table 2_CH" height="20" rowSpan="1">
-							<textField pattern="#,##0.0">
-								<reportElement mode="Opaque" x="0" y="0" width="120" height="20" uuid="1e2d067a-a3ee-4754-aa68-dac570398208"/>
-								<textElement textAlignment="Right">
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{totalActualPasivo}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActualPasivo}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 2_TD" height="20">
-							<textField pattern="#,##0.0">
-								<reportElement x="0" y="0" width="120" height="20" uuid="aa1d37f6-cd31-4864-b47f-0e82795116d3"/>
-								<textElement textAlignment="Right">
-									<font isBold="false"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{SALDOACTUAL}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDOACTUAL}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="100" uuid="24c6217f-02a7-471b-8d4f-6cfb9a6dc5c9">
+						<groupHeader groupName="GRUPO">
+							<cell height="20" style="Table 2_CH">
+								<element kind="textField" uuid="9f333fab-767d-4468-abbc-df361c4a96d9" x="0" y="0" width="120" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<expression><![CDATA[$F{GRUPO} ==1 ? $P{year}:""]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<groupFooter groupName="GRUPO">
+							<cell height="20" style="Table 2_CH">
+								<element kind="textField" uuid="b4f57ca7-06d7-4f6c-ad89-5cb04ba891f9" x="0" y="0" width="120" height="20" mode="Opaque" stretchType="NoStretch" evaluationTime="Group" pattern="#,##0.0" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+									<expression><![CDATA[$V{totalMes}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalMes}]]></expression>
+								</element>
+							</cell>
+						</groupFooter>
+						<columnFooter height="20" rowSpan="1" style="Table 2_CH">
+							<element kind="textField" uuid="1e2d067a-a3ee-4754-aa68-dac570398208" x="0" y="0" width="120" height="20" mode="Opaque" stretchType="NoStretch" pattern="#,##0.0" bold="true" hTextAlign="Right">
+								<expression><![CDATA[$V{totalActualPasivo}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActualPasivo}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table 2_TD">
+							<element kind="textField" uuid="aa1d37f6-cd31-4864-b47f-0e82795116d3" x="0" y="0" width="120" height="20" stretchType="NoStretch" pattern="#,##0.0" bold="false" hTextAlign="Right">
+								<expression><![CDATA[$F{SALDOACTUAL}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDOACTUAL}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="24c6217f-02a7-471b-8d4f-6cfb9a6dc5c9" width="100">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table 2_CH" height="20">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="100" height="20" uuid="ff7f2a28-6f61-4bde-a531-579a118258f7"/>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} ==1 ? $P{year}-1: ""]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:groupFooter groupName="GRUPO">
-							<jr:cell style="Table 2_CH" height="20">
-								<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
-									<reportElement mode="Opaque" x="0" y="0" width="100" height="20" uuid="26ff9268-1552-4fc5-9e64-4a272f2ca7d1"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$V{totalEstimado}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalEstimado}]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupFooter>
-						<jr:columnFooter style="Table 2_CH" height="20" rowSpan="1">
-							<textField pattern="#,##0.0">
-								<reportElement mode="Opaque" x="0" y="0" width="100" height="20" uuid="ccdb316c-bc9b-4806-8f0b-6283bf30067b"/>
-								<textElement textAlignment="Right">
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{totalAnteriorPasivo}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalAnteriorPasivo}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 2_TD" height="20">
-							<textField pattern="#,##0.0">
-								<reportElement x="0" y="0" width="100" height="20" uuid="59540f56-415b-4922-84b7-46a08fbf2db0"/>
-								<textElement textAlignment="Right">
-									<font isBold="false"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{SALDO_ANTE}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDO_ANTE}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
+						<groupHeader groupName="GRUPO">
+							<cell height="20" style="Table 2_CH">
+								<element kind="textField" uuid="ff7f2a28-6f61-4bde-a531-579a118258f7" x="0" y="0" width="100" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Center" vTextAlign="Middle">
+									<expression><![CDATA[$F{GRUPO} ==1 ? $P{year}-1: ""]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<groupFooter groupName="GRUPO">
+							<cell height="20" style="Table 2_CH">
+								<element kind="textField" uuid="26ff9268-1552-4fc5-9e64-4a272f2ca7d1" x="0" y="0" width="100" height="20" mode="Opaque" stretchType="NoStretch" evaluationTime="Group" pattern="#,##0.0" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+									<expression><![CDATA[$V{totalEstimado}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalEstimado}]]></expression>
+								</element>
+							</cell>
+						</groupFooter>
+						<columnFooter height="20" rowSpan="1" style="Table 2_CH">
+							<element kind="textField" uuid="ccdb316c-bc9b-4806-8f0b-6283bf30067b" x="0" y="0" width="100" height="20" mode="Opaque" stretchType="NoStretch" pattern="#,##0.0" bold="true" hTextAlign="Right">
+								<expression><![CDATA[$V{totalAnteriorPasivo}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalAnteriorPasivo}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table 2_TD">
+							<element kind="textField" uuid="59540f56-415b-4922-84b7-46a08fbf2db0" x="0" y="0" width="100" height="20" stretchType="NoStretch" pattern="#,##0.0" bold="false" hTextAlign="Right">
+								<expression><![CDATA[$F{SALDO_ANTE}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDO_ANTE}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+			</element>
 		</band>
 		<band height="60">
-			<componentElement>
-				<reportElement x="440" y="0" width="420" height="60" uuid="97314509-2830-4cd4-8a1b-0dfc1c4e5c53">
-					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 3_TH"/>
-					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 3_CH"/>
-					<property name="com.jaspersoft.studio.table.style.detail" value="Table 3_TD"/>
-				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="hacienda" uuid="810d379f-ee05-43e0-9095-fc737abef17a">
-						<datasetParameter name="sSqlHacienda">
-							<datasetParameterExpression><![CDATA[$P{sSqlHacienda}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="month">
-							<datasetParameterExpression><![CDATA[$P{month}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="year">
-							<datasetParameterExpression><![CDATA[$P{year}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="cuenta3211Act">
-							<datasetParameterExpression><![CDATA[$P{cuenta3211Act}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="cuenta3211Ant">
-							<datasetParameterExpression><![CDATA[$P{cuenta3211Ant}]]></datasetParameterExpression>
-						</datasetParameter>
+			<element kind="component" uuid="97314509-2830-4cd4-8a1b-0dfc1c4e5c53" x="440" y="0" width="420" height="60" stretchType="NoStretch">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table 3_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table 3_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table 3_TD"/>
+				<component kind="table">
+					<datasetRun uuid="810d379f-ee05-43e0-9095-fc737abef17a" subDataset="hacienda">
+						<parameter name="sSqlHacienda">
+							<expression><![CDATA[$P{sSqlHacienda}]]></expression>
+						</parameter>
+						<parameter name="month">
+							<expression><![CDATA[$P{month}]]></expression>
+						</parameter>
+						<parameter name="year">
+							<expression><![CDATA[$P{year}]]></expression>
+						</parameter>
+						<parameter name="cuenta3211Act">
+							<expression><![CDATA[$P{cuenta3211Act}]]></expression>
+						</parameter>
+						<parameter name="cuenta3211Ant">
+							<expression><![CDATA[$P{cuenta3211Ant}]]></expression>
+						</parameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-						<returnValue fromVariable="totalActualHacienda" toVariable="totalActualHacienda"/>
-						<returnValue fromVariable="totalAnteriorHacienda" toVariable="totalAntAHacienda"/>
+						<returnValue toVariable="totalActualHacienda" fromVariable="totalActualHacienda"/>
+						<returnValue toVariable="totalAntAHacienda" fromVariable="totalAnteriorHacienda"/>
 					</datasetRun>
-					<jr:column width="200" uuid="3f7a0aa6-bb00-457a-8804-36fa50f49569">
+					<column kind="single" uuid="3f7a0aa6-bb00-457a-8804-36fa50f49569" width="200">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table 3_CH" height="20" rowSpan="1">
-								<textField>
-									<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="cff7d320-ef63-485d-ab4a-b2e4c39d0e87"/>
-									<textElement>
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{GRUPO} == 1 ? "Hacienda Publica/Patrimonio Contribuido" : $F{GRUPO} == 2 ? "Hacienda Publica/Patrimonio Generado" : "Exceso o Insuficiencia en la Actualización de la Hacienda Publica/Patrimonio"]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:columnHeader style="Table 3_CH" height="20" rowSpan="1">
-							<textField>
-								<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="fda83d20-9343-4f3e-a1a0-915f11208462"/>
+						<columnHeader height="20" rowSpan="1" style="Table 3_CH">
+							<element kind="textField" uuid="fda83d20-9343-4f3e-a1a0-915f11208462" x="0" y="0" width="200" height="20" mode="Opaque" stretchType="NoStretch" bold="true">
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement>
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA["Hacienda Publica/Patrimonio"]]></textFieldExpression>
-							</textField>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table 3_CH" height="20" rowSpan="1">
-							<textField>
-								<reportElement mode="Opaque" x="0" y="0" width="200" height="20" uuid="b852542f-5514-4267-8034-4b91398b4e5f"/>
-								<textElement textAlignment="Right">
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA["Total Hacienda Publica/Patrimonio"]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 3_TD" height="20">
+								<expression><![CDATA["Hacienda Publica/Patrimonio"]]></expression>
+							</element>
+						</columnHeader>
+						<groupHeader groupName="GRUPO">
+							<cell height="20" rowSpan="1" style="Table 3_CH">
+								<element kind="textField" uuid="cff7d320-ef63-485d-ab4a-b2e4c39d0e87" x="0" y="0" width="200" height="20" mode="Opaque" stretchType="NoStretch" bold="true">
+									<expression><![CDATA[$F{GRUPO} == 1 ? "Hacienda Publica/Patrimonio Contribuido" : $F{GRUPO} == 2 ? "Hacienda Publica/Patrimonio Generado" : "Exceso o Insuficiencia en la Actualización de la Hacienda Publica/Patrimonio"]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<columnFooter height="20" rowSpan="1" style="Table 3_CH">
+							<element kind="textField" uuid="b852542f-5514-4267-8034-4b91398b4e5f" x="0" y="0" width="200" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Right">
+								<expression><![CDATA["Total Hacienda Publica/Patrimonio"]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table 3_TD">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<textField>
-								<reportElement x="0" y="0" width="200" height="20" uuid="ba397ef7-5e9c-49a4-b410-ebc1a2ef4c59"/>
-								<textFieldExpression><![CDATA["     " + $F{NOMCTA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="120" uuid="2030f526-132a-40c9-b36b-e4b9c2cad075">
+							<element kind="textField" uuid="ba397ef7-5e9c-49a4-b410-ebc1a2ef4c59" x="0" y="0" width="200" height="20" stretchType="NoStretch">
+								<expression><![CDATA["     " + $F{NOMCTA}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="2030f526-132a-40c9-b36b-e4b9c2cad075" width="120">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table 3_CH" height="20" rowSpan="1">
-								<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
-									<reportElement mode="Opaque" x="0" y="0" width="120" height="20" uuid="db5a60bb-2210-4fc7-8a2c-5d51a4d86d8b"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[""]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:columnHeader style="Table 3_CH" height="20" rowSpan="1">
-							<textField>
-								<reportElement mode="Opaque" x="0" y="0" width="120" height="20" uuid="5b07bcfd-a471-4a2c-9228-b85199372bc2"/>
+						<columnHeader height="20" rowSpan="1" style="Table 3_CH">
+							<element kind="textField" uuid="5b07bcfd-a471-4a2c-9228-b85199372bc2" x="0" y="0" width="120" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Center" vTextAlign="Middle">
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[""]]></textFieldExpression>
-							</textField>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table 3_CH" height="20" rowSpan="1">
-							<textField pattern="#,##0.0">
-								<reportElement mode="Opaque" x="0" y="0" width="120" height="20" uuid="5feae24e-6bde-4561-9db9-7d89876bf7b2"/>
-								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$V{totalActualHacienda}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActualHacienda}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 3_TD" height="20">
+								<expression><![CDATA[""]]></expression>
+							</element>
+						</columnHeader>
+						<groupHeader groupName="GRUPO">
+							<cell height="20" rowSpan="1" style="Table 3_CH">
+								<element kind="textField" uuid="db5a60bb-2210-4fc7-8a2c-5d51a4d86d8b" x="0" y="0" width="120" height="20" mode="Opaque" stretchType="NoStretch" evaluationTime="Group" pattern="#,##0.0" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+									<expression><![CDATA[""]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<columnFooter height="20" rowSpan="1" style="Table 3_CH">
+							<element kind="textField" uuid="5feae24e-6bde-4561-9db9-7d89876bf7b2" x="0" y="0" width="120" height="20" mode="Opaque" stretchType="NoStretch" pattern="#,##0.0" hTextAlign="Right">
+								<expression><![CDATA[$V{totalActualHacienda}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalActualHacienda}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table 3_TD">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<textField pattern="#,##0.0">
-								<reportElement x="0" y="0" width="120" height="20" uuid="a7511d03-efef-494a-866d-df3a2cb98d3e"/>
-								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$F{SALDOACTUAL}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDOACTUAL}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="100" uuid="8e5be73f-1ce3-4a00-a6c1-ca00863b5262">
+							<element kind="textField" uuid="a7511d03-efef-494a-866d-df3a2cb98d3e" x="0" y="0" width="120" height="20" stretchType="NoStretch" pattern="#,##0.0" hTextAlign="Right">
+								<expression><![CDATA[$F{SALDOACTUAL}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDOACTUAL}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="8e5be73f-1ce3-4a00-a6c1-ca00863b5262" width="100">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-						<jr:groupHeader groupName="GRUPO">
-							<jr:cell style="Table 3_CH" height="20" rowSpan="1">
-								<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
-									<reportElement mode="Opaque" x="0" y="0" width="100" height="20" uuid="63e34c39-2dae-40d8-aba5-8c0a572c4625"/>
-									<textElement textAlignment="Right">
-										<font isBold="true"/>
-									</textElement>
-									<textFieldExpression><![CDATA[""]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
-						<jr:columnHeader style="Table 3_CH" height="20" rowSpan="1">
-							<textField>
-								<reportElement mode="Opaque" x="0" y="0" width="100" height="20" uuid="2d88e243-96ed-4eb2-8f00-1bce5f3639c9"/>
+						<columnHeader height="20" rowSpan="1" style="Table 3_CH">
+							<element kind="textField" uuid="2d88e243-96ed-4eb2-8f00-1bce5f3639c9" x="0" y="0" width="100" height="20" mode="Opaque" stretchType="NoStretch" bold="true" hTextAlign="Center" vTextAlign="Middle">
 								<box>
 									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[""]]></textFieldExpression>
-							</textField>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table 3_CH" height="20" rowSpan="1">
-							<textField pattern="#,##0.0">
-								<reportElement mode="Opaque" x="0" y="0" width="100" height="20" uuid="d3b05b8a-5451-4d7b-85d6-73f759c30b80"/>
-								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$V{totalAnteriorHacienda}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalAnteriorHacienda}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 3_TD" height="20">
+								<expression><![CDATA[""]]></expression>
+							</element>
+						</columnHeader>
+						<groupHeader groupName="GRUPO">
+							<cell height="20" rowSpan="1" style="Table 3_CH">
+								<element kind="textField" uuid="63e34c39-2dae-40d8-aba5-8c0a572c4625" x="0" y="0" width="100" height="20" mode="Opaque" stretchType="NoStretch" evaluationTime="Group" pattern="#,##0.0" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+									<expression><![CDATA[""]]></expression>
+								</element>
+							</cell>
+						</groupHeader>
+						<columnFooter height="20" rowSpan="1" style="Table 3_CH">
+							<element kind="textField" uuid="d3b05b8a-5451-4d7b-85d6-73f759c30b80" x="0" y="0" width="100" height="20" mode="Opaque" stretchType="NoStretch" pattern="#,##0.0" hTextAlign="Right">
+								<expression><![CDATA[$V{totalAnteriorHacienda}.compareTo(BigDecimal.ZERO) == 0 ? "" : $V{totalAnteriorHacienda}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="20" style="Table 3_TD">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<textField pattern="#,##0.0">
-								<reportElement x="0" y="0" width="100" height="20" uuid="f836e8cf-0cbc-4b08-8e3e-bd071f4df44a"/>
-								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$F{SALDO_ANTE}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDO_ANTE}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
+							<element kind="textField" uuid="f836e8cf-0cbc-4b08-8e3e-bd071f4df44a" x="0" y="0" width="100" height="20" stretchType="NoStretch" pattern="#,##0.0" hTextAlign="Right">
+								<expression><![CDATA[$F{SALDO_ANTE}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDO_ANTE}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+			</element>
 		</band>
 	</detail>
-	<summary>
-		<band height="20" splitType="Stretch">
-			<textField>
-				<reportElement x="440" y="0" width="200" height="20" uuid="f02c122d-8010-4f3d-a0f6-5d3fe9ec6bca"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Total del Pasivo y Hacienda Publica/Patrimonio"]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.0">
-				<reportElement x="640" y="0" width="120" height="20" uuid="3f2fc6ac-fbb1-4ff2-8be9-348a42c16943"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{totalActualActivo}.add($V{totalActualHacienda}).add($P{cuenta3211Act})]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.0">
-				<reportElement x="760" y="0" width="100" height="20" uuid="81fdf80e-4617-4af6-80df-4e110fd04e57">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{totalAntActivo}.add($V{totalAntAHacienda})]]></textFieldExpression>
-			</textField>
-		</band>
+	<summary height="20" splitType="Stretch">
+		<element kind="textField" uuid="f02c122d-8010-4f3d-a0f6-5d3fe9ec6bca" x="440" y="0" width="200" height="20" stretchType="NoStretch" bold="true">
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["Total del Pasivo y Hacienda Publica/Patrimonio"]]></expression>
+		</element>
+		<element kind="textField" uuid="3f2fc6ac-fbb1-4ff2-8be9-348a42c16943" x="640" y="0" width="120" height="20" stretchType="NoStretch" pattern="#,##0.0" bold="true" hTextAlign="Right">
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$V{totalActualActivo}.add($V{totalActualHacienda}).add($P{cuenta3211Act})]]></expression>
+		</element>
+		<element kind="textField" uuid="81fdf80e-4617-4af6-80df-4e110fd04e57" x="760" y="0" width="100" height="20" stretchType="NoStretch" pattern="#,##0.0" bold="true" hTextAlign="Right">
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$V{totalAntActivo}.add($V{totalAntAHacienda})]]></expression>
+		</element>
 	</summary>
 </jasperReport>

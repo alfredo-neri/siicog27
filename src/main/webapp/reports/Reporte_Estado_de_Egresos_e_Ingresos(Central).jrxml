@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
-<!-- 2016-08-16T16:32:04 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte_Estado_de_Egresos_e_Ingresos(Central)" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="542bc565-2035-45cd-bf26-2c114b0532a7">
+<jasperReport name="Reporte_Estado_de_Egresos_e_Ingresos(Central)" language="java" columnCount="1" dpi="72" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="542bc565-2035-45cd-bf26-2c114b0532a7">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB-SERVER"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -58,14 +55,13 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="DETALLE_INGRESOS" uuid="a170ed4a-c9dc-4adb-8fdc-8a7fd60d1e34">
+	<dataset name="DETALLE_INGRESOS" uuid="a170ed4a-c9dc-4adb-8fdc-8a7fd60d1e34">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB-SERVER"/>
 		<parameter name="MES2" class="java.lang.Integer">
 			<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
 		</parameter>
-		<queryString>
-			<![CDATA[SELECT
+		<query language="sql"><![CDATA[SELECT
 A.CUENTA, A.SCTA, NOMCTA, COALESCE(DECIMAL(SUM(AUTORIZADO),15,2),0.00) AUTORIZADO, COALESCE(DECIMAL(SUM(EJERCIDO),15,2),0.00) EJERCIDO, COALESCE(DECIMAL(SUM(ACUMULADO),15,2),0.00) 
 ACUMULADO
 FROM
@@ -129,29 +125,27 @@ ORDER BY CUENTA.CUENTA,CUENTA.SCTA, CUENTA.SSCTA
 ) A
 INNER JOIN CUENTA ON CUENTA.CUENTA=A.CUENTA AND CUENTA.SCTA=A.SCTA  AND CUENTA.SSCTA=A.SSCTA AND UPPER(NIVCTA)='N' AND CUENTA.SSSCTA=''
 GROUP BY A.CUENTA, A.SCTA, NOMCTA
-ORDER BY A.CUENTA, A.SCTA]]>
-		</queryString>
+ORDER BY A.CUENTA, A.SCTA]]></query>
 		<field name="CUENTA" class="java.lang.String"/>
 		<field name="SCTA" class="java.lang.String"/>
 		<field name="NOMCTA" class="java.lang.String"/>
 		<field name="AUTORIZADO" class="java.math.BigDecimal"/>
 		<field name="EJERCIDO" class="java.math.BigDecimal"/>
 		<field name="ACUMULADO" class="java.math.BigDecimal"/>
-		<variable name="V_TOTAL_AUTORIZADO" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{AUTORIZADO}]]></variableExpression>
+		<variable name="V_TOTAL_AUTORIZADO" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{AUTORIZADO}]]></expression>
 		</variable>
-		<variable name="V_TOTAL_EJERCIDIO" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{EJERCIDO}]]></variableExpression>
+		<variable name="V_TOTAL_EJERCIDIO" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{EJERCIDO}]]></expression>
 		</variable>
-		<variable name="V_TOTAL_ACUMULADO" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{ACUMULADO}]]></variableExpression>
+		<variable name="V_TOTAL_ACUMULADO" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{ACUMULADO}]]></expression>
 		</variable>
-	</subDataset>
-	<subDataset name="DETALLE_EGRESOS" uuid="d50f9f81-1a27-479a-a0f0-245081a8d602">
+	</dataset>
+	<dataset name="DETALLE_EGRESOS" uuid="d50f9f81-1a27-479a-a0f0-245081a8d602">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB-SERVER"/>
-		<queryString>
-			<![CDATA[SELECT CLVGAS, NOMGAS, SUM(ABONOS_1)-SUM(CARGOS_1),
+		<query language="sql"><![CDATA[SELECT CLVGAS, NOMGAS, SUM(ABONOS_1)-SUM(CARGOS_1),
  SUM(SALINI) as Autorizado, 
 CASE 0+9
 	WHEN 1  THEN SUM(C2_1)-SUM(A2_1)
@@ -225,60 +219,58 @@ WHERE NATGAS.IDSECTOR=2  AND NATGAS.CLVGAS IN ('1000','2000', '3000', '4000', '5
 ) C
 WHERE CLVGAS NOT BETWEEN '5000' AND '8000'
 GROUP BY CLVGAS, NOMGAS
-ORDER BY CLVGAS]]>
-		</queryString>
+ORDER BY CLVGAS]]></query>
 		<field name="CLVGAS" class="java.lang.String"/>
 		<field name="NOMGAS" class="java.lang.String"/>
 		<field name="3" class="java.math.BigDecimal"/>
 		<field name="AUTORIZADO" class="java.math.BigDecimal"/>
 		<field name="ACUMULADO" class="java.math.BigDecimal"/>
 		<field name="EJERCIDO" class="java.math.BigDecimal"/>
-		<variable name="V_TOTAL_AUTORIZADO" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{AUTORIZADO}]]></variableExpression>
+		<variable name="V_TOTAL_AUTORIZADO" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{AUTORIZADO}]]></expression>
 		</variable>
-		<variable name="V_TOTAL_EJERCIDO" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{EJERCIDO}]]></variableExpression>
+		<variable name="V_TOTAL_EJERCIDO" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{EJERCIDO}]]></expression>
 		</variable>
-		<variable name="V_TOTAL_ACUMULADO" class="java.math.BigDecimal" calculation="Sum">
-			<variableExpression><![CDATA[$F{ACUMULADO}]]></variableExpression>
+		<variable name="V_TOTAL_ACUMULADO" calculation="Sum" class="java.math.BigDecimal">
+			<expression><![CDATA[$F{ACUMULADO}]]></expression>
 		</variable>
 		<group name="CLVGAS">
-			<groupExpression><![CDATA[$F{CLVGAS}]]></groupExpression>
+			<expression><![CDATA[$F{CLVGAS}]]></expression>
 		</group>
 		<group name="NOMGAS">
-			<groupExpression><![CDATA[$F{NOMGAS}]]></groupExpression>
+			<expression><![CDATA[$F{NOMGAS}]]></expression>
 		</group>
 		<group name="AUTORIZADO">
-			<groupExpression><![CDATA[$F{AUTORIZADO}]]></groupExpression>
+			<expression><![CDATA[$F{AUTORIZADO}]]></expression>
 		</group>
 		<group name="ACUMULADO">
-			<groupExpression><![CDATA[$F{ACUMULADO}]]></groupExpression>
+			<expression><![CDATA[$F{ACUMULADO}]]></expression>
 		</group>
 		<group name="EJERCIDO">
-			<groupExpression><![CDATA[$F{EJERCIDO}]]></groupExpression>
+			<expression><![CDATA[$F{EJERCIDO}]]></expression>
 		</group>
-	</subDataset>
+	</dataset>
 	<parameter name="AN" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[2016]]></defaultValueExpression>
 	</parameter>
-	<parameter name="USUARIO" class="java.lang.String">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+	<parameter name="USUARIO" class="java.lang.String"
+		><description><![CDATA[]]></description>
 		<defaultValueExpression><![CDATA["000110231"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="LOGO" class="java.lang.String">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+	<parameter name="LOGO" class="java.lang.String"
+		><description><![CDATA[]]></description>
 		<defaultValueExpression><![CDATA["/home/buser/Imágenes/cuautitlan.gif"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="MES" class="java.lang.Integer">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+	<parameter name="MES" class="java.lang.Integer"
+		><description><![CDATA[]]></description>
 		<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SECTOR" class="java.lang.Integer">
-		<parameterDescription><![CDATA[]]></parameterDescription>
+	<parameter name="SECTOR" class="java.lang.Integer"
+		><description><![CDATA[]]></description>
 		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
 	</parameter>
-	<queryString>
-		<![CDATA[SELECT  
+	<query language="sql"><![CDATA[SELECT  
    			    COALESCE(TCIM.CLVMUN, 0) AS CLVMUN,
    			    COALESCE(TCIM.NOMBRE_FILE,'') AS IMG_MUN,
    			    COALESCE(TCIM.PATH_FILE,'') AS RUTA_MUN,
@@ -302,8 +294,7 @@ ORDER BY CLVGAS]]>
 		   LEFT JOIN TC_USUARIOS TU ON L.CVELOC = TU.ID_LOCALIDAD
 		   LEFT JOIN TC_IMAGENES_MUNI  TCIM ON TCIM.CLVMUN = CM.CLVMUN
 		   LEFT JOIN  TC_IMAGENES_ENT_ADMIN TCIEA ON TCR.ID_MUN = CM.CLVMUN AND TCR.ID_UNI_ADMIN = TCIEA.ID_ENTIDAD_ADMIN	       
-		   WHERE TU.USUARIO =$P{USUARIO}]]>
-	</queryString>
+		   WHERE TU.USUARIO =$P{USUARIO}]]></query>
 	<field name="CLVMUN" class="java.lang.Integer"/>
 	<field name="IMG_MUN" class="java.lang.String"/>
 	<field name="RUTA_MUN" class="java.lang.String"/>
@@ -322,535 +313,375 @@ ORDER BY CLVGAS]]>
 	<field name="NOMMUN" class="java.lang.String"/>
 	<field name="CLAVE" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<pageHeader>
-		<band height="53" splitType="Stretch">
-			<staticText>
-				<reportElement x="109" y="3" width="150" height="10" uuid="062873e4-25c1-49bd-92d8-102758a23a93"/>
-				<textElement>
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<text><![CDATA[GOBIERNO DEL ESTADO DE MEXICO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="109" y="14" width="150" height="10" uuid="3c84b6d9-fe05-46d4-ae76-47a1a844ceae"/>
-				<textElement>
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<text><![CDATA[SECRETARIA DE FINANZAS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="109" y="25" width="220" height="10" uuid="20bced27-6deb-4438-91ff-2908d521657e"/>
-				<textElement>
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<text><![CDATA[SUBSECRETARIA DE PLANEACION Y PRESUPUESTO]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="109" y="36" width="200" height="10" uuid="8e45af58-6daa-49eb-8c5e-5148de418cc5"/>
-				<textElement>
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<text><![CDATA[CONTADURIA GENERAL GUBERNAMENTAL]]></text>
-			</staticText>
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="553" y="23" width="177" height="10" uuid="1ab4040c-2f40-452d-9abb-a9c12728efcc"/>
-				<textElement>
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["FECHA DE EMISION: "+new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="553" y="38" width="177" height="10" uuid="19d79822-079f-47a8-8de8-90ccd89377e0"/>
-				<textElement>
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["HOJA NO.       :        "+$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<image>
-				<reportElement x="20" y="3" width="50" height="50" uuid="1c24f4dc-23a4-4b03-b603-593dc28077d8"/>
-				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
-			</image>
-		</band>
+	<background splitType="Stretch"/>
+	<pageHeader height="53" splitType="Stretch">
+		<element kind="staticText" uuid="062873e4-25c1-49bd-92d8-102758a23a93" x="109" y="3" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0"
+			><text><![CDATA[GOBIERNO DEL ESTADO DE MEXICO]]></text>
+		</element>
+		<element kind="staticText" uuid="3c84b6d9-fe05-46d4-ae76-47a1a844ceae" x="109" y="14" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0"
+			><text><![CDATA[SECRETARIA DE FINANZAS]]></text>
+		</element>
+		<element kind="staticText" uuid="20bced27-6deb-4438-91ff-2908d521657e" x="109" y="25" width="220" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0"
+			><text><![CDATA[SUBSECRETARIA DE PLANEACION Y PRESUPUESTO]]></text>
+		</element>
+		<element kind="staticText" uuid="8e45af58-6daa-49eb-8c5e-5148de418cc5" x="109" y="36" width="200" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0"
+			><text><![CDATA[CONTADURIA GENERAL GUBERNAMENTAL]]></text>
+		</element>
+		<element kind="textField" uuid="1ab4040c-2f40-452d-9abb-a9c12728efcc" x="553" y="23" width="177" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA["FECHA DE EMISION: "+new java.util.Date()]]></expression>
+		</element>
+		<element kind="textField" uuid="19d79822-079f-47a8-8de8-90ccd89377e0" x="553" y="38" width="177" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0">
+			<expression><![CDATA["HOJA NO.       :        "+$V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="image" uuid="1c24f4dc-23a4-4b03-b603-593dc28077d8" x="20" y="3" width="50" height="50" stretchType="NoStretch">
+			<expression><![CDATA[$P{LOGO}]]></expression>
+		</element>
 	</pageHeader>
-	<columnHeader>
-		<band height="82" splitType="Stretch">
-			<textField>
-				<reportElement x="12" y="47" width="738" height="20" uuid="9c7c84b5-d1fc-4a21-a7cf-d777280c16f5">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box>
-					<bottomPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA["ESTADO DE INGRESOS Y EGRESOS DEL 01   DE   ENERO DE "+$P{AN}+"   AL   31  DE  ENERO  DE  "+$P{AN}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="13" y="67" width="287" height="15" uuid="fb1187e3-a58b-4152-9689-8b96efaf9774">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["  C O N C E P T O"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="600" y="67" width="150" height="15" uuid="77c690af-b4fe-4fd3-b0b1-b0651f3a85a1">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["EJERCIDO ACUMULADO"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="450" y="67" width="150" height="15" uuid="13f07f1b-3238-41d0-87c4-226ef7dbdc5e">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["EJERCIDO DEL MES"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="300" y="67" width="150" height="15" uuid="97575c8a-410d-4c37-9b14-3bd280e44089">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["AUTORIZADO ANUAL"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="8" y="5" width="747" height="20" uuid="9e83f8c1-40c1-4a67-849d-96cbcc9cffbc">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="281" y="26" width="200" height="20" uuid="8da55292-7768-48b2-8346-b0fffbe5c083">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMMUN}]]></textFieldExpression>
-			</textField>
-		</band>
+	<columnHeader height="82" splitType="Stretch">
+		<element kind="textField" uuid="9c7c84b5-d1fc-4a21-a7cf-d777280c16f5" x="12" y="47" width="738" height="20" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Center" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<box>
+				<bottomPen lineWidth="1.0"/>
+			</box>
+			<expression><![CDATA["ESTADO DE INGRESOS Y EGRESOS DEL 01   DE   ENERO DE "+$P{AN}+"   AL   31  DE  ENERO  DE  "+$P{AN}]]></expression>
+		</element>
+		<element kind="textField" uuid="fb1187e3-a58b-4152-9689-8b96efaf9774" x="13" y="67" width="287" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["  C O N C E P T O"]]></expression>
+		</element>
+		<element kind="textField" uuid="77c690af-b4fe-4fd3-b0b1-b0651f3a85a1" x="600" y="67" width="150" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["EJERCIDO ACUMULADO"]]></expression>
+		</element>
+		<element kind="textField" uuid="13f07f1b-3238-41d0-87c4-226ef7dbdc5e" x="450" y="67" width="150" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["EJERCIDO DEL MES"]]></expression>
+		</element>
+		<element kind="textField" uuid="97575c8a-410d-4c37-9b14-3bd280e44089" x="300" y="67" width="150" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA["AUTORIZADO ANUAL"]]></expression>
+		</element>
+		<element kind="textField" uuid="9e83f8c1-40c1-4a67-849d-96cbcc9cffbc" x="8" y="5" width="747" height="20" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Center">
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<expression><![CDATA[$F{DESCRIPCION}]]></expression>
+		</element>
+		<element kind="textField" uuid="8da55292-7768-48b2-8346-b0fffbe5c083" x="281" y="26" width="200" height="20" stretchType="NoStretch" fontName="Arial" fontSize="10.0" hTextAlign="Center">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<expression><![CDATA[$F{NOMMUN}]]></expression>
+		</element>
 	</columnHeader>
 	<detail>
 		<band height="40" splitType="Stretch">
-			<componentElement>
-				<reportElement x="13" y="0" width="742" height="40" uuid="dcd88de9-ffde-49a9-90ed-a0d49201c8ac">
-					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
-					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
-					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
-				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="DETALLE_INGRESOS" uuid="4dac078d-b6f2-46a3-aa38-f092da7f3d0b">
-						<datasetParameter name="MES2">
-							<datasetParameterExpression><![CDATA[$P{MES}]]></datasetParameterExpression>
-						</datasetParameter>
+			<element kind="component" uuid="dcd88de9-ffde-49a9-90ed-a0d49201c8ac" x="13" y="0" width="742" height="40" stretchType="NoStretch">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				<component kind="table">
+					<datasetRun uuid="4dac078d-b6f2-46a3-aa38-f092da7f3d0b" subDataset="DETALLE_INGRESOS">
+						<parameter name="MES2">
+							<expression><![CDATA[$P{MES}]]></expression>
+						</parameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:column width="287" uuid="39cd2980-83f7-4323-bf1e-1e0a123d8bc6">
-						<jr:columnFooter style="Table_CH" height="10">
-							<staticText>
-								<reportElement x="0" y="0" width="287" height="10" uuid="f62e462d-386f-4163-92b7-f4034977754c"/>
+					<column kind="single" uuid="39cd2980-83f7-4323-bf1e-1e0a123d8bc6" width="287">
+						<columnFooter height="10" style="Table_CH">
+							<element kind="staticText" uuid="f62e462d-386f-4163-92b7-f4034977754c" x="0" y="0" width="287" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Left">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Left">
-									<font fontName="Arial" size="8"/>
-								</textElement>
 								<text><![CDATA[TOTAL INGRESOS:]]></text>
-							</staticText>
-						</jr:columnFooter>
-						<jr:detailCell style="Table_TD" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="287" height="10" uuid="b1fce9b8-ad88-4969-9fb5-b3c43da25c8a"/>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table_TD">
+							<element kind="textField" uuid="b1fce9b8-ad88-4969-9fb5-b3c43da25c8a" x="0" y="0" width="287" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement>
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA["        "+$F{NOMCTA}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="150" uuid="9aba4be9-a365-41cd-b127-186203add46e">
-						<jr:columnFooter style="Table_CH" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="64f4258a-21f2-4a5b-a955-62d72465f9ad"/>
+								<expression><![CDATA["        "+$F{NOMCTA}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="9aba4be9-a365-41cd-b127-186203add46e" width="150">
+						<columnFooter height="10" style="Table_CH">
+							<element kind="textField" uuid="64f4258a-21f2-4a5b-a955-62d72465f9ad" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{V_TOTAL_AUTORIZADO}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table_TD" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="e524b2f8-2231-40d6-88e6-10fb3047e5b9"/>
+								<expression><![CDATA[$V{V_TOTAL_AUTORIZADO}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table_TD">
+							<element kind="textField" uuid="e524b2f8-2231-40d6-88e6-10fb3047e5b9" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{AUTORIZADO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="150" uuid="3775030d-3c19-4b8e-8790-f4ab93dd5cd9">
-						<jr:columnFooter style="Table_CH" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="82f96fec-f9b7-444c-a7a9-dda8b9c4bef3"/>
+								<expression><![CDATA[$F{AUTORIZADO}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="3775030d-3c19-4b8e-8790-f4ab93dd5cd9" width="150">
+						<columnFooter height="10" style="Table_CH">
+							<element kind="textField" uuid="82f96fec-f9b7-444c-a7a9-dda8b9c4bef3" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{V_TOTAL_EJERCIDIO}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table_TD" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="4ac98201-995c-422d-a90d-42a4ec65e3ad"/>
+								<expression><![CDATA[$V{V_TOTAL_EJERCIDIO}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table_TD">
+							<element kind="textField" uuid="4ac98201-995c-422d-a90d-42a4ec65e3ad" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{EJERCIDO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="150" uuid="b4ed7665-67e2-47eb-97a4-d4a5badf6758">
-						<jr:columnFooter style="Table_CH" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="3e3a2b67-6e6a-4682-a637-c37596041319"/>
+								<expression><![CDATA[$F{EJERCIDO}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="b4ed7665-67e2-47eb-97a4-d4a5badf6758" width="150">
+						<columnFooter height="10" style="Table_CH">
+							<element kind="textField" uuid="3e3a2b67-6e6a-4682-a637-c37596041319" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{V_TOTAL_ACUMULADO}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table_TD" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="0e08b3e6-9006-42a9-882c-3a7fdea4f2f4"/>
+								<expression><![CDATA[$V{V_TOTAL_ACUMULADO}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table_TD">
+							<element kind="textField" uuid="0e08b3e6-9006-42a9-882c-3a7fdea4f2f4" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{ACUMULADO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
+								<expression><![CDATA[$F{ACUMULADO}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+			</element>
 		</band>
 		<band height="40">
-			<componentElement>
-				<reportElement x="13" y="0" width="738" height="40" uuid="9181687b-3f20-4964-8714-ec1b577dbea0">
-					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
-					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
-					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="DETALLE_EGRESOS" uuid="2570506e-d160-4087-9210-70d5d8bc0208">
+			<element kind="component" uuid="9181687b-3f20-4964-8714-ec1b577dbea0" x="13" y="0" width="738" height="40" stretchType="NoStretch">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<component kind="table">
+					<datasetRun uuid="2570506e-d160-4087-9210-70d5d8bc0208" subDataset="DETALLE_EGRESOS">
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:column width="287" uuid="d67863e6-3719-45ad-8095-6d6f683825d8">
-						<jr:columnFooter style="Table 1_CH" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="287" height="10" uuid="a5d0853e-8d9d-4cfb-a9b8-4d101b016aff"/>
+					<column kind="single" uuid="d67863e6-3719-45ad-8095-6d6f683825d8" width="287">
+						<columnFooter height="10" style="Table 1_CH">
+							<element kind="textField" uuid="a5d0853e-8d9d-4cfb-a9b8-4d101b016aff" x="0" y="0" width="287" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Left">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Left">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA["TOTAL EGRESADOS:"]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 1_TD" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="287" height="10" uuid="857fada5-5474-4310-ac34-dd7268a69e79"/>
+								<expression><![CDATA["TOTAL EGRESADOS:"]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table 1_TD">
+							<element kind="textField" uuid="857fada5-5474-4310-ac34-dd7268a69e79" x="0" y="0" width="287" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement>
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA["        "+$F{CLVGAS}+"  "+$F{NOMGAS}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="150" uuid="a3e809fe-3dd9-4013-88b4-eb7cd9772bb4">
-						<jr:columnFooter style="Table 1_CH" height="10">
-							<textField pattern="#,##0.00#">
-								<reportElement x="0" y="0" width="150" height="10" uuid="9020e2e3-edd8-4e21-aac8-dd42f2bb1038"/>
+								<expression><![CDATA["        "+$F{CLVGAS}+"  "+$F{NOMGAS}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="a3e809fe-3dd9-4013-88b4-eb7cd9772bb4" width="150">
+						<columnFooter height="10" style="Table 1_CH">
+							<element kind="textField" uuid="9020e2e3-edd8-4e21-aac8-dd42f2bb1038" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" pattern="#,##0.00#" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{V_TOTAL_AUTORIZADO}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 1_TD" height="10">
-							<textField pattern="#,##0.00#">
-								<reportElement x="0" y="0" width="150" height="10" uuid="cc0e8c4a-cae2-498e-8b11-3c618d50deb2"/>
+								<expression><![CDATA[$V{V_TOTAL_AUTORIZADO}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table 1_TD">
+							<element kind="textField" uuid="cc0e8c4a-cae2-498e-8b11-3c618d50deb2" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" pattern="#,##0.00#" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{AUTORIZADO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="150" uuid="64861ae3-96c6-41dd-926d-fc81aa7cdf05">
-						<jr:columnFooter style="Table 1_CH" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="f42af9f3-7fa8-4375-8774-150dc4165d9c"/>
+								<expression><![CDATA[$F{AUTORIZADO}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="64861ae3-96c6-41dd-926d-fc81aa7cdf05" width="150">
+						<columnFooter height="10" style="Table 1_CH">
+							<element kind="textField" uuid="f42af9f3-7fa8-4375-8774-150dc4165d9c" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{V_TOTAL_EJERCIDO}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 1_TD" height="10">
-							<textField pattern="#,##0.00#">
-								<reportElement x="0" y="0" width="150" height="10" uuid="7634bdad-4b85-4314-80fb-dc0681707597"/>
+								<expression><![CDATA[$V{V_TOTAL_EJERCIDO}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table 1_TD">
+							<element kind="textField" uuid="7634bdad-4b85-4314-80fb-dc0681707597" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" pattern="#,##0.00#" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{EJERCIDO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="150" uuid="4fb45a1f-904c-4bb3-a090-34fa078c762c">
-						<jr:columnFooter style="Table 1_CH" height="10">
-							<textField>
-								<reportElement x="0" y="0" width="150" height="10" uuid="5d9d2384-d7a2-412e-99c2-22a2a558c6a8"/>
+								<expression><![CDATA[$F{EJERCIDO}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="4fb45a1f-904c-4bb3-a090-34fa078c762c" width="150">
+						<columnFooter height="10" style="Table 1_CH">
+							<element kind="textField" uuid="5d9d2384-d7a2-412e-99c2-22a2a558c6a8" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{V_TOTAL_ACUMULADO}]]></textFieldExpression>
-							</textField>
-						</jr:columnFooter>
-						<jr:detailCell style="Table 1_TD" height="10">
-							<textField pattern="#,##0.00#">
-								<reportElement x="0" y="0" width="150" height="10" uuid="1d828053-c350-405c-8ed7-443835a0b1ca"/>
+								<expression><![CDATA[$V{V_TOTAL_ACUMULADO}]]></expression>
+							</element>
+						</columnFooter>
+						<detailCell height="10" style="Table 1_TD">
+							<element kind="textField" uuid="1d828053-c350-405c-8ed7-443835a0b1ca" x="0" y="0" width="150" height="10" stretchType="NoStretch" fontName="Arial" fontSize="8.0" pattern="#,##0.00#" hTextAlign="Right">
 								<box>
 									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 								</box>
-								<textElement textAlignment="Right">
-									<font fontName="Arial" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{ACUMULADO}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
+								<expression><![CDATA[$F{ACUMULADO}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+			</element>
 		</band>
 	</detail>
-	<lastPageFooter>
-		<band height="66">
-			<textField>
-				<reportElement x="531" y="36" width="100" height="30" uuid="3bdd6ba0-d6ae-4a18-a354-53b80ef2df8e"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{N27}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="331" y="36" width="100" height="30" uuid="73190be2-5708-4c97-82d4-e4ed78bbb8a7"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{N5}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="331" y="6" width="100" height="30" uuid="56f8df6e-df1d-45c9-9254-81f6626a2c7c"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{L5}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="131" y="6" width="100" height="30" uuid="f418ac02-fcee-4cd9-810d-fd50d20d3206"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{L4}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="131" y="36" width="100" height="30" uuid="9fb7721b-608b-4ab2-a53a-200a42570eb3"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{N4}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="531" y="6" width="100" height="30" uuid="87e11d4e-6d67-4bb5-98ae-c941f26ba126"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="Arial" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{L27}]]></textFieldExpression>
-			</textField>
-		</band>
+	<lastPageFooter height="66">
+		<element kind="textField" uuid="3bdd6ba0-d6ae-4a18-a354-53b80ef2df8e" x="531" y="36" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle">
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$F{N27}]]></expression>
+		</element>
+		<element kind="textField" uuid="73190be2-5708-4c97-82d4-e4ed78bbb8a7" x="331" y="36" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle">
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$F{N5}]]></expression>
+		</element>
+		<element kind="textField" uuid="56f8df6e-df1d-45c9-9254-81f6626a2c7c" x="331" y="6" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Center" vTextAlign="Top">
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$F{L5}]]></expression>
+		</element>
+		<element kind="textField" uuid="f418ac02-fcee-4cd9-810d-fd50d20d3206" x="131" y="6" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Center" vTextAlign="Top">
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$F{L4}]]></expression>
+		</element>
+		<element kind="textField" uuid="9fb7721b-608b-4ab2-a53a-200a42570eb3" x="131" y="36" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle">
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$F{N4}]]></expression>
+		</element>
+		<element kind="textField" uuid="87e11d4e-6d67-4bb5-98ae-c941f26ba126" x="531" y="6" width="100" height="30" stretchType="NoStretch" fontName="Arial" fontSize="8.0" hTextAlign="Center" vTextAlign="Top">
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[$F{L27}]]></expression>
+		</element>
 	</lastPageFooter>
 </jasperReport>

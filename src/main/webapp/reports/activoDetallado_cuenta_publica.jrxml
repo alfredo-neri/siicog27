@@ -1,0 +1,635 @@
+<jasperReport name="activoDetallado" language="java" columnCount="1" dpi="72" pageWidth="445" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="445" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Error" uuid="adb6b51c-30dd-49dc-bc70-4989735dd919">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gem21"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="sSqlActivos" class="java.lang.String"/>
+	<parameter name="mes" class="java.lang.String"/>
+	<parameter name="mesB" class="java.lang.String"/>
+	<query language="SQL"><![CDATA[SELECT
+	1 PRINCIPAL,
+	CASE WHEN CUENTA = '1111' THEN 1 WHEN CUENTA = '1112' THEN 1 WHEN CUENTA = 
+	'1123' THEN 2 WHEN CUENTA = '1191' THEN 9 END GRUPO,
+	CASE WHEN CUENTA = '1111' THEN 'a' WHEN CUENTA = '1112' THEN 'a' WHEN 
+	CUENTA = '1123' THEN 'b' WHEN CUENTA = '1191' THEN 'g' END LETRA,
+	CUENTA,
+	NOMCTA,
+	SALDO_ACTUAL,
+	SALDO_ANTERIOR
+FROM
+	(
+SELECT
+	CUENTA,
+	NOMCTA,
+	SALINI+CARGOS_ACT-ABONOS_ACT SALDO_ACTUAL,
+	SALINI+CARGOS_ANT-ABONOS_ANT SALDO_ANTERIOR
+FROM
+	(
+SELECT
+	C.NOMCTA,
+	C.CUENTA,
+	C.SALINI,
+	CA.CARGOS_1 + CA.CARGOS_2 + CA.CARGOS_3 + CA.CARGOS_4 + CA.CARGOS_5 + CA.CARGOS_6 
+	+ CA.CARGOS_7 + CA.CARGOS_8 + CA.CARGOS_9 + CA.CARGOS_10 + CA.CARGOS_11 + CA.CARGOS_12 CARGOS_ANT,
+	CA.ABONOS_1 + CA.ABONOS_2 + CA.ABONOS_3 + CA.ABONOS_4 + CA.ABONOS_5 + CA.ABONOS_6 
+	+ CA.ABONOS_7 + CA.ABONOS_8 + CA.ABONOS_9 + CA.ABONOS_10 + CA.ABONOS_11 + CA.ABONOS_12 ABONOS_ANT,
+	C.ABONOS_1 + C.ABONOS_2 + C.ABONOS_3 + C.ABONOS_4 + C.ABONOS_5 + C.ABONOS_6 
+	+ C.ABONOS_7 + C.ABONOS_8 + C.ABONOS_9 + C.ABONOS_10 + C.ABONOS_11 +
+	C.ABONOS_12 ABONOS_ACT,
+	C.CARGOS_1 + C.CARGOS_2 + C.CARGOS_3 + C.CARGOS_4 + C.CARGOS_5 + C.CARGOS_6 
+	+ C.CARGOS_7 + C.CARGOS_8 + C.CARGOS_9 + C.CARGOS_10 + C.CARGOS_11 +
+	C.CARGOS_12 CARGOS_ACT
+FROM MAYCTA MA ,
+	 CUENTA C,
+	 CUENTA_ANTERIOR CA
+WHERE MA.CUENTA = C.CUENTA
+  AND C.CUENTA  = CA.CUENTA
+  AND MA.CUENTA = CA.CUENTA
+  AND C.SCTA    = CA.SCTA
+  AND C.CUENTA IN ('1111',
+	'1112',
+	'1123',
+	'1191') AND
+	C.SCTA = '' AND
+	C.IDSECTOR = 2
+ORDER BY
+	C.CUENTA ) )
+UNION
+	ALL
+SELECT
+	*
+FROM
+	(
+VALUES
+	(1,
+	1,
+	'a',
+	'1113',
+	'Bancos/Dependencias y Otros',
+	0.00,
+	0.00),
+	(1,
+	1,
+	'a',
+	'1114',
+	'Inversiones Temporales (Hasta 3 meses)',
+	0.00,
+	0.00),
+	(1,
+	1,
+	'a',
+	'1115',
+	'Fondos con Afectación Específica',
+	0.00,
+	0.00),
+	(1,
+	1,
+	'a',
+	'1116',
+	'Depósitos de Fondos de Terceros en Garantía y/o Administración',
+	0.00,
+	0.00),
+	(1,
+	1,
+	'a',
+	'1117',
+	'Otros Efectivos y Equivalentes',
+	0.00,
+	0.00),
+	(1,
+	2,
+	'b',
+	'1121',
+	'Inversiones Financieras de Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	2,
+	'b',
+	'1122',
+	'Cuentas por Cobrar a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	2,
+	'b',
+	'1124',
+	'Ingresos por Recuperar a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	2,
+	'b',
+	'1125',
+	'Deudores por Anticipos de la Tesorería a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	2,
+	'b',
+	'1126',
+	'Préstamos Otorgados a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	2,
+	'b',
+	'1127',
+	'Otros Derechos a Recibir Efectivo o Equivalentes a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	3,
+	'c',
+	'1131',
+	'Anticipo a Proveedores por Adquisición de Bienes y Prestación de Servicios 
+	a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	3,
+	'c',
+	'1132',
+	'Anticipo a Proveedores por Adquisición de Bienes Inmuebles y Muebles a 
+	Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	3,
+	'c',
+	'1133',
+	'Anticipo a Proveedores por Adquisición de Bienes Intangibles a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	3,
+	'c',
+	'1134',
+	'Anticipo a Contratistas por Obras Públicas a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	3,
+	'c',
+	'1135',
+	'Otros Derechos a Recibir Bienes o Servicios a Corto Plazo',
+	0.00,
+	0.00),
+	(1,
+	4,
+	'd',
+	'1141',
+	'Inventario de Mercancías para Venta',
+	0.00,
+	0.00),
+	(1,
+	4,
+	'd',
+	'1142',
+	'Inventario de Mercancías Terminadas',
+	0.00,
+	0.00),
+	(1,
+	4,
+	'd',
+	'1143',
+	'Inventario de Mercancías en Proceso de Elaboración',
+	0.00,
+	0.00),
+	(1,
+	4,
+	'd',
+	'1144',
+	'Inventario de Materias Primas, Materiales y Suministros para Producción',
+	0.00,
+	0.00),
+	(1,
+	4,
+	'd',
+	'1145',
+	'Bienes en Tránsito',
+	0.00,
+	0.00),
+	(1,
+	5,
+	'e',
+	'1151',
+	null,
+	null,
+	null),
+	(1,
+	6,
+	'f',
+	'1161',
+	'Estimaciones para Cuentas Incobrables por Derechos a Recibir Efectivo o 
+	Equivalentes',
+	0.00,
+	0.00),
+	(1,
+	6,
+	'f',
+	'1162',
+	'Estimación por Deterioro de Inventarios',
+	0.00,
+	0.00),
+	(1,
+	9,
+	'g',
+	'1192',
+	'Bienes en Garantía (excluye depósitos de fondos)',
+	0.00,
+	0.00),
+	(1,
+	9,
+	'g',
+	'1193',
+	'Bienes Derivados de Embargos, Decomisos, Aseguramientos y Dación en Pago',
+	0.00,
+	0.00),
+	(1,
+	9,
+	'g',
+	'1194',
+	'Adquisición con Fondos de Terceros',
+	0.00,
+	0.00) ) AS TEMP (PRINCIPAL,
+	GRUPO,
+	LETRA,
+	CUENTA,
+	NOMCTA,
+	SALDO_ACTUAL,
+	SALDO_ANTERIOR)
+UNION
+SELECT
+	2 PRINCIPAL,
+	10 GRUPO,
+	CASE WHEN CUENTA = '1241' THEN 'd' WHEN CUENTA = '1263' THEN 'f' END LETRA,
+	CUENTA,
+	NOMCTA,
+	SALDO_ACTUAL,
+	SALDO_ANTERIOR
+FROM
+	(
+SELECT
+	NOMCTA,
+	CUENTA,
+	SUM(MES_ACT) SALDO_ACTUAL,
+	SUM(MES_ANT) SALDO_ANTERIOR
+FROM
+	(
+SELECT
+	CASE WHEN CUENTA = '1263' THEN CUENTA ELSE '1241' END CUENTA,
+	CASE WHEN CUENTA = '1263' THEN NOMCTA ELSE 'Bienes Muebles' END NOMCTA,
+	CASE WHEN CUENTA = '1263' THEN (SALINI-CARGOS_ACT+ABONOS_ACT)*-1 ELSE 
+	SALINI+CARGOS_ACT-ABONOS_ACT END MES_ACT,
+	CASE WHEN CUENTA = '1263' THEN (SALINI-CARGOS_ANT+ABONOS_ANT)*-1 ELSE 
+	SALINI+CARGOS_ANT-ABONOS_ANT END MES_ANT
+FROM
+	(
+SELECT
+	C.NOMCTA,
+	C.CUENTA,
+	C.SALINI,
+	C.CARGOS_1 + C.CARGOS_2 + C.CARGOS_3 + C.CARGOS_4 + C.CARGOS_5 + C.CARGOS_6 
+	+ C.CARGOS_7 + C.CARGOS_8 + C.CARGOS_9 CARGOS_ANT,
+	C.ABONOS_1 + C.ABONOS_2 + C.ABONOS_3 + C.ABONOS_4 + C.ABONOS_5 + C.ABONOS_6 
+	+ C.ABONOS_7 + C.ABONOS_8 + C.ABONOS_9 ABONOS_ANT,
+	C.ABONOS_1 + C.ABONOS_2 + C.ABONOS_3 + C.ABONOS_4 + C.ABONOS_5 + C.ABONOS_6 
+	+ C.ABONOS_7 + C.ABONOS_8 + C.ABONOS_9 + C.ABONOS_10 + C.ABONOS_11 +
+	C.ABONOS_12 ABONOS_ACT,
+	C.CARGOS_1 + C.CARGOS_2 + C.CARGOS_3 + C.CARGOS_4 + C.CARGOS_5 + C.CARGOS_6 
+	+ C.CARGOS_7 + C.CARGOS_8 + C.CARGOS_9 + C.CARGOS_10 + C.CARGOS_11 +
+	C.CARGOS_12 CARGOS_ACT
+FROM
+	MAYCTA MA
+		INNER JOIN
+		CUENTA C
+		ON
+		MA.CUENTA = C.CUENTA
+WHERE
+	C.CUENTA IN ('1241',
+	'1242',
+	'1243',
+	'1244',
+	'1245',
+	'1246',
+	'1263') AND
+	C.SCTA = '' AND
+	C.IDSECTOR = 2
+ORDER BY
+	C.CUENTA ))
+GROUP BY
+	NOMCTA,
+	CUENTA)
+UNION
+	ALL
+SELECT
+	*
+FROM
+	(
+VALUES
+	(2,
+	10,
+	'a',
+	'1210',
+	'Inversiones Financieras a Largo Plazo',
+	0.00,
+	0.00),
+	(2,
+	10,
+	'b',
+	'1220',
+	'Derechos a Recibir Efectivo o Equivalentes a Largo Plazo',
+	0.00,
+	0.00),
+	(2,
+	10,
+	'c',
+	'1230',
+	'Bienes Inmuebles, Infraestructura y Construcciones en Proceso',
+	0.00,
+	0.00),
+	(2,
+	10,
+	'e',
+	'1250',
+	'Activos Intangibles',
+	0.00,
+	0.00),
+	(2,
+	10,
+	'g',
+	'1270',
+	'Activos Diferidos',
+	0.00,
+	0.00),
+	(2,
+	10,
+	'h',
+	'1280',
+	'Estimación por Pérdida o Deterioro de Activos no Circulantes',
+	0.00,
+	0.00),
+	(2,
+	10,
+	'i',
+	'1290',
+	'Otros Activos no Circulantes',
+	0.00,
+	0.00) ) AS TEMP (PRINCIPAL,
+	GRUPO,
+	LETRA,
+	CUENTA,
+	NOMCTA,
+	SALDO_ACTUAL,
+	SALDO_ANTERIOR)
+ORDER BY
+	4]]></query>
+	<field name="PRINCIPAL" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PRINCIPAL"/>
+		<property name="com.jaspersoft.studio.field.label" value="PRINCIPAL"/>
+	</field>
+	<field name="GRUPO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="GRUPO"/>
+		<property name="com.jaspersoft.studio.field.label" value="GRUPO"/>
+	</field>
+	<field name="LETRA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="LETRA"/>
+		<property name="com.jaspersoft.studio.field.label" value="LETRA"/>
+	</field>
+	<field name="CUENTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CUENTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="CUENTA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CUENTA"/>
+	</field>
+	<field name="NOMCTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NOMCTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="NOMCTA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CUENTA"/>
+	</field>
+	<field name="SALDO_ACTUAL" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="SALDO_ACTUAL"/>
+		<property name="com.jaspersoft.studio.field.label" value="SALDO_ACTUAL"/>
+	</field>
+	<field name="SALDO_ANTERIOR" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="SALDO_ANTERIOR"/>
+		<property name="com.jaspersoft.studio.field.label" value="SALDO_ANTERIOR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="TC_CUENTAANTERIOR"/>
+	</field>
+	<variable name="subTotalActivoActual" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ACTUAL}]]></expression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="contador" resetType="Group" calculation="Count" resetGroup="GRUPO" class="java.lang.Integer">
+		<expression><![CDATA[$F{LETRA}]]></expression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalActivoAnte" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ANTERIOR}]]></expression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalAnte" resetType="Group" calculation="Sum" resetGroup="PRINCIPAL" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ANTERIOR}]]></expression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalActual" resetType="Group" calculation="Sum" resetGroup="PRINCIPAL" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ACTUAL}]]></expression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalAnte" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ANTERIOR}]]></expression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalActual" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ACTUAL}]]></expression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalActivoAct" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ACTUAL}]]></expression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subtotalActivoAnt" resetType="Group" calculation="Sum" resetGroup="GRUPO" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{SALDO_ANTERIOR}]]></expression>
+	</variable>
+	<group name="PRINCIPAL">
+		<expression><![CDATA[$F{PRINCIPAL}]]></expression>
+		<groupHeader>
+			<band height="10">
+				<element kind="textField" uuid="f10afd02-120a-4e2f-bd75-02a92c0a842a" x="0" y="0" width="445" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" bold="true">
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<expression><![CDATA[$F{PRINCIPAL} == 1 ? "Activo Circulante" : ""]]></expression>
+				</element>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="10">
+				<element kind="textField" uuid="22f3cc92-d2ff-4294-9125-53beedb424c3" x="0" y="0" width="265" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" bold="true">
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<expression><![CDATA[$F{PRINCIPAL} == 1 ? "IA. Total de Activos Circulantes (IA = a + b + c + d + e + f + g)" : "IB. Total de Activos No Circulantes (IB = a + b + c + d +e + f + g + h + i)"]]></expression>
+				</element>
+				<element kind="textField" uuid="04fc4b37-b0af-4e6a-a4ff-084e75848aae" x="265" y="0" width="90" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" pattern="#,##0.00" bold="true" hTextAlign="Right">
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<expression><![CDATA[$V{subTotalActual}]]></expression>
+				</element>
+				<element kind="textField" uuid="9c18ceae-3bbc-4e39-b2c6-7201839594ab" x="355" y="0" width="90" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" pattern="#,##0.00" bold="true" hTextAlign="Right">
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<expression><![CDATA[$V{subTotalAnte}]]></expression>
+				</element>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="GRUPO">
+		<expression><![CDATA[$F{GRUPO}]]></expression>
+		<groupHeader>
+			<band height="10">
+				<element kind="textField" uuid="6f6d9141-4fe6-4402-abcb-aae013e2bb02" x="0" y="0" width="265" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" bold="true">
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<expression><![CDATA[$F{GRUPO} == 1? "  a. Efectivo y Equivalentes (a=a1+a2+a3+a4+a5+a6+a7)": $F{GRUPO} ==2 ? "  b. Derechos a Recibir Efectivo o Equivalentes (b=b1+b2+b3+b4+b5+b6+b7)" : $F{GRUPO} == 3 ? "  c. Derechos a Recibir Bienes o Servicios (c=c1+c2+c3+c4+c5)" : $F{GRUPO} == 4 ? "  d. Invenatarios (d=d1+d2+d3+d4+d5)" : $F{GRUPO} == 5 ? "  e. Almacenes": $F{GRUPO} == 6 ? "  f. Estimación por Pérdida o Deterioro de Activos Circulantes (f=f1+f2)":$F{GRUPO}==9 ?"  g. Otros Activos Circulantes (g=g1+g2+g3+g4)": "Activo No Circulante"]]></expression>
+				</element>
+				<element kind="textField" uuid="9897c3b4-cb06-4841-8c38-5c49ecc07740" x="265" y="0" width="90" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" evaluationTime="Group" pattern="#,##0.00" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<expression><![CDATA[$F{GRUPO} <= 9 ? ($F{GRUPO} == 5 ? BigDecimal.ZERO : $V{subTotalActivoActual}) : ""]]></expression>
+				</element>
+				<element kind="textField" uuid="f8fe69c0-bee7-41a6-b0b1-82f966e9cea1" x="355" y="0" width="90" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" evaluationTime="Group" pattern="#,##0.00" bold="true" evaluationGroup="GRUPO" hTextAlign="Right">
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<expression><![CDATA[$F{GRUPO} <= 9 ? ($F{GRUPO} == 5 ? BigDecimal.ZERO : $V{subTotalActivoAnte}) : ""]]></expression>
+				</element>
+			</band>
+		</groupHeader>
+	</group>
+	<pageHeader height="15">
+		<element kind="staticText" uuid="63f6c148-3285-4b79-b656-be704112710e" x="0" y="0" width="265" height="15" mode="Opaque" stretchType="NoStretch" fontSize="7.0" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<text><![CDATA[Concepto]]></text>
+		</element>
+		<element kind="textField" uuid="a6e52c1c-46e3-4200-a5da-d24c03a2a64b" x="265" y="0" width="90" height="15" mode="Opaque" stretchType="NoStretch" fontSize="7.0" pattern="###0" hTextAlign="Center" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[2024]]></expression>
+		</element>
+		<element kind="textField" uuid="d8468fe7-a20d-4cb0-9618-f90bbb00d8ab" x="355" y="0" width="90" height="15" mode="Opaque" stretchType="NoStretch" fontSize="7.0" pattern="###0" hTextAlign="Center" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<expression><![CDATA[2023]]></expression>
+		</element>
+	</pageHeader>
+	<columnHeader height="15">
+		<element kind="staticText" uuid="4dcc15af-9251-4364-becc-fce09dfd8b15" x="0" y="0" width="445" height="15" mode="Opaque" stretchType="NoStretch" fontSize="7.0" vTextAlign="Middle">
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<text><![CDATA[ACTIVO]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<element kind="textField" uuid="fb554796-3661-4379-8713-ddffcd6d2977" x="0" y="0" width="265" height="10" backcolor="#FFFFFF" stretchType="NoStretch" removeLineWhenBlank="true" fontSize="7.0" blankWhenNull="false">
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<expression><![CDATA[$F{GRUPO} == 5 ? "" : "     " + $F{LETRA} +""+($F{PRINCIPAL} == 1 ? $V{contador} : "")+ ") "+$F{NOMCTA}]]></expression>
+			</element>
+			<element kind="textField" uuid="7e2146e5-2e57-4538-abbb-64213ec06946" x="355" y="0" width="90" height="10" backcolor="#FFFFFF" mode="Opaque" stretchType="NoStretch" removeLineWhenBlank="true" fontSize="7.0" pattern="#,##0.00" blankWhenNull="false" hTextAlign="Right">
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<expression><![CDATA[$F{GRUPO} == 5 ? "" : $F{SALDO_ANTERIOR}]]></expression>
+			</element>
+			<element kind="textField" uuid="c944fdbd-49dd-43ab-aa4b-787694731916" x="265" y="0" width="90" height="10" backcolor="#FFFFFF" mode="Opaque" stretchType="NoStretch" removeLineWhenBlank="true" fontSize="7.0" pattern="#,##0.00" blankWhenNull="false" hTextAlign="Right">
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<expression><![CDATA[$F{GRUPO} == 5 ? "": $F{SALDO_ACTUAL}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="10">
+		<element kind="staticText" uuid="7cab16f4-ab42-4d7a-ae79-ff2d058615b5" x="0" y="0" width="265" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" bold="true" vTextAlign="Middle">
+			<box>
+				<leftPen lineWidth="1.0"/>
+				<bottomPen lineWidth="1.0"/>
+			</box>
+			<text><![CDATA[I. Total del Activo (I = IA + IB)]]></text>
+		</element>
+		<element kind="textField" uuid="4c21b715-d9f9-48c3-a40f-a674a1c41eb6" x="265" y="0" width="90" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<box>
+				<bottomPen lineWidth="1.0"/>
+			</box>
+			<expression><![CDATA[$V{totalActual}]]></expression>
+		</element>
+		<element kind="textField" uuid="1cdbb696-c640-4034-a4e5-29717c4f78a1" x="355" y="0" width="90" height="10" mode="Opaque" stretchType="NoStretch" fontSize="7.0" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
+			<box>
+				<bottomPen lineWidth="1.0"/>
+				<rightPen lineWidth="1.0"/>
+			</box>
+			<expression><![CDATA[$V{totalAnte}]]></expression>
+		</element>
+	</columnFooter>
+</jasperReport>

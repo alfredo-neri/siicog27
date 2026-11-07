@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EdoFDeuda" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fd0b9a8b-4425-45f5-ad14-5c5bd45e23ef">
+<jasperReport name="EdoFDeuda" language="java" columnCount="1" dpi="72" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fd0b9a8b-4425-45f5-ad14-5c5bd45e23ef">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEM_LUNUX"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -17,8 +15,7 @@
 	<parameter name="pMesAnt" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[$P{pMes}-1]]></defaultValueExpression>
 	</parameter>
-	<queryString>
-		<![CDATA[SELECT DECIMAL(T1.CLVFLU,24,2)CLVFLU,
+	<query language="sql"><![CDATA[SELECT DECIMAL(T1.CLVFLU,24,2)CLVFLU,
        SUM( T1.CANFLU_ANT)CANFLU_ANT,
        SUM(T1.CANFLU_ACT)CANFLU_ACT,
        T1.NOMFLU
@@ -39,143 +36,98 @@ FROM (SELECT PF.CLVFLU CLVFLU,
               PF.MESPOL 
      ORDER BY PF.CLVFLU)T1
   GROUP BY  T1.CLVFLU,
-            T1.NOMFLU]]>
-	</queryString>
+            T1.NOMFLU]]></query>
 	<field name="CLVFLU" class="java.math.BigDecimal"/>
 	<field name="CANFLU_ANT" class="java.math.BigDecimal"/>
 	<field name="CANFLU_ACT" class="java.math.BigDecimal"/>
 	<field name="NOMFLU" class="java.lang.String"/>
-	<variable name="vMesAct" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{CANFLU_ACT}]]></variableExpression>
+	<variable name="vMesAct" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{CANFLU_ACT}]]></expression>
 		<initialValueExpression><![CDATA[$F{CANFLU_ACT}==null? new BigDecimal(0.00):$F{CANFLU_ACT}]]></initialValueExpression>
 	</variable>
-	<variable name="vMesAnt" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{CANFLU_ANT}]]></variableExpression>
+	<variable name="vMesAnt" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$F{CANFLU_ANT}]]></expression>
 		<initialValueExpression><![CDATA[$F{CANFLU_ANT}==null?new BigDecimal(0.00):$F{CANFLU_ANT}]]></initialValueExpression>
 	</variable>
 	<group name="GrupoT">
 		<groupHeader>
 			<band height="15">
-				<staticText>
-					<reportElement x="0" y="0" width="572" height="15" uuid="b1140754-b877-48c8-89a0-0174269c2803">
-						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					</reportElement>
+				<element kind="staticText" uuid="b1140754-b877-48c8-89a0-0174269c2803" x="0" y="0" width="572" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" bold="true" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="true"/>
-					</textElement>
 					<text><![CDATA[Aplicación]]></text>
-				</staticText>
+				</element>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="15">
-				<staticText>
-					<reportElement x="0" y="0" width="392" height="15" uuid="869045ea-2926-43c8-bdd2-895bc1e5b785">
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
+				<element kind="staticText" uuid="869045ea-2926-43c8-bdd2-895bc1e5b785" x="0" y="0" width="392" height="15" stretchType="NoStretch" fontName="Arial" fontSize="8.0" bold="true" vTextAlign="Middle">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<box>
 						<leftPen lineWidth="1.0"/>
 					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8" isBold="true"/>
-					</textElement>
 					<text><![CDATA[Flujos Netos de  Efectivo por  Actividades de Financiamiento]]></text>
-				</staticText>
-				<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="false">
-					<reportElement x="392" y="0" width="90" height="15" uuid="bc86467a-b944-4380-b044-18bdd8b069cd">
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					</reportElement>
+				</element>
+				<element kind="textField" uuid="bc86467a-b944-4380-b044-18bdd8b069cd" x="392" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" textAdjust="StretchHeight" pattern="#,##0.00" bold="true" blankWhenNull="false" hTextAlign="Right">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<box rightPadding="2"/>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{vMesAct}==null? new BigDecimal(0.00):$V{vMesAct}]]></textFieldExpression>
-				</textField>
-				<textField pattern="#,##0.00" isBlankWhenNull="false">
-					<reportElement x="482" y="0" width="90" height="15" uuid="c091a0a7-003f-4f94-ba10-99e1791d1e4b">
-						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					</reportElement>
+					<expression><![CDATA[$V{vMesAct}==null? new BigDecimal(0.00):$V{vMesAct}]]></expression>
+				</element>
+				<element kind="textField" uuid="c091a0a7-003f-4f94-ba10-99e1791d1e4b" x="482" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" bold="true" blankWhenNull="false" hTextAlign="Right">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<box rightPadding="2">
 						<rightPen lineWidth="1.0"/>
 					</box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" size="9" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{vMesAnt}==null ? new BigDecimal(0.00) :$V{vMesAnt}]]></textFieldExpression>
-				</textField>
+					<expression><![CDATA[$V{vMesAnt}==null ? new BigDecimal(0.00) :$V{vMesAnt}]]></expression>
+				</element>
 			</band>
 		</groupFooter>
 	</group>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<columnHeader>
-		<band height="15" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="572" height="15" uuid="baacbd09-b2a5-4666-8b52-f789e9da8cb8">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Flujos de Efectivo de las Actividades de Financiamiento]]></text>
-			</staticText>
-		</band>
+	<background splitType="Stretch"/>
+	<columnHeader height="15" splitType="Stretch">
+		<element kind="staticText" uuid="baacbd09-b2a5-4666-8b52-f789e9da8cb8" x="0" y="0" width="572" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" bold="true" vTextAlign="Middle">
+			<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<text><![CDATA[Flujos de Efectivo de las Actividades de Financiamiento]]></text>
+		</element>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="392" height="15" uuid="5cfb451a-627e-4744-98ff-57d2132fdf3a">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+			<element kind="textField" uuid="5cfb451a-627e-4744-98ff-57d2132fdf3a" x="0" y="0" width="392" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" blankWhenNull="true" hTextAlign="Left">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<box>
 					<leftPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{NOMFLU}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="392" y="0" width="90" height="15" uuid="2f254c2c-c084-48b1-80c1-530767473adc">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<expression><![CDATA[$F{NOMFLU}]]></expression>
+			</element>
+			<element kind="textField" uuid="2f254c2c-c084-48b1-80c1-530767473adc" x="392" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box rightPadding="2"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CANFLU_ACT}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="482" y="0" width="90" height="15" uuid="214ce00b-fddb-45df-9a07-a6e243b2d09c">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
+				<expression><![CDATA[$F{CANFLU_ACT}]]></expression>
+			</element>
+			<element kind="textField" uuid="214ce00b-fddb-45df-9a07-a6e243b2d09c" x="482" y="0" width="90" height="15" stretchType="NoStretch" fontName="Arial" fontSize="9.0" pattern="#,##0.00" blankWhenNull="true" hTextAlign="Right">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				<box rightPadding="2">
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Arial" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{CANFLU_ANT}]]></textFieldExpression>
-			</textField>
+				<expression><![CDATA[$F{CANFLU_ANT}]]></expression>
+			</element>
 		</band>
 	</detail>
 </jasperReport>
