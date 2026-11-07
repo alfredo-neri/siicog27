@@ -1,6 +1,10 @@
 
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
@@ -24,13 +28,10 @@ Fecha de Creación                    Autor                             Descripc
 */
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -51,8 +52,8 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 /**
  * The Class REDOSITFINMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rEDOSITFINMB")
+@Scope("view")
 public class REDOSITFINMB extends ReportePeriodos {
 
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
@@ -74,22 +75,22 @@ public class REDOSITFINMB extends ReportePeriodos {
 	private EdoSF3211DTO edoSF3211DTO;
 
 	/** The edo SF 3211 service. */
-	@ManagedProperty("#{edoSF3211Service}")
+	@Value("#{edoSF3211Service}")
 	private EdoSF3211Service edoSF3211Service;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 
 	/**
@@ -149,7 +150,7 @@ public class REDOSITFINMB extends ReportePeriodos {
 				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			this.validatePolicyService.isAfectMonth(getMesSelected(), null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(getMesSelected(), null, this.getUserDetails().getIdSector());
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 
 	}
@@ -160,7 +161,7 @@ public class REDOSITFINMB extends ReportePeriodos {
 			this.validatePolicyService.isAfectMonth(getMesSelected(), null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(getMesSelected(), null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
@@ -281,7 +282,7 @@ public class REDOSITFINMB extends ReportePeriodos {
 
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

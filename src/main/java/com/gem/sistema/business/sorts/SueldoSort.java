@@ -14,6 +14,6 @@ public class SueldoSort {
 	 * @return the sort
 	 */
 	public static Sort sortByAll() {
-		return new Sort(Sort.Direction.ASC, "cvepuesto", "nompuesto");
+		return Sort.by(Sort.Direction.ASC, "cvepuesto", "nompuesto");
 	}
 }

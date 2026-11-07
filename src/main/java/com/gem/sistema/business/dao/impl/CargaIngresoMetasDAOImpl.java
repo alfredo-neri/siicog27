@@ -27,7 +27,7 @@ import com.gem.sistema.business.repository.catalogs.TwMetasIngresoRepository;
 public class CargaIngresoMetasDAOImpl implements CargaIngresoMetasDAO {
 
 	private static final String PATH_FILE = "/gem/errores/";
-	private static final Sort SORT_ORDER = new Sort(Sort.Direction.ASC, "tcIngresosPropio");
+	private static final Sort SORT_ORDER = Sort.by(Sort.Direction.ASC, "tcIngresosPropio");
 
 	@Autowired
 	private TwMetasIngresoRepository twMetasIngresoRepository;
@@ -59,7 +59,7 @@ public class CargaIngresoMetasDAOImpl implements CargaIngresoMetasDAO {
 				twMetasIngreso = new TwMetasIngreso();
 
 				TcIngresosPropio ingresosPropios = this.ingresosPropiosRepository
-						.findOne(TcIngresosPropiosPredicate.findByClave(Integer.valueOf(data[0])));
+						.findOne(TcIngresosPropiosPredicate.findByClave(Integer.valueOf(data[0]))).orElse(null);
 				if (null != ingresosPropios) {
 					twMetasIngreso.setTcIngresosPropio(ingresosPropios);
 
@@ -133,7 +133,7 @@ public class CargaIngresoMetasDAOImpl implements CargaIngresoMetasDAO {
 				String data[] = sCadena.split(",");
 
 				ingresosPropios = this.ingresosPropiosRepository
-						.findOne(TcIngresosPropiosPredicate.findByClave(Integer.valueOf(data[0])));
+						.findOne(TcIngresosPropiosPredicate.findByClave(Integer.valueOf(data[0]))).orElse(null);
 				if (null == ingresosPropios)
 					list.add(Integer.valueOf(data[0]));
 

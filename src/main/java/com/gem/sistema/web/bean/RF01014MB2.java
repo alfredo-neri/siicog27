@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,14 +11,11 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -46,8 +47,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  *         Date: 07/04/2021 Changes:Se ajusta Reporte en la seccion de Ingresos,
  *         se elimina la columna de acumulado, Se ajusta diseño del reporte
  */
-@ManagedBean(name = "rF01014MB2")
-@ViewScoped
+@Component("rF01014MB2")
+@Scope("view")
 public class RF01014MB2 extends BaseDirectReport {
 
 	private static final String CLAVE_REPORT = "RPT_EDOACTIVIDADES";
@@ -58,27 +59,27 @@ public class RF01014MB2 extends BaseDirectReport {
 	private Integer mes;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcEntidadAdministrativaRepository}")
+	@Value("#{tcEntidadAdministrativaRepository}")
 	private TcEntidadAdministrativaRepository entidadAdministrativaRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 
 	private StreamedContent psFileTxt;
@@ -110,7 +111,7 @@ public class RF01014MB2 extends BaseDirectReport {
 	/**
 	 * 
 	 */
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {
@@ -173,7 +174,7 @@ public class RF01014MB2 extends BaseDirectReport {
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
@@ -393,7 +394,7 @@ public class RF01014MB2 extends BaseDirectReport {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			streamedContent = new DefaultStreamedContent(stream, "application/txt", out.get("O_FILE_NAME").toString());
+			streamedContent = StreamedContents.of(stream, "application/txt", out.get("O_FILE_NAME").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

@@ -90,7 +90,7 @@ public class PolideServiceImpl implements PolideService {
 	@Override
 	public Polide findPolideById(Long id) {
 		LOGGER.info("Finding Polide entry by using id: {}", id);
-		Polide PolideResult = repository.findOne(id);
+		Polide PolideResult = repository.findById(id).orElse(null);
 		LOGGER.info("Found Polide entry: {}", PolideResult);
 		return PolideResult;
 	}

@@ -5,7 +5,7 @@ import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +105,7 @@ public class Pm2911BSImpl implements Pm2911BS {
 	 */
 	@Override
 	public List<Pm2911> delete(Integer index, List<Pm2911> listPm2911) {
-		pm2911Repository.delete(listPm2911.get(index).getId());
+		pm2911Repository.deleteById(listPm2911.get(index).getId());
 		List<Pm2911> lis = pm2911Repository.findAllByIdsectorOrderBySemesAsc(listPm2911.get(index).getIdsector());
 		BigDecimal sumaAcumuladoTot = new BigDecimal(0);
 		BigDecimal sumaAcumuladoGas = new BigDecimal(0);
@@ -172,7 +172,7 @@ public class Pm2911BSImpl implements Pm2911BS {
 	 */
 	@Override
 	public Sort oderBy() {
-		return new Sort(Sort.Direction.ASC, "semes");
+		return Sort.by(Sort.Direction.ASC, "semes");
 	}
 
 	/*

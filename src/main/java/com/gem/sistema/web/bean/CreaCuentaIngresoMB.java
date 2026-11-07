@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 
 import java.math.BigDecimal;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,8 +16,8 @@ import com.gem.sistema.business.repository.catalogs.CuentaRepository;
 import com.gem.sistema.business.repository.catalogs.FuentefRepository;
 import com.gem.sistema.business.repository.load.IngresoRepository;
 
-@ManagedBean(name = "creaCuentaIngresoMB")
-@ViewScoped
+@Component("creaCuentaIngresoMB")
+@Scope("view")
 public class CreaCuentaIngresoMB extends AbstractMB {
 	private static final Integer MAX_LEVEL = 5;
 
@@ -29,16 +29,16 @@ public class CreaCuentaIngresoMB extends AbstractMB {
 	private String fuente;
 	private Long sector;
 
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty("#{ingresoRepository}")
+	@Value("#{ingresoRepository}")
 	private IngresoRepository ingresoRepository;
 
-	@ManagedProperty("#{fuentefRepository}")
+	@Value("#{fuentefRepository}")
 	private FuentefRepository fuentefRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	@PostConstruct

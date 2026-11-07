@@ -1,7 +1,7 @@
 (function($){
 
   window.rcCB = function(title){
-    PF('statusDialog').hide();
+    PF('blockUIWidget').unblock();
     PF('resGrid').show();
     PF('resGrid').getJQ().find(".ui-dialog-title").text(title);
   };
@@ -16,7 +16,7 @@
       if(e.which === 112){
         var node = $(e.currentTarget).data("node");
         $(".currentCatalog").val(node);
-        PF('statusDialog').show();
+        PF('blockUIWidget').block();
         switch (node) {
           case 'dep':
             searchDeps();

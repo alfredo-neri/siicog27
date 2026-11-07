@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
@@ -15,15 +18,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -40,19 +40,19 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB")
+@Scope("view")
 public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends BaseDirectReport {
 	
 	/** The Constant FOCUS. */
 	protected static final String FOCUS = "PrimeFaces.focus('form1:dataGrid:%1$s:partida');";
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The repository. */
-	@ManagedProperty("#{bienesbcRepository}")
+	@Value("#{bienesbcRepository}")
 	private BienesbcRepository repository;
 
 	/** The master list. */
@@ -80,7 +80,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 	private Natgas natgas;
 
 	/** The natga repository. */
-	@ManagedProperty("#{natgasRepository}")
+	@Value("#{natgasRepository}")
 	private NatgasRepository natgaRepository;
 
 	
@@ -203,8 +203,8 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 		entity.setMes(selectableMonth.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -235,7 +235,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 			Bienesbc bienesbc = repository.save(nuevo);
 			masterList.set(currentPage, bienesbc);
 			selected = bienesbc;
-			RequestContext.getCurrentInstance().execute("PF('dataGrid').getPaginator().setPage(" + currentPage + ");");
+			PrimeFaces.current().executeScript("PF('dataGrid').getPaginator().setPage(" + currentPage + ");");
 
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY, msg);
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -269,8 +269,8 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY,
 					"Capturar consecutivo diferente de cero.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance()
-					.execute("focusEl('form1:dataGrid:" + currentPage + ":inputConsecutivo');");
+			PrimeFaces.current()
+					.executeScript("focusEl('form1:dataGrid:" + currentPage + ":inputConsecutivo');");
 		} else if (Objects.nonNull(bienesbc) && Objects.isNull(nuevo.getId())) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY, "El consecutivo "
 					+ bienesbc.getConsec() + " para el mes " + bienesbc.getMes() + " ya existe en la base de datos.");
@@ -325,7 +325,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 			// selected.setObsncpip("");
 			// selected.setObstcrpip("");
 		} else {
-			selected = repository.findOne(selected.getId());
+			selected = repository.findById(selected.getId()).orElse(null);
 			masterList.set(currentPage, selected);
 		}
 	}
@@ -334,7 +334,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 	 * Delete.
 	 */
 	public void delete() {
-		repository.delete(selected.getId());
+		repository.deleteById(selected.getId());
 		masterList.remove(currentPage);
 		currentPage = currentPage > 0 ? currentPage - 1 : 0;
 		actualizaSeleccionado();
@@ -364,7 +364,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 		if (StringUtils.isNotEmpty(value)) {
 			selected.setSssscta(StringUtils.leftPad(value, 3, StringUtils.EMPTY + ZERO));
 		}
-		RequestContext.getCurrentInstance().update("form1:panel-filtros");
+		PrimeFaces.current().ajax().update("form1:panel-filtros");
 	}
 
 	/**
@@ -572,7 +572,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB extends
 			this.getSelected().setNomcta(this.natgas.getNomgas());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "La cuenta no existe en la base");
-			RequestContext.getCurrentInstance().execute(String.format(FOCUS, index));
+			PrimeFaces.current().executeScript(String.format(FOCUS, index));
 
 		}
 

@@ -3,7 +3,7 @@ package com.gem.sistema.business.predicates;
 import java.math.BigDecimal;
 
 import com.gem.sistema.business.domain.QPolifl;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

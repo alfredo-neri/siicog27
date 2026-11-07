@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
@@ -8,15 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -35,8 +35,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 import com.roonin.utils.UtilDate;
 
-@ManagedBean(name = "eaidMB")
-@ViewScoped
+@Component("eaidMB")
+@Scope("view")
 public class EaidMB extends ReportePeriodos {
 	private static final String CLAVE_REPORT = "RPT_LDF_GENERIC_INGRESOS";
 	private static final String OUTPUT_REPORT_NAME = "LDF_EAID_";
@@ -61,22 +61,22 @@ public class EaidMB extends ReportePeriodos {
 
 	private static final String CLICK_UPDATE = "jQuery('#form1\\\\\\\\:lasPage').click();";
 
-	@ManagedProperty("#{tcPeriodoService}")
+	@Value("#{tcPeriodoService}")
 	private TcPeriodoService tcPeriodoService;
 
-	@ManagedProperty("#{eaidService}")
+	@Value("#{eaidService}")
 	private EaidService eaidService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	private TrPuestoFirma presidente;
@@ -459,14 +459,14 @@ public class EaidMB extends ReportePeriodos {
 		listEadi.add(eaid);
 
 		this.activateRowEdit(listEadi.size() - 1);
-		RequestContext.getCurrentInstance().execute("PF('eaidWdg').paginator.setPage(" + (this.getPage() - 1) + ");");
+		PrimeFaces.current().executeScript("PF('eaidWdg').paginator.setPage(" + (this.getPage() - 1) + ");");
 
 		if (listEadi.size() > 20) {
 			Integer indexOf = this.getRowCurrent(listEadi.size());
 			this.activateRowEdit(indexOf);
 
-			RequestContext.getCurrentInstance().execute(String.format(FOCUS_BY_ROWID, (listEadi.size() - 1)));
-			RequestContext.getCurrentInstance().execute(CLICK_UPDATE);
+			PrimeFaces.current().executeScript(String.format(FOCUS_BY_ROWID, (listEadi.size() - 1)));
+			PrimeFaces.current().executeScript(CLICK_UPDATE);
 
 		}
 
@@ -543,7 +543,7 @@ public class EaidMB extends ReportePeriodos {
 			this.eaidService.save(obj);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Información!",
 					"Los Datos se Guardaron Correctamente");
-			RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+			PrimeFaces.current().executeScript(UPDATE_OBJETS);
 			this.setbAdicionar(FALSE);
 
 		} else if (this.getbAdicionar() && lastTrimestre == obj.getTrimestre() && lastConse == obj.getConsecutivo()) {
@@ -551,7 +551,7 @@ public class EaidMB extends ReportePeriodos {
 			this.setbAdicionar(FALSE);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Información!",
 					"Los Datos se Modificaron Correctamente");
-			RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+			PrimeFaces.current().executeScript(UPDATE_OBJETS);
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_WARN, "Error!", "El trimestre : " + obj.getTrimestre()
 					+ " Con Consecutivo: " + obj.getConsecutivo() + " \n¡Ya existen en la Base de Datos!");
@@ -599,7 +599,7 @@ public class EaidMB extends ReportePeriodos {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**
@@ -620,7 +620,7 @@ public class EaidMB extends ReportePeriodos {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**

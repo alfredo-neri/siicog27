@@ -1,11 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ONE;
 import static com.gem.sistema.util.Constants.TWO;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,18 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
-import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -51,8 +52,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogFinancialSourcesMB")
+@Scope("view")
 public class CatalogFinancialSourcesMB extends CommonCatalogMB<Fuentef> implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -269,11 +270,11 @@ public class CatalogFinancialSourcesMB extends CommonCatalogMB<Fuentef> implemen
 	}
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{fuentefRepository}")
+	@Value("#{fuentefRepository}")
 	private FuentefRepository fuentefRepository;
 
 	/** The repository custom. */
-	@ManagedProperty(value = "#{repositoryImpl}")
+	@Value("#{repositoryImpl}")
 	protected RepositoryCustom repositoryCustom;
 
 	/** Campo requerido Clave de Contrato. */
@@ -425,8 +426,8 @@ public class CatalogFinancialSourcesMB extends CommonCatalogMB<Fuentef> implemen
 						executeOperationSaveOrUpdate(catalog, fuentefRepository);
 						this.setActiveLiga(Boolean.TRUE);
 						restartData();
-						RequestContext.getCurrentInstance()
-								.execute("document.getElementById('form1:hideButton').click();");
+						PrimeFaces.current()
+								.executeScript("document.getElementById('form1:hideButton').click();");
 					} else {
 						generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, MESSAGE_ERROR_UPDATE_UNIQUE
 								.concat(FIELD_REQUIRED_CLVFTE).concat(MESSAGE_ERROR_UPDATE_UNIQUE_COMPLEMENT));
@@ -572,7 +573,7 @@ public class CatalogFinancialSourcesMB extends CommonCatalogMB<Fuentef> implemen
 	}
 
 	/** The Constant FUENTEF_ASC. */
-	private static final Sort FUENTEF_ASC = new Sort(Sort.Direction.ASC, "liga", "clvfte");
+	private static final Sort FUENTEF_ASC = Sort.by(Sort.Direction.ASC, "liga", "clvfte");
 
 	/*
 	 * (non-Javadoc)
@@ -662,7 +663,7 @@ public class CatalogFinancialSourcesMB extends CommonCatalogMB<Fuentef> implemen
 		if (PASS.equals(this.validatePass)) {
 
 			super.insertRow();
-			RequestContext.getCurrentInstance().execute(
+			PrimeFaces.current().executeScript(
 					"jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});");
 			activeLiga = Boolean.FALSE;
 			activeClve = Boolean.FALSE;
@@ -772,7 +773,7 @@ public class CatalogFinancialSourcesMB extends CommonCatalogMB<Fuentef> implemen
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString());
+			csvByPl = StreamedContents.of(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

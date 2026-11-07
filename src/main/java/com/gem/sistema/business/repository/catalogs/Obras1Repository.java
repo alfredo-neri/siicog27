@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import com.gem.sistema.business.domain.Obras1;;
  * The Interface Obras1Repository.
  */
 @Repository
-public interface Obras1Repository extends PagingAndSortingRepository<Obras1, Long>, QueryDslPredicateExecutor<Obras1>{
+public interface Obras1Repository extends PagingAndSortingRepository<Obras1, Long>, CrudRepository<Obras1, Long>, QuerydslPredicateExecutor<Obras1>{
 	
 	/*
 	 * (non-Javadoc)

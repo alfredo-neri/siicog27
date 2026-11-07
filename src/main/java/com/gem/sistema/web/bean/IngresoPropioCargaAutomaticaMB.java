@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.io.File;
@@ -12,11 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +40,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.CopyFileUtil;
 import com.gem.sistema.util.UtilFront;
 
-@ManagedBean(name = "ingresoPropioCargaAutomaticaMB")
-@ViewScoped
+@Component("ingresoPropioCargaAutomaticaMB")
+@Scope("view")
 public class IngresoPropioCargaAutomaticaMB extends BaseDirectReport {
 
 	private static final String PATH = "/gem/upfiles/";
@@ -58,22 +59,22 @@ public class IngresoPropioCargaAutomaticaMB extends BaseDirectReport {
 	private List<TwIngresoPropiosDetalle> cargados = new ArrayList<TwIngresoPropiosDetalle>();
 	private List<IngresosPropiosPolizaDTO> polizas = new ArrayList<IngresosPropiosPolizaDTO>();
 	private IngresosPropiosPolizaDTO polideSelected;
-	@ManagedProperty(value = "#{tcAfectacionIngresoRepository}")
+	@Value("#{tcAfectacionIngresoRepository}")
 	private TcAfectacionIngresoRepository afectacionRepository;
 
-	@ManagedProperty("#{twIngresoPropioDetalleService}")
+	@Value("#{twIngresoPropioDetalleService}")
 	private TwIngresoPropioDetalleService twIngresoPropioDetalleService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
 	public TcPeriodoRepositoy getTcPeriodoRepositoy() {
@@ -174,7 +175,7 @@ public class IngresoPropioCargaAutomaticaMB extends BaseDirectReport {
 							if (event.getFile() != null) {
 								if (StringUtils.isNotEmpty(newName)) {
 									try {
-										String path = CopyFileUtil.copyFile(newName, event.getFile().getInputstream(),
+										String path = CopyFileUtil.copyFile(newName, event.getFile().getInputStream(),
 												PATH);
 										if (event.getFile().getSize() <= 0) {
 											UtilFront.generateNotificationFront(FacesMessage.SEVERITY_INFO,
@@ -232,7 +233,7 @@ public class IngresoPropioCargaAutomaticaMB extends BaseDirectReport {
 		StreamedContent st = null;
 		try {
 			File file = new File(this.getFileError());
-			st = new DefaultStreamedContent(new FileInputStream(file), "text/csv", file.getName());
+			st = StreamedContents.of(new FileInputStream(file), "text/csv", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

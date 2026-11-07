@@ -5,21 +5,21 @@ package com.gem.sistema.web.security.listeners;
 
 import java.io.IOException;
 
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.faces.FacesException;
+import jakarta.faces.FactoryFinder;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
+import jakarta.faces.render.RenderKit;
+import jakarta.faces.render.RenderKitFactory;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ public class SecurityPhaseListener implements PhaseListener {
 	private static final Logger LOG = LoggerFactory.getLogger(SecurityPhaseListener.class);
 
 	/* (non-Javadoc)
-	 * @see javax.faces.event.PhaseListener#afterPhase(javax.faces.event.PhaseEvent)
+	 * @see jakarta.faces.event.PhaseListener#afterPhase(jakarta.faces.event.PhaseEvent)
 	 */
 	@Override
 	public void afterPhase(PhaseEvent event) {
@@ -53,7 +53,7 @@ public class SecurityPhaseListener implements PhaseListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.faces.event.PhaseListener#beforePhase(javax.faces.event.PhaseEvent)
+	 * @see jakarta.faces.event.PhaseListener#beforePhase(jakarta.faces.event.PhaseEvent)
 	 */
 	@Override
 	public void beforePhase(PhaseEvent event) {
@@ -68,7 +68,7 @@ public class SecurityPhaseListener implements PhaseListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.faces.event.PhaseListener#getPhaseId()
+	 * @see jakarta.faces.event.PhaseListener#getPhaseId()
 	 */
 	@Override
 	public PhaseId getPhaseId() {
@@ -94,7 +94,7 @@ public class SecurityPhaseListener implements PhaseListener {
             }
  
             // fix for renderer kit (Mojarra's and PrimeFaces's ajax redirect)
-            if ((RequestContext.getCurrentInstance().isAjaxRequest()
+            if ((PrimeFaces.current().isAjaxRequest()
                 || fc.getPartialViewContext().isPartialRequest())
                 && fc.getResponseWriter() == null
                 && fc.getRenderKit() == null) {

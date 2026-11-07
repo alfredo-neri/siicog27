@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
@@ -18,15 +18,15 @@ import com.gem.sistema.business.service.catalogos.DataYearSystemService;
 /**
  * The Class Pbrm03bMB.
  */
-@ManagedBean(name = "pbrm03bMB")
-@ViewScoped
+@Component("pbrm03bMB")
+@Scope("view")
 public class Pbrm03bMB extends BaseDirectReport {
 
 	/** The proyecto. */
 	private String proyecto;
 	
 	/** The data year system service. */
-	@ManagedProperty(value = "#{dataYearSystemService}")
+	@Value("#{dataYearSystemService}")
 	private DataYearSystemService dataYearSystemService;
 	
 
@@ -57,7 +57,7 @@ public class Pbrm03bMB extends BaseDirectReport {
 	public void init() {
 		LOGGER.info(":: En postconsruct Pbrm03bMB ");
 		reportId = 2;
-		tcReporte = reportesRepository.findOne(reportId);
+		tcReporte = reportesRepository.findById(reportId).orElse(null);
 		jasperReporteName = "CaratulaPresupuestoIngresos";
 		endFilename = jasperReporteName+".pdf";
 	}

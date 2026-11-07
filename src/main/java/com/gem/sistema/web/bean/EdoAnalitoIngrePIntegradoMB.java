@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
@@ -27,8 +27,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class EdoAnalitoIngrePIntegradoMB.
  */
-@ManagedBean(name = "edoAnalitoIngrePIntegradoMB")
-@ViewScoped
+@Component("edoAnalitoIngrePIntegradoMB")
+@Scope("view")
 public class EdoAnalitoIngrePIntegradoMB extends AbstractMB implements Serializable {
 
 	/**
@@ -73,11 +73,11 @@ public class EdoAnalitoIngrePIntegradoMB extends AbstractMB implements Serializa
 	public static final int LENGTH_FIVE_LEVEL = 3;
 
 	/** The cuenta data model. */
-	@ManagedProperty(value = "#{cuentaDataModel}")
+	@Value("#{cuentaDataModel}")
 	private CuentaDataModel cuentaDataModel;
 
 	/** The integradoi repository. */
-	@ManagedProperty(value = "#{integradoiRepository}")
+	@Value("#{integradoiRepository}")
 	private IntegradoiRepository integradoiRepository;
 
 	/** The bean find. */
@@ -212,7 +212,7 @@ public class EdoAnalitoIngrePIntegradoMB extends AbstractMB implements Serializa
 		if (null != cuenta) {
 			this.rowSelected = cuenta;
 			this.integradoiSelected = this.integradoiRepository
-					.findOne(IntegradoiPredicates.findByAccounCompositeInlcudeEmpty(cuenta));
+					.findOne(IntegradoiPredicates.findByAccounCompositeInlcudeEmpty(cuenta)).orElse(null);
 			if (null != this.integradoiSelected) {
 				this.labelAdd = UPD_LABEL;
 			} else {
@@ -266,7 +266,7 @@ public class EdoAnalitoIngrePIntegradoMB extends AbstractMB implements Serializa
 	public void reset() {
 		if (null != this.rowSelected) {
 			this.integradoiSelected = this.integradoiRepository
-					.findOne(IntegradoiPredicates.findByAccounCompositeInlcudeEmpty(this.rowSelected));
+					.findOne(IntegradoiPredicates.findByAccounCompositeInlcudeEmpty(this.rowSelected)).orElse(null);
 			if (null == this.integradoiSelected) {
 				this.integradoiSelected = new Integradoi();
 			}

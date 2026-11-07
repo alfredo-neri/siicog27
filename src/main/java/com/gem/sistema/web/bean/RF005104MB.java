@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -24,8 +24,8 @@ import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
  *           implementa Servicio de firmas dinamicas
  * @Sector Municipal
  */
-@ManagedBean(name = "rF005104MB")
-@ViewScoped
+@Component("rF005104MB")
+@Scope("view")
 public class RF005104MB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_EDO_ANALITICO_INGRESOS_PRESUPUESTAL_INTEGRADO";
 
@@ -36,13 +36,13 @@ public class RF005104MB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

@@ -1,8 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,22 +20,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class ImportarPolizaMB.
  */
-@ManagedBean(name = "importarPolizaMB")
-@ViewScoped
+@Component("importarPolizaMB")
+@Scope("view")
 public class ImportarPolizaMB extends AbstractMB implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -165,38 +166,38 @@ public class ImportarPolizaMB extends AbstractMB implements Serializable {
 	private StreamedContent streamedContent;
 
 	/** The poliza service. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 
 	/** The parametros repository. */
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The cattpo repositry. */
-	@ManagedProperty("#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepositry;
 
 	/** The importar poliza service. */
-	@ManagedProperty("#{importarPolizaServiceImpl}")
+	@Value("#{importarPolizaServiceImpl}")
 	private ImportarPolizaService importarPolizaService;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The polien repository. */
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
 	/** The year service. */
-	@ManagedProperty("#{dataYearSystemService}")
+	@Value("#{dataYearSystemService}")
 	private DataYearSystemService yearService;
 
-	@ManagedProperty("#{extraeArchivoCuentaService}")
+	@Value("#{extraeArchivoCuentaService}")
 	private ExtraeArchivoCuentaService extraeArchivoCuentaService;
 
 	/** The download file. */
@@ -807,8 +808,8 @@ public class ImportarPolizaMB extends AbstractMB implements Serializable {
 								fileName2 = UUID.randomUUID() + "-" + file.getFileName();
 								source = new File(pathFiles + "/" + fileName1);
 								target = new File(pathFiles + "/" + fileName2);
-								inputFile(fileName1, file.getInputstream());
-								inputFile(fileName2, file.getInputstream());
+								inputFile(fileName1, file.getInputStream());
+								inputFile(fileName2, file.getInputStream());
 								ConvertCharsetUtils.transform(source, charSetISO, target, charSetUFT);
 								File newFile = new File(getPath("CARG_ARCHIVO") + File.separator + fileName2);
 
@@ -991,9 +992,9 @@ public class ImportarPolizaMB extends AbstractMB implements Serializable {
 
 		if (validate()) {
 			this.setRenderPdf(Boolean.TRUE);
-			this.streamedContent = new DefaultStreamedContent(this.polizaService.getReportByTipopolMespolConpol(
+			this.streamedContent = StreamedContents.of(this.polizaService.getReportByTipopolMespolConpol(
 					REPORT_PATH_JASPER_POLICY, REPORT_NAME, "escudo_ecatepec.png", iTipo, iMes, iNumero, iNumero,
-					getUserDetails().getIdSector(), this.getUserDetails().getUsername()));
+					getUserDetails().getIdSector(), this.getUserDetails().getUsername()), null, null, null);
 			try {
 				this.filePdfPath = this.polizaService.savePDFFile(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
 						"escudo_ecatepec.png", iTipo, iMes, iNumero, iNumero, getUserDetails().getIdSector(),

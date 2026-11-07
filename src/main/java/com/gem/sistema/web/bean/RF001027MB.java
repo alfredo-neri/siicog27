@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.primefaces.model.StreamedContent;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class RF001027MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF001027MB")
+@Scope("view")
 public class RF001027MB extends BaseDirectReport {
 	
 	/** The mes. */

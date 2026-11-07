@@ -5,7 +5,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,7 @@ import com.gem.sistema.business.domain.TcTipoUsuario;
  *
  * @author gauss
  */
-public interface TcTipoUsuarioRepository extends PagingAndSortingRepository<TcTipoUsuario, Long>, QueryDslPredicateExecutor<TcTipoUsuario> {
+public interface TcTipoUsuarioRepository extends PagingAndSortingRepository<TcTipoUsuario, Long>, CrudRepository<TcTipoUsuario, Long>, QuerydslPredicateExecutor<TcTipoUsuario> {
 
 	/*
 	 * (non-Javadoc)

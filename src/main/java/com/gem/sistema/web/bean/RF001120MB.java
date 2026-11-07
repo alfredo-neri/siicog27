@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,10 +15,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -30,8 +31,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class RF001120MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF001120MB")
+@Scope("view")
 public class RF001120MB extends GenericExecuteProcedure {
 
 	/** The mes. */
@@ -44,7 +45,7 @@ public class RF001120MB extends GenericExecuteProcedure {
 	private StreamedContent fileTxt1;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/**
@@ -197,7 +198,7 @@ public class RF001120MB extends GenericExecuteProcedure {
 				// close the ZipOutputStream
 				zos.close();
 				stream = new FileInputStream(new File(zipFile.toString()));
-				fileTxt1 = new DefaultStreamedContent(stream, "application/zip", zipFile.toString());
+				fileTxt1 = StreamedContents.of(stream, "application/zip", zipFile.toString(), null);
 			} catch (IOException ioe) {
 
 				System.out.println("Error creating zip file: " + ioe);

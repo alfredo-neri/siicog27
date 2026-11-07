@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -28,8 +28,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  *           crean componentes del reporte<br>
  * @Sector Municipal
  */
-@ManagedBean(name = "cPEstadoAnaliticoActivoMB")
-@ViewScoped
+@Component("cPEstadoAnaliticoActivoMB")
+@Scope("view")
 public class CPEstadoAnaliticoActivoMB extends BaseDirectReport {
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
 	private static final String CLAVE_REPORT = "RPT_CP_EDO_ANALITICO_ACTIVO";
@@ -37,16 +37,16 @@ public class CPEstadoAnaliticoActivoMB extends BaseDirectReport {
 	private Integer noDecimales;
 	private Integer pesos;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct
@@ -88,7 +88,7 @@ public class CPEstadoAnaliticoActivoMB extends BaseDirectReport {
 		this.validatePolicyService.isAfectMonth(12, null, this.getUserDetails().getIdSector());
 		this.validatePolicyService.existPolices(12, null, this.getUserDetails().getIdSector());
 
-		RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+		PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 	}
 
 	public void viewPdf() {

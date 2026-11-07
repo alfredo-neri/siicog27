@@ -1,19 +1,18 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.PrimeFaces;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,8 @@ import com.gem.sistema.load.fileupload.validators.FileContentValidator;
 /**
  * The Class FileUploadView.
  */
-@Component(value="fileUploadView")
-@ManagedBean
-@SessionScoped
+@Component("fileUploadView")
+@Scope("session")
 public class FileUploadView extends AbstractMB{
 	
 	/** The Constant LOGGER. */
@@ -145,7 +143,7 @@ public class FileUploadView extends AbstractMB{
         	newFile = new File( DEFAULT_PATH + UUID.randomUUID() +"-" + file.getFileName() );
         	
         	try {
-				FileUtils.copyInputStreamToFile(file.getInputstream(), newFile);
+				FileUtils.copyInputStreamToFile(file.getInputStream(), newFile);
 				
 				final com.gem.sistema.load.fileupload.model.FileUpload fileUpload = new FileUpload();
 				
@@ -203,7 +201,7 @@ public class FileUploadView extends AbstractMB{
      * @param event .
      */
     public void login(ActionEvent event) {
-        RequestContext context = RequestContext.getCurrentInstance();
+        PrimeFaces context = PrimeFaces.current();
         FacesMessage message = null;
         boolean loggedIn = false;
         
@@ -223,7 +221,7 @@ public class FileUploadView extends AbstractMB{
 
         LOGGER.info("valor de cveOk:" + cveOk);
        
-        context.addCallbackParam("loggedIn", loggedIn);
+        context.ajax().addCallbackParam("loggedIn", loggedIn);
     }
 
 	/**

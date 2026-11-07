@@ -1,6 +1,5 @@
 package com.gem.sistema.business.common;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class PreCondition.

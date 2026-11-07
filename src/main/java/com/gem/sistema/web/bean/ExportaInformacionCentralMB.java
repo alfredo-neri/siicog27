@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.TcPeriodo;
 import com.gem.sistema.business.domain.TcReportesFirma;
@@ -10,16 +13,13 @@ import com.gem.sistema.business.service.callsp.ExecutePlService;
 import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,8 +36,8 @@ import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 /**
  * The Class ExportaInformacionCentralMB.
  */
-@ViewScoped
-@ManagedBean(name = "exportaInformacionCentralMB")
+@Scope("view")
+@Component("exportaInformacionCentralMB")
 public class ExportaInformacionCentralMB extends BaseDirectReport {
 
 	private Integer mes;
@@ -46,19 +46,19 @@ public class ExportaInformacionCentralMB extends BaseDirectReport {
 
 	private List<TcPeriodo> listPeriodo;
 	
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct
@@ -87,7 +87,7 @@ public class ExportaInformacionCentralMB extends BaseDirectReport {
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
 
-			//RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			//PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 	

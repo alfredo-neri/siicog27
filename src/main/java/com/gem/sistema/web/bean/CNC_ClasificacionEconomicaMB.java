@@ -1,16 +1,14 @@
 package com.gem.sistema.web.bean;
 
-
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.TrPuestoFirma;
@@ -23,18 +21,18 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  * @author Alfredo Neri
  *
  */
-@ManagedBean(name = "CNC_ClasificacionEconomicaMB")
-@ViewScoped
+@Component("CNC_ClasificacionEconomicaMB")
+@Scope("view")
 public class CNC_ClasificacionEconomicaMB extends ReportePeriodos {
 
 	private String reporte;
 	private Integer noDecimales;
 	private Integer pesos;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

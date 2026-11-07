@@ -1,5 +1,6 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
 import static com.gem.sistema.util.Constants.ONE;
 import static com.gem.sistema.util.Constants.PARAMETER_WHERE_CLAUSE;
 import static com.gem.sistema.util.Constants.TXT_EXTENSION;
@@ -8,8 +9,8 @@ import static com.gem.sistema.util.UtilFront.clearFields;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilJPACuentas.addQualifiersLikeFieldsString;
 import static com.gem.sistema.util.UtilJPACuentas.clearQualifiersLikeFieldsString;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -17,21 +18,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.util.CollectionUtils;
 
@@ -112,14 +113,14 @@ public abstract class CommonCatalogCuentasMB<T extends AbstractEntity> extends A
 	private List<T> listNew;
 
 	/** Consulta generica. */
-	@ManagedProperty(value = "#{repositoryImpl}")
+	@Value("#{repositoryImpl}")
 	protected RepositoryCustom repositoryCustom;
 	
-	@ManagedProperty(value = "#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	protected ConctbRepository conctbRepository;
 
 	/** Uitleria de reportes. */
-	@ManagedProperty(value = "#{utilReportCuentas}")
+	@Value("#{utilReportCuentas}")
 	protected UtilReportCuentas utilReportCuenta;
 
 	/** Objeto para realizar una busqueda. */
@@ -411,7 +412,7 @@ public abstract class CommonCatalogCuentasMB<T extends AbstractEntity> extends A
 			restartFilteredList();
 			activateRowEdit(ZERO);
 		}
-		RequestContext.getCurrentInstance().update("form1:objects");
+		PrimeFaces.current().ajax().update("form1:objects");
 	}
 
 	/**
@@ -447,7 +448,7 @@ public abstract class CommonCatalogCuentasMB<T extends AbstractEntity> extends A
 		fixIndexAnteriorRows();
 		restartFilteredList();
 
-		RequestContext.getCurrentInstance().update("form1:objects");
+		PrimeFaces.current().ajax().update("form1:objects");
 		LOGGER.info(":: \n\n\n\nResultado de busqueda catalogDependenciesAuxiliaryMB(Update) {} \n\n\n\n", getList());
 	}
 
@@ -607,7 +608,7 @@ public abstract class CommonCatalogCuentasMB<T extends AbstractEntity> extends A
 	 * @param catalog the catalog
 	 * @param repository the repository
 	 */
-	protected void executeOperationSaveOrUpdate(final T catalog, final PagingAndSortingRepository<T, Long> repository) {
+	protected void executeOperationSaveOrUpdate(final T catalog, final CrudRepository<T, Long> repository) {
 		final Boolean isSave = catalog.getId().intValue() == ZERO ? Boolean.TRUE : Boolean.FALSE;
 		LOGGER.info(":: Salvar/Actualizar {} :: {} :: {}", isSave, repository, catalog);
 		repository.save(catalog);
@@ -769,7 +770,7 @@ public abstract class CommonCatalogCuentasMB<T extends AbstractEntity> extends A
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL);
 		text.append(index);
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**

@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import com.gem.sistema.business.domain.Finalidad;
  * The Interface FinalidadRepository.
  */
 @Repository(value = "finalidadRepository")
-public interface FinalidadRepository extends PagingAndSortingRepository<Finalidad, Long>, QueryDslPredicateExecutor<Finalidad> {
+public interface FinalidadRepository extends PagingAndSortingRepository<Finalidad, Long>, CrudRepository<Finalidad, Long>, QuerydslPredicateExecutor<Finalidad> {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#findAll()

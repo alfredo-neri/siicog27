@@ -58,7 +58,7 @@ public class PuestosFirmasServiceImpl implements PuestosFirmasService {
 
 	@Override
 	public void deleteRelationshipPuesto(List<TrPuestoFirma>  firma) {
-		firmaRepository.delete(firma);
+		firmaRepository.deleteAll(firma);
 	}
 
 	@Override

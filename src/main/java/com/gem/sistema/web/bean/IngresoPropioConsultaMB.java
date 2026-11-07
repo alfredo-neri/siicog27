@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.event.SelectEvent;
@@ -26,8 +26,8 @@ import com.gem.sistema.business.repository.catalogs.TcMesRepository;
 import com.gem.sistema.business.service.catalogos.TwIngresoPropioDetalleService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean(name = "ingresoPropioConsultaMB")
-@ViewScoped
+@Component("ingresoPropioConsultaMB")
+@Scope("view")
 public class IngresoPropioConsultaMB extends BaseDirectReport {
 	private String mes;
 	private String numero = "";
@@ -39,16 +39,16 @@ public class IngresoPropioConsultaMB extends BaseDirectReport {
 	private IngresosPropiosPolizaDTO polideSelected;
 	private String status = "";
 
-	@ManagedProperty("#{twIngresoPropioDetalleService}")
+	@Value("#{twIngresoPropioDetalleService}")
 	private TwIngresoPropioDetalleService twIngresoPropioDetalleService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	@PostConstruct

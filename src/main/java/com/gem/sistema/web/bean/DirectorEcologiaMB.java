@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getDateSystem;
 import static com.roonin.utils.UtilDate.getLastDay;
@@ -9,15 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -37,8 +37,8 @@ import com.google.gson.Gson;
  * @author Alfredo Neri
  *
  */
-@ManagedBean(name = "directorEcologiaMB")
-@ViewScoped
+@Component("directorEcologiaMB")
+@Scope("view")
 public class DirectorEcologiaMB extends BaseDirectReport {
 
 	private static final String TABLE_NAME = "ECOLOGIA";
@@ -59,16 +59,16 @@ public class DirectorEcologiaMB extends BaseDirectReport {
 	private int currentPage = 0;
 	private Boolean isNew = null;
 
-	@ManagedProperty("#{competenciasLaboralesService}")
+	@Value("#{competenciasLaboralesService}")
 	private CompetenciasLaboralesService competenciasLaboralesService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	@PostConstruct
@@ -207,8 +207,8 @@ public class DirectorEcologiaMB extends BaseDirectReport {
 		bBorrar = true;
 		isNew = true;
 		if (listEcologia.size() == 2) {
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').paginator.setPage(" + (listEcologia.size() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').paginator.setPage(" + (listEcologia.size() - 1) + ");");
 
 		}
 		if (listEcologia.size() > 2) {

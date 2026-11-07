@@ -1,8 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static java.util.stream.Collectors.toList;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -23,17 +26,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
+import jakarta.faces.application.FacesMessage;
 
-import javax.faces.context.FacesContext;
-import javax.faces.bean.ViewScoped;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import com.gem.sistema.business.domain.Tsueldo;
 import com.gem.sistema.business.repository.catalogs.ParametrosRepository;
@@ -47,8 +47,8 @@ import com.gem.sistema.load.fileupload.validators.FileContentValidator;
 /**
  * The Class UploadFileMunicipalMB.
  */
-@ManagedBean(name = "uploadFileMunicipalMB")
-@ViewScoped
+@Component("uploadFileMunicipalMB")
+@Scope("view")
 public class UploadFileMunicipalMB extends AbstractMB {
 	/** The Constant charSetISO. */
 	private final static String ISO = "ISO-8859-1";
@@ -56,19 +56,19 @@ public class UploadFileMunicipalMB extends AbstractMB {
 	/** The Constant charSetUFT. */
 	private final static String UTF_8 = "UTF-8";
 	/** The parametros repository. */
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
 	/** The tsueldo respository. */
-	@ManagedProperty(value = "#{tsueldoRespository}")
+	@Value("#{tsueldoRespository}")
 	private TsueldoRespository tsueldoRespository;
 
 	/** The tabulador. */
-	@ManagedProperty("#{tabuladorSueldosServiceImpl}")
+	@Value("#{tabuladorSueldosServiceImpl}")
 	private TabuladorSueldosService tabulador;
 
 	/** The egresos csv validator. */
-	@ManagedProperty("#{informacionMunicipalCsvValidator}")
+	@Value("#{informacionMunicipalCsvValidator}")
 	private FileContentValidator egresosCsvValidator;
 
 	/** The validate. */
@@ -292,7 +292,7 @@ public class UploadFileMunicipalMB extends AbstractMB {
 		String fileName2 = "";
 		String pathFiles = "";
 		try {
-			inputFile(event.getFile().getFileName(), event.getFile().getInputstream());
+			inputFile(event.getFile().getFileName(), event.getFile().getInputStream());
 			final FileUpload fileUpload = new FileUpload();
 			this.archivo = event.getFile();
 			File newFile = new File(getPath("CARG_ARCHIVO") + File.separator + event.getFile().getFileName());
@@ -308,8 +308,8 @@ public class UploadFileMunicipalMB extends AbstractMB {
 					fileName2 = UUID.randomUUID()+ "-"+ event.getFile().getFileName();
 					source  = new File(pathFiles+"/"+fileName1);
 					target  = new File(pathFiles+"/"+fileName2);
-					inputFile(fileName1, event.getFile().getInputstream());
-					inputFile(fileName2,  event.getFile().getInputstream());
+					inputFile(fileName1, event.getFile().getInputStream());
+					inputFile(fileName2,  event.getFile().getInputStream());
 					ConvertCharsetUtils.transform(source, ISO, target, UTF_8);
 					newFile2 = new File(getPath("CARG_ARCHIVO") + File.separator + fileName2);
 					InputStream  input = new FileInputStream(newFile2);

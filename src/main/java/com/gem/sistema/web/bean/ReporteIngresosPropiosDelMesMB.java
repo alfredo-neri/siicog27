@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 /*
 
@@ -19,10 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -42,8 +42,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class ReporteIngresosPropiosDelMesMB.
  */
-@ManagedBean(name = "reporteIngresosPropiosDelMesMB")
-@ViewScoped
+@Component("reporteIngresosPropiosDelMesMB")
+@Scope("view")
 public class ReporteIngresosPropiosDelMesMB extends BaseDirectReport {
 	
 	/** The mes. */
@@ -65,17 +65,17 @@ public class ReporteIngresosPropiosDelMesMB extends BaseDirectReport {
 	private String concepto;
 	
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
 	/** The tc ingreso propio repository. */
-	@ManagedProperty("#{tcIngresosPropioRepository}")
+	@Value("#{tcIngresosPropioRepository}")
 	private TcIngresoPropioRepository tcIngresoPropioRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 	/**

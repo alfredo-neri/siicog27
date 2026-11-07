@@ -1,23 +1,23 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import com.gem.sistema.business.domain.TcMatrizIngreso;
 import com.gem.sistema.business.repository.catalogs.TcMatrizIngresoRepository;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 
-@ManagedBean(name = "catalogMatrixIngresosMB")
-@ViewScoped
+@Component("catalogMatrixIngresosMB")
+@Scope("view")
 public class CatalogMatrixIngresosMB {
 
 	private String tipoMatriz;
 	private String titleTable;
 	private List<TcMatrizIngreso> listMatrizIngresos;
 
-	@ManagedProperty("#{tcMatrizIngresoRepository}")
+	@Value("#{tcMatrizIngresoRepository}")
 	private TcMatrizIngresoRepository matrizIngresoRepository;
 
 	@PostConstruct

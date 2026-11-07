@@ -1,6 +1,8 @@
 package com.gem.sistema.web.bean;
 
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
@@ -13,12 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import com.gem.sistema.business.domain.TcMes;
 import com.gem.sistema.business.domain.TcReportesFirma;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -36,8 +35,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class AnexoEstadoSituacionFinancieraMB.
  */
-@ManagedBean(name = "libroMayorMB")
-@ViewScoped
+@Component("libroMayorMB")
+@Scope("view")
 public class LibroMayorMB extends BaseDirectReport {
 
 	private static final String CLAVE_REPORT= "RPT_CONAC_LIBRO_MAYOR";
@@ -45,22 +44,22 @@ public class LibroMayorMB extends BaseDirectReport {
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
 //	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository contbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
-	@ManagedProperty("#{tcEntidadAdministrativaRepository}")
+	@Value("#{tcEntidadAdministrativaRepository}")
 	private TcEntidadAdministrativaRepository entidadAdministrativaRepository;
 	
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/** The mes. */
@@ -177,7 +176,7 @@ public class LibroMayorMB extends BaseDirectReport {
 			this.validatePolicyService.isAfectMonth(Integer.parseInt(mes), null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(Integer.parseInt(mes), null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 

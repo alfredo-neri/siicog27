@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getDateSystem;
 import static com.roonin.utils.UtilDate.getLastDay;
@@ -9,15 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -39,8 +39,8 @@ import com.google.gson.Gson;
  * @author Alfredo Neri
  *
  */
-@ManagedBean(name = "reporte141MB")
-@ViewScoped
+@Component("reporte141MB")
+@Scope("view")
 public class Reporte141MB extends BaseDirectReport {
 
 	private static final String TABLE_NAME = "PM3811";
@@ -62,20 +62,20 @@ public class Reporte141MB extends BaseDirectReport {
 	private Boolean isNew = null;
 	private int currentPage = 0;
 
-	@ManagedProperty("#{competenciasLaboralesService}")
+	@Value("#{competenciasLaboralesService}")
 	private CompetenciasLaboralesService competenciasLaboralesService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	@PostConstruct
@@ -213,8 +213,8 @@ public class Reporte141MB extends BaseDirectReport {
 		bBorrar = true;
 		isNew = true;
 		if (listPm3811.size() == 2) {
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').paginator.setPage(" + (listPm3811.size() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').paginator.setPage(" + (listPm3811.size() - 1) + ");");
 
 		}
 		if (listPm3811.size() > 2) {

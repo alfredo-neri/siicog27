@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -33,8 +33,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class RF0010115MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF0010115MB")
+@Scope("view")
 public class RF0010115MB extends BaseDirectReport {
 
 	/** The mes inicial. */
@@ -53,20 +53,20 @@ public class RF0010115MB extends BaseDirectReport {
 	private Firmas firmas;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -94,7 +94,7 @@ public class RF0010115MB extends BaseDirectReport {
 	}
 
 	/** Repositorio para mensajes de validacion **/
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/**

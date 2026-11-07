@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -8,16 +11,13 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Firmas;
@@ -34,23 +34,23 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class CambioReferenciaMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("cambioReferenciaMB")
+@Scope("view")
 public class CambioReferenciaMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The polide repository. */
-	@ManagedProperty("#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** The polien repository. */
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The polide. */
@@ -107,12 +107,12 @@ public class CambioReferenciaMB extends BaseDirectReport {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 						"No existe esta poliza o renglon, verifique.");
 				FacesContext.getCurrentInstance().addMessage(null, message);
-				RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+				PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 			} else {
 				polide = polideFound;
 				this.setbSave(Boolean.TRUE);
 			}
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 	}
 
@@ -123,7 +123,7 @@ public class CambioReferenciaMB extends BaseDirectReport {
 		if (this.getbSave() == Boolean.TRUE) {
 			if (validarCamposVacios() && tienePermiso() && Objects.nonNull(polide.getRefpol())
 					&& StringUtils.isNotEmpty(polide.getRefpol())) {
-				RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+				PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 				polideRepository.save(polide);
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY,
 						"Referencia modificada con éxito.");
@@ -133,7 +133,7 @@ public class CambioReferenciaMB extends BaseDirectReport {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 						"No se puede actualizar el campo de Polide");
 				FacesContext.getCurrentInstance().addMessage(null, message);
-				RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+				PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 			}
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
@@ -155,7 +155,7 @@ public class CambioReferenciaMB extends BaseDirectReport {
 			String msg = Objects.nonNull(polien) ? "Usuario no autorizado para modificar poliza." : "No existe poliza.";
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY, msg);
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 		return tienePermiso;
 	}
@@ -174,7 +174,7 @@ public class CambioReferenciaMB extends BaseDirectReport {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"Por favor debe capturar los campos Tipo Poliza, Número Poliza, Renglon, Mes Poliza y Año Poliza.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 		return isValid;
 	}

@@ -115,20 +115,20 @@ public class AuthenticationService implements UserDetailsService {
 		Long idLocalidad = 0l;
 		if (user.getTipoUsuario().getId() == 1) {
 			TcEntidadAdministrativa tcEntidadAdministrativa = this.tcEntidadAdministrativaRepository
-					.findOne(TcEntidadAdministrativaPredicate.findByClaveEntidad(user.getIdEntidadAdmini().toString()));
+					.findOne(TcEntidadAdministrativaPredicate.findByClaveEntidad(user.getIdEntidadAdmini().toString())).orElse(null);
 			entidadDesc = tcEntidadAdministrativa.getDescripcion();
 			idEntidad = Long.valueOf(tcEntidadAdministrativa.getClave());
-			Catmun catmun = this.catmunRepository.findOne(user.getIdLocalidad());
+			Catmun catmun = this.catmunRepository.findById(user.getIdLocalidad()).orElse(null);
 			localidadDesc = catmun.getNommun();
 			idLocalidad = catmun.getId();
 			String[] paths = this.getPaths(catmun.getClvmun(), idEntidad);
 			pathImgCab1 = paths[0];
 			pathImgCab2 = paths[1];
 		} else {
-			TcEntePubCentral tcEntePub = this.tcEntePubCentralRepository.findOne(user.getIdEntidadAdmini());
+			TcEntePubCentral tcEntePub = this.tcEntePubCentralRepository.findById(user.getIdEntidadAdmini()).orElse(null);
 			entidadDesc = tcEntePub.getDesc();
 			idEntidad = tcEntePub.getId();
-			Catdep catdep = this.catdepRepository.findOne(user.getIdLocalidad());
+			Catdep catdep = this.catdepRepository.findById(user.getIdLocalidad()).orElse(null);
 			localidadDesc = catdep.getNomdep();
 			idLocalidad = catdep.getId();
 			String[] paths = this.getPaths(0, 0l);
@@ -161,7 +161,7 @@ public class AuthenticationService implements UserDetailsService {
 		}
 
 		TcImagenesEntAdmin tcImagenesEntAdmin = this.tcImagenesEntAdminRepository
-				.findOne(TcImagenesEntAdminPredicate.findByClvmunAndEntidad(idEntidad, clvmun == 0 ? 0 : 1));
+				.findOne(TcImagenesEntAdminPredicate.findByClvmunAndEntidad(idEntidad, clvmun == 0 ? 0 : 1)).orElse(null);
 		if (null != tcImagenesEntAdmin) {
 			toReturn[1] = tcImagenesEntAdmin.getPathFile();
 		}

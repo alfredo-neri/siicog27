@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class Pm2711BSImpl implements Pm2711BS{
 	 */
 	@Override
 	public List<Pm2711> delete(Integer index, List<Pm2711> listPm2711) {
-		pm2711Repository.delete(listPm2711.get(index).getId());
+		pm2711Repository.deleteById(listPm2711.get(index).getId());
 		listPm2711 = this.acumulado(listPm2711.get(index).getIdsector());
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se elimino la información correctamente");
 		return listPm2711;
@@ -129,7 +129,7 @@ public class Pm2711BSImpl implements Pm2711BS{
 	 */
 	@Override
 	public Sort oderBy() {
-		return new Sort(Sort.Direction.ASC, "semestral");
+		return Sort.by(Sort.Direction.ASC, "semestral");
 	}
 
 	/* (non-Javadoc)

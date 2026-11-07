@@ -1,15 +1,15 @@
 
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;	
 import org.primefaces.model.StreamedContent;
@@ -30,8 +30,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class Reporte46MB.
  */
-@ManagedBean(name="reporte46MB")
-@ViewScoped
+@Component("reporte46MB")
+@Scope("view")
 public class Reporte46MB extends BaseDirectReport {
 	
 	/** The Constant EMPTY_VALUE. */
@@ -55,27 +55,27 @@ public class Reporte46MB extends BaseDirectReport {
 	private Conctb conctb;
 	
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 	
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 	/** The pm 5311 service. */
-	@ManagedProperty("#{pm5311Service}")
+	@Value("#{pm5311Service}")
 	private Pm5311Service pm5311Service;
 
 	/** The pm 5311 repository. */
-	@ManagedProperty("#{pm5311Repository}")
+	@Value("#{pm5311Repository}")
 	private Pm5311Repository pm5311Repository;
 
 	/** The validate policy service. */
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 	/**
 	 * Gets the mes.

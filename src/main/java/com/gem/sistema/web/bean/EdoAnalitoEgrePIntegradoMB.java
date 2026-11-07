@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
@@ -26,8 +26,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class EdoAnalitoEgrePIntegradoMB.
  */
-@ManagedBean(name = "edoAnalitoEgrePIntegradoMB")
-@ViewScoped
+@Component("edoAnalitoEgrePIntegradoMB")
+@Scope("view")
 public class EdoAnalitoEgrePIntegradoMB extends AbstractMB implements Serializable {
 
 	/**
@@ -72,11 +72,11 @@ public class EdoAnalitoEgrePIntegradoMB extends AbstractMB implements Serializab
 	public static final int LENGTH_FIVE_LEVEL = 3;
 
 	/** The natgas custom data model. */
-	@ManagedProperty(value = "#{natgasCustomDataModel}")
+	@Value("#{natgasCustomDataModel}")
 	private NatgasCustomDataModel natgasCustomDataModel;
 
 	/** The integradoe repository. */
-	@ManagedProperty(value = "#{integradoeRepository}")
+	@Value("#{integradoeRepository}")
 	private IntegradoeRepository integradoeRepository;
 
 	/** The bean find. */
@@ -210,7 +210,7 @@ public class EdoAnalitoEgrePIntegradoMB extends AbstractMB implements Serializab
 		if (null != natgas) {
 			this.rowSelected = natgas;
 			this.integradoeSelected = this.integradoeRepository
-					.findOne(IntegradoePredicates.findByPartida(natgas.getClvgas()));
+					.findOne(IntegradoePredicates.findByPartida(natgas.getClvgas())).orElse(null);
 			if (null != this.integradoeSelected) {
 				this.labelAdd = UPD_LABEL;
 			} else {
@@ -253,7 +253,7 @@ public class EdoAnalitoEgrePIntegradoMB extends AbstractMB implements Serializab
 	public void reset() {
 		if (null != this.rowSelected) {
 			this.integradoeSelected = this.integradoeRepository
-					.findOne(IntegradoePredicates.findByPartida(this.rowSelected.getClvgas()));
+					.findOne(IntegradoePredicates.findByPartida(this.rowSelected.getClvgas())).orElse(null);
 			if (null == this.integradoeSelected) {
 				this.integradoeSelected = new Integradoe();
 			}

@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,15 +13,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -45,8 +44,8 @@ import com.gem.sistema.business.service.reportador.ReportadorTXTServiceImpl;
 /**
  * The Class AfectacionPolizaMB.
  */
-@ManagedBean(name = "afectacionPolizaMB")
-@ViewScoped
+@Component("afectacionPolizaMB")
+@Scope("view")
 public class AfectacionPolizaMB extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -62,22 +61,22 @@ public class AfectacionPolizaMB extends AbstractMB {
 	/** The lis mes. */
 	private List<TcMes> lisMes;
 
-	@ManagedProperty("#{passwordEncoder}")
+	@Value("#{passwordEncoder}")
 	private PasswordEncoder passwordEncoder;
 
 	/** The tc mes repository. */
-	@ManagedProperty(value = "#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The poliza service. */
-	@ManagedProperty(value = "#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 
 	/** The polien repository. */
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
 	/** The download file. */
@@ -376,7 +375,7 @@ public class AfectacionPolizaMB extends AbstractMB {
 		activarButton = Boolean.TRUE;
 		isActivarButton();
 		String keyPass = this.getUserDetails().getIdSector() == 1 ? KEY_PASS_1 : KEY_PASS;
-		TcParametro param = this.parametrosRepository.findOne(ParametrosPredicate.findByDataType(keyPass, DATA_TYPE));
+		TcParametro param = this.parametrosRepository.findOne(ParametrosPredicate.findByDataType(keyPass, DATA_TYPE)).orElse(null);
 		passAfectacion = param.getValor();
 	}
 
@@ -474,7 +473,7 @@ public class AfectacionPolizaMB extends AbstractMB {
 
 			InputStream stream = FacesContext.getCurrentInstance().getExternalContext()
 					.getResourceAsStream(poliza.getPathName() + "/" + poliza.getFileName());
-			downloadFile = new DefaultStreamedContent(stream); // "application/octet-stream",
+			downloadFile = StreamedContents.of(stream, null, null, null); // "application/octet-stream",
 																// fileName);
 		} catch (Exception e) {
 			e.printStackTrace();

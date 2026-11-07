@@ -1,17 +1,18 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public abstract class AbstractFileUploadBudgetFlow extends AbstractMB {
 		LOGGER.info("Recibiendo Archivo" + filename);
 		try {
 			File file = new File(filename);
-			return new DefaultStreamedContent(new FileInputStream(file), "text/plain", file.getName());
+			return StreamedContents.of(new FileInputStream(file), "text/plain", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Error Descargando Archivo" + e);
 			e.printStackTrace();

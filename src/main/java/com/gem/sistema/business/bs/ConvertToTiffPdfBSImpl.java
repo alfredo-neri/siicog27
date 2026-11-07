@@ -20,8 +20,7 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.pdf.RandomAccessFileOrArray;
-import com.lowagie.text.pdf.codec.TiffImage;
+import com.gem.sistema.util.TiffPages;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -66,11 +65,11 @@ public class ConvertToTiffPdfBSImpl implements ConvertToTiffPdfBS {
 				int pages = 0;
 				document.open();
 				PdfContentByte cb = writer.getDirectContent();
-				RandomAccessFileOrArray ra = null;
+				TiffPages ra = null;
 				int comps = 0;
 				try {
-					ra = new RandomAccessFileOrArray(tiff);
-					comps = TiffImage.getNumberOfPages(ra);
+					ra = new TiffPages(tiff);
+					comps = ra.getNumberOfPages();
 				} catch (Throwable e) {
 					System.out.println("Exception in " + tiff + " " + e.getMessage());
 					continue;
@@ -78,7 +77,7 @@ public class ConvertToTiffPdfBSImpl implements ConvertToTiffPdfBS {
 				System.out.println("Processing: " + tiff);
 				for (int c = 0; c < comps; ++c) {
 					try {
-						Image img = TiffImage.getTiffImage(ra, c + 1);
+						Image img = ra.getPage(c + 1);
 						if (img != null) {
 							System.out.println("page " + (c + 1));
 							System.out.println("img.getDpiX() : " + img.getDpiX());

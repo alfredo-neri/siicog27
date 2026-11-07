@@ -1,5 +1,7 @@
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,9 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 
+import org.primefaces.model.FilterMeta;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -19,8 +21,8 @@ import com.gem.sistema.business.domain.Pm0511;
 /**
  * The Class Pm0511DataModel.
  */
-@ManagedBean(name = "pm0511DataModel")
-@ViewScoped
+@Component("pm0511DataModel")
+@Scope("view")
 public class Pm0511DataModel extends LazyDataModel<Pm0511> {
 
 	/** The list pm 0511. */
@@ -62,8 +64,22 @@ public class Pm0511DataModel extends LazyDataModel<Pm0511> {
 	/* (non-Javadoc)
 	 * @see org.primefaces.model.LazyDataModel#getRowKey(java.lang.Object)
 	 */
-	public Object getRowKey(Pm0511 pm0511) {
-		return pm0511.getId();
+	public String getRowKey(Pm0511 pm0511) {
+		return String.valueOf(pm0511.getId());
+	}
+
+	/** PrimeFaces 16: el conteo se pide aparte; se reutiliza el filtrado en memoria de load(). */
+	@Override
+	public int count(Map<String, FilterMeta> filterBy) {
+		return load(0, Integer.MAX_VALUE, null, null, CustomPagingModel.toLegacyFilters(filterBy)).size();
+	}
+
+	/** PrimeFaces 16: adapta la firma nueva de load() a la de PrimeFaces 5. */
+	@Override
+	public List<Pm0511> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		SortMeta sort = sortBy == null || sortBy.isEmpty() ? null : sortBy.values().iterator().next();
+		return load(first, pageSize, sort == null ? null : sort.getField(), sort == null ? null : sort.getOrder(),
+				CustomPagingModel.toLegacyFilters(filterBy));
 	}
 
 	/* (non-Javadoc)

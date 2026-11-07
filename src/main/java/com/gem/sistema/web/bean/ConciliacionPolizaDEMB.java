@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.model.SelectItem;
 
 import com.gem.sistema.business.domain.TcPeriodo;
 import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
@@ -28,8 +28,8 @@ import com.gem.sistema.business.vo.ConciliacionPolizaDEVO;
  *
  * @author Alfredo Neri
  */
-@ManagedBean(name = "conciliacionPolizaDEMB")
-@ViewScoped
+@Component("conciliacionPolizaDEMB")
+@Scope("view")
 public class ConciliacionPolizaDEMB extends AbstractMB {
 
 	/** Valor del filtro que no descarta ningun registro. */
@@ -41,10 +41,10 @@ public class ConciliacionPolizaDEMB extends AbstractMB {
 	/** Tipo de periodo del catalogo TC_PERIODO que corresponde a los meses. */
 	private static final Integer TIPO_PERIODO_MES = Integer.valueOf(1);
 
-	@ManagedProperty(value = "#{conciliacionPolizaDEService}")
+	@Value("#{conciliacionPolizaDEService}")
 	private ConciliacionPolizaDEService conciliacionPolizaDEService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	private List<TcPeriodo> listaMeses;

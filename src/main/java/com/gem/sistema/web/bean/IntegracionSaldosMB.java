@@ -1,20 +1,20 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -27,25 +27,24 @@ import com.gem.sistema.business.repository.catalogs.FirmasRepository;
 import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.util.ConstantsClaveEnnum;
-import com.google.common.base.Strings;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class IntegracionSaldosMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("integracionSaldosMB")
+@Scope("view")
 public class IntegracionSaldosMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The cuenta repository. */
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/** The mes. */
@@ -69,7 +68,7 @@ public class IntegracionSaldosMB extends BaseDirectReport {
 	/** The nombre cuenta mayor. */
 	private String nombreCuentaMayor;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 		
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -80,7 +79,7 @@ public class IntegracionSaldosMB extends BaseDirectReport {
 		this.puestosFirmasService = puestosFirmasService;
 	}
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 	
@@ -244,7 +243,7 @@ public class IntegracionSaldosMB extends BaseDirectReport {
 	 * @return true, if successful
 	 */
 	private boolean todosVacios() {
-		return Strings.isNullOrEmpty(cuenta.getCuenta()) || Strings.isNullOrEmpty(cuenta.getScuenta());
+		return StringUtils.isEmpty(cuenta.getCuenta()) || StringUtils.isEmpty(cuenta.getScuenta());
 	}
 
 	/**
@@ -257,7 +256,7 @@ public class IntegracionSaldosMB extends BaseDirectReport {
 		 * "La cuenta no existe"); FacesContext.getCurrentInstance().addMessage(null,
 		 * message); } else {
 		 */
-		RequestContext.getCurrentInstance().execute("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
+		PrimeFaces.current().executeScript("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
 		// }
 	}
 
@@ -273,7 +272,7 @@ public class IntegracionSaldosMB extends BaseDirectReport {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"Por favor debe informar una cuenta.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		} else {
 			List<Cuenta> lista = cuentaRepository.findAllByCuentaAndNomctaAndIdsector(cuenta.getCuenta(),
 					cuenta.getScuenta(), cuenta.getSscuenta(), cuenta.getSsscuenta(), cuenta.getSssscuenta(),
@@ -282,7 +281,7 @@ public class IntegracionSaldosMB extends BaseDirectReport {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 						"La cuenta no existe");
 				FacesContext.getCurrentInstance().addMessage(null, message);
-				RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+				PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 				isValid = false;
 			}
 		}
@@ -297,11 +296,11 @@ public class IntegracionSaldosMB extends BaseDirectReport {
 		// if (validateCuenta()) {
 		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			createFilePdfInline();
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
-			RequestContext.getCurrentInstance()
-					.execute("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '57em');");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
+			PrimeFaces.current()
+					.executeScript("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '57em');");
 		}
-		// RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+		// PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		// }
 	}
 

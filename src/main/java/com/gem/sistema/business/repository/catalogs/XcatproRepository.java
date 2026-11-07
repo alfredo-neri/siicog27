@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,7 +22,7 @@ import com.gem.sistema.business.dto.IndCapturaDTO;
  */
 @Repository(value = "xcatproRepository")
 public interface XcatproRepository
-		extends PagingAndSortingRepository<Xcatpro, Long>, QueryDslPredicateExecutor<Xcatpro> {
+		extends PagingAndSortingRepository<Xcatpro, Long>, CrudRepository<Xcatpro, Long>, QuerydslPredicateExecutor<Xcatpro> {
 
 	/*
 	 * (non-Javadoc)

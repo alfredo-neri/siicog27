@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getDateSystem;
 import static com.roonin.utils.UtilDate.getLastDay;
@@ -9,15 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -36,8 +36,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 import com.gem.sistema.util.CreateFileUtils;
 import com.google.gson.Gson;
 
-@ManagedBean(name = "pm3611MB")
-@ViewScoped
+@Component("pm3611MB")
+@Scope("view")
 public class Pm3611MB extends BaseDirectReport {
 	private static final String TABLE_NAME = "PM3611";
 	private static final String JASPER_NAME = "CompetenciaLaboral";
@@ -58,19 +58,19 @@ public class Pm3611MB extends BaseDirectReport {
 	private Boolean isNew = null;
 	private int currentPage = 0;
 
-	@ManagedProperty("#{competenciasLaboralesService}")
+	@Value("#{competenciasLaboralesService}")
 	private CompetenciasLaboralesService competenciasLaboralesService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
 	@PostConstruct
@@ -207,8 +207,8 @@ public class Pm3611MB extends BaseDirectReport {
 		bBorrar = true;
 		isNew = true;
 		if (listPm3611.size() == 2) {
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').paginator.setPage(" + (listPm3611.size() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').paginator.setPage(" + (listPm3611.size() - 1) + ");");
 
 		}
 		if (listPm3611.size() > 2) {

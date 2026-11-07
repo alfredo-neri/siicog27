@@ -1,20 +1,20 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Cuenta;
@@ -22,25 +22,24 @@ import com.gem.sistema.business.domain.Firmas;
 import com.gem.sistema.business.repository.catalogs.CuentaRepository;
 import com.gem.sistema.business.repository.catalogs.FirmasRepository;
 import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
-import com.google.common.base.Strings;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class EstadoCuentasDelMesGraficoMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("estadoCuentasDelMesGraficoMB")
+@Scope("view")
 public class EstadoCuentasDelMesGraficoMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The cuenta repository. */
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/** The mes. */
@@ -248,9 +247,9 @@ public class EstadoCuentasDelMesGraficoMB extends BaseDirectReport {
 	 * @return true, if successful
 	 */
 	private boolean todosVacios() {
-		return Strings.isNullOrEmpty(cuenta.getCuenta()) && Strings.isNullOrEmpty(cuenta.getScuenta())
-				&& Strings.isNullOrEmpty(cuenta.getSscuenta()) && Strings.isNullOrEmpty(cuenta.getSscuenta())
-				&& Strings.isNullOrEmpty(cuenta.getSscuenta());
+		return StringUtils.isEmpty(cuenta.getCuenta()) && StringUtils.isEmpty(cuenta.getScuenta())
+				&& StringUtils.isEmpty(cuenta.getSscuenta()) && StringUtils.isEmpty(cuenta.getSscuenta())
+				&& StringUtils.isEmpty(cuenta.getSscuenta());
 	}
 
 	/**
@@ -275,15 +274,15 @@ public class EstadoCuentasDelMesGraficoMB extends BaseDirectReport {
 		 * FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 		 * "La cuenta no existe"); FacesContext.getCurrentInstance().addMessage(null,
 		 * message);
-		 * RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();")
+		 * PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();")
 		 * ; } else {
 		 */if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			createFilePdfInline();
 
-			RequestContext.getCurrentInstance()
-					.execute("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '45em');");
+			PrimeFaces.current()
+					.executeScript("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '45em');");
 		}
-		RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+		PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		// }
 	}
 

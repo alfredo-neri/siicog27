@@ -1,13 +1,13 @@
 package com.gem.sistema.web.semaphore;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.Serializable;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class ObjectUnlock.
  */
-@ManagedBean
-@SessionScoped
+@Component("objectUnlock")
+@Scope("session")
 public class ObjectUnlock implements Serializable,HttpSessionBindingListener {
 
 	/** The Constant serialVersionUID. */
@@ -27,7 +27,7 @@ public class ObjectUnlock implements Serializable,HttpSessionBindingListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ObjectUnlock.class);
 
 	/** The semaphores. */
-	@ManagedProperty(value="#{semaphores}")
+	@Value("#{semaphores}")
 	private Semaphores semaphores;
 	
 
@@ -51,7 +51,7 @@ public class ObjectUnlock implements Serializable,HttpSessionBindingListener {
 
 	
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
+     * @see jakarta.servlet.http.HttpSessionBindingListener#valueBound(jakarta.servlet.http.HttpSessionBindingEvent)
      */
     public void valueBound(HttpSessionBindingEvent event) {
     	LOGGER.info("valueBound: {} sessionid: {}", event.getName(), event.getSession().getId() );
@@ -67,7 +67,7 @@ public class ObjectUnlock implements Serializable,HttpSessionBindingListener {
     }
 
     /* (non-Javadoc)
-     * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+     * @see jakarta.servlet.http.HttpSessionBindingListener#valueUnbound(jakarta.servlet.http.HttpSessionBindingEvent)
      */
     public void valueUnbound(HttpSessionBindingEvent event) {
     	LOGGER.info("valueUnBound: {} sessionid: {} semaphores {}"  ,event.getName(), event.getSession().getId(), semaphores );              

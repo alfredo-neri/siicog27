@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import com.gem.sistema.business.domain.Pm4311;
  */
 @Repository(value="pm4311Repository")
 public interface Pm4311Repository
-		extends PagingAndSortingRepository<Pm4311, Long>, QueryDslPredicateExecutor<Pm4311>{
+		extends PagingAndSortingRepository<Pm4311, Long>, CrudRepository<Pm4311, Long>, QuerydslPredicateExecutor<Pm4311>{
 	/*
 	 * (non-Javadoc)
 	 *

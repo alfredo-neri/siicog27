@@ -1,26 +1,26 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.FolioContrarecibo;
 import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 import com.gem.sistema.business.repository.catalogs.FoliosContrareciboRepository;
 
-@ManagedBean(name = "foliosContraRecibosMB")
-@ViewScoped
+@Component("foliosContraRecibosMB")
+@Scope("view")
 public class FoliosContraRecibosMB extends AbstractMB {
 
 	private FolioContrarecibo folio;
 
-	@ManagedProperty("#{foliosContrareciboRepository}")
+	@Value("#{foliosContrareciboRepository}")
 	private FoliosContrareciboRepository foliosContrareciboRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	private Conctb conctb = null;
@@ -61,7 +61,7 @@ public class FoliosContraRecibosMB extends AbstractMB {
 	}
 
 	public void cancelarEdicion() {
-		folio = foliosContrareciboRepository.findOne(folio.getId());
+		folio = foliosContrareciboRepository.findById(folio.getId()).orElse(null);
 		this.editing = false;
 
 	}

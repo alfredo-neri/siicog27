@@ -3,7 +3,7 @@ package com.gem.sistema.business.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "TC_FIRMAS_SOLICITUDES_DETALLE")

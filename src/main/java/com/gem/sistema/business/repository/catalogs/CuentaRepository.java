@@ -6,7 +6,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ import com.gem.sistema.business.domain.Cuenta;
  */
 @Repository("cuentaRepository")
 public interface CuentaRepository
-		extends PagingAndSortingRepository<Cuenta, Long>, QueryDslPredicateExecutor<Cuenta>, CuentaRepositoryCustom {
+		extends PagingAndSortingRepository<Cuenta, Long>, CrudRepository<Cuenta, Long>, QuerydslPredicateExecutor<Cuenta>, CuentaRepositoryCustom {
 	/*
 	 * (non-Javadoc)
 	 *
@@ -328,7 +329,7 @@ public interface CuentaRepository
 	 * @param idSector the id sector
 	 * @return the cuenta
 	 */
-	@Query("select c from Cuenta c where idSector =:idSector and cuenta =:cuenta and scta = '' and sscta = '' and ssscta = ''  and sssscta = ''")
+	@Query("select c from Cuenta c where c.idsector = :idSector and c.cuenta = :cuenta and c.scuenta = '' and c.sscuenta = '' and c.ssscuenta = '' and c.sssscuenta = ''")
 	Cuenta findAcountByAcount(@Param("cuenta") String partida, @Param("idSector") Integer idSector);
 
 	/**

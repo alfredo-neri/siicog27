@@ -2,7 +2,7 @@ package com.gem.sistema.business.service.catalogos;
 
 import java.io.File;
 
-import javax.activation.MimetypesFileTypeMap;
+import jakarta.activation.MimetypesFileTypeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

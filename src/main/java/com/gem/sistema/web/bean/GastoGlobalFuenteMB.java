@@ -1,18 +1,18 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.TcMes;
@@ -22,8 +22,8 @@ import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.reportador.JasperGenericServiceImpl;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean
-@ViewScoped
+@Component("gastoGlobalFuenteMB")
+@Scope("view")
 public class GastoGlobalFuenteMB extends BaseDirectReport {
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -35,13 +35,13 @@ public class GastoGlobalFuenteMB extends BaseDirectReport {
 	private List<TcMes> listMes = new ArrayList<TcMes>();
 	private Boolean txt = Boolean.FALSE;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	@PostConstruct
@@ -143,7 +143,7 @@ public class GastoGlobalFuenteMB extends BaseDirectReport {
 	public void downlandXLS() {
 		if (inputsValids()) {
 			this.txt = Boolean.FALSE;
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 
 	}
@@ -151,7 +151,7 @@ public class GastoGlobalFuenteMB extends BaseDirectReport {
 	public void downlandTXT() {
 		if (inputsValids()) {
 			this.txt = Boolean.TRUE;
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

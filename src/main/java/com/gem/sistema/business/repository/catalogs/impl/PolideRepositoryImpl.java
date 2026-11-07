@@ -8,18 +8,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.MapUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
+import jakarta.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -37,7 +36,7 @@ import com.gem.sistema.business.repository.catalogs.PolideRepositoryCustom;
  * @author Luis Sosa
  */
 
-public class PolideRepositoryImpl extends QueryDslRepositorySupport implements PolideRepositoryCustom {
+public class PolideRepositoryImpl extends QuerydslRepositorySupport implements PolideRepositoryCustom {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(PolideRepositoryImpl.class);
@@ -169,7 +168,7 @@ public class PolideRepositoryImpl extends QueryDslRepositorySupport implements P
 			total = count.longValue();
 		}
 
-		int offset = pageable.getOffset();
+		int offset = (int) pageable.getOffset();
 		int pageSize = pageable.getPageSize();
 		Integer limitMin = offset + 1;
 		Integer limitMax = offset + pageSize;
@@ -336,8 +335,7 @@ public class PolideRepositoryImpl extends QueryDslRepositorySupport implements P
 		sql.append(" AND (:P_SSSSCTA IS NULL OR POLIDE.SSSSCTA = :P_SSSSCTA) \n");
 		sql.append(" ORDER BY CUENTA, SCTA, SSCTA, SSSCTA, SSSSCTA \n");
 		
-		Session session = this.getEntityManager().unwrap(Session.class);
-        Query query = session.createSQLQuery(sql.toString()).setResultSetMapping("consultaMovimientosMapping");
+        Query query = this.getEntityManager().createNativeQuery(sql.toString(), "consultaMovimientosMapping");
         
         query.setParameter("P_ID_SECTOR", polide.getIdsector());
         query.setParameter("P_CUENTA", polide.getCuenta());
@@ -347,6 +345,6 @@ public class PolideRepositoryImpl extends QueryDslRepositorySupport implements P
         query.setParameter("P_SSSCTA", polide.getSsscta());
         query.setParameter("P_SSSSCTA", polide.getSssscta());
 
-        return query.list();
+        return query.getResultList();
     }
 }

@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -36,8 +36,8 @@ import static com.roonin.utils.UtilDate.getLastDay;
  *
  * @author Mateo
  */
-@ManagedBean(name = "rF00912012MB")
-@ViewScoped
+@Component("rF00912012MB")
+@Scope("view")
 public class RF00912012MB extends BaseDirectReport {
 
 	/** The mes. */
@@ -62,22 +62,22 @@ public class RF00912012MB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The tc tipo poder repository. */
-	@ManagedProperty("#{tcTipoPoderRepository}")
+	@Value("#{tcTipoPoderRepository}")
 	private TcTipoPoderRepository tcTipoPoderRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

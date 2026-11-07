@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import javax.security.auth.login.AccountException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,24 +27,24 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class CambioMesMB.
  */
-@ManagedBean(name = "cambioMesMB")
-@ViewScoped
+@Component("cambioMesMB")
+@Scope("view")
 public class CambioMesMB extends AbstractMB {
 
   /** The cattpo service. */
-  @ManagedProperty(value = "#{cattpoService}")
+  @Value("#{cattpoService}")
   private CattpoService cattpoService;
 
   /** The copome service. */
-  @ManagedProperty(value = "#{copomeService}")
+  @Value("#{copomeService}")
   private CopomeService copomeService;
 
   /** The polien repository. */
-  @ManagedProperty("#{polienRepository}")
+  @Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
   /** The conctb repository. */
-  @ManagedProperty("#{conctbRepository}")
+  @Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 

@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,14 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -34,19 +34,19 @@ import com.gem.sistema.business.service.reportador.ReportadorTXTServiceImpl;
 /**
  * The Class PresupuestoIngresoIntegradoMB.
  */
-@ManagedBean(name = "presupuestoIngresoIntegradoMB")
-@SessionScoped
+@Component("presupuestoIngresoIntegradoMB")
+@Scope("session")
 public class PresupuestoIngresoIntegradoMB extends AbstractMB {
 	
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReconducPresupEgrIngrTxtMB.class);
 
 	/** The presupuesto integrado service. */
-	@ManagedProperty(value= "#{presupuestoIntegradoService}")
+	@Value("#{presupuestoIntegradoService}")
 	private PresupuestoIntegradoService presupuestoIntegradoService;
 
 	/** The tc mes repository. */
-	@ManagedProperty(value= "#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The cve ref. */

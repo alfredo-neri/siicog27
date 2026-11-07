@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
@@ -12,11 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +45,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class EdoFlujoEfecMB.
  */
-@ManagedBean(name = "edoFlujoEfecMB2")
-@ViewScoped
+@Component("edoFlujoEfecMB2")
+@Scope("view")
 public class EdoFlujoEfecMB2 extends BaseDirectReport {
 
 	private static final String CLAVE_REPORT = "RPT_EDO_FLU_EFE";
@@ -61,26 +62,26 @@ public class EdoFlujoEfecMB2 extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{tcEntidadAdministrativaRepository}")
+	@Value("#{tcEntidadAdministrativaRepository}")
 	private TcEntidadAdministrativaRepository entidadAdministrativaRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 
 	private StreamedContent psFileTxt;
@@ -293,7 +294,7 @@ public class EdoFlujoEfecMB2 extends BaseDirectReport {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			streamedContent = new DefaultStreamedContent(stream, "application/txt", out.get("O_FILE_NAME").toString());
+			streamedContent = StreamedContents.of(stream, "application/txt", out.get("O_FILE_NAME").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

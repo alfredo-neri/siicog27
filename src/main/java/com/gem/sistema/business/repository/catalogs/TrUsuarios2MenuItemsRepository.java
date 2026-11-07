@@ -7,7 +7,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ import com.gem.sistema.business.domain.TrUsuarios2MenuItems;
  * @author lancer
  */
 @Repository
-public interface TrUsuarios2MenuItemsRepository extends PagingAndSortingRepository<TrUsuarios2MenuItems, Long>, QueryDslPredicateExecutor<TrUsuarios2MenuItems> {
+public interface TrUsuarios2MenuItemsRepository extends PagingAndSortingRepository<TrUsuarios2MenuItems, Long>, CrudRepository<TrUsuarios2MenuItems, Long>, QuerydslPredicateExecutor<TrUsuarios2MenuItems> {
 
 	/*
 	 * (non-Javadoc)

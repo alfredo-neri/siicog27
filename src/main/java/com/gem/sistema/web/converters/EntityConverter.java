@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.FacesConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,7 +45,7 @@ private Map<String, Object> getViewMap(FacesContext context) {
 }
 
 /* (non-Javadoc)
- * @see javax.faces.convert.Converter#getAsObject(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.String)
+ * @see jakarta.faces.convert.Converter#getAsObject(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.String)
  */
 @Override
 public Object getAsObject(FacesContext context, UIComponent c, String value) {
@@ -56,7 +56,7 @@ public Object getAsObject(FacesContext context, UIComponent c, String value) {
 }
 
 /* (non-Javadoc)
- * @see javax.faces.convert.Converter#getAsString(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.Object)
+ * @see jakarta.faces.convert.Converter#getAsString(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)
  */
 @Override
 public String getAsString(FacesContext context, UIComponent c, Object value) {

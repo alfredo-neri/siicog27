@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import com.gem.sistema.business.domain.Catflu;
 import com.gem.sistema.business.predicates.CatfluPredicates;
 import com.gem.sistema.business.repository.catalogs.CatfluRepository;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

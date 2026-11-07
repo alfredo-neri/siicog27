@@ -1,8 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,16 +13,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.data.PageEvent;
 import org.slf4j.Logger;
@@ -52,8 +52,8 @@ import com.gem.sistema.business.service.indicadoresdiseno.IndicadoresDisenoServi
 /**
  * The Class IndicadoresDisenoMB.
  */
-@ManagedBean(name = "indicadoresDisenoMB")
-@ViewScoped
+@Component("indicadoresDisenoMB")
+@Scope("view")
 public class IndicadoresDisenoMB extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -66,7 +66,7 @@ public class IndicadoresDisenoMB extends AbstractMB {
 	private static final Boolean FALSE = Boolean.FALSE;
 
 	/** The indicadores diseno service. */
-	@ManagedProperty("#{indicadoresDisenoService}")
+	@Value("#{indicadoresDisenoService}")
 	private IndicadoresDisenoService indicadoresDisenoService;
 
 	/** The lista encabezado. */
@@ -215,31 +215,31 @@ public class IndicadoresDisenoMB extends AbstractMB {
 	private boolean tieneDatosEncabezado;
 
 	/** The variables repository. */
-	@ManagedProperty("#{variablesRepository}")
+	@Value("#{variablesRepository}")
 	private VariablesRepository variablesRepository;
 
 	/** The mir repository. */
-	@ManagedProperty("#{mirRepository}")
+	@Value("#{mirRepository}")
 	private MirRepository mirRepository;
 
 	/** The ftecnica dm repository. */
-	@ManagedProperty("#{ftecnicaDmRepository}")
+	@Value("#{ftecnicaDmRepository}")
 	private FtecnicaDmRepository ftecnicaDmRepository;
 
 	/** The ftecnica dd repository. */
-	@ManagedProperty("#{ftecnicaDdRepository}")
+	@Value("#{ftecnicaDdRepository}")
 	private FtecnicaDdRepository ftecnicaDdRepository;
 
 	/** The muni nep repository. */
-	@ManagedProperty("#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muniNepRepository;
 
 	/** The catdep repository. */
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** The cpd repository. */
-	@ManagedProperty("#{cpdRepository}")
+	@Value("#{cpdRepository}")
 	private CpdRepository cpdRepository;
 
 	private Integer idSector;
@@ -912,7 +912,7 @@ public class IndicadoresDisenoMB extends AbstractMB {
 				listaDetalle = new ArrayList<FtecnicaddDTO>();
 			} else {
 				// load masterList with get row
-				Ftecnicadm fMaster = this.ftecnicaDmRepository.findOne(listaEncabezado.get(currentPage).getId());
+				Ftecnicadm fMaster = this.ftecnicaDmRepository.findById(listaEncabezado.get(currentPage).getId()).orElse(null);
 				FtecnicadmDTO ftDto = new FtecnicadmDTO();
 				if (null != fMaster) {
 
@@ -949,15 +949,15 @@ public class IndicadoresDisenoMB extends AbstractMB {
 					ftDto.setUserid(fMaster.getUserid());
 					ftDto.setUsuario(fMaster.getUsuario());
 					ftDto.setValido(fMaster.getValido());
-					descTemas = this.cpdRepository.findOne(CpdPredicate.findByCveTema(ftDto.getCvetemas()))
+					descTemas = this.cpdRepository.findOne(CpdPredicate.findByCveTema(ftDto.getCvetemas())).orElse(null)
 							.getDescripcion();
 					descDependencia = this.catdepRepository.findOne(
-							CatdepPredicate.findByclvDep(ftDto.getClvdep(), this.getUserDetails().getIdSector()))
+							CatdepPredicate.findByclvDep(ftDto.getClvdep(), this.getUserDetails().getIdSector())).orElse(null)
 							.getNomdep();
 					descPrograma = this.muniNepRepository.findOne(
-							MuniNepPredicates.findByclvfun(ftDto.getClvfun(), this.getUserDetails().getIdSector()))
+							MuniNepPredicates.findByclvfun(ftDto.getClvfun(), this.getUserDetails().getIdSector())).orElse(null)
 							.getCampo6();
-					descCodigoIndicador = mirRepository.findOne(MirPredicates.findBycveInd(ftDto.getCveind()))
+					descCodigoIndicador = mirRepository.findOne(MirPredicates.findBycveInd(ftDto.getCveind())).orElse(null)
 							.getNomind();
 
 				}
@@ -1524,8 +1524,8 @@ public class IndicadoresDisenoMB extends AbstractMB {
 		listaDetalle.get(currentPageDetalle).setNumvar(variableSelected.getNumvar());
 		listaDetalle.get(currentPageDetalle).setCvevar(variableSelected.getCvevar());
 		listaDetalle.get(currentPageDetalle).setVariables(variableSelected.getNomvar());
-		RequestContext.getCurrentInstance().execute("PF('variablesWdg').unselectAllRows();");
-		RequestContext.getCurrentInstance().execute("PF('variablesWdg').clearFilters();");
+		PrimeFaces.current().executeScript("PF('variablesWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('variablesWdg').clearFilters();");
 	}
 
 	/**
@@ -1535,7 +1535,7 @@ public class IndicadoresDisenoMB extends AbstractMB {
 	 */
 	public void onClvdgmRowDblClckSelect(final SelectEvent event) {
 		this.changeVariable();
-		RequestContext.getCurrentInstance().execute("PF('variablesWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('variablesWdg').unselectAllRows();");
 	}
 
 	/**
@@ -1593,8 +1593,8 @@ public class IndicadoresDisenoMB extends AbstractMB {
 	public void changeIndicador() {
 		listaEncabezado.get(currentPage).setCveind(indicadorSelected.getCodigo());
 		this.setDescCodigoIndicador(indicadorSelected.getNomind());
-		RequestContext.getCurrentInstance().execute("PF('indicadorWdg').unselectAllRows();");
-		RequestContext.getCurrentInstance().execute("PF('indicadorWdg').clearFilters();");
+		PrimeFaces.current().executeScript("PF('indicadorWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('indicadorWdg').clearFilters();");
 	}
 
 	/**
@@ -1604,7 +1604,7 @@ public class IndicadoresDisenoMB extends AbstractMB {
 	 */
 	public void onIndRowDblClckSelect(final SelectEvent event) {
 		this.changeIndicador();
-		RequestContext.getCurrentInstance().execute("PF('indicadorWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('indicadorWdg').unselectAllRows();");
 	}
 
 	/**

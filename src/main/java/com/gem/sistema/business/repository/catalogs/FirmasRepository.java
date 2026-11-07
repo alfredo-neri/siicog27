@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ import com.gem.sistema.business.domain.Firmas;
  */
 @Repository(value = "firmasRepository")
 public interface FirmasRepository
-		extends PagingAndSortingRepository<Firmas, Long>, QueryDslPredicateExecutor<Firmas> {
+		extends PagingAndSortingRepository<Firmas, Long>, CrudRepository<Firmas, Long>, QuerydslPredicateExecutor<Firmas> {
 
 	/*
 	 * (non-Javadoc)

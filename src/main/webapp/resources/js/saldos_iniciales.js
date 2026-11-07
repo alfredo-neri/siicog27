@@ -15,11 +15,11 @@
   };
 
   window.showStatus = function(){
-    PF('statusDialog').show();
+    PF('blockUIWidget').block();
   };
 
   window.hideStatus = function (){
-    PF('statusDialog').hide();
+    PF('blockUIWidget').unblock();
   };
 
   window.dblClickCallback = function(xhr, status, args){

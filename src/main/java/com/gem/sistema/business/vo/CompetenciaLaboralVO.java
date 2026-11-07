@@ -1,7 +1,7 @@
 package com.gem.sistema.business.vo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class CompetenciaLaboralVO {

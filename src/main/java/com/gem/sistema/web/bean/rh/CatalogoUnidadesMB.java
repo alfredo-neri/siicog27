@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean.rh;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.dto.CatalogoUnidades;
 
-@ManagedBean(name = "catalogoUnidadesMB")
-@ViewScoped
+@Component("catalogoUnidadesMB")
+@Scope("view")
 public class CatalogoUnidadesMB {
 	
 	private List<CatalogoUnidades> listCatalog = Arrays.asList(new CatalogoUnidades(1, "PONENCIA COMISIONADO PRESIDENTE JMV"),

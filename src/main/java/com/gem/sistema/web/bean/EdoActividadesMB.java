@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
@@ -12,11 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -37,8 +38,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class EdoActividadesMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("edoActividadesMB")
+@Scope("view")
 public class EdoActividadesMB extends BaseDirectReport {
 
 	/** The Constant PROCEDURE_NAME. */
@@ -61,21 +62,21 @@ public class EdoActividadesMB extends BaseDirectReport {
 	private StreamedContent fileTxt;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -372,7 +373,7 @@ public class EdoActividadesMB extends BaseDirectReport {
 
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,13 +17,10 @@ import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -46,8 +47,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  * @author Alfredo
  *
  */
-@ManagedBean(name = "estadoCambiosSFBCMB")
-@ViewScoped
+@Component("estadoCambiosSFBCMB")
+@Scope("view")
 public class EstadoCambiosSFBCMB extends ReportePeriodos {
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
 	private static final String PROCEDURE_NAME = "SP_GENERA_TXT_EDO_CAMBIOS_SITUACION_FINANCIERA";
@@ -59,26 +60,26 @@ public class EstadoCambiosSFBCMB extends ReportePeriodos {
 	private Conctb conctb;
 
 	/** The conctb repository. */
-	@ManagedProperty(value = "#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The estado cambios SFBCMB service. */
-	@ManagedProperty(value = "#{estadoCambiosSFBCMBService}")
+	@Value("#{estadoCambiosSFBCMBService}")
 	private EstadoCambiosSFBCMBService estadoCambiosSFBCMBService;
 
-	@ManagedProperty("#{edoSF3211Service}")
+	@Value("#{edoSF3211Service}")
 	private EdoSF3211Service edoSF3211Service;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 	
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 	
 	/**
@@ -134,7 +135,7 @@ public class EstadoCambiosSFBCMB extends ReportePeriodos {
 	public void downloadXls() {
 		if (this.validatePolicyService.isOpenMonth(getMesSelected(), null,
 				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
@@ -173,7 +174,7 @@ public class EstadoCambiosSFBCMB extends ReportePeriodos {
 
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

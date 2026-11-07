@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.math.BigDecimal;
@@ -8,14 +11,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -37,8 +37,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.NumberToLetter;
 import com.gem.sistema.util.UtilFront;
 
-@ViewScoped
-@ManagedBean(name = "impresionChequeMB")
+@Scope("view")
+@Component("impresionChequeMB")
 public class ImpresionChequeMB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
@@ -74,28 +74,28 @@ public class ImpresionChequeMB extends BaseDirectReport {
 	private List<TcPeriodo> listMeses;
 	private List<Cattpo> listCattpo;
 
-	@ManagedProperty("#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepositry;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty("#{twChequeRepository}")
+	@Value("#{twChequeRepository}")
 	private TwChequeRepository chequeRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	@PostConstruct
@@ -299,7 +299,7 @@ public class ImpresionChequeMB extends BaseDirectReport {
 		this.newFecpol = (Date) event.getObject();
 		if (null == this.date) {
 			generateNotificationFront(FacesMessage.SEVERITY_FATAL, MESSAGE_ERROR, "Favor de capturar una fecha valida");
-			RequestContext.getCurrentInstance().execute("errorChangeDate();");
+			PrimeFaces.current().executeScript("errorChangeDate();");
 		}
 	}
 
@@ -486,7 +486,7 @@ public class ImpresionChequeMB extends BaseDirectReport {
 		case 4:
 		case 5:
 			this.reportList();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 			break;
 		case 2: // Poliza
 			UtilFront.generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error",

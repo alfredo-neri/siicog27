@@ -1,11 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -20,8 +20,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class MPbrm08bMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("mPbrm08bMB")
+@Scope("view")
 public class MPbrm08bMB extends BaseDirectReport {
 	
 	/** The p trim. */
@@ -29,13 +29,13 @@ public class MPbrm08bMB extends BaseDirectReport {
 	
 
 	/** The pbrm 08 detail service. */
-	@ManagedProperty("#{pbrm08DetailService}")
+	@Value("#{pbrm08DetailService}")
 	private Pbrm08DetailService pbrm08DetailService;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

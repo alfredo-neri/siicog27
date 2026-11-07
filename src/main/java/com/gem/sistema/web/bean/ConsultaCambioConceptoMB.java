@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -7,15 +10,12 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Firmas;
@@ -30,20 +30,20 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class ConsultaCambioConceptoMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("consultaCambioConceptoMB")
+@Scope("view")
 public class ConsultaCambioConceptoMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The polide repository. */
-	@ManagedProperty("#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** The polien repository. */
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
 	/** The polide. */
@@ -98,11 +98,11 @@ public class ConsultaCambioConceptoMB extends BaseDirectReport {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 						"No existe esta poliza o renglon, verifique.");
 				FacesContext.getCurrentInstance().addMessage(null, message);
-				RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+				PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 			} else {
 				polide = polideFound;
 			}
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 	}
 
@@ -112,7 +112,7 @@ public class ConsultaCambioConceptoMB extends BaseDirectReport {
 	public void guardarCambios() {
 		if (validarCamposVacios() && tienePermiso() && Objects.nonNull(polide.getConcep())
 				&& StringUtils.isNotBlank(polide.getConcep())) {
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 			polideRepository.save(polide);
 			polide = new Polide();
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY,
@@ -129,7 +129,7 @@ public class ConsultaCambioConceptoMB extends BaseDirectReport {
 						"No se puede actualizar el campo en POLIDE.");
 				FacesContext.getCurrentInstance().addMessage(null, message);
 			}
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 	}
 
@@ -148,7 +148,7 @@ public class ConsultaCambioConceptoMB extends BaseDirectReport {
 					: "No existe la póliza.";
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY, msg);
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 		return tienePermiso;
 	}
@@ -167,7 +167,7 @@ public class ConsultaCambioConceptoMB extends BaseDirectReport {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"Por favor debe llenar todos los campos.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 		return isValid;
 	}

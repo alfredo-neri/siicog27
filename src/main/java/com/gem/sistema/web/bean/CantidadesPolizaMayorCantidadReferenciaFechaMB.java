@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 
 import java.util.ArrayList;
@@ -7,15 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -29,31 +29,30 @@ import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
 import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.util.ConstantsClaveEnnum;
-import com.google.common.base.Strings;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class CantidadesPolizaMayorCantidadReferenciaFechaMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("cantidadesPolizaMayorCantidadReferenciaFechaMB")
+@Scope("view")
 public class CantidadesPolizaMayorCantidadReferenciaFechaMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The cuenta repository. */
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/** The mes. */
@@ -223,7 +222,7 @@ public class CantidadesPolizaMayorCantidadReferenciaFechaMB extends BaseDirectRe
 	 * @return true, if successful
 	 */
 	private boolean todosVacios() {
-		return Strings.isNullOrEmpty(cuenta.getCuenta()) || Strings.isNullOrEmpty(cuenta.getScuenta());
+		return StringUtils.isEmpty(cuenta.getCuenta()) || StringUtils.isEmpty(cuenta.getScuenta());
 	}
 
 	/**
@@ -235,7 +234,7 @@ public class CantidadesPolizaMayorCantidadReferenciaFechaMB extends BaseDirectRe
 					"La cuenta no existe");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} else {
-			RequestContext.getCurrentInstance().execute("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
+			PrimeFaces.current().executeScript("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
 		}
 	}
 
@@ -260,7 +259,7 @@ public class CantidadesPolizaMayorCantidadReferenciaFechaMB extends BaseDirectRe
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"La cuenta no existe");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		} else {
 
 			if (this.validatePolicyService.isOpenMonth(mes, null,
@@ -270,10 +269,10 @@ public class CantidadesPolizaMayorCantidadReferenciaFechaMB extends BaseDirectRe
 				this.createFilePdfInline();
 				createFilePdfInline();
 
-				RequestContext.getCurrentInstance()
-						.execute("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '57em');");
+				PrimeFaces.current()
+						.executeScript("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '57em');");
 			}
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 
 	}

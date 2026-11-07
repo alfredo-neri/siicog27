@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDay;
 
@@ -9,11 +13,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -36,8 +37,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  * Changes: Se agrega opcion a pantalla para generar el reporte Trimestral y Acumulado
  * 			Se ajusta metodo del armado de la consulta
  */
-@ManagedBean(name = "clasificacionObjGastoMB2")
-@ViewScoped
+@Component("clasificacionObjGastoMB2")
+@Scope("view")
 public class ClasificacionObjGastoMB2 extends BaseDirectReport {
 
 	private List<TcPeriodo> listTrimestres;
@@ -49,19 +50,19 @@ public class ClasificacionObjGastoMB2 extends BaseDirectReport {
 	private String fileName;
 	private StreamedContent file;
 
-	@ManagedProperty("#{clasificacionObjGastoService}")
+	@Value("#{clasificacionObjGastoService}")
 	private ClasificacionObjGastoService clasificacionObjGastoService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{generaTxtFilesService}")
+	@Value("#{generaTxtFilesService}")
 	private GeneraTxtFilesService txtFilesService;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -176,7 +177,7 @@ public class ClasificacionObjGastoMB2 extends BaseDirectReport {
 		} catch (FileNotFoundException ex) {
 
 		}
-		file = new DefaultStreamedContent(stream, Constants.APPLICCTION_TXT, fileName);
+		file = StreamedContents.of(stream, Constants.APPLICCTION_TXT, fileName, null);
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se Generó el Archivo: " + fileName);
 		return file;
 	}

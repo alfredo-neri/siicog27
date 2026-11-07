@@ -6,8 +6,8 @@ package com.gem.sistema.web.bean;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.faces.context.FacesContext;
-import javax.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
 
 import com.gem.sistema.web.security.model.GemUser;
 
@@ -27,7 +27,8 @@ public class AbstractMB {
 	 * @return the user details
 	 */
    public GemUser getUserDetails() {
-     if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserDetails) {
+     if (SecurityContextHolder.getContext().getAuthentication() != null
+         && SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserDetails) {
        return (GemUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
      } else {
        return null;

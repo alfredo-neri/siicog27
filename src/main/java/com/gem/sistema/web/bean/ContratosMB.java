@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
@@ -13,12 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.event.SelectEvent;
@@ -51,8 +51,8 @@ import com.gem.sistema.business.service.catalogos.ContratosService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.util.ImagesFirmasDigitales;
 
-@ManagedBean(name = "contratosMB")
-@ViewScoped
+@Component("contratosMB")
+@Scope("view")
 public class ContratosMB extends BaseDirectReport {
 
 	private static final String FIRST_CONTRATO_STATE = "REVISANDO";
@@ -86,16 +86,16 @@ public class ContratosMB extends BaseDirectReport {
 	private TcContratosRevison revison = new TcContratosRevison();
 	private Integer firmaPosicion = 0;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{contratosService}")
+	@Value("#{contratosService}")
 	private ContratosService contratosService;
 
-	@ManagedProperty("#{tcContratosFirmaRepository}")
+	@Value("#{tcContratosFirmaRepository}")
 	private TcContratosFirmaRepository contratosFirmaRepository;
 
-	@ManagedProperty("#{tcFirmaSolicitudDetalleRepository}")
+	@Value("#{tcFirmaSolicitudDetalleRepository}")
 	private TcFirmaSolicitudDetalleRepository firmaSolicitudDetalleRepository;
 
 	@PostConstruct
@@ -385,7 +385,7 @@ public class ContratosMB extends BaseDirectReport {
 			for (int i = 1; i < 4; i++) {
 				contratosFirmas.add(new TcContratosFirma(i, null, contratosList.get(currentIndex).getContrato()));
 			}
-			contratosFirmas = (List<TcContratosFirma>) contratosFirmaRepository.save(contratosFirmas);
+			contratosFirmas = (List<TcContratosFirma>) contratosFirmaRepository.saveAll(contratosFirmas);
 		}
 		createPathImgs();
 	}

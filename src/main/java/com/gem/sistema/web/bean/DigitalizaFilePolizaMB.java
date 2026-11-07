@@ -1,7 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,17 +14,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +44,8 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class DigitalizaFilePolizaMB.
  */
-@ManagedBean(name = "digitalizaFilePolizaMB")
-@ViewScoped
+@Component("digitalizaFilePolizaMB")
+@Scope("view")
 public class DigitalizaFilePolizaMB {
 
 	/** The Constant LOGGER. */
@@ -66,7 +65,7 @@ public class DigitalizaFilePolizaMB {
 	String cveParametro = "TIF";
 
 	/** The path file service. */
-	@ManagedProperty("#{pathFileSystemservice}")
+	@Value("#{pathFileSystemservice}")
 	private PathFileSystemserviceImpl pathFileService;
 
 	/**
@@ -109,19 +108,19 @@ public class DigitalizaFilePolizaMB {
 	private String pathFile = "";
 
 	/** The registra reporoty. */
-	@ManagedProperty("#{tcRegistraArchivoDigitalRepository}")
+	@Value("#{tcRegistraArchivoDigitalRepository}")
 	private TcRegistraArchivoDigitalRepository registraReporoty;
 
 	/** The parametros repository. */
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The cosulta impl. */
-	@ManagedProperty("#{consultaPolizaSirveImpl}")
+	@Value("#{consultaPolizaSirveImpl}")
 	private ConsultaPolizaSirveImpl cosultaImpl;
 
 	/**
@@ -292,12 +291,12 @@ public class DigitalizaFilePolizaMB {
 								tcArchivo.setUserId(getUserDetails().getUsername());
 								tcArchivo.setSectorId(getUserDetails().getIdSector());
 								tcArchivo.setIdRef(0);
-								saveFile(pathFile, fileName, event.getFile().getInputstream());
+								saveFile(pathFile, fileName, event.getFile().getInputStream());
 								registraReporoty.save(tcArchivo);
 								generateNotificationFront(SEVERITY_INFO, "Info",
 										" La poliza se digitalizo correctamente");
 							} else {
-								saveFile(pathFile, fileName, event.getFile().getInputstream());
+								saveFile(pathFile, fileName, event.getFile().getInputStream());
 								TcRegistraArchivoDigital img = imgPol.get(0);
 								img.setNombreArchivo(fileName);
 								registraReporoty.save(img);
@@ -379,7 +378,7 @@ public class DigitalizaFilePolizaMB {
 	 */
 	public void saveFile(String path, String filename, InputStream input) throws IOException {
 		// String filename = FilenameUtils.getName(file.getFileName());
-		// InputStream input = file.getInputstream();
+		// InputStream input = file.getInputStream();
 		OutputStream output = new FileOutputStream(new File(path, filename));
 
 		try {

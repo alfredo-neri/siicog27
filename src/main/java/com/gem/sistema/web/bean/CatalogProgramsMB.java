@@ -1,10 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.Util.fillZerosToRight;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,17 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -54,7 +55,7 @@ import com.gem.sistema.business.repository.catalogs.PpcappRepository;
 import com.gem.sistema.business.repository.catalogs.XcatproRepository;
 import com.gem.sistema.business.utils.ConvertCharsetUtils;
 import com.gem.sistema.web.util.FrontProperty;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -62,8 +63,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogProgramsMB")
+@Scope("view")
 public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Serializable {
 
 	/** The Constant charSetISO. */
@@ -139,26 +140,26 @@ public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Seria
 	private List<Fuentef> filteredFinancialSources;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muniNepRepository;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{fuentefRepository}")
+	@Value("#{fuentefRepository}")
 	private FuentefRepository fuentefRepository;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty(value = "#{ppcappRepository}")
+	@Value("#{ppcappRepository}")
 	private PpcappRepository ppcappRepository;
 
 	/** Fila seleccionada del catalogo de programas. */
@@ -381,7 +382,7 @@ public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Seria
 				generateNotificationFront(SEVERITY_ERROR,
 						"EL PROGRAMA NO SE PUEDE MODIFICAR PORQUE TIENE CUENTAS DE EGRESOS", "");
 				bandera = Boolean.FALSE;
-				// RequestContext.getCurrentInstance()
+				// PrimeFaces.current()
 				// .execute(String.format(CANCEL_CLVFLU_ROW_JQUERY,
 				// catalog.getIndex()));
 			}
@@ -575,10 +576,10 @@ public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Seria
 	}
 
 	/** The Constant XCATPRO_CTA_ASC. */
-	private static final Sort XCATPRO_CTA_ASC = new Sort(Sort.Direction.ASC, "clvdep", "clvfun", "clvfin");
+	private static final Sort XCATPRO_CTA_ASC = Sort.by(Sort.Direction.ASC, "clvdep", "clvfun", "clvfin");
 
 	/** The Constant CUENTA_CTA_ASC. */
-	private static final Sort CUENTA_CTA_ASC = new Sort(Sort.Direction.ASC, "cuenta");
+	private static final Sort CUENTA_CTA_ASC = Sort.by(Sort.Direction.ASC, "cuenta");
 
 	/**
 	 * Validate add financial sources.
@@ -647,16 +648,16 @@ public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Seria
 			LOGGER.info(":: Cambiar dependencia " + dependenceSelected + "::" + rowSelected);
 			rowSelected.setClvdep(dependenceSelected.getClvdep());
 
-			// final RequestContext context =
-			// RequestContext.getCurrentInstance();
-			// context.update(VIEW_CATALOG_FORM1_OBJECTS +
+			// final PrimeFaces context =
+			// PrimeFaces.current();
+			// context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS +
 			// rowSelected.getIndex() +
 			// ":clvdep");
 		}
 
 		activateRowEdit(rowSelected.getIndex());
-		final RequestContext context = RequestContext.getCurrentInstance();
-		context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvfuen");
+		final PrimeFaces context = PrimeFaces.current();
+		context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvfuen");
 	}
 
 	/**
@@ -706,9 +707,9 @@ public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Seria
 
 		}
 		activateRowEdit(rowSelected.getIndex());
-		final RequestContext context = RequestContext.getCurrentInstance();
-		context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvfun");
-		context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":nompro");
+		final PrimeFaces context = PrimeFaces.current();
+		context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvfun");
+		context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":nompro");
 		LOGGER.info(":: Cambiar estructura programatica_2***: " + rowSelected);
 	}
 
@@ -747,8 +748,8 @@ public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Seria
 			rowSelected.setClvfin(financialSourcesSelected.getClvfte());
 		}
 		activateRowEdit(rowSelected.getIndex());
-		final RequestContext context = RequestContext.getCurrentInstance();
-		context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvfuen");
+		final PrimeFaces context = PrimeFaces.current();
+		context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvfuen");
 	}
 
 	/**
@@ -1190,7 +1191,7 @@ public class CatalogProgramsMB extends CommonCatalogMB<Xcatpro> implements Seria
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", fileNameOut);
+			csvByPl = StreamedContents.of(stream, "application/csv", fileNameOut, null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

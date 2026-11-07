@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 public class CopyFileUtil {
 	public static void saveFile(String path, String filename, InputStream input) throws IOException {
 		// String filename = FilenameUtils.getName(file.getFileName());
-		// InputStream input = file.getInputstream();
+		// InputStream input = file.getInputStream();
 		OutputStream output = new FileOutputStream(new File(path, filename));
 
 		try {

@@ -1,11 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,8 +14,8 @@ import com.gem.sistema.business.repository.catalogs.CatmunRepository;
 import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 import com.gem.sistema.business.service.catalogos.DatosMunicipioService;
 
-@ManagedBean(name = "datosMunicipioMB")
-@ViewScoped
+@Component("datosMunicipioMB")
+@Scope("view")
 public class DatosMunicipioMB extends AbstractMB {
 
 	private List<String> lisMuni;
@@ -23,13 +23,13 @@ public class DatosMunicipioMB extends AbstractMB {
 	private String clvEntidad = "0";
 	private String clvMuni;
 
-	@ManagedProperty("#{catmunRepository}")
+	@Value("#{catmunRepository}")
 	private CatmunRepository catmunRepository;
 
-	@ManagedProperty("#{datosMunicipioService}")
+	@Value("#{datosMunicipioService}")
 	private DatosMunicipioService datosMunicipioService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	@PostConstruct

@@ -1,21 +1,21 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
@@ -25,8 +25,8 @@ import com.gem.sistema.business.service.callsp.ExecutePlService;
 /**
  * The Class InventarioGeneralBienesMueblesCargaAutomaticaMB.
  */
-@ManagedBean(name = "inventarioGeneralBienesMueblesCargaAutomaticaMB")
-@ViewScoped
+@Component("inventarioGeneralBienesMueblesCargaAutomaticaMB")
+@Scope("view")
 public class InventarioGeneralBienesMueblesCargaAutomaticaMB extends AbstractMB {
 
 	private static final String PROCEDURE_NAME = "SP_CARGA_ARCHIVO_BIENES_MUEBLES";
@@ -34,7 +34,7 @@ public class InventarioGeneralBienesMueblesCargaAutomaticaMB extends AbstractMB 
 
 	private File file;
 
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 
 	private Integer alMes;
@@ -58,7 +58,7 @@ public class InventarioGeneralBienesMueblesCargaAutomaticaMB extends AbstractMB 
 
 				try {
 
-					FileUtils.copyInputStreamToFile(archivo.getInputstream(), file);
+					FileUtils.copyInputStreamToFile(archivo.getInputStream(), file);
 
 					if (file.length() > 0) {
 
@@ -146,7 +146,7 @@ public class InventarioGeneralBienesMueblesCargaAutomaticaMB extends AbstractMB 
 	 * Salvar.
 	 */
 //	public void salvar() {
-//		RequestContext.getCurrentInstance().execute("PF('blockUIWidget').block();");
+//		PrimeFaces.current().executeScript("PF('blockUIWidget').block();");
 //		try {
 //			List<Bienesm> toRemove = new ArrayList<Bienesm>();
 //			toRemove = repository.findByIdsectorAndMes(this.getUserDetails().getIdSector(), alMes);
@@ -186,8 +186,8 @@ public class InventarioGeneralBienesMueblesCargaAutomaticaMB extends AbstractMB 
 //		}
 //		System.out.println(log);
 //		
-//		RequestContext.getCurrentInstance().execute("unblock();");
-//		RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+//		PrimeFaces.current().executeScript("unblock();");
+//		PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 //		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY, msg);
 //		FacesContext.getCurrentInstance().addMessage(null, message);
 //	}

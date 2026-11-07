@@ -12,10 +12,11 @@
 
 package com.roonin.utils;
 
+import org.slf4j.LoggerFactory;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 
 // TODO: Auto-generated Javadoc
@@ -25,7 +26,7 @@ import org.apache.log4j.Logger;
 public class NumberToLetterConverter {
 
   /** The log. */
-  private static Logger _log = Logger.getLogger(NumberToLetterConverter.class);
+  private static Logger _log = LoggerFactory.getLogger(NumberToLetterConverter.class);
 
   /** The Constant UNIDADES. */
   private static final String[] UNIDADES = { "", "UN ", "DOS ", "TRES ",

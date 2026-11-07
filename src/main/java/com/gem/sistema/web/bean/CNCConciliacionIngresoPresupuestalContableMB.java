@@ -1,17 +1,17 @@
 
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -24,27 +24,27 @@ import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean
-@ViewScoped
+@Component("cNCConciliacionIngresoPresupuestalContableMB")
+@Scope("view")
 public class CNCConciliacionIngresoPresupuestalContableMB extends BaseDirectReport {
 	private static final String OUTPUT_REPORT_NAME = "CONAC-ConciliacionIngresos";
 	private static final String CLAVE_REPORT = "RPT_CONAC_GENERIC_INGRESOS";
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
 
 	private Integer mesInput;
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	protected TcPeriodoRepositoy periodoRepositoy;
 	
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct
@@ -94,7 +94,7 @@ public class CNCConciliacionIngresoPresupuestalContableMB extends BaseDirectRepo
 			this.validatePolicyService.isAfectMonth(mesInput, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mesInput, null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 

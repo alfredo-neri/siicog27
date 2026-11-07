@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.repository.catalogs.ConctbRepository;
@@ -19,21 +19,21 @@ import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
 import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean(name = "avancePresupuestalDelMesMB")
-@ViewScoped
+@Component("avancePresupuestalDelMesMB")
+@Scope("view")
 public class AvancePresupuestalDelMesMB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_PDF = " jQuery('#form1\\\\:downPdf').click();";
 	private Integer mes;
 	private List<Integer> listMes;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {
@@ -89,7 +89,7 @@ public class AvancePresupuestalDelMesMB extends BaseDirectReport {
 			this.validatePolicyService.existPolices(Long.valueOf(mes).intValue(), null,
 					this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_PDF);
+			PrimeFaces.current().executeScript(DOWNLOAD_PDF);
 		}
 	}
 

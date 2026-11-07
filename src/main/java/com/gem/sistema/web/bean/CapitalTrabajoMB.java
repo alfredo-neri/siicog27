@@ -1,19 +1,19 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -37,8 +37,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class CapitalTrabajoMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("capitalTrabajoMB")
+@Scope("view")
 public class CapitalTrabajoMB extends BaseDirectReport {
 
 	/** The Constant FOCUS_BY_ROWID. */
@@ -62,27 +62,27 @@ public class CapitalTrabajoMB extends BaseDirectReport {
 	Integer idSector = this.getUserDetails().getIdSector();
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/** The txt preview. */
@@ -203,7 +203,7 @@ public class CapitalTrabajoMB extends BaseDirectReport {
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
@@ -413,7 +413,7 @@ public class CapitalTrabajoMB extends BaseDirectReport {
 			ConvertCharsetUtils.transform(source, charSetUFT, target, charSetISO);
 
 			txtPreview = this.generatePreviewService.generatePreview(enfFile);
-			RequestContext.getCurrentInstance().execute(FOCUS_BY_ROWID);
+			PrimeFaces.current().executeScript(FOCUS_BY_ROWID);
 		}
 	}
 

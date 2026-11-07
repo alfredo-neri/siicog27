@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 import com.gem.sistema.business.domain.Catdep;
@@ -29,8 +29,8 @@ import static com.roonin.utils.UtilDate.getDateOfSystem;
 /**
  * The Class ReporteRF0092165MB.
  */
-@ManagedBean(name = "reporteRF0092165MB")
-@ViewScoped
+@Component("reporteRF0092165MB")
+@Scope("view")
 public class ReporteRF0092165MB extends BaseDirectReport {
 	
 	/** The catdep. */
@@ -92,22 +92,22 @@ public class ReporteRF0092165MB extends BaseDirectReport {
 	private List<Xcatpro> listXcatpro;
 
 	/** The catdep repository. */
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** The xcatpro repository. */
-	@ManagedProperty("#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The generate totale service. */
-	@ManagedProperty("#{generateTotaleService}")
+	@Value("#{generateTotaleService}")
 	private GenerateTotaleService generateTotaleService;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

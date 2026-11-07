@@ -31,7 +31,7 @@ public class EaidDAOImpl implements EaidDAO {
 	 */
 	@Override
 	public boolean save(Eaid eaid) {
-		Eaid valida = this.eaidRepository.findOne(EaidPredicate.validaEaid(eaid));
+		Eaid valida = this.eaidRepository.findOne(EaidPredicate.validaEaid(eaid)).orElse(null);
 		if (null == valida) {
 			this.eaidRepository.save(eaid);
 			return true;

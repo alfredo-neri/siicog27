@@ -1,7 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,14 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -39,8 +40,8 @@ import com.gem.sistema.business.utils.ConvertCharsetUtils;
  * @author Alfredo
  *
  */
-@ManagedBean(name = "consultasTodasReferenciasMB")
-@ViewScoped
+@Component("consultasTodasReferenciasMB")
+@Scope("view")
 public class ConsultasTodasReferenciasMB extends GenericExecuteProcedure {
 	/** The Constant PROCEDURE_NAME. */
 	private static final String PROCEDURE_NAME = "SP_GENERA_TXT_ALL_REFERENCIAS";
@@ -79,11 +80,11 @@ public class ConsultasTodasReferenciasMB extends GenericExecuteProcedure {
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
 	/**
@@ -139,7 +140,7 @@ public class ConsultasTodasReferenciasMB extends GenericExecuteProcedure {
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-				fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+				fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 				generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 			} else {
 				generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());
@@ -180,7 +181,7 @@ public class ConsultasTodasReferenciasMB extends GenericExecuteProcedure {
 				}
 
 				txtPreview = this.generatePreviewService.generatePreview(fileNameOut);
-				RequestContext.getCurrentInstance().execute(FOCUS_IN_PREVIEW);
+				PrimeFaces.current().executeScript(FOCUS_IN_PREVIEW);
 			}
 		}
 		addToBitacora(false);

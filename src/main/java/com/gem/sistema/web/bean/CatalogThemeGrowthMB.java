@@ -1,10 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.EMPTY;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,15 +21,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -46,8 +47,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogThemeGrowthMB")
+@Scope("view")
 public class CatalogThemeGrowthMB extends CommonCatalogMB<Cpd> implements Serializable {
 
 	/** Serial default. */
@@ -57,16 +58,16 @@ public class CatalogThemeGrowthMB extends CommonCatalogMB<Cpd> implements Serial
 	private static final Logger LOGGER = LoggerFactory.getLogger(CatalogThemeGrowthMB.class);
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{cpdRepository}")
+	@Value("#{cpdRepository}")
 	private CpdRepository cpdRepository;
 
-	@ManagedProperty(value = "#{ftecnicaDmRepository}")
+	@Value("#{ftecnicaDmRepository}")
 	private FtecnicaDmRepository ftecnicaDmRepository;
 
-	@ManagedProperty(value = "#{ftecnicasmRepository}")
+	@Value("#{ftecnicasmRepository}")
 	private FtecnicasmRepository ftecnicasmRepository;
 
-	@ManagedProperty(value = "#{matindRepository}")
+	@Value("#{matindRepository}")
 	private MatindRepository matindRepository;
 
 	/** Campo por el que se ordenará la consulta de datos. */
@@ -188,7 +189,7 @@ public class CatalogThemeGrowthMB extends CommonCatalogMB<Cpd> implements Serial
 
 			if (existPadres(catalog)) {
 				executeOperationSaveOrUpdate(catalog, cpdRepository);
-				RequestContext.getCurrentInstance().execute("onload()");
+				PrimeFaces.current().executeScript("onload()");
 			} else {
 				generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO, "No existen los padres");
 				activateRowEdit(catalog.getIndex());
@@ -421,7 +422,7 @@ public class CatalogThemeGrowthMB extends CommonCatalogMB<Cpd> implements Serial
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString());
+			csvByPl = StreamedContents.of(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

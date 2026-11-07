@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.business.predicates.TcUsuarioPredicates.findByUsuario;
 
 import java.util.Base64;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
@@ -19,8 +19,8 @@ import com.gem.sistema.business.repository.catalogs.TcFirmaDigitalRepository;
 import com.gem.sistema.business.repository.catalogs.TcUsuarioRepository;
 import com.gem.sistema.web.util.ImagesFirmasDigitales;
 
-@ManagedBean(name = "firmasDigitalesMB")
-@ViewScoped
+@Component("firmasDigitalesMB")
+@Scope("view")
 public class FirmasDigitalesMB extends AbstractMB {
 	private static final String BASE64_TYPE = "data:image/png;base64";
 	private String draw;
@@ -28,19 +28,19 @@ public class FirmasDigitalesMB extends AbstractMB {
 	private TcUsuario usuario;
 	private String imagenPath = "";
 	private String imgBase64;
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcFirmaDigitalRepository}")
+	@Value("#{tcFirmaDigitalRepository}")
 	private TcFirmaDigitalRepository firmaRepository;
 
-	@ManagedProperty(value = "#{tcUsuarioRepository}")
+	@Value("#{tcUsuarioRepository}")
 	private TcUsuarioRepository tcUsuarioRepository;
 
 	@PostConstruct
 	private void init() {
 		try {
-			usuario = tcUsuarioRepository.findOne(findByUsuario(this.getUserDetails().getUsername()));
+			usuario = tcUsuarioRepository.findOne(findByUsuario(this.getUserDetails().getUsername())).orElse(null);
 			firma = firmaRepository.findByUsername(usuario.getUsuario());
 			if (firma != null) {
 				imagenPath = ImagesFirmasDigitales.createPathTempFromImg(firma.getNombreArchivo(), firma.getArchivo());
@@ -83,12 +83,12 @@ public class FirmasDigitalesMB extends AbstractMB {
 				try {
 					if (event.getFile().getSize() >= 0) {
 						if (firma != null) {
-							firma.setArchivo(event.getFile().getContents());
+							firma.setArchivo(event.getFile().getContent());
 							firma.setNombreArchivo(newName);
 							firma = this.firmaRepository.save(firma);
 						} else {
 							firma = firmaRepository
-									.save(new TcFirmaDigital(event.getFile().getContents(), usuario, newName));
+									.save(new TcFirmaDigital(event.getFile().getContent(), usuario, newName));
 						}
 						imagenPath = ImagesFirmasDigitales.createPathTempFromImg(firma.getNombreArchivo(),
 								firma.getArchivo());

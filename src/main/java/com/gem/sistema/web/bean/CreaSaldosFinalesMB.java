@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -8,14 +11,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -29,8 +30,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class CreaSaldosFinalesMB.
  */
-@ManagedBean(name = "creaSaldosFinalesMB")
-@ViewScoped
+@Component("creaSaldosFinalesMB")
+@Scope("view")
 public class CreaSaldosFinalesMB extends GenericExecuteProcedure {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CreaSaldosFinalesMB.class);
@@ -55,7 +56,7 @@ public class CreaSaldosFinalesMB extends GenericExecuteProcedure {
 		} else if (VALID_PASSWORD.equals(enteredPassword)) {
 			try {
 				this.downLoadFile();
-				RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+				PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 			} catch (ReportValidationException e) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL,
 						"Ha ocurrido un error generando el archivo", "Favor de Contactar al Adminitrador");
@@ -91,7 +92,7 @@ public class CreaSaldosFinalesMB extends GenericExecuteProcedure {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

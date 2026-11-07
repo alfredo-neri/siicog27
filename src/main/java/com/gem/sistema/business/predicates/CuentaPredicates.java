@@ -5,8 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.gem.sistema.business.domain.Cuenta;
 import com.gem.sistema.business.domain.Polide;
 import com.gem.sistema.business.domain.QCuenta;
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 // TODO: Auto-generated Javadoc
 /**

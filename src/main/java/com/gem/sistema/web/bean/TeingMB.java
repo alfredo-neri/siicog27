@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -19,11 +19,11 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class TeingMB.
  */
-@ManagedBean(name = "teingMB")
-@ViewScoped
+@Component("teingMB")
+@Scope("view")
 public class TeingMB extends BaseDirectReport {
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
 	/**

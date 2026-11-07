@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 import com.gem.sistema.business.domain.Polien;
 import com.gem.sistema.business.domain.TcPeriodo;
@@ -19,8 +19,8 @@ import com.gem.sistema.business.repository.catalogs.PolienRepository;
 import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
-@ViewScoped
-@ManagedBean(name = "cambioFechaMB")
+@Scope("view")
+@Component("cambioFechaMB")
 public class CambioFechaMB extends AbstractMB {
 
 	private List<TcPeriodo> listMeses;
@@ -33,13 +33,13 @@ public class CambioFechaMB extends AbstractMB {
 	private Integer anopol;
 	private boolean rendered;
 
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	@PostConstruct
@@ -77,14 +77,14 @@ public class CambioFechaMB extends AbstractMB {
 			minDate = "1/" + polien.getMespol() + "/" + anio;
 			maxDate = lastDay + "/" + polien.getMespol() + "/" + anio;
 		}
-		RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+		PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 	}
 
 	public void guardarCambios() {
 
 		rendered = false;
 		conpol = null;
-		RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+		PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		polienRepository.save(polien);
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY,
 				"Fecha modificada con éxito.");

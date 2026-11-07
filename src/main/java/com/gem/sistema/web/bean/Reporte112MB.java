@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDay;
 
@@ -8,14 +11,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import org.springframework.data.domain.Sort;
 
@@ -33,8 +33,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class Reporte112MB.
  */
-@ManagedBean(name = "reporte112MB")
-@ViewScoped
+@Component("reporte112MB")
+@Scope("view")
 public class Reporte112MB extends BaseDirectReport {
 
 	/** The firmas. */
@@ -95,23 +95,23 @@ public class Reporte112MB extends BaseDirectReport {
 	private boolean bReport = Boolean.FALSE;
 	
 	/** The pm 0411 service. */
-	@ManagedProperty("#{pm0411Service}")
+	@Value("#{pm0411Service}")
 	private Pm0411Service pm0411Service;
 
 	/** The pm 0411 repository. */
-	@ManagedProperty("#{pm0411Repository}")
+	@Value("#{pm0411Repository}")
 	private Pm0411Repository pm0411Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/**
@@ -680,7 +680,7 @@ public class Reporte112MB extends BaseDirectReport {
 		bBorrar = Boolean.TRUE;
 		bAdd = Boolean.TRUE;
 		listPm0411.add(0, pm0411Service.add());
-		RequestContext.getCurrentInstance().execute("PF('pm0411Wdg').paginator.setPage(0);");
+		PrimeFaces.current().executeScript("PF('pm0411Wdg').paginator.setPage(0);");
 		if (null == listPm0411.get(1).getUserid())
 			listPm0411.remove(1);
 
@@ -889,7 +889,7 @@ public class Reporte112MB extends BaseDirectReport {
 	 * @return the sort
 	 */
 	public Sort orderByAsc(){
-		return new Sort(Sort.Direction.ASC, "trimestre");
+		return Sort.by(Sort.Direction.ASC, "trimestre");
 	}
 
 }

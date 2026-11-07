@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -9,10 +12,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -27,8 +28,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  * Changes: Se crean componentes para el reporte Trimestral del
  *			Programa Anual de Adquisiciones
  */
-@ManagedBean(name = "programaAnualAdquisicionesMB")
-@ViewScoped
+@Component("programaAnualAdquisicionesMB")
+@Scope("view")
 public class ProgramaAnualAdquisicionesMB extends GenericExecuteProcedure {
 
 	private Integer trimestre;
@@ -71,7 +72,7 @@ public class ProgramaAnualAdquisicionesMB extends GenericExecuteProcedure {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		}
 

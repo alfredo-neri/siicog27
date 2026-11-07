@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AjaxBehaviorEvent;
 import javax.security.auth.login.AccountException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ import com.roonin.utils.NumberToLetterConverter;
 /**
  * The Class EmisionFacturaElectronicaMB.
  */
-@ManagedBean(name = "emisionFacturaElectronica")
-@ViewScoped
+@Component("emisionFacturaElectronica")
+@Scope("view")
 public class EmisionFacturaElectronicaMB extends AbstractMB {
 
   /**     linked view props. */
@@ -141,11 +141,11 @@ public class EmisionFacturaElectronicaMB extends AbstractMB {
   public Boolean cfdDisabled = Boolean.TRUE;
 
   /**     Services. */
-  @ManagedProperty("#{cfdmasterService}")
+  @Value("#{cfdmasterService}")
   CfdmasterService cfdmasterService;
 
   /** The cfddetails service. */
-  @ManagedProperty("#{cfddetailsService}")
+  @Value("#{cfddetailsService}")
   CfddetailsService cfddetailsService;
 
   /**

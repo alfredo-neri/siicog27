@@ -1,14 +1,15 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
 
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
 import java.io.FileInputStream;
-import javax.faces.bean.ManagedProperty;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.DefaultStreamedContent;
 import com.gem.sistema.business.service.reportador.GeneraPartidasPresupuestalesEnCeroService;
@@ -17,12 +18,12 @@ import com.gem.sistema.business.service.reportador.GeneraPartidasPresupuestalesE
 /**
  * The Class GeneraPartidasPresupuestalesEnCeroMB.
  */
-@ManagedBean(name = "genPartPresEnCeroMB")
-@ViewScoped
+@Component("genPartPresEnCeroMB")
+@Scope("view")
 public class GeneraPartidasPresupuestalesEnCeroMB extends AbstractMB{
 
   /** The genera partidas presupuestales en cero service. */
-  @ManagedProperty("#{generaPartidasPresupuestalesEnCeroService}")
+  @Value("#{generaPartidasPresupuestalesEnCeroService}")
   private GeneraPartidasPresupuestalesEnCeroService generaPartidasPresupuestalesEnCeroService;
 
   /** The download. */
@@ -76,7 +77,7 @@ public class GeneraPartidasPresupuestalesEnCeroMB extends AbstractMB{
          generaPartidasPresupuestalesEnCeroService.generatePartidasPresPasos(getIdSectorForCurrentUser().intValue(),zipFile, getUserDetails().getUsername());
 
         if(zipFile!=null){
-            this.setDownload(new DefaultStreamedContent(new FileInputStream(zipFile), "zip", "egre.zip"));
+            this.setDownload(StreamedContents.of(new FileInputStream(zipFile), "zip", "egre.zip", null));
           }
         }catch(Exception e){
           e.printStackTrace();

@@ -3,7 +3,6 @@
  */
 package com.gem.sistema.load.fileupload.validators.field;
 
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.gem.sistema.load.fileupload.exceptions.ValidateTokenException;

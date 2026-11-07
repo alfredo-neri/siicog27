@@ -136,14 +136,14 @@ public class ControlPresupuestarioServiceImpl implements ControlPresupuestarioSe
 
 	@Override
 	public List<TrPresupuestoArea> savePresupuestoAreas(List<TrPresupuestoArea> presupuestoAreas) {
-		return (List<TrPresupuestoArea>) presupuestoAreaRepository.save(presupuestoAreas);
+		return (List<TrPresupuestoArea>) presupuestoAreaRepository.saveAll(presupuestoAreas);
 	}
 
 	@Override
 	public List<TrPresupuestoDependencia> savePresupuestoDependencias(
 			List<TrPresupuestoDependencia> presupuestoDependencias) {
 
-		return presupuestoDependenciaRepository.save(presupuestoDependencias);
+		return presupuestoDependenciaRepository.saveAll(presupuestoDependencias);
 	}
 
 	@Override

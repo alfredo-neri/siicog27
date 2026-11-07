@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.faces.bean.ManagedProperty;
 
 import org.primefaces.model.StreamedContent;
 
@@ -28,7 +28,7 @@ public abstract class ReportePeriodos extends BaseDirectReport {
 	protected TcPeriodo periodo;
 	protected List<TcPeriodo> periodos;
 
-	@ManagedProperty(value = "#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	protected TcPeriodoRepositoy periodoRepositoy;
 
 	/**

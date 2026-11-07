@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
@@ -19,8 +19,8 @@ import com.gem.sistema.business.service.callsp.ExecutePlService;
 /**
  * The Class InventarioGeneralBienesMueblesBajoCostoCargaAutomaticaMB.
  */
-@ManagedBean(name = "CBajoCostoMB")
-@ViewScoped
+@Component("CBajoCostoMB")
+@Scope("view")
 public class InventarioGeneralBienesMueblesBajoCostoCargaAutomaticaMB extends AbstractMB {
 
 	private Integer alMes;
@@ -30,7 +30,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCargaAutomaticaMB extends Ab
 	private static final String PROCEDURE = "SP_CARGA_ARCHIVO_BIENES_BC";
 	private String proceso = "R";
 
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 
 	@PostConstruct
@@ -81,7 +81,7 @@ public class InventarioGeneralBienesMueblesBajoCostoCargaAutomaticaMB extends Ab
 			if (this.archivo.getName().equals("bienesbc.csv")) {
 				if (StringUtils.isNotEmpty(this.archivo.getName().toString())) {
 					try {
-						FileUtils.copyInputStreamToFile(event.getFile().getInputstream(), this.archivo);
+						FileUtils.copyInputStreamToFile(event.getFile().getInputStream(), this.archivo);
 						if (this.archivo.length() <= 0) {
 							this.displayInfoMessage("El archivo no puede ser vacio");
 							return;

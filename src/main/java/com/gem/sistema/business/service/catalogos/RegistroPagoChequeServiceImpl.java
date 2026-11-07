@@ -118,7 +118,7 @@ public class RegistroPagoChequeServiceImpl implements RegistroPagoChequeService 
 
 	@Override
 	public TwRegistroPagoCheque findByIdCheque(Integer idCheque) {
-		return this.repository.findOne(idCheque.longValue());
+		return this.repository.findById(idCheque.longValue()).orElse(null);
 	}
 
 	@Override

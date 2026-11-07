@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -26,8 +26,8 @@ import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
  *           ajusta logos de reporte
  * @Sector Municipal
  */
-@ManagedBean
-@ViewScoped
+@Component("pbrm01aMB")
+@Scope("view")
 public class Pbrm01aMB extends BaseDirectReport {
 
 	private static final String CLAVE_REPORT = "RPT_PROGRAMA_ANUAL_DIMENSION_ADMINISTRATIVA_GASTO";
@@ -36,13 +36,13 @@ public class Pbrm01aMB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/**

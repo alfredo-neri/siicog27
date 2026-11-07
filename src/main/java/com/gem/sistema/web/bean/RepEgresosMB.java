@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -12,8 +12,8 @@ import org.primefaces.model.StreamedContent;
 /**
  * The Class RepEgresosMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("repEgresosMB")
+@Scope("view")
 public class RepEgresosMB extends BaseDirectReport {
 
 	/** The tipo rep. */

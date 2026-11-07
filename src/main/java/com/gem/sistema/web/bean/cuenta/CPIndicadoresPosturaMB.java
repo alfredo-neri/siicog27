@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean.cuenta;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -18,11 +18,11 @@ import com.gem.sistema.web.bean.BaseDirectReport;
 /**
  * @author Alfredo Neri
  */
-@ViewScoped
-@ManagedBean(name = "cPIndicadoresPosturaMB")
+@Scope("view")
+@Component("cPIndicadoresPosturaMB")
 public class CPIndicadoresPosturaMB extends BaseDirectReport {
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	@PostConstruct

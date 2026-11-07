@@ -1,7 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,14 +26,11 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.business.utils.ConvertCharsetUtils;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -41,8 +42,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
  *
  * @author Alfredo
  */
-@ManagedBean(name = "estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion")
-@ViewScoped
+@Component("estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion")
+@Scope("view")
 public class EstadoAvancePresupuestalEgresosFinalidadFuncionSubFuncionMB extends GenericExecuteProcedure {
 	
 	/** The Constant PROCEDURE_NAME. */
@@ -87,18 +88,18 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionSubFuncionMB extends
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The tcmes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcmesRepository;
 
 	/** The muni nep repository. */
-	@ManagedProperty("#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muniNepRepository;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {
@@ -163,7 +164,7 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionSubFuncionMB extends
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());
@@ -202,7 +203,7 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionSubFuncionMB extends
 			}
 
 			txtPreview = this.generatePreviewService.generatePreview(fileNameOut);
-			RequestContext.getCurrentInstance().execute(FOCUS_IN_PREVIEW);
+			PrimeFaces.current().executeScript(FOCUS_IN_PREVIEW);
 		}
 
 	}
@@ -433,7 +434,7 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionSubFuncionMB extends
 	public void downloadTxt() throws ReportValidationException {
 		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			this.downLoadFile();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

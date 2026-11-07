@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.*;
+import static jakarta.faces.application.FacesMessage.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,24 +16,21 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import com.gem.sistema.business.domain.Ingreso;
 import com.gem.sistema.business.repository.catalogs.ParametrosRepository;
 import com.gem.sistema.business.repository.load.IngresoRepository;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 
-@ManagedBean(name = "plantillaIngresosOsfemMB")
-@ViewScoped
+@Component("plantillaIngresosOsfemMB")
+@Scope("view")
 public class PlantillaIngresosOsfemMB extends AbstractMB {
 	private static final String PASSWORD = "xcargaplantilla";
 
@@ -50,10 +50,10 @@ public class PlantillaIngresosOsfemMB extends AbstractMB {
 	private boolean size;
 	private boolean objDisabled;
 
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
-	@ManagedProperty("#{ingresoRepository}")
+	@Value("#{ingresoRepository}")
 	private IngresoRepository ingresoRepository;
 
 	@PostConstruct
@@ -76,7 +76,7 @@ public class PlantillaIngresosOsfemMB extends AbstractMB {
 
 			Long idSector = Long.valueOf(this.getUserDetails().getIdSector());
 			FileReader fR = this.saveFile(this.getPath("CARG_ARCHIVO"), event.getFile().getFileName(),
-					event.getFile().getInputstream());
+					event.getFile().getInputStream());
 			BufferedReader b = new BufferedReader(fR);
 			String cadena = "";
 			while ((cadena = b.readLine()) != null) {

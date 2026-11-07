@@ -1,9 +1,8 @@
 package com.gem.sistema.load.fileupload.validators;
 
-
-
+import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 
 // TODO: Auto-generated Javadoc
@@ -19,7 +18,7 @@ public abstract class AbstractCellFieldValidator extends AbstractSimpleFieldVali
      * <b> LOGGER. </b>
      * </p>
      */
-    private static final Logger LOGGER = Logger.getLogger(AbstractSimpleFieldValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSimpleFieldValidator.class);
 
     /**
      * <p>

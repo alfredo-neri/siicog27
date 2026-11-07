@@ -1,5 +1,6 @@
 package com.gem.sistema.util;
 
+import com.gem.sistema.web.util.StreamedContents;
 import static com.gem.sistema.util.Constants.BLANK;
 import static com.gem.sistema.util.Constants.LIKE;
 import static com.gem.sistema.util.Constants.PREFIX_GET;
@@ -22,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-import javax.persistence.Column;
-import javax.servlet.ServletContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.persistence.Column;
+import jakarta.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -47,12 +48,13 @@ import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.TcReportesFirma;
 import com.gem.sistema.web.security.model.GemUser;
 
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.poi.export.JRXlsExporter;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -229,7 +231,7 @@ public class UtilReport {
 			final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 			JasperExportManager.exportReportToPdfStream(print, arrayOutputStream);
 			final InputStream stream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
-			result = new DefaultStreamedContent(stream, CONTENT_TYPE_PDF, reportName.concat(PDF_EXTENSION));
+			result = StreamedContents.of(stream, CONTENT_TYPE_PDF, reportName.concat(PDF_EXTENSION), null);
 			LOGGER.info(":: Termina Exportar PDF ");
 		} catch (final Exception genericExc) {
 			LOGGER.error(":: Error al generar reporte de Excel ", genericExc);
@@ -279,15 +281,17 @@ public class UtilReport {
 			final JasperPrint print = JasperFillManager.fillReport(pathReport, parameters, connection);
 			final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 			final JRXlsExporter exporter = new JRXlsExporter();
-			exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
-			exporter.setParameter(JRXlsExporterParameter.OUTPUT_STREAM, arrayOutputStream);
-			exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-			exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
-			exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-			exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
+			exporter.setExporterInput(new SimpleExporterInput(print));
+			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(arrayOutputStream));
+			final SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+			configuration.setOnePagePerSheet(Boolean.FALSE);
+			configuration.setDetectCellType(Boolean.TRUE);
+			configuration.setWhitePageBackground(Boolean.FALSE);
+			configuration.setRemoveEmptySpaceBetweenRows(Boolean.TRUE);
+			exporter.setConfiguration(configuration);
 			exporter.exportReport();
 			final InputStream stream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
-			result = new DefaultStreamedContent(stream, CONTENT_TYPE_XLS, reportName.concat(XLS_EXTENSION));
+			result = StreamedContents.of(stream, CONTENT_TYPE_XLS, reportName.concat(XLS_EXTENSION), null);
 			LOGGER.info(":: Finaliza exportar Excel {} ", result);
 		} catch (final Exception genericExc) {
 			LOGGER.error(":: Error al generar reporte de Excel ", genericExc);
@@ -322,7 +326,7 @@ public class UtilReport {
 			text.append(createRowFromObject(element, separatorCols));
 		}
 		final InputStream stream = new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8));
-		return new DefaultStreamedContent(stream, typeContent, reportName.concat(extension), "UTF-8");
+		return StreamedContents.of(stream, typeContent, reportName.concat(extension), "UTF-8");
 	}
 
 	/**
@@ -345,7 +349,7 @@ public class UtilReport {
 			text.append(createCSVRowFromObject(element, separatorCols));
 		}
 		final InputStream stream = new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.ISO_8859_1));
-		return new DefaultStreamedContent(stream, typeContent, reportName.concat(extension), "ISO-8859-1");
+		return StreamedContents.of(stream, typeContent, reportName.concat(extension), "ISO-8859-1");
 	}
 
 	/**

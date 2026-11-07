@@ -1,10 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.MIN_LENGTH_FIELD_CAMPO8_MATRIX_INDICATORS;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,18 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -49,7 +50,7 @@ import com.gem.sistema.business.repository.catalogs.MirRepository;
 import com.gem.sistema.business.repository.catalogs.MuniNepRepository;
 import com.gem.sistema.business.repository.catalogs.XcatproRepository;
 import com.gem.sistema.web.util.FrontProperty;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -57,8 +58,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogMatrixIndicatorsMB")
+@Scope("view")
 public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -108,15 +109,15 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 	private Xcatpro programSelected;
 	
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{mirRepository}")
+	@Value("#{mirRepository}")
 	private MirRepository mirRepository;
 
 	/** Repositorio de muninep. */
-	@ManagedProperty(value = "#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muniNepRepository;
 
 	/** The xcatpro repository. */
-	@ManagedProperty(value = "#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
 	/** Campo requerido Codigo. */
@@ -239,7 +240,7 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 
 			// this.mirRepository.save(catalog);
 			executeOperationSaveOrUpdate(catalog, mirRepository);
-			// RequestContext.getCurrentInstance().execute("document.getElementById('form1:hideButton3').click();");
+			// PrimeFaces.current().executeScript("document.getElementById('form1:hideButton3').click();");
 
 		} else {
 			if (errorMsg.length() == ZERO) {
@@ -331,8 +332,8 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 				if (bandera == 0) {
 					mirRepository.delete(getBeanSelected());
 					restartDataOperationDelete();
-					RequestContext.getCurrentInstance()
-							.execute("document.getElementById('form1:hideButton2').click();");
+					PrimeFaces.current()
+							.executeScript("document.getElementById('form1:hideButton2').click();");
 				} else {
 					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
 							"No se puede eliminar tiene dependencia en Finalidad");
@@ -343,8 +344,8 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 				if (bandera == 0) {
 					mirRepository.delete(getBeanSelected());
 					restartDataOperationDelete();
-					RequestContext.getCurrentInstance()
-							.execute("document.getElementById('form1:hideButton2').click();");
+					PrimeFaces.current()
+							.executeScript("document.getElementById('form1:hideButton2').click();");
 				} else {
 					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
 							"No se puede eliminar tiene dependencia en Componente");
@@ -355,8 +356,8 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 				if (bandera == 0) {
 					mirRepository.delete(getBeanSelected());
 					restartDataOperationDelete();
-					RequestContext.getCurrentInstance()
-							.execute("document.getElementById('form1:hideButton2').click();");
+					PrimeFaces.current()
+							.executeScript("document.getElementById('form1:hideButton2').click();");
 				} else {
 					generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR,
 							"No se puede eliminar tiene dependencia en Actividad");
@@ -367,8 +368,8 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 				if (bandera == 0) {
 					mirRepository.delete(getBeanSelected());
 					restartDataOperationDelete();
-					RequestContext.getCurrentInstance()
-							.execute("document.getElementById('form1:hideButton2').click();");
+					PrimeFaces.current()
+							.executeScript("document.getElementById('form1:hideButton2').click();");
 				} else {
 					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
 							"No se puede eliminar tiene dependencia en Proposito");
@@ -404,7 +405,7 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 	}
 
 	/** The Constant MIR_PROGRAMA_ASC. */
-	private static final Sort MIR_PROGRAMA_ASC = new Sort(Sort.Direction.ASC, "programa");
+	private static final Sort MIR_PROGRAMA_ASC = Sort.by(Sort.Direction.ASC, "programa");
 
 	/**
 	 * Consult program structure.
@@ -442,8 +443,8 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 		LOGGER.info(":: Cambiar Programa ");
 		rowSelected.setPrograma(programSelected.getClvfun());
 		activateRowEdit(rowSelected.getIndex());
-		final RequestContext context = RequestContext.getCurrentInstance();
-		context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":programa");
+		final PrimeFaces context = PrimeFaces.current();
+		context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":programa");
 	}
 
 	/**
@@ -672,7 +673,7 @@ public class CatalogMatrixIndicatorsMB extends CommonCatalogMB<Mir> implements S
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString());
+			csvByPl = StreamedContents.of(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

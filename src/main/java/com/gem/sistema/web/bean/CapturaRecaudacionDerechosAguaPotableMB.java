@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,15 +16,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -34,16 +34,16 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class CapturaRecaudacionDerechosAguaPotableMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("capturaRecaudacionDerechosAguaPotableMB")
+@Scope("view")
 public class CapturaRecaudacionDerechosAguaPotableMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The repository. */
-	@ManagedProperty("#{aguaRepository}")
+	@Value("#{aguaRepository}")
 	private AguaRepository repository;
 
 	/** The master list. */
@@ -148,8 +148,8 @@ public class CapturaRecaudacionDerechosAguaPotableMB extends BaseDirectReport {
 		entity.setMes(selectableMonth.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -240,7 +240,7 @@ public class CapturaRecaudacionDerechosAguaPotableMB extends BaseDirectReport {
 			// selected.setObsncpip("");
 			// selected.setObstcrpip("");
 		} else {
-			selected = repository.findOne(selected.getId());
+			selected = repository.findById(selected.getId()).orElse(null);
 			masterList.set(currentPage, selected);
 		}
 	}
@@ -249,7 +249,7 @@ public class CapturaRecaudacionDerechosAguaPotableMB extends BaseDirectReport {
 	 * Delete.
 	 */
 	public void delete() {
-		repository.delete(selected.getId());
+		repository.deleteById(selected.getId());
 		masterList.remove(currentPage);
 		currentPage = currentPage > 0 ? currentPage - 1 : 0;
 		actualizaSeleccionado();

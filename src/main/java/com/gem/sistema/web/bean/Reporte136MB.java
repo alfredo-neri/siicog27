@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDay;
 
@@ -9,11 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -36,8 +36,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class Reporte136MB.
  */
-@ManagedBean(name = "reporte136MB")
-@ViewScoped
+@Component("reporte136MB")
+@Scope("view")
 public class Reporte136MB extends BaseDirectReport {
 
 	/** The firmas. */
@@ -101,29 +101,29 @@ public class Reporte136MB extends BaseDirectReport {
 	private boolean bAdd = Boolean.FALSE;
 
 	/** The pm 3411 service. */
-	@ManagedProperty("#{pm3411Service}")
+	@Value("#{pm3411Service}")
 	private Pm3411Service pm3411Service;
 
 	/** The pm 3411 repository. */
-	@ManagedProperty("#{pm3411Repository}")
+	@Value("#{pm3411Repository}")
 	private Pm3411Repository pm3411Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	public PuestosFirmasService getPuestosFirmasService() {

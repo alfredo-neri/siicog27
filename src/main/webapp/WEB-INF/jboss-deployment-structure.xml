@@ -1,15 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jboss-deployment-structure>
-  <deployment>
-    <exclusions>
-      <module name="org.apache.commons.logging" />
-      <module name="org.apache.log4j" />
-      <module name="org.jboss.logging" />
-      <module name="org.jboss.logging.jul-to-slf4j-stub" />
-      <module name="org.jboss.logmanager" />
-      <module name="org.jboss.logmanager.log4j" />
-      <module name="org.slf4j" />
-      <module name="org.slf4j.impl" />
-    </exclusions>
-  </deployment>
-  </jboss-deployment-structure>
+<!--
+	Despliegue en WildFly 41. siicog27 trae dentro del WAR su propio Faces (Mojarra vía JoinFaces),
+	Hibernate, validación y logging, todos configurados por Spring Boot. Se excluyen los subsistemas
+	de WildFly que harían lo mismo para que no se inicialicen dos veces ni carguen otras versiones.
+	La API de EL sí la pone WildFly (wildflyee.api la reexporta), igual que la de Servlet.
+	Con java -jar o Tomcat este archivo se ignora.
+
+	Además del WAR, en WildFly hacen falta: los context-param de web.xml (Spring Boot no aplica los de
+	application.yml fuera del Tomcat embebido) y VfsBeanArchiveHandler (Weld y las URLs vfs:).
+-->
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.3">
+	<deployment>
+		<exclude-subsystems>
+			<subsystem name="jsf" />
+			<subsystem name="weld" />
+			<subsystem name="jpa" />
+			<subsystem name="bean-validation" />
+			<subsystem name="jaxrs" />
+			<subsystem name="logging" />
+			<subsystem name="ee-security" />
+			<subsystem name="batch-jberet" />
+		</exclude-subsystems>
+		<exclusions>
+			<!-- Módulos de WildFly que publican extensiones CDI (META-INF/services). El Weld del WAR las
+			     encuentra y falla porque implementan la interfaz CDI de WildFly, no la del WAR. -->
+			<module name="jakarta.enterprise.api" />
+			<module name="jakarta.enterprise.concurrent.api" />
+			<module name="org.glassfish.concurro" />
+			<module name="org.wildfly.concurrency" />
+			<module name="io.smallrye.config" />
+			<module name="io.smallrye.fault-tolerance" />
+			<module name="io.smallrye.opentelemetry" />
+			<module name="io.smallrye.reactive.messaging" />
+			<module name="jakarta.faces.impl" />
+			<module name="org.eclipse.krazo.core" />
+			<module name="org.glassfish.soteria" />
+			<module name="org.hibernate.validator.cdi" />
+			<module name="org.infinispan.cdi.embedded" />
+			<module name="org.infinispan.cdi.remote" />
+			<module name="org.jberet.jberet-core" />
+			<module name="org.jboss.jts" />
+			<module name="org.jboss.narayana.lra.lra-participant" />
+			<module name="org.jboss.resteasy.resteasy-cdi" />
+			<module name="org.jboss.resteasy.resteasy-client-microprofile" />
+			<module name="org.wildfly.security.elytron-jwt" />
+		</exclusions>
+		<dependencies>
+			<!-- el driver de DB2 (jcc) usa jdk.net.ExtendedSocketOptions, que WildFly no expone por omision -->
+			<module name="jdk.net" />
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>

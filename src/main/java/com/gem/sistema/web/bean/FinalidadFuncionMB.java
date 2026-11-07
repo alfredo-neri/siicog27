@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
@@ -26,8 +26,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  *           implementa servivio de firmas dinamico<br>
  * @Sector Municipal
  */
-@ManagedBean(name = "finalidadFuncionMB")
-@ViewScoped
+@Component("finalidadFuncionMB")
+@Scope("view")
 public class FinalidadFuncionMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_LDF_GENERIC_EGRESOS";
 	private static final String OUTPUT_REPORT_NAME = "LDF-ClasificacionFuncional_";
@@ -35,13 +35,13 @@ public class FinalidadFuncionMB extends BaseDirectReport {
 	private Integer noDecimales;
 	private Integer pesos;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/**

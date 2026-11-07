@@ -64,7 +64,7 @@ public class Pm5511BSImpl implements Pm5511BS {
 	 * @see com.gem.sistema.business.bs.Pm5511BS#orderByAsc()
 	 */
 	public Sort orderByAsc() {
-		return new Sort(Sort.Direction.ASC, "mensual");
+		return Sort.by(Sort.Direction.ASC, "mensual");
 	}
 
 	/* (non-Javadoc)
@@ -160,7 +160,7 @@ public class Pm5511BSImpl implements Pm5511BS {
 	 */
 	@Override
 	public List<Pm5511> delete(List<Pm5511> listPm511, Integer index) {
-		pm5511Repository.delete(listPm511.get(index).getId());
+		pm5511Repository.deleteById(listPm511.get(index).getId());
 		listPm511 = this.findAllOrderByMensual();
 		if(CollectionUtils.isEmpty(listPm511))
 			listPm511.add(index, this.beginVariables());

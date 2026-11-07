@@ -3,7 +3,7 @@ package com.gem.sistema.business.predicates;
 import com.gem.sistema.business.domain.Componente;
 import com.gem.sistema.business.domain.QComponente;
 import com.gem.sistema.business.domain.QProposito;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

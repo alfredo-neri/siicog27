@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.ArrayList;
@@ -11,15 +14,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -35,8 +35,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class IndicadorTrimestralAtencionIntegralMadreMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("indicadorTrimestralAtencionIntegralMadreMB")
+@Scope("view")
 public class IndicadorTrimestralAtencionIntegralMadreMB extends BaseDirectReport {
 
 	/** The conctb. */
@@ -46,15 +46,15 @@ public class IndicadorTrimestralAtencionIntegralMadreMB extends BaseDirectReport
 	private Firmas firmas;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The service. */
-	@ManagedProperty("#{pm2111Service}")
+	@Value("#{pm2111Service}")
 	private Pm2111Service service;
 
 	/** The master list. */
@@ -171,8 +171,8 @@ public class IndicadorTrimestralAtencionIntegralMadreMB extends BaseDirectReport
 		entity.setTrimestre(selectableTrimesters.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -211,8 +211,8 @@ public class IndicadorTrimestralAtencionIntegralMadreMB extends BaseDirectReport
 
 			sortMasterList();
 			currentPage = masterList.indexOf(nuevo);
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').getPaginator().setPage(" + (selected.getTrimestre() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').getPaginator().setPage(" + (selected.getTrimestre() - 1) + ");");
 
 			defaultValues(nuevo);
 			Pm2111 pm2111 = service.save(nuevo);

@@ -1,7 +1,7 @@
 package com.gem.sistema.business.domain;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The persistent class for the TR_CONTRATO_SOLICITUDES database table.

@@ -1,7 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,15 +14,12 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -46,8 +47,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class ConsultaPolizaMB.
  */
-@ManagedBean(name = "consultaPolizaMB")
-@ViewScoped
+@Component("consultaPolizaMB")
+@Scope("view")
 public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	
 	/** The Constant serialVersionUID. */
@@ -120,7 +121,7 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	private List<Cuenta> listCuenta;
 
 	/** The exis digital. */
-	@ManagedProperty("#{tcRegistraArchivoDigitalRepository}")
+	@Value("#{tcRegistraArchivoDigitalRepository}")
 	private TcRegistraArchivoDigitalRepository exisDigital;
 
 	/**
@@ -209,7 +210,7 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	public StreamedContent getStreamedContent() {
 		if (streamedContent != null)
 			try {
-				streamedContent.getStream().reset();
+				streamedContent.getStream().get().reset();
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
@@ -283,11 +284,11 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	}
 
 	/** The consulta poliza sirve impl. */
-	@ManagedProperty("#{consultaPolizaSirveImpl}")
+	@Value("#{consultaPolizaSirveImpl}")
 	private ConsultaPolizaSirveImpl consultaPolizaSirveImpl;
 
 	/** The poliza service. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaServiceImpl polizaService;
 
 	/**
@@ -507,27 +508,27 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	}
 
 	/** The cattpo repositry. */
-	@ManagedProperty("#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepositry;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The cuenta repository. */
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/** The archivo repository. */
-	@ManagedProperty("#{tcRegistraArchivoDigitalRepository}")
+	@Value("#{tcRegistraArchivoDigitalRepository}")
 	private TcRegistraArchivoDigitalRepository archivoRepository;
 
 	/** The polide repository. */
-	@ManagedProperty("#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** The polien repository. */
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
 	/**
@@ -877,7 +878,7 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	 */
 	public void findDigitalPoli() {
 		if (this.imageId > 0) {
-			RequestContext.getCurrentInstance().execute("PF('digitalPoliza').show();");
+			PrimeFaces.current().executeScript("PF('digitalPoliza').show();");
 
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
@@ -925,7 +926,7 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	public void getReportPoli() {
 		LOGGER.info("ENtra a leer el reporte del PDF");
 		try {
-			streamedContent = new DefaultStreamedContent(new FileInputStream("/tmp/Poliza.pdf"), "application/pdf");
+			streamedContent = StreamedContents.of(new FileInputStream("/tmp/Poliza.pdf"), "application/pdf", null, null);
 			LOGGER.info("ST::: " + streamedContent.getContentEncoding());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1036,7 +1037,7 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 	protected static final String MESSAGE_ERROR = FrontProperty.getPropertyValue("catalog.message.error");
 
 	/** The poliza serviceimpl. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaServiceimpl;
 
 	/**
@@ -1048,12 +1049,11 @@ public class ConsultaPolizaMB extends AbstractMB implements Serializable {
 
 		if (validate()) {
 			this.setRenderPdf(Boolean.TRUE);
-			// this.streamedContent = new DefaultStreamedContent(
-			// this.polizaServiceimpl.getReportByTipopolMespolConpol(REPORT_PATH_JASPER_POLICY,
+			// this.streamedContent = StreamedContents.of(// this.polizaServiceimpl.getReportByTipopolMespolConpol(REPORT_PATH_JASPER_POLICY,
 			// REPORT_NAME,
 			// "escudo_ecatepec.png", polien.getTippol(), polien.getMespol(),
 			// polien.getConpol(), polien.getConpol(),
-			// getUserDetails().getIdSector()), "application/pdf");
+			// getUserDetails().getIdSector()), "application/pdf", null, null);
 			try {
 				this.filePdfPath = this.polizaServiceimpl.savePDFFile(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
 						"escudo_ecatepec.png", polien.getTippol(), polien.getMespol(), polien.getConpol(),

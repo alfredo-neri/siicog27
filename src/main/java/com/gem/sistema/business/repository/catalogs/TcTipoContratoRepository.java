@@ -1,6 +1,5 @@
 package com.gem.sistema.business.repository.catalogs;
 
-
 import com.gem.sistema.business.domain.TcTipoContrato;
 
 import org.springframework.data.repository.CrudRepository;

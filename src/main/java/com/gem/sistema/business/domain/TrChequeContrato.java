@@ -1,7 +1,6 @@
 package com.gem.sistema.business.domain;
 
-
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 

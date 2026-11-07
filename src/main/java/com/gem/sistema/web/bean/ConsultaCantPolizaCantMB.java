@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
@@ -22,8 +22,8 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 /**
  * The Class ConsultaCantPolizaCantMB.
  */
-@ManagedBean(name = "consultaCantPolizaCantMB")
-@ViewScoped
+@Component("consultaCantPolizaCantMB")
+@Scope("view")
 public class ConsultaCantPolizaCantMB extends AbstractMB implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -33,10 +33,10 @@ public class ConsultaCantPolizaCantMB extends AbstractMB implements Serializable
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConsultaCantPolizaCantMB.class);
 
 	/** The repository. */
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository repository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/** The mes. */

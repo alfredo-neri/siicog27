@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +137,7 @@ public class TwIngresoPropioDetalleServiceImpl implements TwIngresoPropioDetalle
 			eliminaIngresoByPolide(polide);
 			List<TwIngresoPropiosDetalle> aCargar = detalle.stream()
 					.filter(in -> in.getMonto().compareTo(new BigDecimal(0)) != 0).collect(Collectors.toList());
-			detalleRepository.save(aCargar);
+			detalleRepository.saveAll(aCargar);
 			aCargar = aCargar.stream().map(in -> {
 				in.setIdIngreso(Long.valueOf(listIngresos.stream().filter(d -> d.getId() == in.getIdIngreso())
 						.collect(Collectors.toList()).get(0).getClave()));
@@ -155,7 +155,7 @@ public class TwIngresoPropioDetalleServiceImpl implements TwIngresoPropioDetalle
 	@Override
 	public void eliminaIngresoByPolide(Polide polide) {
 		List<TwIngresoPropiosDetalle> entitys = this.getByPolide(polide);
-		detalleRepository.delete(entitys);
+		detalleRepository.deleteAll(entitys);
 	}
 
 	private void cargaCatalogoIngresos() {

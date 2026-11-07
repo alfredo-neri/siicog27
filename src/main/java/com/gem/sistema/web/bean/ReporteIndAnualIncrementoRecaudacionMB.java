@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,12 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
@@ -33,8 +33,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class ReporteIndAnualIncrementoRecaudacionMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporteIndAnualIncrementoRecaudacionMB")
+@Scope("view")
 public class ReporteIndAnualIncrementoRecaudacionMB extends BaseDirectReport {
 
 
@@ -69,14 +69,14 @@ public class ReporteIndAnualIncrementoRecaudacionMB extends BaseDirectReport {
 	private Conctb conctb;
 	
 	/** The pm 4811 repository. */
-	@ManagedProperty("#{pm4811Repository}")
+	@Value("#{pm4811Repository}")
 	private Pm4811Repository pm4811Repository;
 	
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**
@@ -297,7 +297,7 @@ public class ReporteIndAnualIncrementoRecaudacionMB extends BaseDirectReport {
 		try{
 			boolean answer=false;
 			try{
-				pm4811Repository.delete(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
+				pm4811Repository.deleteById(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
 				answer = true;
 			}catch(Exception e){
 				answer = false;

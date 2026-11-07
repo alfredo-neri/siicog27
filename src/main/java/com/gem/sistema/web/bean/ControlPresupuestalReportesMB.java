@@ -1,12 +1,12 @@
 
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,21 +15,21 @@ import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 /**
  * @author Alfredo
  *
  */
-@ManagedBean
-@ViewScoped
+@Component("controlPresupuestalReportesMB")
+@Scope("view")
 public class ControlPresupuestalReportesMB extends ReportePeriodos {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ControlPresupuestalReportesMB.class);
 
 	private String report = StringUtils.EMPTY;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	@PostConstruct

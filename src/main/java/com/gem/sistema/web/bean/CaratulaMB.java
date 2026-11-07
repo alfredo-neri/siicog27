@@ -1,26 +1,26 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.LazyDataModel;
@@ -38,8 +38,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Ernesto Nava Serrano
  */
-@ManagedBean(name = "caratulaMB")
-@ViewScoped
+@Component("caratulaMB")
+@Scope("view")
 public class CaratulaMB extends AbstractMB implements Serializable {
 
 	protected static final String MESSAGE_INFO = FrontProperty.getPropertyValue("catalog.message.info");
@@ -78,7 +78,7 @@ public class CaratulaMB extends AbstractMB implements Serializable {
 	private String msj;
 
 	/** The caratula repository. */
-	@ManagedProperty(value = "#{caratulaRepository}")
+	@Value("#{caratulaRepository}")
 	private CaratulaRepository caratulaRepository;
 
 	/**
@@ -381,7 +381,7 @@ public class CaratulaMB extends AbstractMB implements Serializable {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	public void delete() {

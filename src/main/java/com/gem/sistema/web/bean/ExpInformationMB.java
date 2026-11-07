@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDay;
@@ -13,11 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.QConctb;
@@ -27,7 +28,7 @@ import com.gem.sistema.business.repository.catalogs.TcReportesFirmasRepository;
 import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -37,11 +38,11 @@ import com.gem.sistema.business.domain.TcPeriodo;
 import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
 import com.gem.sistema.business.service.catalogos.ExportInformationService;
 
-@ManagedBean(name = "expInformationMB")
-@ViewScoped
+@Component("expInformationMB")
+@Scope("view")
 public class ExpInformationMB extends BaseDirectReport {
 
-	@ManagedProperty("#{exportInformationService}")
+	@Value("#{exportInformationService}")
 	private ExportInformationService exportInformationService;
 
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -51,16 +52,16 @@ public class ExpInformationMB extends BaseDirectReport {
 
 	private static final Integer MENSUAL = 1;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	private StreamedContent file1;
@@ -111,7 +112,7 @@ public class ExpInformationMB extends BaseDirectReport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		file1 = new DefaultStreamedContent(stream1, "application/zip", pathName.substring(13));
+		file1 = StreamedContents.of(stream1, "application/zip", pathName.substring(13), null);
 		
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se Generaro el archivo zip: "
 				+ pathName.substring(13) );
@@ -165,7 +166,7 @@ public class ExpInformationMB extends BaseDirectReport {
 	public void downloadCuentaTxt() {
 		try {
 			this.downloadCuenta();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,7 +176,7 @@ public class ExpInformationMB extends BaseDirectReport {
 	public void downloadTxt2() {
 		try {
 			this.downloadCuenta();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT2);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT2);
 
 			
 		} catch (Exception e) {
@@ -187,7 +188,7 @@ public class ExpInformationMB extends BaseDirectReport {
 		try {
 			this.downloadCuenta();
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT3);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

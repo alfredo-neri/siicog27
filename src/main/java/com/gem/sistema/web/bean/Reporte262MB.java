@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDay;
 
 import java.util.Calendar;
@@ -8,10 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
@@ -29,8 +29,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class Reporte262MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporte262MB")
+@Scope("view")
 public class Reporte262MB extends BaseDirectReport {
 
 	/** The fecha ini. */
@@ -49,18 +49,18 @@ public class Reporte262MB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 	/** The data year system service. */
-	@ManagedProperty(value = "#{dataYearSystemService}")
+	@Value("#{dataYearSystemService}")
     private DataYearSystemService dataYearSystemService;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
 	/**

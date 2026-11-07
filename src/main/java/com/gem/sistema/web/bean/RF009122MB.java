@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDay;
 
@@ -11,14 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -38,8 +39,8 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 /**
  * The Class RF009122MB.
  */
-@ManagedBean(name = "rF009122MB")
-@ViewScoped
+@Component("rF009122MB")
+@Scope("view")
 public class RF009122MB extends BaseDirectReport {
 
 	/** The Constant DOWNLOAD_XLS. */
@@ -79,21 +80,21 @@ public class RF009122MB extends BaseDirectReport {
 	private static final String PROCEDURE_NAME = "SP_REPORTE_RF009122_EDOAVANCEPEFIN";
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The paso repository. */
-	@ManagedProperty("#{pasoRepository}")
+	@Value("#{pasoRepository}")
 	private PasoRepository pasoRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**
@@ -322,15 +323,15 @@ public class RF009122MB extends BaseDirectReport {
 	private List<Muninep> listMuninep;
 
 	/** The tcmes repository. */
-	@ManagedProperty("#{tcMesRepository}") // aqui trae el ABC
+	@Value("#{tcMesRepository}") // aqui trae el ABC
 	private TcMesRepository tcmesRepository;
 
 	/** The muninep repository. */
-	@ManagedProperty("#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muninepRepository;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 
 	/**
@@ -537,7 +538,7 @@ public class RF009122MB extends BaseDirectReport {
 
 				e.printStackTrace();
 			}
-			txt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			txt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());
@@ -591,7 +592,7 @@ public class RF009122MB extends BaseDirectReport {
 		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null,
 				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			this.getTxt();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 
 	}
@@ -600,7 +601,7 @@ public class RF009122MB extends BaseDirectReport {
 		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null,
 				this.getUserDetails().getIdSector()) == Boolean.TRUE && (Boolean.TRUE == this.validateData())) {
 			this.downloadFile();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 

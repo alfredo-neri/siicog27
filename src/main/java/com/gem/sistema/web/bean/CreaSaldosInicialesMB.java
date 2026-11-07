@@ -1,10 +1,11 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import javax.security.auth.login.AccountException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,11 +13,9 @@ import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -46,8 +45,8 @@ import java.util.function.BiConsumer;
 /**
  * The Class CreaSaldosInicialesMB.
  */
-@ManagedBean(name = "creaSaldosInicialesMB")
-@ViewScoped
+@Component("creaSaldosInicialesMB")
+@Scope("view")
 public class CreaSaldosInicialesMB extends AbstractMB {
 	private static final String PATH_FILE = "/gem/upfiles/";
 	/** The Constant uploadURL. */
@@ -60,14 +59,14 @@ public class CreaSaldosInicialesMB extends AbstractMB {
 	private static final String _INNER_PASS = "ycargasal";
 
 	/** The account service. */
-	@ManagedProperty(value = "#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
 	/** The conctb repository. */
-	@ManagedProperty(value = "#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{cargaCuentas58Service}")
+	@Value("#{cargaCuentas58Service}")
 	private CargaCuentas58Service cargaCuentas58Service;
 
 	/** The password. */
@@ -88,7 +87,7 @@ public class CreaSaldosInicialesMB extends AbstractMB {
 	public void handleFileUpload(FileUploadEvent event) {
 		fileName = UUID.randomUUID() + event.getFile().getFileName();
 		try {
-			String pathFillFullName = CopyFileUtil.copyFile(fileName, event.getFile().getInputstream(), PATH_FILE);
+			String pathFillFullName = CopyFileUtil.copyFile(fileName, event.getFile().getInputStream(), PATH_FILE);
 			outParameters = this.cargaCuentas58Service.cargaCuetaTmp(pathFillFullName);
 
 			try {
@@ -96,7 +95,7 @@ public class CreaSaldosInicialesMB extends AbstractMB {
 
 				if(Integer.valueOf(outParameters.get("O_COD_ERROR").toString()) == 0) {
 					inputStrem = new FileInputStream(new File(outParameters.get("O_FULL_NAME").toString()));
-					download = new DefaultStreamedContent(inputStrem, "application/csv", "erroresSalini.csv");
+					download = StreamedContents.of(inputStrem, "application/csv", "erroresSalini.csv", null);
 					btnDowload = Boolean.TRUE;
 				}
 				
@@ -204,9 +203,8 @@ public class CreaSaldosInicialesMB extends AbstractMB {
 			StringWriter writer = new StringWriter();
 			processFile(writer);
 			try {
-				setDownload(new DefaultStreamedContent(IOUtils.toInputStream(writer.toString(), "UTF-8"), "text/csv",
-						"cargasal.csv"));
-			} catch (IOException e) {
+				setDownload(StreamedContents.of(IOUtils.toInputStream(writer.toString(), "UTF-8"), "text/csv", "cargasal.csv", null));
+			} catch (java.io.UncheckedIOException e) {
 				LOGGER.error("Error Descargando Archivo {}", e);
 				e.printStackTrace();
 			}
@@ -259,7 +257,7 @@ public class CreaSaldosInicialesMB extends AbstractMB {
 	 */
 	private void processFile(StringWriter writer) {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputstream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
 			for (String line = null; (line = reader.readLine()) != null;) {
 				final String l = line;
 				findAndUpdate(cleanColumns(line.replaceAll("\"", "").split(",")), (account, salini) -> {

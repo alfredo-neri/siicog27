@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.Serializable;
@@ -12,19 +15,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.tree.Tree;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.CheckboxTreeNode;
@@ -69,8 +69,8 @@ import com.gem.sistema.web.datamodel.TcUsuarioDataModel;
  *
  * @author Gauss
  */
-@ManagedBean(name = "usersMB")
-@ViewScoped
+@Component("usersMB")
+@Scope("view")
 public class UsersMB extends AbstractMB implements Serializable {
 
 	/**
@@ -82,7 +82,7 @@ public class UsersMB extends AbstractMB implements Serializable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UsersMB.class);
 
 	/** The tc usuario data model. */
-	@ManagedProperty(value = "#{tcUsuarioDataModel}")
+	@Value("#{tcUsuarioDataModel}")
 	private TcUsuarioDataModel tcUsuarioDataModel;
 
 	/** The selected tc usuario. */
@@ -97,62 +97,62 @@ public class UsersMB extends AbstractMB implements Serializable {
 	private TcUsuario updateUsuario = new TcUsuario();
 
 	/** The tc usuario repository. */
-	@ManagedProperty(value = "#{tcUsuarioRepository}")
+	@Value("#{tcUsuarioRepository}")
 	private TcUsuarioRepository tcUsuarioRepository;
 
 	/** The entidad administrativa repository. */
-	@ManagedProperty(value = "#{tcEntidadAdministrativaRepository}")
+	@Value("#{tcEntidadAdministrativaRepository}")
 	private TcEntidadAdministrativaRepository entidadAdministrativaRepository;
 
 	/** The localidades usuario repository. */
-	@ManagedProperty(value = "#{tcLocalidadesUsuarioRepository}")
+	@Value("#{tcLocalidadesUsuarioRepository}")
 	private TcLocalidadesUsuarioRepository localidadesUsuarioRepository;
 
 	/** The tc menu repository. */
-	@ManagedProperty(value = "#{tcMenuRepository}")
+	@Value("#{tcMenuRepository}")
 	private TcMenuRepository tcMenuRepository;
 
 	/** The tc role repository. */
-	@ManagedProperty(value = "#{tcRoleRepository}")
+	@Value("#{tcRoleRepository}")
 	private TcRoleRepository tcRoleRepository;
 
 	/** The tc tipo usuario repository. */
-	@ManagedProperty(value = "#{tcTipoUsuarioRepository}")
+	@Value("#{tcTipoUsuarioRepository}")
 	private TcTipoUsuarioRepository tcTipoUsuarioRepository;
 
 	/** The tc menu item repository. */
-	@ManagedProperty(value = "#{tcMenuItemRepository}")
+	@Value("#{tcMenuItemRepository}")
 	private TcMenuItemRepository tcMenuItemRepository;
 
 	/** The tc ente pub central repository. */
-	@ManagedProperty(value = "#{tcEntePubCentralRepository}")
+	@Value("#{tcEntePubCentralRepository}")
 	private TcEntePubCentralRepository tcEntePubCentralRepository;
 
 	/** The catdep repository. */
-	@ManagedProperty(value = "#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** The catmun repository. */
-	@ManagedProperty(value = "#{catmunRepository}")
+	@Value("#{catmunRepository}")
 	private CatmunRepository catmunRepository;
 
 	/** The password encoder. */
-	@ManagedProperty(value = "#{passwordEncoder}")
+	@Value("#{passwordEncoder}")
 	private PasswordEncoder passwordEncoder;
 
 	/** The tc menu niveles repository. */
-	@ManagedProperty(value = "#{tcMenuNivelesRepository}")
+	@Value("#{tcMenuNivelesRepository}")
 	private TcMenuNivelesRepository tcMenuNivelesRepository;
 
 	/** The tr usuarios 2 menu items repository. */
-	@ManagedProperty(value = "#{trUsuarios2MenuItemsRepository}")
+	@Value("#{trUsuarios2MenuItemsRepository}")
 	private TrUsuarios2MenuItemsRepository trUsuarios2MenuItemsRepository;
 
 	/** The polien repository. */
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
-	@ManagedProperty("#{usersService}")
+	@Value("#{usersService}")
 	private UsersService usersService;
 
 	// private List<TcLocalidadesUsuario> localidades;
@@ -388,7 +388,7 @@ public class UsersMB extends AbstractMB implements Serializable {
 	// }
 
 	/** The Constant SORT_BY_CLVMUN. */
-	private static final Sort SORT_BY_CLVMUN = new Sort(Sort.Direction.ASC, "nommun");
+	private static final Sort SORT_BY_CLVMUN = Sort.by(Sort.Direction.ASC, "nommun");
 
 	/**
 	 * Prepara un nuevo Usuario.
@@ -417,8 +417,8 @@ public class UsersMB extends AbstractMB implements Serializable {
 	 */
 	public void prepareUpdate(ActionEvent actionEvent) {
 		LOGGER.debug("usuario::" + selectedTcUsuario.getNombre());
-		mirrorTcUsuario = tcUsuarioRepository.findOne(selectedTcUsuario.getId());
-		this.selectedTcUsuario = tcUsuarioRepository.findOne(selectedTcUsuario.getId());
+		mirrorTcUsuario = tcUsuarioRepository.findById(selectedTcUsuario.getId()).orElse(null);
+		this.selectedTcUsuario = tcUsuarioRepository.findById(selectedTcUsuario.getId()).orElse(null);
 		selectedMenuItems = transformMenuItems2Map(mirrorTcUsuario.getMenuItems());
 		this.setMenu(this.getMenuRootNiveles(listaMenuNiveles));
 		this.menu.setSelected(Boolean.FALSE);
@@ -431,9 +431,9 @@ public class UsersMB extends AbstractMB implements Serializable {
 		}
 
 		if (SECTOR_CENTRAL == selectedTcUsuario.getTipoUsuario().getId()) {
-			RequestContext.getCurrentInstance().execute("PF('usuarioUpdateDialog2').show()");
+			PrimeFaces.current().executeScript("PF('usuarioUpdateDialog2').show()");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('usuarioUpdateDialog').show()");
+			PrimeFaces.current().executeScript("PF('usuarioUpdateDialog').show()");
 		}
 	}
 
@@ -469,7 +469,7 @@ public class UsersMB extends AbstractMB implements Serializable {
 	 */
 	public void deleteUser(ActionEvent actionEvent) {
 		LOGGER.debug("usuario::" + selectedTcUsuario.getNombre());
-		mirrorTcUsuario = tcUsuarioRepository.findOne(selectedTcUsuario.getId());
+		mirrorTcUsuario = tcUsuarioRepository.findById(selectedTcUsuario.getId()).orElse(null);
 		Long count = this.polienRepository.count(PolienPredicates.deleteByidUser(mirrorTcUsuario.getUsuario()));
 		if (count > 0) {
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!",
@@ -978,7 +978,7 @@ public class UsersMB extends AbstractMB implements Serializable {
 
 		for (Entry<Long, String[]> selMenus : getSelectedMenuItems().entrySet()) {
 			for (String id : selMenus.getValue()) {
-				TcMenuItem tcMenuItem = tcMenuItemRepository.findOne(Long.valueOf(id));
+				TcMenuItem tcMenuItem = tcMenuItemRepository.findById(Long.valueOf(id)).orElse(null);
 				menuItems.add(tcMenuItem);
 			}
 		}
@@ -1221,9 +1221,9 @@ public class UsersMB extends AbstractMB implements Serializable {
 	 */
 	public void chooseSector() {
 		if (SECTOR_CENTRAL == this.newTcUsuario.getTipoUsuario().getId()) {
-			RequestContext.getCurrentInstance().execute("PF('usuarioNuevoDialog2').show()");
+			PrimeFaces.current().executeScript("PF('usuarioNuevoDialog2').show()");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('usuarioNuevoDialog').show()");
+			PrimeFaces.current().executeScript("PF('usuarioNuevoDialog').show()");
 		}
 	}
 
@@ -1232,12 +1232,12 @@ public class UsersMB extends AbstractMB implements Serializable {
 	 */
 	public void chooseCloseSector() {
 		if (SECTOR_CENTRAL == this.newTcUsuario.getTipoUsuario().getId()) {
-			RequestContext.getCurrentInstance().execute("PF('usuarioNuevoDialog2').hide()");
+			PrimeFaces.current().executeScript("PF('usuarioNuevoDialog2').hide()");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('usuarioNuevoDialog').hide()");
+			PrimeFaces.current().executeScript("PF('usuarioNuevoDialog').hide()");
 		}
 
-		RequestContext.getCurrentInstance().update(":form1:messagesEdit");
+		PrimeFaces.current().ajax().update(":form1:messagesEdit");
 	}
 
 	/**
@@ -1245,12 +1245,12 @@ public class UsersMB extends AbstractMB implements Serializable {
 	 */
 	public void chooseCloseUpdateSector() {
 		if (SECTOR_CENTRAL == this.selectedTcUsuario.getTipoUsuario().getId()) {
-			RequestContext.getCurrentInstance().execute("PF('usuarioUpdateDialog2').hide()");
+			PrimeFaces.current().executeScript("PF('usuarioUpdateDialog2').hide()");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('usuarioUpdateDialog').hide()");
+			PrimeFaces.current().executeScript("PF('usuarioUpdateDialog').hide()");
 		}
 
-		RequestContext.getCurrentInstance().update(":form1:messagesEdit");
+		PrimeFaces.current().ajax().update(":form1:messagesEdit");
 	}
 
 	/**

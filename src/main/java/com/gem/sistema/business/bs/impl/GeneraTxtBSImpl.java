@@ -44,7 +44,7 @@ public class GeneraTxtBSImpl implements GeneraTxtBS {
 	@Override
 	public String generatArchivoTxt(long idReporte, Integer idSector, Integer trimestre) {
 
-		TcReporte tcReporte = this.reportesRepository.findOne(idReporte);
+		TcReporte tcReporte = this.reportesRepository.findById(idReporte).orElse(null);
 		Conctb conctb = this.conctbRepository.findByIdsector(idSector);
 		String fileSystem = tcReporte.getRutaArchivo() + "/" + tcReporte.getNombreArchivo() + conctb.getClave()
 				+ conctb.getAnoemp() + StringUtils.leftPad(trimestre.toString(), 2, "0") + TXT;

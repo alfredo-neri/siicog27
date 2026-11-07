@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
@@ -9,11 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -35,8 +36,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  * @Sector Municipal
  *
  */
-@ManagedBean(name = "pbrm02aMB")
-@ViewScoped
+@Component("pbrm02aMB")
+@Scope("view")
 public class Pbrm02aMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_CALENDARIZACION_METAS_ACTIVIDAD_POR_PROY";
 	/** The Constant PROCEDURE_NAME. */
@@ -49,17 +50,17 @@ public class Pbrm02aMB extends BaseDirectReport {
 	private StreamedContent txt;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 	
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/**
@@ -179,7 +180,7 @@ public class Pbrm02aMB extends BaseDirectReport {
 
 				e.printStackTrace();
 			}
-			txt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			txt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,8 @@ import com.gem.sistema.business.service.presupuesto.PresIngresoCalendarizadoServ
  * @author Sam
  */
 @Component(value = "ingresosCalendarizadosTxtMB")
-@ViewScoped
+// difem26: la anotacion de scope de JSF era ignorada por Spring (singleton compartido)
+@Scope("view")
 public class IngresosCalendarizadosTxtMB implements Serializable {
 
 	/** The Constant serialVersionUID. */

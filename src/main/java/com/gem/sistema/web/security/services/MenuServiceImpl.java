@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.ServletContext;
 import org.springframework.stereotype.Repository;
 
 import com.gem.sistema.business.domain.TcMenu;
@@ -43,6 +44,26 @@ public class MenuServiceImpl implements MenuService {
 	/** The tc menu niveles repository. */
 	@Autowired
 	private TcMenuNivelesRepository tcMenuNivelesRepository;
+
+	@Autowired
+	private ServletContext servletContext;
+
+	/**
+	 * Las URL de TC_MENU_NIVELES son absolutas desde la raiz del servidor (/views/...), porque difem26
+	 * se desplegaba en el contexto raiz de WildFly. siicog27 corre en /siicog27: se antepone el contexto.
+	 * La base no se modifica, porque la comparte difem26.
+	 *
+	 * @param url URL registrada en el menu
+	 * @return URL con el contexto de la aplicacion
+	 */
+	private String conContexto(String url) {
+		String contexto = servletContext.getContextPath();
+		if (StringUtils.startsWith(url, "/") && !StringUtils.startsWith(url, "//")
+				&& StringUtils.isNotEmpty(contexto) && !StringUtils.startsWith(url, contexto + "/")) {
+			return contexto + url;
+		}
+		return url;
+	}
 	
 	
 	
@@ -92,7 +113,7 @@ public class MenuServiceImpl implements MenuService {
 		
 		System.out.println("Se recibe user" + user);
 	 	
-		TcUsuario usuario = tcUsuarioRepository.findOne(TcUsuarioPredicates.findByUsuario(user));
+		TcUsuario usuario = tcUsuarioRepository.findOne(TcUsuarioPredicates.findByUsuario(user)).orElse(null);
 		
 		
 		MenuModel menuModel = new DefaultMenuModel();
@@ -103,20 +124,20 @@ public class MenuServiceImpl implements MenuService {
 			
 			DefaultSubMenu submenu = (DefaultSubMenu) MapUtils.getObject(menus, tcMenu.getId());
 			if( submenu== null) {
-				submenu = new DefaultSubMenu(tcMenu.getLabel());
+				submenu = DefaultSubMenu.builder().label(tcMenu.getLabel()).build();
 				if(StringUtils.isNotEmpty(tcMenu.getStyleclass())){
 					submenu.setStyleClass(tcMenu.getStyleclass());
 				}
 				menus.put( menuItem.getMenu().getId(),  submenu);
 			}
 			
-			DefaultMenuItem item = new DefaultMenuItem(menuItem.getLabel());
-			item.setUrl(menuItem.getUrl());
-			submenu.addElement(item);
+			DefaultMenuItem item = DefaultMenuItem.builder().value(menuItem.getLabel()).build();
+			item.setUrl(conContexto(menuItem.getUrl()));
+			submenu.getElements().add(item);
 			
 		}
 		for( Map.Entry<Long, DefaultSubMenu> entry : menus.entrySet()){
-			menuModel.addElement(entry.getValue());
+			menuModel.getElements().add(entry.getValue());
 		}
 		
 		
@@ -154,12 +175,14 @@ public class MenuServiceImpl implements MenuService {
 	        
 	        for (TcMenuNiveles men : menu) {
 	            if (men.getIdMenuPadre().intValue() == BigDecimal.ZERO.intValue()) {
-	                DefaultSubMenu menuPadre = new DefaultSubMenu(men.getLabel());
+	                DefaultSubMenu menuPadre = DefaultSubMenu.builder().label(men.getLabel()).build();
 	                menuPadre = validarHijos(menu, men.getClaveMenu(), menuPadre);
 
-	                model.addElement(menuPadre);
+	                model.getElements().add(menuPadre);
 	            }
 	        }
+	        // PrimeFaces 16: los modelos armados en Java necesitan ids para renderizarse y navegar
+	        model.generateUniqueIds();
 	        return model;
 	    }
 		
@@ -185,16 +208,15 @@ public class MenuServiceImpl implements MenuService {
              */
             if (menuTemp.size() >= 1) {
                 for (TcMenuNiveles men : menuTemp) {
-                    DefaultSubMenu submenu0 = new DefaultSubMenu(men.getLabel());
+                    DefaultSubMenu submenu0 = DefaultSubMenu.builder().label(men.getLabel()).build();
                     DefaultMenuItem adminSubItem = null;
                     submenu0 = validarHijos(menu, men.getClaveMenu(), submenu0);
                     if (submenu0.getElements().size() == 0) {
-                        adminSubItem = new DefaultMenuItem(men.getLabel());
-                        adminSubItem.setUrl(men.getUrl());                                   
-                        item.addElement(adminSubItem);
+                        adminSubItem = DefaultMenuItem.builder().value(men.getLabel()).build();
+                        adminSubItem.setUrl(conContexto(men.getUrl()));                                   
+                        item.getElements().add(adminSubItem);
                     } else {
-                        submenu0.setStyleClass("dropdown-submenu");
-                        item.addElement(submenu0);
+                        item.getElements().add(submenu0);
                     }
                 }
             }

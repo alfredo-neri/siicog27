@@ -1,7 +1,7 @@
 package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.QTcRegistraArchivoDigital;
-import com.mysema.query.types.expr.NumberExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
 
 // TODO: Auto-generated Javadoc
 /**

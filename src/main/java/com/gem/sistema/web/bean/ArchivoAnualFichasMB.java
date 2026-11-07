@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -18,8 +18,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  *           reporte
  * @Sector Municipal
  */
-@ManagedBean(name = "archivoAnualFichasMB")
-@ViewScoped
+@Component("archivoAnualFichasMB")
+@Scope("view")
 public class ArchivoAnualFichasMB extends BaseDirectReport {
 
 	@PostConstruct

@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
@@ -20,8 +20,8 @@ import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 import com.gem.sistema.business.repository.catalogs.FuenteFGobiernoRepository;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean(name = "fuenteFGobiernoMB")
-@ViewScoped
+@Component("fuenteFGobiernoMB")
+@Scope("view")
 public class FuenteFGobiernoMB extends BaseDirectReport {
 
 	private List<FuentefGobierno> fuentes = new ArrayList<>();
@@ -29,10 +29,10 @@ public class FuenteFGobiernoMB extends BaseDirectReport {
 	private Boolean editable = false;
 	private FuentefGobierno selected = new FuentefGobierno();
 
-	@ManagedProperty("#{fuenteFGobiernoRepository}")
+	@Value("#{fuenteFGobiernoRepository}")
 	private FuenteFGobiernoRepository fuenteFGobiernoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	@PostConstruct

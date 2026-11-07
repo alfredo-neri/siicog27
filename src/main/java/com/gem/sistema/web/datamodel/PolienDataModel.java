@@ -3,16 +3,16 @@
  */
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +22,7 @@ import com.gem.sistema.business.predicates.CuentaPredicates;
 import com.gem.sistema.business.repository.catalogs.CuentaRepository;
 import com.gem.sistema.business.service.catalogos.AccountService;
 import com.gem.sistema.business.sorts.CuentaSort;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -30,8 +30,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author gauss
  */
-@ManagedBean(name = "polienDataModel")
-@ViewScoped
+@Component("polienDataModel")
+@Scope("view")
 public class PolienDataModel extends CustomPagingModel<Cuenta> {
 
 	/** The Constant serialVersionUID. */
@@ -39,12 +39,12 @@ public class PolienDataModel extends CustomPagingModel<Cuenta> {
 	/**
 	 * Repositorio de Cuenta.
 	 */
-	@ManagedProperty(value = "#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/** Servicios para el modulo de centas. */
 
-	@ManagedProperty(value = "#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
 	/** The insert. */

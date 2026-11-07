@@ -3,13 +3,13 @@ package com.gem.sistema.business.domain;
 import java.math.BigDecimal;
 
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.NamedStoredProcedureQueries;
-import javax.persistence.NamedStoredProcedureQuery;
-import javax.persistence.StoredProcedureParameter;
-import javax.persistence.NamedQuery;
-import javax.persistence.ParameterMode;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.NamedStoredProcedureQueries;
+import jakarta.persistence.NamedStoredProcedureQuery;
+import jakarta.persistence.StoredProcedureParameter;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.ParameterMode;
 
 // TODO: Auto-generated Javadoc
 /**

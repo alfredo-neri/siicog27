@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
@@ -13,15 +16,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -38,24 +38,24 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class IndicadorMensualInformacionEvaluarDesempenoMensualFismMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("indicadorMensualInformacionEvaluarDesempenoMensualFismMB")
+@Scope("view")
 public class IndicadorMensualInformacionEvaluarDesempenoMensualFismMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The service. */
-	@ManagedProperty("#{pm5411Service}")
+	@Value("#{pm5411Service}")
 	private Pm5411Service service;
 
 	/** The master list. */
@@ -257,8 +257,8 @@ public class IndicadorMensualInformacionEvaluarDesempenoMensualFismMB extends Ba
 		entity.setMensual(selectableMonth.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -286,8 +286,8 @@ public class IndicadorMensualInformacionEvaluarDesempenoMensualFismMB extends Ba
 
 			sortMasterList();
 
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').getPaginator().setPage(" + (selected.getMensual() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').getPaginator().setPage(" + (selected.getMensual() - 1) + ");");
 
 			Pm5411 Pm5411 = service.save(nuevo);
 			masterList.set(currentPage, Pm5411);

@@ -1,24 +1,24 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
@@ -32,7 +32,7 @@ import com.gem.sistema.business.predicates.LocalidadesPredicates;
 import com.gem.sistema.business.repository.catalogs.CatmunRepository;
 import com.gem.sistema.business.repository.catalogs.LocalidadesRepository;
 import com.gem.sistema.web.util.FrontProperty;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,8 +40,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogLocalitiesMunicipalityMB")
+@Scope("view")
 public class CatalogLocalitiesMunicipalityMB extends CommonCatalogMB<Localidades> implements Serializable {
 
 	/** Serial default. */
@@ -54,11 +54,11 @@ public class CatalogLocalitiesMunicipalityMB extends CommonCatalogMB<Localidades
 	private static final String ORDER_BY_FIELD_CLVMUN = "cveMun";
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{localidadesRepository}")
+	@Value("#{localidadesRepository}")
 	private LocalidadesRepository localidadesRepository;
 
 	/** Componente de repositorio. */
-	@ManagedProperty(value = "#{catmunRepository}")
+	@Value("#{catmunRepository}")
 	private CatmunRepository catmunRepository;
 
 	/** Fila seleccionada. */
@@ -183,7 +183,7 @@ public class CatalogLocalitiesMunicipalityMB extends CommonCatalogMB<Localidades
 //				executeOperationSaveOrUpdate(catalog, localidadesRepository);
 			this.localidadesRepository.save(catalog);
 			this.consultList();
-			RequestContext.getCurrentInstance().execute("document.getElementById('form1:hideButton3').click();");
+			PrimeFaces.current().executeScript("document.getElementById('form1:hideButton3').click();");
 			
 		} else {
 			if (errorMsg.length() == ZERO) {
@@ -256,7 +256,7 @@ public class CatalogLocalitiesMunicipalityMB extends CommonCatalogMB<Localidades
 	}
 	
 	/** The by cvemun cvelov. */
-	Sort BY_CVEMUN_CVELOV = new Sort(Sort.Direction.ASC, "cveMun", "cveLoc");
+	Sort BY_CVEMUN_CVELOV = Sort.by(Sort.Direction.ASC, "cveMun", "cveLoc");
 
 	/*
 	 * (non-Javadoc)

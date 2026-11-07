@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import com.gem.sistema.business.domain.Cuenta;
 import com.gem.sistema.business.domain.Programamun;
 import com.gem.sistema.business.domain.TcParametro;
@@ -40,51 +40,51 @@ import java.math.BigDecimal;
 /**
  * The Class AcumulacionSaldosMB.
  */
-@ManagedBean(name = "acumulacionSaldosMB")
-@ViewScoped
+@Component("acumulacionSaldosMB")
+@Scope("view")
 public class AcumulacionSaldosMB extends AbstractMB {
 	
 	private static final String PROCEDURE_NAME = "SP_PISTOV409_M";
 
 	/** The cuenta repository. */
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/** The ingreso repository. */
-	@ManagedProperty("#{ingresoRepository}")
+	@Value("#{ingresoRepository}")
 	private IngresoRepository ingresoRepository;
 
 	/** The ingresot repository. */
-	@ManagedProperty("#{ingresotRepository}")
+	@Value("#{ingresotRepository}")
 	private IngresotRepository ingresotRepository;
 
 	/** The paso repository. */
-	@ManagedProperty("#{pasoRepository}")
+	@Value("#{pasoRepository}")
 	private PasoRepository pasoRepository;
 
 	/** The pasot repository. */
-	@ManagedProperty("#{pasotRepository}")
+	@Value("#{pasotRepository}")
 	private PasotRepository pasotRepository;
 
 	/** The preprogra repository. */
-	@ManagedProperty("#{preprograRepository}")
+	@Value("#{preprograRepository}")
 	private PreprograRepository preprograRepository;
 
 	/** The programamun repository. */
-	@ManagedProperty("#{programamunRepository}")
+	@Value("#{programamunRepository}")
 	private ProgramamunRepository programamunRepository;
 
 	/** The account service. */
-	@ManagedProperty("#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
 	private TcParametro tcParametro;
 	private String password;
 
-	@ManagedProperty("#{changePasswordService}")
+	@Value("#{changePasswordService}")
 	private ChangePasswordService changePasswordService;
 	
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 
 	/** The disabled. */

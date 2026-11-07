@@ -1,11 +1,9 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import javax.security.auth.login.AccountException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,8 +33,8 @@ import org.springframework.beans.factory.annotation.Value;
 /**
  * The Class ConsultaFacturaPolizaMB.
  */
-@ViewScoped
-@ManagedBean(name = "consultaFacturaPolizaMB")
+@Scope("view")
+@Component("consultaFacturaPolizaMB")
 public class ConsultaFacturaPolizaMB extends AbstractMB {
 
 	/** The file. */
@@ -56,7 +54,7 @@ public class ConsultaFacturaPolizaMB extends AbstractMB {
 
 
   /** The main service. */
-  @ManagedProperty("#{consultaFacturaPolizasService}")
+  @Value("#{consultaFacturaPolizasService}")
   private ConsultaFacturaPolizasService mainService;
 
   /**

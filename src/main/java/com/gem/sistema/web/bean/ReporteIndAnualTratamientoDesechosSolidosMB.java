@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,12 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
@@ -33,8 +33,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class ReporteIndAnualTratamientoDesechosSolidosMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporteIndAnualTratamientoDesechosSolidosMB")
+@Scope("view")
 public class ReporteIndAnualTratamientoDesechosSolidosMB extends BaseDirectReport {
 
 	/** The master list. */
@@ -65,14 +65,14 @@ public class ReporteIndAnualTratamientoDesechosSolidosMB extends BaseDirectRepor
 	private int currentPage = 0;
 
 	/** The pm 2811 repository. */
-	@ManagedProperty("#{pm2811Repository}")
+	@Value("#{pm2811Repository}")
 	private Pm2811Repository pm2811Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 
@@ -276,7 +276,7 @@ public class ReporteIndAnualTratamientoDesechosSolidosMB extends BaseDirectRepor
 		try {
 			boolean answer = false;
 			try {
-				pm2811Repository.delete(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
+				pm2811Repository.deleteById(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
 				answer = true;
 			} catch (Exception e) {
 				answer = false;

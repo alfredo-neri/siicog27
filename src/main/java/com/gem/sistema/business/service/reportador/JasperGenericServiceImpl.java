@@ -3,6 +3,7 @@
  */
 package com.gem.sistema.business.service.reportador;
 
+import com.gem.sistema.web.util.StreamedContents;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,8 +14,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import org.primefaces.model.DefaultStreamedContent;
@@ -121,17 +122,15 @@ public class JasperGenericServiceImpl implements JasperGenericService {
 		final InputStream stream = getInternalReport(params, jasperReportName, type);
 		switch (type) {
 		case JasperGenericService.PDF:
-			return new DefaultStreamedContent(stream, CONTENT_TYPE_PDF, jasperReportName.concat(PDF_EXTENSION));
+			return StreamedContents.of(stream, CONTENT_TYPE_PDF, jasperReportName.concat(PDF_EXTENSION), null);
 		case JasperGenericService.XLS:
-			return new DefaultStreamedContent(stream, CONTENT_TYPE_XLS, jasperReportName.concat(XLS_EXTENSION));
+			return StreamedContents.of(stream, CONTENT_TYPE_XLS, jasperReportName.concat(XLS_EXTENSION), null);
 		case JasperGenericService.CSV:
-			return new DefaultStreamedContent(stream, TYPE_CONTENT_CSV, jasperReportName.concat(CSV_EXTENSION),
-					"ISO-8859-1");
+			return StreamedContents.of(stream, TYPE_CONTENT_CSV, jasperReportName.concat(CSV_EXTENSION), "ISO-8859-1");
 		case JasperGenericService.TXT:
-			return new DefaultStreamedContent(stream, TYPE_CONTENT_TEXT_PLAIN, jasperReportName.concat(TXT_EXTENSION),
-					"UTF-8");
+			return StreamedContents.of(stream, TYPE_CONTENT_TEXT_PLAIN, jasperReportName.concat(TXT_EXTENSION), "UTF-8");
 		default:
-			return new DefaultStreamedContent(stream, CONTENT_TYPE_PDF, jasperReportName.concat(PDF_EXTENSION));
+			return StreamedContents.of(stream, CONTENT_TYPE_PDF, jasperReportName.concat(PDF_EXTENSION), null);
 		}
 	}
 	
@@ -139,17 +138,15 @@ public class JasperGenericServiceImpl implements JasperGenericService {
 		final InputStream stream = getInternalReport(params, jasperReportName, type);
 		switch (type) {
 		case JasperGenericService.PDF:
-			return new DefaultStreamedContent(stream, CONTENT_TYPE_PDF, reportaEndName.concat(PDF_EXTENSION));
+			return StreamedContents.of(stream, CONTENT_TYPE_PDF, reportaEndName.concat(PDF_EXTENSION), null);
 		case JasperGenericService.XLS:
-			return new DefaultStreamedContent(stream, CONTENT_TYPE_XLS, reportaEndName.concat(XLS_EXTENSION));
+			return StreamedContents.of(stream, CONTENT_TYPE_XLS, reportaEndName.concat(XLS_EXTENSION), null);
 		case JasperGenericService.CSV:
-			return new DefaultStreamedContent(stream, TYPE_CONTENT_CSV, reportaEndName.concat(CSV_EXTENSION),
-					"ISO-8859-1");
+			return StreamedContents.of(stream, TYPE_CONTENT_CSV, reportaEndName.concat(CSV_EXTENSION), "ISO-8859-1");
 		case JasperGenericService.TXT:
-			return new DefaultStreamedContent(stream, TYPE_CONTENT_TEXT_PLAIN, reportaEndName.concat(TXT_EXTENSION),
-					"UTF-8");
+			return StreamedContents.of(stream, TYPE_CONTENT_TEXT_PLAIN, reportaEndName.concat(TXT_EXTENSION), "UTF-8");
 		default:
-			return new DefaultStreamedContent(stream, CONTENT_TYPE_PDF, reportaEndName.concat(PDF_EXTENSION));
+			return StreamedContents.of(stream, CONTENT_TYPE_PDF, reportaEndName.concat(PDF_EXTENSION), null);
 		}
 	}
 

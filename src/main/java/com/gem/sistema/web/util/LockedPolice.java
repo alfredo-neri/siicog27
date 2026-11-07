@@ -2,10 +2,10 @@ package com.gem.sistema.web.util;
 
 import java.io.Serializable;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class LockedPolice implements Serializable, HttpSessionBindingListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(javax.servlet.http.HttpSessionBindingEvent)
+	 * @see jakarta.servlet.http.HttpSessionBindingListener#valueBound(jakarta.servlet.http.HttpSessionBindingEvent)
 	 */
 	public void valueBound(HttpSessionBindingEvent event) {
 		log.info("valueBound:" + event.getName() + " session:" + event.getSession().getId() );
@@ -57,7 +57,7 @@ public class LockedPolice implements Serializable, HttpSessionBindingListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+	 * @see jakarta.servlet.http.HttpSessionBindingListener#valueUnbound(jakarta.servlet.http.HttpSessionBindingEvent)
 	 */
 	public void valueUnbound(HttpSessionBindingEvent event) {
 		log.info("valueUnBound:" + event.getName() + " session:" + event.getSession().getId() );

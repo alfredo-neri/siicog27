@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,7 +186,7 @@ public class PM0511BSImpl implements PM0511BS {
 	 */
 	@Override
 	public Sort getSort() {
-		return new Sort(Direction.ASC, "trimestre", "conse");
+		return Sort.by(Direction.ASC, "trimestre", "conse");
 	}
 
 	/*

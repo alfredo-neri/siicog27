@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -27,8 +27,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  *           implementa Servicio de firmas dinamicas
  * @Sector Municipal
  */
-@ManagedBean(name = "reporteProyeccionResultadoMB")
-@ViewScoped
+@Component("reporteProyeccionResultadoMB")
+@Scope("view")
 public class ReporteProyeccionResultadoMB extends BaseDirectReport {
 
 	private Integer reporte;
@@ -38,13 +38,13 @@ public class ReporteProyeccionResultadoMB extends BaseDirectReport {
 	private String tipcta;
 	private String claveFirmasReport;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	@PostConstruct

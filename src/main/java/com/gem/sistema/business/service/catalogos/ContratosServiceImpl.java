@@ -181,13 +181,13 @@ public class ContratosServiceImpl implements ContratosService {
 
 	@Override
 	public List<TcContratosFirma> saveFirmas(List<TcContratosFirma> firmas) {
-		return (List<TcContratosFirma>) contratosFirmaRepository.save(firmas);
+		return (List<TcContratosFirma>) contratosFirmaRepository.saveAll(firmas);
 	}
 
 	@Override
 	public List<TrContratoSolicitud> saveContratoSolicitudes(List<TrContratoSolicitud> contratoSolicituds) {
 
-		return (List<TrContratoSolicitud>) contratoSolicitudRepository.save(contratoSolicituds);
+		return (List<TrContratoSolicitud>) contratoSolicitudRepository.saveAll(contratoSolicituds);
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public class ContratosServiceImpl implements ContratosService {
 
 	@Override
 	public TcAdquisicion getAdquisicion(Long idLong) {
-		return adquisicionRepository.findOne(idLong);
+		return adquisicionRepository.findById(idLong).orElse(null);
 	}
 
 	@Override
@@ -222,7 +222,7 @@ public class ContratosServiceImpl implements ContratosService {
 
 	@Override
 	public void saveArticulos(List<TcArticulosContrato> articulosContratos) {
-		articuloContratoRepository.save(articulosContratos);
+		articuloContratoRepository.saveAll(articulosContratos);
 	}
 
 	@Override

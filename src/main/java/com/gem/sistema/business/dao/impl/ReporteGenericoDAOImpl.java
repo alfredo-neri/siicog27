@@ -30,7 +30,7 @@ public class ReporteGenericoDAOImpl implements ReporteGenericoDAO {
 
 	@Override
 	public String generaFileTXTWithIdSector(Integer idSector, Integer idReporte, String nameFile) {
-		TcReporte reporte = reportesRepository.findOne(TcReportesPredicate.findById(idReporte));
+		TcReporte reporte = reportesRepository.findOne(TcReportesPredicate.findById(idReporte)).orElse(null);
 		String sSql = String.format(reporte.getQry1(), idSector);
 
 		parameters = new MapSqlParameterSource().addValue("i_header", StringUtils.EMPTY).addValue("i_query", sSql)

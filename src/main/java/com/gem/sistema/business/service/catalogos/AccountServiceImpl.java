@@ -52,8 +52,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -83,7 +83,7 @@ import com.gem.sistema.business.repository.catalogs.PolizaRepository;
 import com.gem.sistema.load.fileupload.validators.results.EgresResultBean;
 import com.gem.sistema.util.Constants;
 import com.gem.sistema.web.bean.CatalogAccountsMB;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -331,7 +331,7 @@ public class AccountServiceImpl implements AccountService {
 		if (BooleanUtils.negate(result)) {
 			errorMsg.append(ERROR_PREVIOUS_LEVEL_NOT_EXIST);
 		} else {
-			Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(catalog.getCuenta()));
+			Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(catalog.getCuenta())).orElse(null);
 			if (null == maycta) {
 				errorMsg.append(NO_MAYCTA);
 				result = Boolean.FALSE;
@@ -568,7 +568,7 @@ public class AccountServiceImpl implements AccountService {
 	 */
 	private List<Cuenta> saveGeneratedRows(final List<Cuenta> listSave, final Cuenta original) {
 		listSave.add(ZERO, this.populateAcc(original, original));
-		return IterableUtils.toList(cuentaRepository.save(listSave));
+		return IterableUtils.toList(cuentaRepository.saveAll(listSave));
 
 	}
 
@@ -814,7 +814,7 @@ public class AccountServiceImpl implements AccountService {
 	 */
 	public Cuenta populateAcc(Cuenta account, Cuenta original) {
 		account.setXnicta(this.getNivCta(account));
-		Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(account.getCuenta()));
+		Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(account.getCuenta())).orElse(null);
 		if (maycta.getNivcta().intValue() == AccountServiceImpl.getCuentaLevel(account)) {
 			account.setNivcta("S");
 		} else {
@@ -834,7 +834,7 @@ public class AccountServiceImpl implements AccountService {
 				account.setNomcta(original.getNomcta());
 			} else {
 				account.setNomcta(this.catdepRepository
-						.findOne(DependencePredicates.getPredicatetCveDep(original.getScuenta())).getNomdep());
+						.findOne(DependencePredicates.getPredicatetCveDep(original.getScuenta())).orElse(null).getNomdep());
 			}
 		}
 		if (account.getXnicta() == Constants.THREE && this.isContableAccount(original.getCuenta())) {
@@ -843,11 +843,11 @@ public class AccountServiceImpl implements AccountService {
 			} else {
 
 				account.setNomcta(this.catdepRepository
-						.findOne(DependencePredicates.getPredicatetCveDep(original.getScuenta())).getNomdep()
+						.findOne(DependencePredicates.getPredicatetCveDep(original.getScuenta())).orElse(null).getNomdep()
 						+ " "
 						+ this.muniNepRepository.findOne(MuniNepPredicates.getPredicateToPrograms(
 								StringUtils.substring(original.getSscuenta(), ZERO, 10),
-								original.getIdsector().intValue())).getCampo6());
+								original.getIdsector().intValue())).orElse(null).getCampo6());
 			}
 		}
 		if (account.getXnicta() == Constants.FOUR) {
@@ -857,7 +857,7 @@ public class AccountServiceImpl implements AccountService {
 					account.setNomcta(original.getNomcta());
 				} else {
 					account.setNomcta(this.natgasRepository.findOne(
-							NatgasPredicates.existNatgas(original.getSsscuenta(), original.getIdsector().intValue()))
+							NatgasPredicates.existNatgas(original.getSsscuenta(), original.getIdsector().intValue())).orElse(null)
 							.getNomgas());
 				}
 			}
@@ -977,7 +977,7 @@ public class AccountServiceImpl implements AccountService {
 
 		if (null != accs) {
 			for (Cuenta cuenta2 : accs) {
-				Cuenta ctabuff = this.cuentaRepository.findOne(CuentaPredicates.existsFiveLevelsAccount(cuenta2));
+				Cuenta ctabuff = this.cuentaRepository.findOne(CuentaPredicates.existsFiveLevelsAccount(cuenta2)).orElse(null);
 				if (null != ctabuff) {
 					balance = balance.add(ctabuff.getSalini());
 				}
@@ -1007,7 +1007,7 @@ public class AccountServiceImpl implements AccountService {
 
 		if (null != accs) {
 			for (Cuenta cuenta2 : accs) {
-				Cuenta ctabuff = this.cuentaRepository.findOne(CuentaPredicates.existsFiveLevelsAccount(cuenta2));
+				Cuenta ctabuff = this.cuentaRepository.findOne(CuentaPredicates.existsFiveLevelsAccount(cuenta2)).orElse(null);
 				if (null != ctabuff && !this.isInPoliza(ctabuff) && ctabuff.getSalini().compareTo(ZERO_DOUBLE) == 0) {
 					this.cuentaRepository.delete(ctabuff);
 				}
@@ -1084,14 +1084,14 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public List<Cuenta> getEgresoAcc(Cuenta cuenta) {
 		if (!this.cuentaRepository.exists(CuentaPredicates.findByAccounComposite(cuenta))) {
-			Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(cuenta.getCuenta()));
+			Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(cuenta.getCuenta())).orElse(null);
 			cuenta.setCuenta(maycta.getCuenta());
 			cuenta.setNomcta(maycta.getNommay());
 			cuenta.setStacta(maycta.getNatcta());
 			cuenta.setNotcta(maycta.getNotcta());
 			return this.saveGeneratedRows(this.getAutogeneratedBudgetAccount(cuenta), cuenta);
 		} else {
-			cuenta = this.cuentaRepository.findOne(CuentaPredicates.findByAccounComposite(cuenta));
+			cuenta = this.cuentaRepository.findOne(CuentaPredicates.findByAccounComposite(cuenta)).orElse(null);
 			List<Cuenta> accs = this.getAutogeneratedBudgetAccount(cuenta);
 			for (Cuenta cuenta2 : accs) {
 				if (!this.cuentaRepository.exists(CuentaPredicates.findByAccounComposite(cuenta2))) {

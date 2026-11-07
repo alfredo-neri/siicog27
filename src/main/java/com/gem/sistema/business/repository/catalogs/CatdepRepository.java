@@ -4,21 +4,22 @@ import java.util.List;
 
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gem.sistema.business.domain.Catdep;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Interface CatdepRepository.
  */
 @Repository("catdepRepository")
-public interface CatdepRepository extends PagingAndSortingRepository<Catdep, Long>, QueryDslPredicateExecutor<Catdep> {
+public interface CatdepRepository extends PagingAndSortingRepository<Catdep, Long>, CrudRepository<Catdep, Long>, QuerydslPredicateExecutor<Catdep> {
 
 	/*
 	 * (non-Javadoc)
@@ -38,7 +39,7 @@ public interface CatdepRepository extends PagingAndSortingRepository<Catdep, Lon
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.
+	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll(com.
 	 * mysema.query.types.Predicate)
 	 */
 	List<Catdep> findAll(Predicate prdct);

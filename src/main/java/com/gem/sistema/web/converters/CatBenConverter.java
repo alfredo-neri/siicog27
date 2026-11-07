@@ -1,11 +1,11 @@
 package com.gem.sistema.web.converters;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
-import javax.faces.convert.FacesConverter;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.ConverterException;
+import jakarta.faces.convert.FacesConverter;
 
 import com.gem.sistema.business.domain.Catben;
 import com.gem.sistema.web.bean.CatalogMaintenanceBeneficiaryInstitutionsMB;
@@ -18,7 +18,7 @@ import com.gem.sistema.web.bean.CatalogMaintenanceBeneficiaryInstitutionsMB;
 public class CatBenConverter implements Converter {
 
 	/* (non-Javadoc)
-	 * @see javax.faces.convert.Converter#getAsObject(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.String)
+	 * @see jakarta.faces.convert.Converter#getAsObject(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.String)
 	 */
 	@Override
 	public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
@@ -37,7 +37,7 @@ public class CatBenConverter implements Converter {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.faces.convert.Converter#getAsString(javax.faces.context.FacesContext, javax.faces.component.UIComponent, java.lang.Object)
+	 * @see jakarta.faces.convert.Converter#getAsString(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)
 	 */
 	@Override
 	public String getAsString(FacesContext fc, UIComponent uic, Object object) {

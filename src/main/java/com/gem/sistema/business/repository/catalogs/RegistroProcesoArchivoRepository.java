@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +14,7 @@ import com.gem.sistema.business.domain.TcRegistraProcesoArchivo;
 /**
  * The Interface RegistroProcesoArchivoRepository.
  */
-public interface RegistroProcesoArchivoRepository extends PagingAndSortingRepository<TcRegistraProcesoArchivo, Long>, QueryDslPredicateExecutor<TcRegistraProcesoArchivo>{
+public interface RegistroProcesoArchivoRepository extends PagingAndSortingRepository<TcRegistraProcesoArchivo, Long>, CrudRepository<TcRegistraProcesoArchivo, Long>, QuerydslPredicateExecutor<TcRegistraProcesoArchivo>{
      
      /* (non-Javadoc)
       * @see org.springframework.data.repository.CrudRepository#findAll()

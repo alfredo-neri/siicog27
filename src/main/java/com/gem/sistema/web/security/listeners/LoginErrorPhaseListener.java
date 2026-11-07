@@ -3,11 +3,11 @@
  */
 package com.gem.sistema.web.security.listeners;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
 
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -32,7 +32,7 @@ public class LoginErrorPhaseListener implements PhaseListener {
 	private static final long serialVersionUID = 1L;
 
 	/* (non-Javadoc)
-	 * @see javax.faces.event.PhaseListener#afterPhase(javax.faces.event.PhaseEvent)
+	 * @see jakarta.faces.event.PhaseListener#afterPhase(jakarta.faces.event.PhaseEvent)
 	 */
 	@Override
 	public void afterPhase(PhaseEvent arg0) {
@@ -41,7 +41,7 @@ public class LoginErrorPhaseListener implements PhaseListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.faces.event.PhaseListener#beforePhase(javax.faces.event.PhaseEvent)
+	 * @see jakarta.faces.event.PhaseListener#beforePhase(jakarta.faces.event.PhaseEvent)
 	 */
 	@Override
 	public void beforePhase(PhaseEvent arg0) {
@@ -69,7 +69,7 @@ public class LoginErrorPhaseListener implements PhaseListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.faces.event.PhaseListener#getPhaseId()
+	 * @see jakarta.faces.event.PhaseListener#getPhaseId()
 	 */
 	@Override
 	public PhaseId getPhaseId() {

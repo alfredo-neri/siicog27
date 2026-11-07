@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,18 +12,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -42,8 +41,8 @@ import com.gem.sistema.business.service.reportador.ReportadorTXTServiceImpl;
 /**
  * The Class ReportadorTxtMB.
  */
-@ManagedBean(name = "reportadortxtMB")
-@ViewScoped
+@Component("reportadortxtMB")
+@Scope("view")
 public class ReportadorTxtMB extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -64,19 +63,19 @@ public class ReportadorTxtMB extends AbstractMB {
 	private TcReporte tcReporte;
 
 	/** The reportador TXT service. */
-	@ManagedProperty("#{reportadorTXTService}")
+	@Value("#{reportadorTXTService}")
 	private ReportadorTXTService reportadorTXTService;
 
 	/** The reportes repository. */
-	@ManagedProperty("#{reportesRepository}")
+	@Value("#{reportesRepository}")
 	private ReportesRepository reportesRepository;
 
 	/** The reportes log repository. */
-	@ManagedProperty("#{reportesLogRepository}")
+	@Value("#{reportesLogRepository}")
 	private ReportesLogRepository reportesLogRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**
@@ -110,7 +109,7 @@ public class ReportadorTxtMB extends AbstractMB {
 	 */
 	public void initNombreDinamico() {
 		long reporteId = reportid;
-		this.tcReporte = this.reportesRepository.findOne(reporteId);
+		this.tcReporte = this.reportesRepository.findById(reporteId).orElse(null);
 		if (null == this.tcReporte) {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, new FacesMessage("El id del reporte no se encuentra en la base de datos"));
@@ -171,7 +170,7 @@ public class ReportadorTxtMB extends AbstractMB {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, new FacesMessage("No existen registros para generar el reporte"));
 		} else {
-			RequestContext.getCurrentInstance().execute("jQuery('#formTable\\\\:hidden2).click();");
+			PrimeFaces.current().executeScript("jQuery('#formTable\\\\:hidden2).click();");
 		}
 
 	}
@@ -208,8 +207,7 @@ public class ReportadorTxtMB extends AbstractMB {
 				byte[] ingresoRespFile = new byte[(int) fileToSend.length()];
 				fileInputStream = new FileInputStream(fileToSend);
 				fileInputStream.read(ingresoRespFile);
-				toReturn = new DefaultStreamedContent(fileInputStream, "text/plain", nombreArchivoFormato,
-						ReportadorTXTServiceImpl.CHARSET);
+				toReturn = StreamedContents.of(fileInputStream, "text/plain", nombreArchivoFormato, ReportadorTXTServiceImpl.CHARSET);
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
 				FacesContext context = FacesContext.getCurrentInstance();

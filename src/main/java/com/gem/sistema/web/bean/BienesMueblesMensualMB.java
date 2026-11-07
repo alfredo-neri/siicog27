@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
@@ -11,11 +15,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -39,8 +40,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  * @Changes Se implementa servicios de firmas
  * @Sector Municipal
  */
-@ManagedBean(name = "bienesMueblesMensualMB")
-@ViewScoped
+@Component("bienesMueblesMensualMB")
+@Scope("view")
 public class BienesMueblesMensualMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_INVENTARIO_MENSUAL_BIENES_MUEBLES";
 
@@ -57,7 +58,7 @@ public class BienesMueblesMensualMB extends BaseDirectReport {
 	private StreamedContent txt;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 
 	public ExecutePlService getExecutePlService() {
@@ -68,16 +69,16 @@ public class BienesMueblesMensualMB extends BaseDirectReport {
 		this.executePlService = executePlService;
 	}
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -163,7 +164,7 @@ public class BienesMueblesMensualMB extends BaseDirectReport {
 
 				e.printStackTrace();
 			}
-			txt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			txt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

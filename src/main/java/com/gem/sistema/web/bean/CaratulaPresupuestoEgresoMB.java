@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.event.RowEditEvent;
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ import com.gem.sistema.business.domain.Pasot;
 import com.gem.sistema.business.repository.catalogs.PasotRepository;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 
-@ManagedBean
-@ViewScoped
+@Component("caratulaPresupuestoEgresoMB")
+@Scope("view")
 public class CaratulaPresupuestoEgresoMB implements Serializable {	
 
 	/**
@@ -43,7 +43,7 @@ public class CaratulaPresupuestoEgresoMB implements Serializable {
 	private Boolean bEdicion;
 
 	/** The pasot repository. */
-	@ManagedProperty(value = "#{pasotRepository}")
+	@Value("#{pasotRepository}")
 	private PasotRepository pasotRepository;
 
 	/**

@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,14 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.ContraRecibo;
@@ -32,8 +32,8 @@ import com.gem.sistema.business.repository.catalogs.ProveedoresNuevoRepository;
 import com.gem.sistema.business.repository.catalogs.TcFacturasContraReciboRepository;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean(name = "contrarecibosMB")
-@ViewScoped
+@Component("contrarecibosMB")
+@Scope("view")
 public class ContrarecibosMB extends BaseDirectReport {
 
 	private static final String SHOW_PDF = " jQuery('#form\\\\:showPdf').click();";
@@ -55,22 +55,22 @@ public class ContrarecibosMB extends BaseDirectReport {
 
 	Map<String, Object> paramsReport = new java.util.HashMap<String, Object>();
 
-	@ManagedProperty("#{contraReciboRepository}")
+	@Value("#{contraReciboRepository}")
 	private ContraReciboRepository contraReciboRepository;
 
-	@ManagedProperty("#{tcFacturaContraReciboRepository}")
+	@Value("#{tcFacturaContraReciboRepository}")
 	private TcFacturasContraReciboRepository facturasContraReciboRepository;
 
-	@ManagedProperty("#{proveedoresNuevoRepository}")
+	@Value("#{proveedoresNuevoRepository}")
 	private ProveedoresNuevoRepository proveedoresRepository;
 
-	@ManagedProperty("#{foliosContrareciboRepository}")
+	@Value("#{foliosContrareciboRepository}")
 	private FoliosContrareciboRepository foliosContrareciboRepository;
 
-	@ManagedProperty("#{fuentefRepository}")
+	@Value("#{fuentefRepository}")
 	private FuentefRepository fuentefRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	@PostConstruct
@@ -192,7 +192,7 @@ public class ContrarecibosMB extends BaseDirectReport {
 						.orElse(new ContraRecibo());
 				recibos = recibos.stream().filter(p -> !p.getId().equals(idTemporal)).collect(Collectors.toList());
 				facturasByRecibo = facturasContraReciboRepository.findAllByContraRecibo(reciboDelete);
-				facturasContraReciboRepository.delete(facturasByRecibo);
+				facturasContraReciboRepository.deleteAll(facturasByRecibo);
 				contraReciboRepository.delete(reciboDelete);
 				displayInfoMessage(
 						"El contra-recibo con folio: " + reciboDelete.getFolio() + ", se ha eliminado correctamente");
@@ -233,12 +233,12 @@ public class ContrarecibosMB extends BaseDirectReport {
 	}
 
 	public void showPdf() {
-		RequestContext.getCurrentInstance().execute(SHOW_PDF);
+		PrimeFaces.current().executeScript(SHOW_PDF);
 		whitePdf = false;
 	}
 
 	public void showPdfWhite() {
-		RequestContext.getCurrentInstance().execute(SHOW_PDF);
+		PrimeFaces.current().executeScript(SHOW_PDF);
 		whitePdf = true;
 	}
 
@@ -307,11 +307,12 @@ public class ContrarecibosMB extends BaseDirectReport {
 
 	/** Elimina un Factura */
 	public void deleteFactura() {
-		if (facturaContraRecibo != null) {
+		if (facturaContraRecibo != null && facturaContraRecibo.getId() != null) {
 			try {
 				facturasByRecibo.remove(facturaContraRecibo);
 				recibo.deleteFactura(facturaContraRecibo);
-				facturasContraReciboRepository.delete(facturasByRecibo);
+				// antes deleteAll(facturasByRecibo): borraba las facturas que quedaban y no la elegida
+				facturasContraReciboRepository.delete(facturaContraRecibo);
 				displayInfoMessage("La factura se ha eliminado correctamnte");
 				facturaContraRecibo = new TcFacturaContraRecibo();
 			} catch (Exception e) {

@@ -1,6 +1,5 @@
 package com.gem.sistema.business.dao;
 
-
 import com.gem.sistema.business.dto.PresupuestoDTO;
 
 // TODO: Auto-generated Javadoc

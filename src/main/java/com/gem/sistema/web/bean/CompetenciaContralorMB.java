@@ -1,11 +1,11 @@
 package com.gem.sistema.web.bean;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 
-@ManagedBean(name="competenciaContralorMB")
-@ViewScoped
+@Component("competenciaContralorMB")
+@Scope("view")
 public class CompetenciaContralorMB {
 
 	@PostConstruct

@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,7 @@ import com.gem.sistema.business.domain.Agua;
  */
 @Repository(value="aguaRepository")
 public interface AguaRepository
-		extends PagingAndSortingRepository<Agua, Long>, QueryDslPredicateExecutor<Agua>{
+		extends PagingAndSortingRepository<Agua, Long>, CrudRepository<Agua, Long>, QuerydslPredicateExecutor<Agua>{
 	/*
 	 * (non-Javadoc)
 	 *

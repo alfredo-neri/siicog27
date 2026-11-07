@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -23,8 +23,8 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class ComparativoGlobalMensualMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("comparativoGlobalMensualMB")
+@Scope("view")
 public class ComparativoGlobalMensualMB extends BaseDirectReport {
 	
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -36,13 +36,13 @@ public class ComparativoGlobalMensualMB extends BaseDirectReport {
 	private Integer numFirmas;
 
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -138,7 +138,7 @@ public class ComparativoGlobalMensualMB extends BaseDirectReport {
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

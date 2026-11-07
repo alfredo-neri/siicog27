@@ -1,6 +1,10 @@
 
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,13 +21,10 @@ import com.gem.sistema.business.repository.catalogs.TcMesRepository;
 import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -32,14 +33,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class RF009126MB.
  */
-@ManagedBean(name = "rF009126MB")
-@ViewScoped
+@Component("rF009126MB")
+@Scope("view")
 public class RF009126MB extends GenericExecuteProcedure {
 
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -73,22 +74,22 @@ public class RF009126MB extends GenericExecuteProcedure {
 	/** The bandera. */
 	private Boolean bandera = Boolean.FALSE;
 
-	// @ManagedProperty("#{xcatproRepository}") // aqui trae el ABC
+	// @Value("#{xcatproRepository}") // aqui trae el ABC
 	// private XcatproRepository xcatproRepository;
 
 	/** The tcmes repository. */
-	@ManagedProperty("#{tcMesRepository}") // aqui trae el ABC
+	@Value("#{tcMesRepository}") // aqui trae el ABC
 	private TcMesRepository tcmesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {
@@ -375,8 +376,7 @@ public class RF009126MB extends GenericExecuteProcedure {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt",
-					outParameters.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", outParameters.get("O_NAME_FILE").toString(), null);
 
 		} else {
 			generateNotificationFront(SEVERITY_INFO, "Info!", outParameters.get("O_MSG_ERROR").toString());
@@ -470,8 +470,7 @@ public class RF009126MB extends GenericExecuteProcedure {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				fileTxt = new DefaultStreamedContent(stream, "application/txt",
-						outParameters.get("O_NAME_FILE").toString());
+				fileTxt = StreamedContents.of(stream, "application/txt", outParameters.get("O_NAME_FILE").toString(), null);
 
 			} else {
 				generateNotificationFront(SEVERITY_INFO, "Info!", outParameters.get("O_MSG_ERROR").toString());
@@ -488,7 +487,7 @@ public class RF009126MB extends GenericExecuteProcedure {
 			if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mesFinal), null,
 					this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 				this.downLoadFile();
-				RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+				PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 			}
 		}
 	}

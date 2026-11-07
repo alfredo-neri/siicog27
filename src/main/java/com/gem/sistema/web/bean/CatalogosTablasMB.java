@@ -1,22 +1,22 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 
 import com.gem.sistema.business.domain.TcTabla;
 import com.gem.sistema.business.service.catalogos.CatalogoTablasService;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 
-@ManagedBean(name = "catalogosTablasMB")
-@ViewScoped
+@Component("catalogosTablasMB")
+@Scope("view")
 public class CatalogosTablasMB extends AbstractMB {
 
 	private static final String VIEW_EDIT_ROW_ACTIVATE_PENCIL = "jQuery('span.ui-icon-pencil').eq(";
@@ -32,7 +32,7 @@ public class CatalogosTablasMB extends AbstractMB {
 	private Boolean bModifcar;
 	private Boolean bAdicionar;
 
-	@ManagedProperty("#{catalogoTablasService}")
+	@Value("#{catalogoTablasService}")
 	private CatalogoTablasService catalogoTablasService;
 
 	@PostConstruct
@@ -56,14 +56,14 @@ public class CatalogosTablasMB extends AbstractMB {
 		listTablas.add(newTabla);
 
 		this.activateRowEdit(listTablas.size() - 1);
-		RequestContext.getCurrentInstance()
-				.execute("PF('balanceWdg').paginator.setPage(" + (this.getPage() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('balanceWdg').paginator.setPage(" + (this.getPage() - 1) + ");");
 
 		if (listTablas.size() > 20) {
 			Integer indexOf = this.getRowCurrent(listTablas.size());
 			this.activateRowEdit(indexOf);
 
-			RequestContext.getCurrentInstance().execute(String.format(FOCUS_BY_ROWID, (listTablas.size() - 1)));
+			PrimeFaces.current().executeScript(String.format(FOCUS_BY_ROWID, (listTablas.size() - 1)));
 		}
 
 		dataModelTcTabla.setListT(listTablas);
@@ -91,7 +91,7 @@ public class CatalogosTablasMB extends AbstractMB {
 		} else {
 			if (dataModelTcTabla.getListT().get(lastIndex).getId() != null) {
 				listTablas = catalogoTablasService.findAllTablas();
-				RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+				PrimeFaces.current().executeScript(UPDATE_OBJETS);
 				bAdicionar=Boolean.FALSE;
 			} else {
 				if (bModifcar == Boolean.TRUE && tablaSelected.getId() == null) {
@@ -179,7 +179,7 @@ public class CatalogosTablasMB extends AbstractMB {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	public void activateRowEdit(final int index) {
@@ -189,7 +189,7 @@ public class CatalogosTablasMB extends AbstractMB {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	public String[] getValue(String data) {

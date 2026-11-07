@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 import java.math.BigDecimal;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import com.gem.sistema.business.domain.Ingresot;
  * The Interface IngresotRepository.
  */
 @Repository("ingresotRepository")
-public interface IngresotRepository extends PagingAndSortingRepository<Ingresot, Long>, QueryDslPredicateExecutor<Ingresot> {
+public interface IngresotRepository extends PagingAndSortingRepository<Ingresot, Long>, CrudRepository<Ingresot, Long>, QuerydslPredicateExecutor<Ingresot> {
 
 
 

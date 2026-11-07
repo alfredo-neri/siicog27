@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.StreamedContent;
 
@@ -28,8 +28,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class Reporte160MB.
  */
-@ManagedBean(name = "reporte160MB")
-@ViewScoped
+@Component("reporte160MB")
+@Scope("view")
 public class Reporte160MB extends BaseDirectReport {
 	
 	/** The conctb. */
@@ -75,18 +75,18 @@ public class Reporte160MB extends BaseDirectReport {
 	private boolean bAdd = Boolean.FALSE;
 
 	/** The pm 2411 service. */
-	@ManagedProperty("#{pm2411Service}")
+	@Value("#{pm2411Service}")
 	private Pm2411Service pm2411Service;
 
 	/** The pm 2411 repository. */
-	@ManagedProperty("#{pm2411Repository}")
+	@Value("#{pm2411Repository}")
 	private Pm2411Repository pm2411Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

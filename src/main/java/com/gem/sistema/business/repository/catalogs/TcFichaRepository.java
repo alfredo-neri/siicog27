@@ -3,13 +3,14 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.gem.sistema.business.domain.TcFicha;
 
 @Repository("tcFichaRepository")
-public interface TcFichaRepository extends PagingAndSortingRepository<TcFicha, Long> {
+public interface TcFichaRepository extends PagingAndSortingRepository<TcFicha, Long>, CrudRepository<TcFicha, Long> {
 
 	List<TcFicha> findAllByMatrizNivelMatrizDependenciaClaveStartingWithAndMatrizNivelNivelCodigoIndicadorStartingWith(
 			String dependencia, String codigo);

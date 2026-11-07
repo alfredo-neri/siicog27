@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -31,8 +31,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  *
  * @author Alfredo
  */
-@ManagedBean
-@ViewScoped
+@Component("ipm42111MB")
+@Scope("view")
 public class Ipm42111MB extends BaseDirectReport {
 	
 	/** The Constant EMPTY_VALUE. */
@@ -56,26 +56,26 @@ public class Ipm42111MB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The pm 4211 service. */
-	@ManagedProperty("#{pm4211Service}")
+	@Value("#{pm4211Service}")
 	private Pm4211Service pm4211Service;
 
 	/** The pm 4211 repository. */
-	@ManagedProperty("#{pm4211Repository}")
+	@Value("#{pm4211Repository}")
 	private Pm4211Repository pm4211Repository;
 	
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {

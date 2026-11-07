@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.domain.TcUnidadMedida;
 import com.gem.sistema.business.repository.catalogs.TcArticulosSARepository;
@@ -25,8 +25,8 @@ import com.gem.sistema.business.repository.catalogs.TcUnidadMedidaRepository;
  * {@code busquedaSimple()} de la entidad y la baja se bloquea cuando la unidad
  * ya fue usada en algun articulo.
  */
-@ManagedBean(name = "unidadesMedidaMB")
-@ViewScoped
+@Component("unidadesMedidaMB")
+@Scope("view")
 public class UnidadesMedidaMB extends AbstractMB {
 
 	/** Unidad en edicion o captura */
@@ -41,10 +41,10 @@ public class UnidadesMedidaMB extends AbstractMB {
 	/** Id de la unidad que el usuario pidio eliminar */
 	private Long idTemporal;
 
-	@ManagedProperty("#{tcUnidadMedidaRepository}")
+	@Value("#{tcUnidadMedidaRepository}")
 	private TcUnidadMedidaRepository unidadMedidaRepository;
 
-	@ManagedProperty("#{tcArticulosSARepository}")
+	@Value("#{tcArticulosSARepository}")
 	private TcArticulosSARepository articulosRepository;
 
 	@PostConstruct
@@ -121,7 +121,7 @@ public class UnidadesMedidaMB extends AbstractMB {
 		try {
 			long usos = articulosRepository.countByUnidad(borrar);
 			if (usos == 0) {
-				unidadMedidaRepository.delete(borrar.getId());
+				unidadMedidaRepository.deleteById(borrar.getId());
 				displayInfoMessage("La unidad de medida: " + borrar.getClave() + " - " + borrar.getDescripcion()
 						+ " se ha eliminado correctamente");
 			} else {

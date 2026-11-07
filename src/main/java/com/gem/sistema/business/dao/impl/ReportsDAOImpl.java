@@ -12,8 +12,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.MapUtils;

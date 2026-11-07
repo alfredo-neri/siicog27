@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.gem.sistema.business.domain.QTcRegistraProcesoArchivo;
 import com.gem.sistema.business.domain.QTcUsuario;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

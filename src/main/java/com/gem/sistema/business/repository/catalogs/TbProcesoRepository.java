@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,7 @@ import com.gem.sistema.business.domain.TbProceso;
 
 @Repository(value = "tbProcesoRepository")
 public interface TbProcesoRepository
-		extends PagingAndSortingRepository<TbProceso, Long>, QueryDslPredicateExecutor<TbProceso> {
+		extends PagingAndSortingRepository<TbProceso, Long>, CrudRepository<TbProceso, Long>, QuerydslPredicateExecutor<TbProceso> {
 
 	@Query(value = "select p from TbProceso p where p.nombreProceso=:nombre and "
 			+ "MONTH(p.fechaInicio)=MONTH(:fecha)  and DAY(p.fechaInicio)=DAY(:fecha) and YEAR(p.fechaInicio)=YEAR(:fecha) "

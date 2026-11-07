@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
@@ -8,11 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.component.tabview.Tab;
 import org.primefaces.event.TabChangeEvent;
@@ -36,8 +37,8 @@ import com.gem.sistema.util.Constants;
  *           ajusta reporte y se implementa firmas dinamicas
  * @Sector Municipal
  */
-@ManagedBean(name = "pbrm01eMB")
-@ViewScoped
+@Component("pbrm01eMB")
+@Scope("view")
 public class Pbrm01eMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_MATRIZ_INDICADORES_01E";
 
@@ -45,16 +46,16 @@ public class Pbrm01eMB extends BaseDirectReport {
 	private String fileName;
 	private String report;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{generaTxtFilesService}")
+	@Value("#{generaTxtFilesService}")
 	private GeneraTxtFilesService txtFilesService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct
@@ -132,7 +133,7 @@ public class Pbrm01eMB extends BaseDirectReport {
 			e.printStackTrace();
 		}
 
-		file = new DefaultStreamedContent(stream, Constants.APPLICCTION_TXT, fileName);
+		file = StreamedContents.of(stream, Constants.APPLICCTION_TXT, fileName, null);
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Success", "Se Generó el Archivo: " + fileName);
 
 		return file;

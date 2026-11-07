@@ -1,39 +1,38 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Cuenta;
 import com.gem.sistema.business.repository.catalogs.CuentaRepository;
 import com.gem.sistema.business.repository.catalogs.FirmasRepository;
-import com.google.common.base.Strings;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class MovimientosDeudaMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("movimientosDeudaMB")
+@Scope("view")
 public class MovimientosDeudaMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The cuenta repository. */
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/** The mes. */
@@ -198,14 +197,14 @@ public class MovimientosDeudaMB extends BaseDirectReport {
 	 * @return true, if successful
 	 */
 	private boolean todosVacios() {
-		return Strings.isNullOrEmpty(cuenta.getCuenta()) || Strings.isNullOrEmpty(cuenta.getScuenta());
+		return StringUtils.isEmpty(cuenta.getCuenta()) || StringUtils.isEmpty(cuenta.getScuenta());
 	}
 
 	/**
 	 * Creates the file txt inline validate.
 	 */
 	public void createFileTxtInlineValidate() {
-		RequestContext.getCurrentInstance().execute("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
+		PrimeFaces.current().executeScript("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
 	}
 
 
@@ -215,9 +214,9 @@ public class MovimientosDeudaMB extends BaseDirectReport {
 	public void createFilePdfInlineValidate() {
 		// if (validateCuenta()) {
 		createFilePdfInline();
-		RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
-		RequestContext.getCurrentInstance()
-				.execute("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '57em');");
+		PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
+		PrimeFaces.current()
+				.executeScript("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '57em');");
 		// }
 	}
 

@@ -1,7 +1,7 @@
 package com.gem.sistema.business.domain;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.gem.sistema.annotation.IgnoredQuery;
 

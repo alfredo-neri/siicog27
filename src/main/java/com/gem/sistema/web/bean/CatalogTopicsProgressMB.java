@@ -1,17 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.primefaces.event.RowEditEvent;
@@ -31,8 +28,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogTopicsProgressMB")
+@Scope("view")
 public class CatalogTopicsProgressMB extends CommonCatalogMB<Cpd> implements Serializable {
 	
 	/** Constante de la version del objeto. */
@@ -42,7 +39,7 @@ public class CatalogTopicsProgressMB extends CommonCatalogMB<Cpd> implements Ser
 	private static final Logger LOGGER = LoggerFactory.getLogger(CatalogTopicsProgressMB.class);		
 
 	/**  Componente de servicio. */
-	@ManagedProperty(value = "#{cpdRepository}")
+	@Value("#{cpdRepository}")
 	private CpdRepository cpdRepository;			
 
 	/**  Nombre del reporte en texto plano. */

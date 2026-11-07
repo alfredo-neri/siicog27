@@ -4,7 +4,7 @@ import static com.gem.sistema.util.Constants.MIN_LENGTH_FIELD_CAMPO8_INDICATORS;
 import static com.gem.sistema.util.Constants.MIN_LENGTH_FIELD_CAMPO8_MATRIX_INDICATORS;
 
 import com.gem.sistema.business.domain.QMuninep;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

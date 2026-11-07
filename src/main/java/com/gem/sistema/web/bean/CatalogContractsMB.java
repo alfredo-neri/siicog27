@@ -1,9 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,10 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.primefaces.event.RowEditEvent;
@@ -35,8 +35,8 @@ import com.gem.sistema.web.util.FrontProperty;
  * @author Juan Carlos Pedraza Alcala
  */
 
-@ManagedBean
-@ViewScoped
+@Component("catalogContractsMB")
+@Scope("view")
 public class CatalogContractsMB extends CommonCatalogMB<Obras1> implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -52,7 +52,7 @@ public class CatalogContractsMB extends CommonCatalogMB<Obras1> implements Seria
 	private static final String FIELD_ORDER_BY_CLVPRV = "clvprv";
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{obras1Repository}")
+	@Value("#{obras1Repository}")
 	private Obras1Repository obras1Repository;
 
 	/** The row selected. */

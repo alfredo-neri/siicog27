@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDay;
 
@@ -12,15 +15,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -42,8 +42,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class IndicadorSemestralZonasRiesgoProtegidasMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("indicadorSemestralZonasRiesgoProtegidasMB")
+@Scope("view")
 public class IndicadorSemestralZonasRiesgoProtegidasMB extends BaseDirectReport {
 
 	/** The firmas. */
@@ -56,25 +56,25 @@ public class IndicadorSemestralZonasRiesgoProtegidasMB extends BaseDirectReport 
 	private TcMes tcMes;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 	
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;;
 
 	/** The service. */
-	@ManagedProperty("#{pm0911Service}")
+	@Value("#{pm0911Service}")
 	private Pm0911Service service;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -342,8 +342,8 @@ public class IndicadorSemestralZonasRiesgoProtegidasMB extends BaseDirectReport 
 		entity.setSemes(selectableSemesters.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -377,8 +377,8 @@ public class IndicadorSemestralZonasRiesgoProtegidasMB extends BaseDirectReport 
 			
 			sortMasterList();
 			currentPage = masterList.indexOf(nuevo);
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').getPaginator().setPage(" + (selected.getSemes() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').getPaginator().setPage(" + (selected.getSemes() - 1) + ");");
 
 			defaultValues(nuevo);
 			Pm0911 pm0911 = service.save(nuevo);

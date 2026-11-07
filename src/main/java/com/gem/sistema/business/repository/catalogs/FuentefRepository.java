@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.query.Param;
@@ -21,7 +22,7 @@ import com.gem.sistema.business.dto.CatdaaDTO;
  */
 @Repository(value = "fuentefRepository")
 public interface FuentefRepository
-		extends PagingAndSortingRepository<Fuentef, Long>, QueryDslPredicateExecutor<Fuentef> {
+		extends PagingAndSortingRepository<Fuentef, Long>, CrudRepository<Fuentef, Long>, QuerydslPredicateExecutor<Fuentef> {
 
 	/*
 	 * (non-Javadoc)

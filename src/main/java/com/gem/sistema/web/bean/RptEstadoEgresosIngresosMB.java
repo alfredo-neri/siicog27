@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -26,8 +26,8 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 /**
  * The Class RptEstadoEgresosIngresosMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rptEstadoEgresosIngresosMB")
+@Scope("view")
 public class RptEstadoEgresosIngresosMB extends BaseDirectReport {
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -40,19 +40,19 @@ public class RptEstadoEgresosIngresosMB extends BaseDirectReport {
 	private List<String> listQuerys;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/**
@@ -97,7 +97,7 @@ public class RptEstadoEgresosIngresosMB extends BaseDirectReport {
 		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
@@ -105,7 +105,7 @@ public class RptEstadoEgresosIngresosMB extends BaseDirectReport {
 		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

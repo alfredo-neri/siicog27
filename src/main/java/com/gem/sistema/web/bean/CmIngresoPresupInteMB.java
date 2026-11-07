@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 
 import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
@@ -27,8 +27,8 @@ import com.gem.sistema.web.datamodel.NatgasDataModel;
  *
  * @author Gauss
  */
-@ManagedBean(name="cmIngresoPresupInteMB")
-@ViewScoped
+@Component("cmIngresoPresupInteMB")
+@Scope("view")
 public class CmIngresoPresupInteMB extends AbstractMB implements Serializable {
 
 	/**
@@ -40,7 +40,7 @@ public class CmIngresoPresupInteMB extends AbstractMB implements Serializable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CmIngresoPresupInteMB.class);
 
 	/** The natgas data model. */
-	@ManagedProperty( value = "#{natgasDataModel}")
+	@Value("#{natgasDataModel}")
 	private NatgasDataModel natgasDataModel;
 
 	/** The selected natgas. */
@@ -56,11 +56,11 @@ public class CmIngresoPresupInteMB extends AbstractMB implements Serializable {
 	private Integradoe newIntegradoe;
 
 	/** The natgas repository. */
-	@ManagedProperty(value = "#{natgasRepository}")
+	@Value("#{natgasRepository}")
 	private NatgasRepository natgasRepository;
 	
 	/** The integradoe repository. */
-	@ManagedProperty(value = "#{integradoeRepository}")	
+	@Value("#{integradoeRepository}")	
 	private IntegradoeRepository integradoeRepository;
 	
 	/** The existen registros. */

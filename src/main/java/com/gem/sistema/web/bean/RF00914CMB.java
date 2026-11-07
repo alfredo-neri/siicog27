@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.IOException;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.service.callsp.ParamsRF00914CDTO;
@@ -24,13 +24,13 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class RF00914CMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF00914CMB")
+@Scope("view")
 public class RF00914CMB extends BaseDirectReportByPL {
 
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {
@@ -61,7 +61,7 @@ public class RF00914CMB extends BaseDirectReportByPL {
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
 	/**
@@ -194,7 +194,7 @@ public class RF00914CMB extends BaseDirectReportByPL {
 			ConvertCharsetUtils.transform(source, charSetUFT, target, charSetISO);
 
 			txtPreview = this.generatePreviewService.generatePreview("/gem/reportes/t.txt");
-			RequestContext.getCurrentInstance().execute(FOCUS_PREVIEW);
+			PrimeFaces.current().executeScript(FOCUS_PREVIEW);
 
 		}
 		addToBitacora(false);
@@ -202,7 +202,7 @@ public class RF00914CMB extends BaseDirectReportByPL {
 
 	public void downloadTxt() throws ReportValidationException {
 		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

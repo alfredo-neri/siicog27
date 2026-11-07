@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.business.utils.GetValuesClassUtils.getFieldNamesAndValues;
 
 import java.util.ArrayList;
@@ -8,10 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.domain.Firmas;
 import com.gem.sistema.business.dto.FirmasDTO;
@@ -23,8 +23,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class FirmasMB.
  */
-@ManagedBean(name = "firmasMB")
-@ViewScoped
+@Component("firmasMB")
+@Scope("view")
 public class FirmasMB extends AbstractMB {
 
 	/** The Constant INIT. */
@@ -82,11 +82,11 @@ public class FirmasMB extends AbstractMB {
 	private List<FirmasDTO> lisDTO;
 
 	/** The firmas service. */
-	@ManagedProperty("#{firmasService}")
+	@Value("#{firmasService}")
 	private FirmasService firmasService;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**

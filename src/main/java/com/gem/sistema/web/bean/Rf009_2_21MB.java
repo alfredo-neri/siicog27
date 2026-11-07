@@ -1,15 +1,16 @@
 package com.gem.sistema.web.bean;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -26,27 +27,27 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 /**
  * The Class Rf009_2_21MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rf009_2_21MB")
+@Scope("view")
 public class Rf009_2_21MB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
 	private static final String CLAVE_REPORT = "RPT_DISPONIBILIDAD_FLUJO";
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public ConctbRepository getConctbRepository() {
@@ -65,7 +66,7 @@ public class Rf009_2_21MB extends BaseDirectReport {
 		this.puestosFirmasService = puestosFirmasService;
 	}
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/** The mes. */
@@ -106,13 +107,13 @@ public class Rf009_2_21MB extends BaseDirectReport {
 
 	public void downloadXls() {
 		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
 	public void downloadTxt() {
 		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

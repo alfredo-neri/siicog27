@@ -3,14 +3,14 @@
  */
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +18,8 @@ import org.springframework.data.domain.Sort;
 
 import com.gem.sistema.business.domain.Caratula;
 import com.gem.sistema.business.repository.catalogs.CaratulaRepository;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -27,8 +27,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author gauss s
  */
-@ManagedBean(name = "caratulaDataModel")
-@ViewScoped
+@Component("caratulaDataModel")
+@Scope("view")
 public class CaratulaDataModel extends CustomPagingModel<Caratula> {
 
 	/**
@@ -37,7 +37,7 @@ public class CaratulaDataModel extends CustomPagingModel<Caratula> {
 	private static final long serialVersionUID = 1L;
 	
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{caratulaRepository}")
+	@Value("#{caratulaRepository}")
 	private CaratulaRepository caratulaRepository;
 
 	/*

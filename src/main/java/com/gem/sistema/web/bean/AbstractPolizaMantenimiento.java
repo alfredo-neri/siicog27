@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ManagedProperty;
 
 import org.springframework.data.domain.Sort;
 
@@ -78,7 +78,7 @@ public class AbstractPolizaMantenimiento extends AbstractMB {
 	protected static final Integer PAGE_SIZE = 1;
 
 	/** The Constant POLEIN_TIO_MES_CONT. */
-	protected static final Sort POLEIN_TIO_MES_CONT = new Sort(Sort.Direction.ASC, "tippol", "mespol", "conpol");
+	protected static final Sort POLEIN_TIO_MES_CONT = Sort.by(Sort.Direction.ASC, "tippol", "mespol", "conpol");
 
 	/** The Constant FIND_ACC_NAME. */
 	protected static final String FIND_ACC_NAME = "FIND_ACC_NAME";
@@ -187,79 +187,79 @@ public class AbstractPolizaMantenimiento extends AbstractMB {
 	}
 
 	/** The con poliz sirvice. */
-	@ManagedProperty(value = "#{consultaPolizaSirveImpl}")
+	@Value("#{consultaPolizaSirveImpl}")
 	private ConsultaPolizaSirve conPolizSirvice;
 
 	/** The copome service. */
-	@ManagedProperty("#{copomeService}")
+	@Value("#{copomeService}")
 	private CopomeService copomeService;
 
 	/** The polide data model. */
-	@ManagedProperty("#{polideDataModel}")
+	@Value("#{polideDataModel}")
 	private PolideDataModel polideDataModel;
 
 	/** The polifl repository. */
-	@ManagedProperty("#{poliflRepository}")
+	@Value("#{poliflRepository}")
 	private PoliflRepository poliflRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The data year system service. */
-	@ManagedProperty(value = "#{dataYearSystemService}")
+	@Value("#{dataYearSystemService}")
 	private DataYearSystemService dataYearSystemService;
 
 	/** The polien repository. */
-	@ManagedProperty(value = "#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty(value = "#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The cattpo repository. */
-	@ManagedProperty(value = "#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepository;
 
 	/** The polide repository. */
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** The cuenta adicional service. */
-	@ManagedProperty(value = "#{cuentaAdicionalService}")
+	@Value("#{cuentaAdicionalService}")
 	private CuentaAdicionalService cuentaAdicionalService;
 
 	/** The cuenta poliza data model. */
-	@ManagedProperty(value = "#{cuentaPolizaDataModel}")
+	@Value("#{cuentaPolizaDataModel}")
 	private CuentaPolizaDataModel cuentaPolizaDataModel;
 
 	/** The poliza service. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 
 	/** The catflu repository. */
-	@ManagedProperty(value = "#{catfluRepository}")
+	@Value("#{catfluRepository}")
 	private CatfluRepository catfluRepository;
 
 	/** Servicios para el modulo de centas. */
-	@ManagedProperty(value = "#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
 	/** The cuenta repository. */
-	@ManagedProperty(value = "#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/** The exis digital. */
-	@ManagedProperty("#{tcRegistraArchivoDigitalRepository}")
+	@Value("#{tcRegistraArchivoDigitalRepository}")
 	private TcRegistraArchivoDigitalRepository exisDigital;
 
 	/** The polide service. */
-	@ManagedProperty(value = "#{polideService}")
+	@Value("#{polideService}")
 	private PolideService polideService;
 
 	/** The parametros repository. */
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
 	/**

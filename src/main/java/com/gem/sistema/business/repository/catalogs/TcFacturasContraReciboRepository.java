@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +15,8 @@ import com.gem.sistema.business.domain.TcFacturaContraRecibo;
  * The Interface TcFacturaContraReciboRepository.
  */
 @Repository(value = "tcFacturaContraReciboRepository")
-public interface TcFacturasContraReciboRepository extends PagingAndSortingRepository<TcFacturaContraRecibo, Long>,
-		QueryDslPredicateExecutor<TcFacturaContraRecibo> {
+public interface TcFacturasContraReciboRepository extends PagingAndSortingRepository<TcFacturaContraRecibo, Long>, CrudRepository<TcFacturaContraRecibo, Long>,
+		QuerydslPredicateExecutor<TcFacturaContraRecibo> {
 
 	List<TcFacturaContraRecibo> findAllByContraRecibo(ContraRecibo contraRecibo);
 }

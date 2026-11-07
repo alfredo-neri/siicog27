@@ -70,7 +70,7 @@ public class ArchivoConciliarServiceImpl implements ArchivoConciliarService{
 
     for(int pagenum = 0; true; pagenum++){
       Page<Polide> page = polideRepository.getByMonthAndLevels(month, conctb.getAnoemp(), cta, sscta, ssscta, idsector.intValue(),
-                                                               new PageRequest(pagenum,10));
+                                                               PageRequest.of(pagenum,10));
       page.forEach((p) -> {
         String xcaopol = "";
         BigDecimal xcanpol = null;

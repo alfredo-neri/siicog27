@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.tabview.Tab;
@@ -27,21 +27,21 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  *           crean componentes para la generacion de los reportes
  * @Sector Municipal
  */
-@ViewScoped
-@ManagedBean(name = "proyectoPresupuestarioReportesMB")
+@Scope("view")
+@Component("proyectoPresupuestarioReportesMB")
 public class ProyectoPresupuestarioReportesMB extends BaseDirectReport {
 	private static final String WHERE_SALDO_CERO = " WHERE T1.ENERO <> 0 OR T1.FEBRERO <> 0 OR T1.MARZO <> 0 OR T1.ABRIL <> 0 OR T1.MAYO <> 0 OR T1.JUNIO <> 0 OR T1.JULIO <> 0 OR T1.AGOSTO <> 0 OR T1.SEPTIEMBRE <> 0 OR T1.OCTUBRE <> 0 	OR T1.NOVIEMBRE <> 0 OR T1.DICIEMBRE <> 0 ";
 	private String saldoCero;
 	private String claveReport;
 	private Boolean showSaldoCero;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct

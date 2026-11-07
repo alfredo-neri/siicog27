@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import com.gem.sistema.business.domain.PpCaptura;;
  * The Interface PpCapturaRepository.
  */
 @Repository
-public interface PpCapturaRepository extends PagingAndSortingRepository<PpCaptura, Long>, QueryDslPredicateExecutor<PpCaptura> {
+public interface PpCapturaRepository extends PagingAndSortingRepository<PpCaptura, Long>, CrudRepository<PpCaptura, Long>, QuerydslPredicateExecutor<PpCaptura> {
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#save(S)

@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDay;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,8 +28,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class RF0010116MB.
  */
-@ManagedBean(name = "rF0010116MB")
-@ViewScoped
+@Component("rF0010116MB")
+@Scope("view")
 public class RF0010116MB extends BaseDirectReport {
 
 	/** The mes. */
@@ -39,13 +39,13 @@ public class RF0010116MB extends BaseDirectReport {
 	private List<TcMes> listMes;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

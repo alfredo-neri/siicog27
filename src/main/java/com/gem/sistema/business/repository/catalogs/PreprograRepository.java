@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 import java.math.BigDecimal;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import com.gem.sistema.business.domain.Preprogra;
  * The Interface PreprograRepository.
  */
 @Repository("preprograRepository")
-public interface PreprograRepository extends PagingAndSortingRepository<Preprogra, Long>, QueryDslPredicateExecutor<Preprogra> {
+public interface PreprograRepository extends PagingAndSortingRepository<Preprogra, Long>, CrudRepository<Preprogra, Long>, QuerydslPredicateExecutor<Preprogra> {
 
 
 

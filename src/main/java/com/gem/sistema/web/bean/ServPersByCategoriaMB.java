@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
@@ -9,11 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -27,8 +28,8 @@ import com.gem.sistema.business.service.reportador.GeneraTxtFilesService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.Constants;
 
-@ManagedBean(name = "servPersByCategoriaMB")
-@ViewScoped
+@Component("servPersByCategoriaMB")
+@Scope("view")
 public class ServPersByCategoriaMB extends ReportePeriodos {
 	
 	private static final String CLAVE_REPORT = "RPT_LDF_GENERIC_EGRESOS";
@@ -39,16 +40,16 @@ public class ServPersByCategoriaMB extends ReportePeriodos {
 	private String fileName;
 	private StreamedContent file;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 	
-	@ManagedProperty("#{generaTxtFilesService}")
+	@Value("#{generaTxtFilesService}")
 	private GeneraTxtFilesService txtFilesService;
 
 	@PostConstruct
@@ -162,7 +163,7 @@ public class ServPersByCategoriaMB extends ReportePeriodos {
 		} catch (FileNotFoundException ex) {
 
 		}
-		file = new DefaultStreamedContent(stream, Constants.APPLICCTION_TXT, fileName);
+		file = StreamedContents.of(stream, Constants.APPLICCTION_TXT, fileName, null);
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se Generó el Archivo: " + fileName);
 		return file;
 	}

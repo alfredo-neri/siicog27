@@ -7,9 +7,9 @@ import com.gem.sistema.business.domain.QXcatpro;
 import com.gem.sistema.business.domain.Xcatpro;
 import com.gem.sistema.util.UtilJPA;
 import com.gem.sistema.util.UtilReport;
-import com.mysema.query.jpa.impl.JPAUtil;
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.jpa.impl.JPAUtil;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -1,7 +1,7 @@
 package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.QPpCapp;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

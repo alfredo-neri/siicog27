@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.ArrayList;
@@ -7,14 +10,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -30,8 +30,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class Reporte111MB.
  */
-@ManagedBean(name = "reporte111MB")
-@ViewScoped
+@Component("reporte111MB")
+@Scope("view")
 public class Reporte111MB extends BaseDirectReport {
 
 	/** The trimestre. */
@@ -59,11 +59,11 @@ public class Reporte111MB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The b lbl trimestre. */
@@ -97,11 +97,11 @@ public class Reporte111MB extends BaseDirectReport {
 	private boolean bAdd = Boolean.FALSE;
 
 	/** The pm 2511 service. */
-	@ManagedProperty("#{pm2511Service}")
+	@Value("#{pm2511Service}")
 	private Pm2511Service pm2511Service;
 
 	/** The pm 2511 repository. */
-	@ManagedProperty("#{pm2511Repository}")
+	@Value("#{pm2511Repository}")
 	private Pm2511Repository pm2511Repository;
 
 	/**
@@ -603,8 +603,8 @@ public class Reporte111MB extends BaseDirectReport {
 			listPm2511.add(new Pm2511());
 		else
 			listPm2511.add(this.pm2511Service.add());
-		RequestContext.getCurrentInstance()
-				.execute("PF('pm2511Wdg').paginator.setPage(" + (listPm2511.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('pm2511Wdg').paginator.setPage(" + (listPm2511.size() - 1) + ");");
 		// if (null == listPm2511.get(1).getUserid())
 		// listPm2511.remove(1);
 

@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -11,13 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -31,8 +32,8 @@ import com.gem.sistema.business.utils.ConvertCharsetUtils;
 /**
  * The Class Reporte91MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporte91MB")
+@Scope("view")
 public class Reporte91MB extends GenericExecuteProcedure {
 
 	/** The Constant charSetISO. */
@@ -72,7 +73,7 @@ public class Reporte91MB extends GenericExecuteProcedure {
 	private StringBuilder txtPreview;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
 	/**
@@ -451,7 +452,7 @@ public class Reporte91MB extends GenericExecuteProcedure {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		}
 		addToBitacora(false);
@@ -495,7 +496,7 @@ public class Reporte91MB extends GenericExecuteProcedure {
 			}
 
 			txtPreview = this.generatePreviewService.generatePreview(fileNameOut);
-			RequestContext.getCurrentInstance().execute(FOCUS_BY_ROWID);
+			PrimeFaces.current().executeScript(FOCUS_BY_ROWID);
 		}
 		addToBitacora(false);
 	}

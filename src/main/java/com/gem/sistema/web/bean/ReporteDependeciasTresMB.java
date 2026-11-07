@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,14 +11,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -41,8 +43,8 @@ import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 /**
  * The Class ReporteRF0091205MB.
  */
-@ManagedBean(name = "reporteDependeciasTresMB")
-@ViewScoped
+@Component("reporteDependeciasTresMB")
+@Scope("view")
 public class ReporteDependeciasTresMB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
@@ -54,6 +56,9 @@ public class ReporteDependeciasTresMB extends BaseDirectReport {
 	private Integer mes;
 
 	/** The clv dep. */
+	/** Aviso cuando el sector no tiene dependencias de tres digitos en CATDEP. */
+	private static final String SIN_DEPENDENCIA = "No hay dependencias registradas para el sector.";
+
 	private String clvDep;
 
 	private String nomDep;
@@ -67,27 +72,27 @@ public class ReporteDependeciasTresMB extends BaseDirectReport {
 	private StreamedContent fileTxt;
 
 	/** The catdep repository. */
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**
@@ -121,8 +126,26 @@ public class ReporteDependeciasTresMB extends BaseDirectReport {
 	}
 
 	public void changeDependecia() {
-		Catdep dependencia = catdepRepository.getCatdep(this.getUserDetails().getIdSector(), clvDep);
-		nomDep = dependencia.getNomdep();
+		Catdep dependencia = clvDep == null ? null
+				: catdepRepository.getCatdep(this.getUserDetails().getIdSector(), clvDep);
+		// sin dependencias en CATDEP la pantalla abre vacia en lugar de fallar
+		nomDep = dependencia == null ? StringUtils.EMPTY : dependencia.getNomdep();
+		if (dependencia == null) {
+			generateNotificationFront(FacesMessage.SEVERITY_WARN, "Info!", SIN_DEPENDENCIA);
+		}
+	}
+
+	/**
+	 * Indica si hay una dependencia valida para generar el reporte; si no, avisa al usuario.
+	 *
+	 * @return true si se puede generar el reporte
+	 */
+	private boolean hayDependencia() {
+		if (clvDep == null || catdepRepository.getCatdep(this.getUserDetails().getIdSector(), clvDep) == null) {
+			generateNotificationFront(FacesMessage.SEVERITY_WARN, "Info!", SIN_DEPENDENCIA);
+			return false;
+		}
+		return true;
 	}
 
 	/*
@@ -182,14 +205,14 @@ public class ReporteDependeciasTresMB extends BaseDirectReport {
 	}
 
 	public void downloadXls() {
-		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
+		if (hayDependencia() && this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
 	public void viewPdf() {
-		if (this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
+		if (hayDependencia() && this.validatePolicyService.isOpenMonth(mes, null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 
 			this.createFilePdfInline();
 			;
@@ -227,7 +250,7 @@ public class ReporteDependeciasTresMB extends BaseDirectReport {
 
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

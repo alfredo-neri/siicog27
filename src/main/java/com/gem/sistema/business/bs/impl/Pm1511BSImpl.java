@@ -5,7 +5,7 @@ import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -123,7 +123,7 @@ public class Pm1511BSImpl implements Pm1511BS {
 		Integer tcpd = 0;
 		pmOperation1 = new Pm1511();
 		Integer idSector  = listPm1511.get(index).getIdsector();
-		pm1511Repository.delete(listPm1511.get(index).getId());
+		pm1511Repository.deleteById(listPm1511.get(index).getId());
 
 		listPm1511 = pm1511Repository.findAllByIdsector(idSector, this.oderBy());
 		if (CollectionUtils.isNotEmpty(listPm1511)) {
@@ -194,7 +194,7 @@ public class Pm1511BSImpl implements Pm1511BS {
 	 */
 	@Override
 	public Sort oderBy() {
-		return new Sort(Sort.Direction.ASC, "semestral");
+		return Sort.by(Sort.Direction.ASC, "semestral");
 	}
 
 	/*

@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -23,8 +23,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class Reporte72MB.
  */
-@ManagedBean(name = "reporte72MB")
-@ViewScoped
+@Component("reporte72MB")
+@Scope("view")
 public class Reporte72MB extends BaseDirectReport {
 	
 	/** The mes. */
@@ -42,15 +42,15 @@ public class Reporte72MB extends BaseDirectReport {
 
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 	/** The catdep repository. */
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/**

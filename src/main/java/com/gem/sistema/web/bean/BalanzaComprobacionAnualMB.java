@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -29,8 +29,8 @@ import static com.gem.sistema.util.UtilReport.getNameFileReport;
  *           implementa Servicio de firmas dinamicas<br>
  * @Sector Municipal
  */
-@ManagedBean
-@ViewScoped
+@Component("balanzaComprobacionAnualMB")
+@Scope("view")
 public class BalanzaComprobacionAnualMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_CP_BAL_COM_DET_ANUAL";
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
@@ -53,16 +53,16 @@ public class BalanzaComprobacionAnualMB extends BaseDirectReport {
 	/** The con saldo cero. */
 	private String conSaldoCero;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/**
@@ -187,7 +187,7 @@ public class BalanzaComprobacionAnualMB extends BaseDirectReport {
 		this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 		this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
 
-		RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+		PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 	}
 
 	public void viewPdf() {

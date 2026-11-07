@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +14,7 @@ import com.gem.sistema.business.domain.TcLocalidadesUsuario;
  * The Interface TcLocalidadesUsuarioRepository.
  */
 public interface TcLocalidadesUsuarioRepository
-		extends PagingAndSortingRepository<TcLocalidadesUsuario, Long>, QueryDslPredicateExecutor<TcLocalidadesUsuario> {
+		extends PagingAndSortingRepository<TcLocalidadesUsuario, Long>, CrudRepository<TcLocalidadesUsuario, Long>, QuerydslPredicateExecutor<TcLocalidadesUsuario> {
 
 	
 	/*

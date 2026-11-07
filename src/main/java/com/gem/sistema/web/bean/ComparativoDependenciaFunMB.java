@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getMonthName;
 
@@ -8,13 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.domain.TcMes;
@@ -31,29 +31,29 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.ConstantsClaveEnnum;
 
-@ManagedBean(name = "comparativoDependenciaFunMB")
-@ViewScoped
+@Component("comparativoDependenciaFunMB")
+@Scope("view")
 public class ComparativoDependenciaFunMB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
 	private static final String CLAVE_REPORT = "RPT_COMP_EGRE_DET_PROG";
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	private List<TcMes> listMes;
@@ -490,7 +490,7 @@ public class ComparativoDependenciaFunMB extends BaseDirectReport {
 				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			this.validatePolicyService.isAfectMonth(Integer.valueOf(mes), null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(Integer.valueOf(mes), null, this.getUserDetails().getIdSector());
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

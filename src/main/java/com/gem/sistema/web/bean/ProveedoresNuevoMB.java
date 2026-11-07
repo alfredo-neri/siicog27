@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import com.gem.sistema.business.domain.ProveedorNuevo;
 import com.gem.sistema.business.repository.catalogs.ProveedoresNuevoRepository;
 
-@ManagedBean(name = "proveedoresNuevoMB")
-@ViewScoped
+@Component("proveedoresNuevoMB")
+@Scope("view")
 public class ProveedoresNuevoMB extends AbstractMB {
 
 	private ProveedorNuevo proveedor;
@@ -20,7 +20,7 @@ public class ProveedoresNuevoMB extends AbstractMB {
 	private String busqueda = "";
 	private List<String> tipos = ProveedorNuevo.TIPOS;
 
-	@ManagedProperty("#{proveedoresNuevoRepository}")
+	@Value("#{proveedoresNuevoRepository}")
 	private ProveedoresNuevoRepository proveedoresRepository;
 
 	@PostConstruct
@@ -113,7 +113,7 @@ public class ProveedoresNuevoMB extends AbstractMB {
 	public void deleteProveedor() {
 		if (proveedor != null) {
 			try {
-				proveedoresRepository.delete(proveedor.getId());
+				proveedoresRepository.deleteById(proveedor.getId());
 				proveedores = proveedores.stream().filter(p -> p.getId() != proveedor.getId())
 						.collect(Collectors.toList());
 				displayInfoMessage("El proveedor se ha eliminado correctamente");

@@ -1,6 +1,5 @@
 package com.gem.sistema.business.dto;
 
-
 import java.util.Date;
 
 

@@ -1,5 +1,6 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -11,8 +12,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -117,7 +118,7 @@ public class UploadBuggetEgresosMB extends AbstractFileUploadBudgetFlow {
 		LOGGER.info("Recibiendo Archivo" + filename);
 		try {
 			File file = new File(filename);
-			return new DefaultStreamedContent(new FileInputStream(file), "text/csv", file.getName());
+			return StreamedContents.of(new FileInputStream(file), "text/csv", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Error Descargando Archivo" + e);
 			e.printStackTrace();
@@ -154,8 +155,8 @@ public class UploadBuggetEgresosMB extends AbstractFileUploadBudgetFlow {
 
 						newFile = new File(DEFAULT_PATH_DOWNLOAD + newName);
 						target = new File(DEFAULT_PATH_DOWNLOAD + newName2);
-						FileUtils.copyInputStreamToFile(file.getInputstream(), newFile);
-//						FileUtils.copyInputStreamToFile(file.getInputstream(), target);
+						FileUtils.copyInputStreamToFile(file.getInputStream(), newFile);
+//						FileUtils.copyInputStreamToFile(file.getInputStream(), target);
 //						ConvertCharsetUtils.transform(newFile, charSetISO, target, charSetUFT);
 
 						if (validaArchivo(newFile)) {
@@ -212,11 +213,11 @@ public class UploadBuggetEgresosMB extends AbstractFileUploadBudgetFlow {
 						// newName= file.getFileName();
 						newFile = new File(DEFAULT_PATH_DOWNLOAD + newName);
 
-						FileUtils.copyInputStreamToFile(file.getInputstream(), newFile);
+						FileUtils.copyInputStreamToFile(file.getInputStream(), newFile);
 
 						if (validaArchivo(newFile)) {
 							if (applyContenFileValidators(newFile)) {
-								saveFile(DEFAULT_PATH_DOWNLOAD, file.getFileName(), file.getInputstream());
+								saveFile(DEFAULT_PATH_DOWNLOAD, file.getFileName(), file.getInputStream());
 								PresupuestoDTO presupuesto = new PresupuestoDTO();
 
 								presupuesto.setiPprocesar(this.processAccounts ? 1 : 0);
@@ -268,7 +269,7 @@ public class UploadBuggetEgresosMB extends AbstractFileUploadBudgetFlow {
 	 */
 	public void saveFile(String path, String filename, InputStream input) throws IOException {
 		// String filename = FilenameUtils.getName(file.getFileName());
-		// InputStream input = file.getInputstream();
+		// InputStream input = file.getInputStream();
 		OutputStream output = new FileOutputStream(new File(path, filename));
 
 		try {

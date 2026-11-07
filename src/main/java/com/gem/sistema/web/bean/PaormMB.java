@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -7,13 +11,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -21,8 +22,8 @@ import com.gem.sistema.business.domain.Conctb;
 import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 import com.gem.sistema.business.service.catalogos.ReporteGenericoService;
 
-@ManagedBean(name = "paormMB")
-@ViewScoped
+@Component("paormMB")
+@Scope("view")
 public class PaormMB extends AbstractMB {
 
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -33,10 +34,10 @@ public class PaormMB extends AbstractMB {
 	private InputStream stream = null;
 	private StreamedContent file;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{reporteGenericoService}")
+	@Value("#{reporteGenericoService}")
 	private ReporteGenericoService reporteGenericoService;
 
 	@PostConstruct
@@ -48,7 +49,7 @@ public class PaormMB extends AbstractMB {
 	public void downloadTxt() {
 		try {
 			this.generateFile();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,7 +66,7 @@ public class PaormMB extends AbstractMB {
 			e.printStackTrace();
 		}
 
-		file = new DefaultStreamedContent(stream, "application/txt", pathName.substring(13));
+		file = StreamedContents.of(stream, "application/txt", pathName.substring(13), null);
 
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!",
 				"Se Generó el Archivo: " + pathName.substring(13));

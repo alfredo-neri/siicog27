@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.primefaces.model.FilterMeta;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -39,8 +41,8 @@ public class DataModelGeneric<T extends AbstractEntity> extends LazyDataModel<T>
 		this.listT = listT;
 	}
 
-	public Object getRowKey(T object) {
-		return object.getId();
+	public String getRowKey(T object) {
+		return String.valueOf(object.getId());
 	}
 
 	public T getRowData(String rowKey) {
@@ -50,6 +52,20 @@ public class DataModelGeneric<T extends AbstractEntity> extends LazyDataModel<T>
 			}
 		}
 		return null;
+	}
+
+	/** PrimeFaces 16: el conteo se pide aparte; se reutiliza el filtrado en memoria de load(). */
+	@Override
+	public int count(Map<String, FilterMeta> filterBy) {
+		return load(0, Integer.MAX_VALUE, null, null, CustomPagingModel.toLegacyFilters(filterBy)).size();
+	}
+
+	/** PrimeFaces 16: adapta la firma nueva de load() a la de PrimeFaces 5. */
+	@Override
+	public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		SortMeta sort = sortBy == null || sortBy.isEmpty() ? null : sortBy.values().iterator().next();
+		return load(first, pageSize, sort == null ? null : sort.getField(), sort == null ? null : sort.getOrder(),
+				CustomPagingModel.toLegacyFilters(filterBy));
 	}
 
 	public List<T> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {

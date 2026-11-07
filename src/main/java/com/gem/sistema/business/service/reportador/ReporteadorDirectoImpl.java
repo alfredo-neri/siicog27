@@ -18,7 +18,9 @@ import javax.sql.DataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.model.ByteArrayContent;
+import java.io.ByteArrayInputStream;
+
+import com.gem.sistema.web.util.StreamedContents;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -171,10 +173,10 @@ public String ejecutaQueryNativoToFile(TcReporte tcReporte, int typeFile, Map<St
 		String rowsToFile = ejecutaQueryNativoToFile(tcReporte, typeFile,  params);
 		switch (typeFile) {
 		case CSV:
-			file = new ByteArrayContent(rowsToFile.getBytes(ENCODING_UTF8), TYPE_CONTENT_CSV, nombreCompuesto, ENCODING_UTF8.name()) ;	
+			file = StreamedContents.of(new ByteArrayInputStream(rowsToFile.getBytes(ENCODING_UTF8)), TYPE_CONTENT_CSV, nombreCompuesto, ENCODING_UTF8.name()) ;	
 			break;
 		case TXT:
-			file = new ByteArrayContent(rowsToFile.getBytes(ENCODING_UTF8), TYPE_CONTENT_TEXT_PLAIN, nombreCompuesto, ENCODING_UTF8.name()) ;	
+			file = StreamedContents.of(new ByteArrayInputStream(rowsToFile.getBytes(ENCODING_UTF8)), TYPE_CONTENT_TEXT_PLAIN, nombreCompuesto, ENCODING_UTF8.name()) ;	
 			break;
 		}
 		

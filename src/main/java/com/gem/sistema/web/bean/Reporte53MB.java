@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getMonthName;
@@ -11,14 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -36,18 +36,16 @@ import com.gem.sistema.business.service.catalogos.Pm5211Service;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.util.FrontProperty;
 
-import antlr.collections.impl.LList;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class Reporte53MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporte53MB")
+@Scope("view")
 public class Reporte53MB extends BaseDirectReport {
 
 	/** The Constant sort. */
-	private static final Sort sort = new Sort(Direction.ASC, "mensual");
+	private static final Sort sort = Sort.by(Direction.ASC, "mensual");
 
 	/** The Constant INACTIVO. */
 	private static final Integer INACTIVO = 1;
@@ -116,26 +114,26 @@ public class Reporte53MB extends BaseDirectReport {
 	private boolean bGuardar = Boolean.FALSE;
 
 	/** The pm 5211 repository. */
-	@ManagedProperty("#{pm5211Repository}")
+	@Value("#{pm5211Repository}")
 	private Pm5211Repository pm5211Repository;
 
 	/** The pm 5211 service. */
-	@ManagedProperty("#{pm5211Service}")
+	@Value("#{pm5211Service}")
 	private Pm5211Service pm5211Service;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The firmas. */
 	private Firmas firmas;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/**
@@ -723,7 +721,7 @@ public class Reporte53MB extends BaseDirectReport {
 
 			this.setbCombo(Boolean.FALSE);
 			this.setbLbl(Boolean.TRUE);
-			RequestContext.getCurrentInstance().execute("PF('pm5011Wdg').paginator.setPage("
+			PrimeFaces.current().executeScript("PF('pm5011Wdg').paginator.setPage("
 					+ (this.pm5211Repository.findByIdSectorOderByMensual(this.getUserDetails().getIdSector()).size()
 							- 1)
 					+ ")");

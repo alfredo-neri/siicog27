@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.service.catalogos.DataYearSystemService;
@@ -13,15 +13,15 @@ import com.gem.sistema.business.service.catalogos.DataYearSystemService;
 /**
  * The Class RF0091209MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF0091209MB")
+@Scope("view")
 public class RF0091209MB extends BaseDirectReport {
 	
 	/** The mes. */
 	private Integer mes;
 
 	/** The data year system service. */
-	@ManagedProperty(value = "#{dataYearSystemService}")
+	@Value("#{dataYearSystemService}")
 	private DataYearSystemService dataYearSystemService;
 
 	/**

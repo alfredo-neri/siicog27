@@ -30,16 +30,16 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 	@Qualifier("userService")
 	private UserService userService;
 	
-	/* (non-Javadoc)
-	 * @see org.springframework.security.authentication.dao.DaoAuthenticationProvider#setUserDetailsService(org.springframework.security.core.userdetails.UserDetailsService)
+	/**
+	 * Spring Security 7 exige el UserDetailsService en el constructor (antes era un setter).
+	 *
+	 * @param userDetailsService the user details service
 	 */
-	@Autowired
-	@Qualifier("authenticationService")
-	@Override
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		super.setUserDetailsService(userDetailsService);
+	public LimitLoginAuthenticationProvider(
+			@Qualifier("authenticationService") UserDetailsService userDetailsService) {
+		super(userDetailsService);
 	}
-	
+
 	/**
 	 * Sets the password encoder.
 	 *

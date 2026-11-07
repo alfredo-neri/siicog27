@@ -96,17 +96,17 @@ public class MatrizFichasIndicadoresServiceImpl implements MatrizFichasIndicador
 
 	@Override
 	public Catdgm getDependenciaGeneralById(Long id) {
-		return catdgmRepository.findOne(id);
+		return catdgmRepository.findById(id).orElse(null);
 	}
 
 	@Override
 	public Catdaa getDependenciaAuxiliarById(Long id) {
-		return catdaaRepository.findOne(id);
+		return catdaaRepository.findById(id).orElse(null);
 	}
 
 	@Override
 	public Cpd getTemaDesarrolloById(Long id) {
-		return cpdRepository.findOne(id);
+		return cpdRepository.findById(id).orElse(null);
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class MatrizFichasIndicadoresServiceImpl implements MatrizFichasIndicador
 
 	@Override
 	public Muninep getProyectoById(Long id) {
-		return muniNepRepository.findOne(id);
+		return muniNepRepository.findById(id).orElse(null);
 	}
 
 	@Override
@@ -245,7 +245,7 @@ public class MatrizFichasIndicadoresServiceImpl implements MatrizFichasIndicador
 
 	@Override
 	public void saveMatricesNivel(List<TrMatrizNivel> niveles) {
-		matrizNivelRepository.save(niveles);
+		matrizNivelRepository.saveAll(niveles);
 	}
 
 	@Override
@@ -294,7 +294,7 @@ public class MatrizFichasIndicadoresServiceImpl implements MatrizFichasIndicador
 
 	@Override
 	public void deleteFicha(Long idFicha) {
-		fichaRepository.delete(idFicha);
+		fichaRepository.deleteById(idFicha);
 	}
 
 	private List<TcMatriz> poblateMatriz(Integer sector, List<TcMatriz> listMatrizs) {

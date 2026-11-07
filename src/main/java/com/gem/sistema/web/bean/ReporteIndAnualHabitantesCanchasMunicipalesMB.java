@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,12 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
@@ -34,8 +34,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class ReporteIndAnualHabitantesCanchasMunicipalesMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporteIndAnualHabitantesCanchasMunicipalesMB")
+@Scope("view")
 public class ReporteIndAnualHabitantesCanchasMunicipalesMB extends BaseDirectReport {
 
 	/** The list. */
@@ -72,17 +72,17 @@ public class ReporteIndAnualHabitantesCanchasMunicipalesMB extends BaseDirectRep
 	private Conctb conctb;
 
 	/** The pm 1311 repository. */
-	@ManagedProperty("#{pm1311Repository}")
+	@Value("#{pm1311Repository}")
 	private Pm1311Repository pm1311Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -324,7 +324,7 @@ public class ReporteIndAnualHabitantesCanchasMunicipalesMB extends BaseDirectRep
 		try {
 			boolean answer = false;
 			try {
-				pm1311Repository.delete(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
+				pm1311Repository.deleteById(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
 				answer = true;
 			} catch (Exception e) {
 				answer = false;

@@ -1,13 +1,13 @@
 package com.gem.sistema.business.domain;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Clob;
-import javax.persistence.NamedStoredProcedureQueries;
-import javax.persistence.NamedStoredProcedureQuery;
-import javax.persistence.StoredProcedureParameter;
-import javax.persistence.ParameterMode;
+import jakarta.persistence.NamedStoredProcedureQueries;
+import jakarta.persistence.NamedStoredProcedureQuery;
+import jakarta.persistence.StoredProcedureParameter;
+import jakarta.persistence.ParameterMode;
 
 
 // TODO: Auto-generated Javadoc

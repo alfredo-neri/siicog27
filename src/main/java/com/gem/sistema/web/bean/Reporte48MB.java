@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.ArrayList;
@@ -8,14 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import org.springframework.data.domain.Sort;
 
@@ -35,8 +35,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class Reporte48MB.
  */
-@ManagedBean(name = "reporte48MB")
-@ViewScoped
+@Component("reporte48MB")
+@Scope("view")
 public class Reporte48MB extends BaseDirectReport {
 
 	/** The Constant MESSAGE. */
@@ -103,19 +103,19 @@ public class Reporte48MB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The pm 5011 repository. */
-	@ManagedProperty("#{pm5011Repository}")
+	@Value("#{pm5011Repository}")
 	private Pm5011Repository pm5011Repository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**
@@ -623,7 +623,7 @@ public class Reporte48MB extends BaseDirectReport {
 				acumular();
 				generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!",
 						"Se modificaron correctamente los datos");
-				RequestContext.getCurrentInstance().execute("PF('pm5011Wdg').paginator.setPage("
+				PrimeFaces.current().executeScript("PF('pm5011Wdg').paginator.setPage("
 						+ (this.pm5011Repository.findByIdSector(this.getUserDetails().getIdSector()).size() - 1) + ")");
 				bLblmes = Boolean.TRUE;
 				bComboMes = Boolean.FALSE;
@@ -645,7 +645,7 @@ public class Reporte48MB extends BaseDirectReport {
 				acumular();
 				generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!",
 						"La informacion se guardo correctamente");
-				RequestContext.getCurrentInstance().execute("PF('pm5011Wdg').paginator.setPage("
+				PrimeFaces.current().executeScript("PF('pm5011Wdg').paginator.setPage("
 						+ (this.pm5011Repository.findByIdSector(this.getUserDetails().getIdSector()).size() - 1) + ")");
 				bLblmes = Boolean.TRUE;
 				bComboMes = Boolean.FALSE;
@@ -747,7 +747,7 @@ public class Reporte48MB extends BaseDirectReport {
 	 * @param index the index
 	 */
 	public void delete(Integer index) {
-		pm5011Repository.delete(listPm50.get(index).getId());
+		pm5011Repository.deleteById(listPm50.get(index).getId());
 		acumular();
 		listPm50 = orderByMensual();
 		if (CollectionUtils.isEmpty(listPm50)) {
@@ -809,7 +809,7 @@ public class Reporte48MB extends BaseDirectReport {
 	 * @return the sort
 	 */
 	private Sort sortByIdAsc() {
-		return new Sort(Sort.Direction.ASC, "mensual");
+		return Sort.by(Sort.Direction.ASC, "mensual");
 	}
 
 	/**

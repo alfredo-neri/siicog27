@@ -6,7 +6,7 @@ import static com.gem.sistema.util.Constants.ZERO;
 
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import com.gem.sistema.business.domain.Natgas;
 import com.gem.sistema.business.predicates.NatgasPredicates;
 import com.gem.sistema.business.repository.catalogs.NatgasRepository;
 import com.gem.sistema.util.UtilJPA;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

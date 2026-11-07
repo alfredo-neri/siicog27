@@ -2,7 +2,7 @@ package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.QTcReporte;
 
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 public class TcReportesPredicate {
 

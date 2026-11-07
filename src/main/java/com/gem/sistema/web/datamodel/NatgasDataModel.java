@@ -11,7 +11,7 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 
 import com.gem.sistema.business.domain.Natgas;
 import com.gem.sistema.business.repository.catalogs.NatgasRepository;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -137,7 +137,7 @@ public class NatgasDataModel extends CustomPagingModel<Natgas> {
 	 */
 	@Override
 	protected Sort orderBy() {
-		return new Sort(Sort.Direction.ASC, "clvgas");
+		return Sort.by(Sort.Direction.ASC, "clvgas");
 	}
 
 

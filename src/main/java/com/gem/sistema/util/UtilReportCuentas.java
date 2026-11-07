@@ -1,5 +1,6 @@
 package com.gem.sistema.util;
 
+import com.gem.sistema.web.util.StreamedContents;
 import static com.gem.sistema.util.Constants.BLANK;
 import static com.gem.sistema.util.Constants.LIKE;
 import static com.gem.sistema.util.Constants.PREFIX_GET;
@@ -21,9 +22,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-import javax.persistence.Column;
-import javax.servlet.ServletContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.persistence.Column;
+import jakarta.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -39,12 +40,10 @@ import org.springframework.stereotype.Component;
 
 import com.gem.sistema.annotation.ColumnFile;
 
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.poi.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
@@ -228,7 +227,7 @@ public class UtilReportCuentas {
 			final ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 			JasperExportManager.exportReportToPdfStream(print, arrayOutputStream);
 			final InputStream stream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
-			result = new DefaultStreamedContent(stream, CONTENT_TYPE_PDF, reportName.concat(PDF_EXTENSION));
+			result = StreamedContents.of(stream, CONTENT_TYPE_PDF, reportName.concat(PDF_EXTENSION), null);
 			LOGGER.info(":: Termina Exportar PDF ");
 		} catch (final Exception genericExc) {
 			LOGGER.error(":: Error al generar reporte de Excel ", genericExc);
@@ -274,7 +273,7 @@ public class UtilReportCuentas {
 			exporter.exportReport();
 			
 			final InputStream stream = new ByteArrayInputStream(arrayOutputStream.toByteArray());
-			result = new DefaultStreamedContent(stream, CONTENT_TYPE_XLS, reportName.concat(XLS_EXTENSION));
+			result = StreamedContents.of(stream, CONTENT_TYPE_XLS, reportName.concat(XLS_EXTENSION), null);
 			LOGGER.info(":: Finaliza exportar Excel {} ", result);
 		} catch (final Exception genericExc) {
 			LOGGER.error(":: Error al generar reporte de Excel ", genericExc);
@@ -308,7 +307,7 @@ public class UtilReportCuentas {
 			text.append(createRowFromObject(element, separatorCols));
 		}
 		final InputStream stream = new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8));
-		return new DefaultStreamedContent(stream, typeContent, reportName.concat(extension), "UTF-8");
+		return StreamedContents.of(stream, typeContent, reportName.concat(extension), "UTF-8");
 	}
 
 	/**
@@ -331,7 +330,7 @@ public class UtilReportCuentas {
 			text.append(createCSVRowFromObject(element, separatorCols));
 		}
 		final InputStream stream = new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.ISO_8859_1));
-		return new DefaultStreamedContent(stream, typeContent, reportName.concat(extension), "ISO-8859-1");
+		return StreamedContents.of(stream, typeContent, reportName.concat(extension), "ISO-8859-1");
 	}
 
 	/**

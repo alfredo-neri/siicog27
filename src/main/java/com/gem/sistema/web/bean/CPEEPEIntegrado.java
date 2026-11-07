@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDay;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -27,9 +27,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class CPEEPEIntegrado.
  */
-@ManagedBean(name = "cPEEPEIntegradoMB")
-@ViewScoped
-
+@Component("cPEEPEIntegradoMB")
+@Scope("view")
 public class CPEEPEIntegrado extends BaseDirectReport {
 
 	/** The mes. */
@@ -42,14 +41,14 @@ public class CPEEPEIntegrado extends BaseDirectReport {
 	private List<TcMes> listMes;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The contb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository contbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

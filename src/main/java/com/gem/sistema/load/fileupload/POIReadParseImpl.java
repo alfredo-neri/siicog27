@@ -5,14 +5,14 @@ import java.util.Arrays;
 
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.springframework.stereotype.Service;
 
 @Service(value = "poiReadParse")
 public class POIReadParseImpl implements POIReadParseService {
 	public Object[][] readParseWord(UploadedFile word, String[] out) {
 		try {
-			XWPFDocument doc = new XWPFDocument(word.getInputstream());
+			XWPFDocument doc = new XWPFDocument(word.getInputStream());
 
 			XWPFWordExtractor wordExtractor = new XWPFWordExtractor(doc);
 			String docText = wordExtractor.getText();

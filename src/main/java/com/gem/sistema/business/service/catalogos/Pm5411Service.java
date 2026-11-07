@@ -64,7 +64,7 @@ public class Pm5411Service {
 	 */
 	public Pm5411 findById(Long id) {
 		LOGGER.info("Finding id entry by using id: {}", id);
-		Pm5411 result = repository.findOne(id);
+		Pm5411 result = repository.findById(id).orElse(null);
 		LOGGER.info("Found id entry: {}", result);
 		return result;
 	}
@@ -87,7 +87,7 @@ public class Pm5411Service {
 	 * @param id the id
 	 */
 	public void delete(Long id) {
-		repository.delete(id);
+		repository.deleteById(id);
 	}
 	
 }

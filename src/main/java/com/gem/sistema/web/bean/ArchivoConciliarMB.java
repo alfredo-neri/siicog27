@@ -1,10 +1,11 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import javax.security.auth.login.AccountException;
 
 import com.gem.sistema.business.service.catalogos.AccountService;
@@ -32,8 +33,8 @@ import org.apache.commons.io.FileUtils;
 /**
  * The Class ArchivoConciliarMB.
  */
-@ManagedBean(name = "archivoConciliarMB")
-@ViewScoped
+@Component("archivoConciliarMB")
+@Scope("view")
 public class ArchivoConciliarMB extends AbstractMB{
 
   /** The cta. */
@@ -64,11 +65,11 @@ public class ArchivoConciliarMB extends AbstractMB{
   private File temp;
 
   /** The account service. */
-  @ManagedProperty("#{accountService}")
+  @Value("#{accountService}")
   private AccountService accountService;
 
   /** The archivo conciliar service. */
-  @ManagedProperty("#{archivoConsiliarService}")
+  @Value("#{archivoConsiliarService}")
   private ArchivoConciliarService archivoConciliarService;
 
   /**
@@ -291,7 +292,7 @@ public class ArchivoConciliarMB extends AbstractMB{
                                        }
                                      });
       out.close();
-      setDownload(new DefaultStreamedContent(new FileInputStream(temp), "text/plain", StringUtils.defaultIfBlank(getFileout(), "ArchivoConciliar.txt")));
+      setDownload(StreamedContents.of(new FileInputStream(temp), "text/plain", StringUtils.defaultIfBlank(getFileout(), "ArchivoConciliar.txt"), null));
     }catch(IOException e){
       e.printStackTrace();
     }

@@ -2,7 +2,7 @@ package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.QTcModulosOperacione;
 import com.gem.sistema.business.domain.TcModulosOperacione;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 public class TcModulosOperacionePredicate {
 

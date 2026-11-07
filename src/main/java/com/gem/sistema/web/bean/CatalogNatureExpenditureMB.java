@@ -1,9 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,17 +12,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.hsqldb.lib.StringUtil;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -44,8 +40,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogNatureExpenditureMB")
+@Scope("view")
 public class CatalogNatureExpenditureMB extends CommonCatalogMB<Natgas> implements Serializable {
 
 	/** Constante de la version del objeto. */
@@ -74,14 +70,14 @@ private static final String OPERATOR_EQUAL = "=";
 	private static final String CLVGAS = "clvgas";
 
 	/** Componente de repositorio. */
-	@ManagedProperty(value = "#{natgasRepository}")
+	@Value("#{natgasRepository}")
 	private NatgasRepository natgasRepository;
 	
 	
 
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{natureExpenditureServiceImpl}")
+	@Value("#{natureExpenditureServiceImpl}")
 	private NatureExpenditureService natureExpenditureService;
 
 	/** Campo requerido Clave de Contrato. */
@@ -349,7 +345,7 @@ private static final String OPERATOR_EQUAL = "=";
 		LOGGER.info(":: Insercion de un nuevo registro ");
 		if (PASS.equals(this.validatePass)) {
 			super.insertRow();
-			RequestContext.getCurrentInstance().execute(
+			PrimeFaces.current().executeScript(
 					"jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});");
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No password incorrecto");

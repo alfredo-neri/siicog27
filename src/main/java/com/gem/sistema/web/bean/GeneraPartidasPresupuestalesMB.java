@@ -1,8 +1,8 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import com.gem.sistema.business.service.reportador.GeneraPartidasPresupuestalesService;
 import com.gem.sistema.business.domain.Catdep;
 import com.gem.sistema.business.domain.Natgas;
@@ -11,14 +11,14 @@ import com.gem.sistema.business.domain.GenericCatalog;
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class GeneraPartidasPresupuestalesMB.
  */
-@ManagedBean(name = "genPartPresMB")
-@ViewScoped
+@Component("genPartPresMB")
+@Scope("view")
 public class GeneraPartidasPresupuestalesMB extends AbstractMB {
 
 	/** The Constant FOCUS_IN_PROGRAMA. */
@@ -58,7 +58,7 @@ public class GeneraPartidasPresupuestalesMB extends AbstractMB {
 	private GenericCatalog<String> selectedItem;
 
 	/** The genera partidas presupuestales service. */
-	@ManagedProperty("#{generaPartidasPresupuestalesService}")
+	@Value("#{generaPartidasPresupuestalesService}")
 	private GeneraPartidasPresupuestalesService generaPartidasPresupuestalesService;
 
 	/**
@@ -300,7 +300,7 @@ public class GeneraPartidasPresupuestalesMB extends AbstractMB {
 				displayErrorMessage("No se encuentra la dependencia");
 			} else {
 				setDepDesc(catdep.getNomdep());
-				RequestContext.getCurrentInstance().execute(FOCUS_IN_PROGRAMA);
+				PrimeFaces.current().executeScript(FOCUS_IN_PROGRAMA);
 			}
 		}
 		f1Pressed = false;	
@@ -327,7 +327,7 @@ public class GeneraPartidasPresupuestalesMB extends AbstractMB {
 				displayErrorMessage("No existe el programa");
 			} else {
 				setProgDesc(xcatpro.getNompro());
-				RequestContext.getCurrentInstance().execute(FOCUS_IN_PARTIDA);
+				PrimeFaces.current().executeScript(FOCUS_IN_PARTIDA);
 			}
 		}
 		f1Pressed = false;
@@ -364,11 +364,11 @@ public class GeneraPartidasPresupuestalesMB extends AbstractMB {
 			if ("dep".equals(getCurrentCatalog())) {
 				setDepId(cat.getId());
 				setDepDesc(cat.getName());
-				RequestContext.getCurrentInstance().execute(FOCUS_IN_PROGRAMA);
+				PrimeFaces.current().executeScript(FOCUS_IN_PROGRAMA);
 			} else if ("prog".equals(getCurrentCatalog())) {
 				setProgId(cat.getAttrs().get("clvfun") + "" + cat.getAttrs().get("clvfin"));
 				setProgDesc(cat.getName());
-				RequestContext.getCurrentInstance().execute(FOCUS_IN_PARTIDA);
+				PrimeFaces.current().executeScript(FOCUS_IN_PARTIDA);
 			} else if ("part".equals(getCurrentCatalog())) {
 				setPartId(cat.getId());
 				setPartDesc(cat.getName());

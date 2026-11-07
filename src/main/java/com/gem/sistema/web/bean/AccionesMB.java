@@ -1,24 +1,24 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 import com.gem.sistema.business.domain.TcAccion;
 import com.gem.sistema.business.domain.TcArea;
 import com.gem.sistema.business.service.catalogos.AccionesService;
 
-@ManagedBean(name = "accionesMB")
-@ViewScoped
+@Component("accionesMB")
+@Scope("view")
 public class AccionesMB {
 
 	private List<TcAccion> acciones;
@@ -32,7 +32,7 @@ public class AccionesMB {
 	private String titleModal = StringUtils.EMPTY;
 	private Boolean edition = Boolean.FALSE;
 
-	@ManagedProperty(value = "#{accionesService}")
+	@Value("#{accionesService}")
 	private AccionesService accionesService;
 
 	@PostConstruct
@@ -66,7 +66,7 @@ public class AccionesMB {
 			accionesService.saveAccion(selectedAccion);
 			acciones = accionesService.listadoAcciones();
 			displayInfoMessage("Se ha guardado la información correctamente");
-			RequestContext.getCurrentInstance().execute("PF('carDialog').hide();");
+			PrimeFaces.current().executeScript("PF('carDialog').hide();");
 			this.accion = new TcAccion();
 		} else {
 			displayInfoMessage("Favor de completar la Información de la Acción.");

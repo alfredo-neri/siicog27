@@ -1,9 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -13,13 +14,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.SessionScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,8 @@ import com.gem.sistema.web.util.FrontProperty;
  * The Class SalaryScaleManualMB.
  */
 @Component(value = "salaryScaleManualMB")
-@SessionScoped
+// difem26: la anotacion de scope de JSF era ignorada por Spring (singleton compartido)
+@Scope("session")
 public class SalaryScaleManualMB extends CommonCatalogMB<Tsueldo> implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -136,7 +137,7 @@ public class SalaryScaleManualMB extends CommonCatalogMB<Tsueldo> implements Ser
 			catalog.setSectorId(this.getUserDetails().getIdSector());
 			executeOperationSaveOrUpdate(catalog, sueldoRepositorio);
 			this.consultList();
-			RequestContext.getCurrentInstance().execute("jQuery('#form1\\\\:hideButton3').click();");
+			PrimeFaces.current().executeScript("jQuery('#form1\\\\:hideButton3').click();");
 		} else {
 			if (errorMsg.length() == ZERO) {
 				generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, MESSAGE_ERROR_UPDATE_UNIQUE

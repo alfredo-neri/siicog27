@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,10 +15,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
@@ -32,12 +32,12 @@ import com.gem.sistema.load.fileupload.validators.FileContentValidator;
 /**
  * The Class Reporte108CargaAutomaticaMB.
  */
-@ManagedBean(name = "reporte108CargaAutomaticaMB")
-@ViewScoped
+@Component("reporte108CargaAutomaticaMB")
+@Scope("view")
 public class Reporte108CargaAutomaticaMB extends AbstractMB {
 
 	/** The egresos csv validator. */
-	@ManagedProperty("#{importarPolizaCsvValidator}")
+	@Value("#{importarPolizaCsvValidator}")
 	private FileContentValidator egresosCsvValidator;
 
 	/** The Constant PROCEDURE_NAME. */
@@ -94,11 +94,11 @@ public class Reporte108CargaAutomaticaMB extends AbstractMB {
 	}
 
 	/** The parametros repository. */
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 
 	/**
@@ -213,7 +213,7 @@ public class Reporte108CargaAutomaticaMB extends AbstractMB {
 	 */
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
-			inputFile(event.getFile().getFileName(), event.getFile().getInputstream());
+			inputFile(event.getFile().getFileName(), event.getFile().getInputStream());
 			final FileUpload fileUpload = new FileUpload();
 			File newFile = new File(getPath("RUTA_REPORTES") + File.separator + event.getFile().getFileName());
 			fileUpload.setFile(newFile);

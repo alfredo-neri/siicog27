@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 
 import java.util.Collection;
@@ -7,16 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Polide;
@@ -30,22 +30,22 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 /**
  * The Class ConsultaMovimientosMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("consultaMovimientosMB")
+@Scope("view")
 public class ConsultaMovimientosMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The polide service. */
-	@ManagedProperty("#{polideService}")
+	@Value("#{polideService}")
 	private PolideService polideService;
 
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/** The polide. */
@@ -100,9 +100,9 @@ public class ConsultaMovimientosMB extends BaseDirectReport {
 					this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 				polide.setIdsector(getUserDetails().getIdSector());
 				lista = polideService.consultaMovimientos(polide);
-				RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+				PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 			}
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 	}
 
@@ -170,7 +170,7 @@ public class ConsultaMovimientosMB extends BaseDirectReport {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"La cuenta no exite o no es de último nivel. Favor de validar.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 
 		return isValidate;
@@ -182,11 +182,11 @@ public class ConsultaMovimientosMB extends BaseDirectReport {
 	// StringUtils.EMPTY,
 	// "La cuenta no existe");
 	// FacesContext.getCurrentInstance().addMessage(null, message);
-	// RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+	// PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 	// } else {
 	// createFilePdfInline();
-	// RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
-	// RequestContext.getCurrentInstance()
+	// PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
+	// PrimeFaces.current()
 	// .execute("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height',
 	// '57em');");
 	// }

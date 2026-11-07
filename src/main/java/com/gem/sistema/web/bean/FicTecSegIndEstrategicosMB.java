@@ -1,7 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,16 +10,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.data.PageEvent;
 import org.slf4j.Logger;
@@ -50,9 +49,8 @@ import com.gem.sistema.business.repository.catalogs.XcatproRepository;
  *
  * @author BIITEC
  */
-@Component(value = "ficTecSegIndEstrategicosMB")
-@ManagedBean
-@ViewScoped
+@Component("ficTecSegIndEstrategicosMB")
+@Scope("view")
 public class FicTecSegIndEstrategicosMB extends AbstractMB implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -1046,8 +1044,8 @@ public class FicTecSegIndEstrategicosMB extends AbstractMB implements Serializab
 			ftd.setCvevar(variableSelected.getCvevar());
 			ftd.setVariables(variableSelected.getNomvar());
 		}
-		RequestContext.getCurrentInstance().execute("PF('variableWdg').unselectAllRows();");
-		RequestContext.getCurrentInstance().execute("PF('variableWdg').clearFilters();");
+		PrimeFaces.current().executeScript("PF('variableWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('variableWdg').clearFilters();");
 	}
 
 	/**
@@ -1092,11 +1090,11 @@ public class FicTecSegIndEstrategicosMB extends AbstractMB implements Serializab
 			this.desIdCodInd = indicadorSelected.getCodigo();
 		}
 
-		RequestContext.getCurrentInstance().execute("PF('indicadorWdg').unselectAllRows();");
-		RequestContext.getCurrentInstance().execute("PF('indicadorWdg').clearFilters();");
-//		final RequestContext context = RequestContext.getCurrentInstance();
-//		context.update("formIndCaptura:panelIndicadores:indDetalleTable:" + detalleRowSelected + ":varClave");
-//		context.update("formIndCaptura:panelIndicadores:indDetalleTable:" + detalleRowSelected + ":varDescripcion");
+		PrimeFaces.current().executeScript("PF('indicadorWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('indicadorWdg').clearFilters();");
+//		final PrimeFaces context = PrimeFaces.current();
+//		context.ajax().update("formIndCaptura:panelIndicadores:indDetalleTable:" + detalleRowSelected + ":varClave");
+//		context.ajax().update("formIndCaptura:panelIndicadores:indDetalleTable:" + detalleRowSelected + ":varDescripcion");
 	}
 
 	/**

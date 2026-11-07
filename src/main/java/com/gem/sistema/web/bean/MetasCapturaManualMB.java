@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Value;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datagrid.DataGrid;
@@ -30,7 +30,8 @@ import com.gem.sistema.util.UtilFront;
  * The Class MetasCapturaManualMB.
  */
 @Component(value = "metasCapturaManualMB")
-@ViewScoped
+// difem26: la anotacion de scope de JSF era ignorada por Spring (singleton compartido)
+@Scope("view")
 public class MetasCapturaManualMB extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -126,7 +127,7 @@ public class MetasCapturaManualMB extends AbstractMB {
 	private int currentPageCaptura = 0;
 
 	/** Repositorio de Catdep. */
-	@ManagedProperty(value = "#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/**

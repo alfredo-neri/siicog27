@@ -1,5 +1,6 @@
 package com.gem.sistema.business.service.catalogos;
 
+import com.gem.sistema.web.util.StreamedContents;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -7,8 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import javax.sql.DataSource;
 
 import org.primefaces.model.DefaultStreamedContent;
@@ -29,7 +30,7 @@ import com.gem.sistema.business.predicates.CuentaPredicates;
 import com.gem.sistema.business.repository.catalogs.CuentaRepository;
 import com.gem.sistema.business.repository.catalogs.PolideRepository;
 import com.gem.sistema.business.repository.catalogs.TcRegistraArchivoDigitalRepository;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -197,7 +198,7 @@ public class ConsultaPolizaSirveImpl implements ConsultaPolizaSirve {
 			TcRegistraArchivoDigital archivoDigital = registraArchivo.getPoliBby(String.valueOf(mes), numero, tipo,
 					idSector);
 			String fileNameContent = archivoDigital.getPathFile() + "/" + archivoDigital.getNombreArchivo();
-			strContent = new DefaultStreamedContent(new FileInputStream(fileNameContent));
+			strContent = StreamedContents.of(new FileInputStream(fileNameContent), null, null, null);
 		} catch (FileNotFoundException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
 					"La Poliza no se encuentra en la base");
@@ -216,9 +217,9 @@ public class ConsultaPolizaSirveImpl implements ConsultaPolizaSirve {
 		LOGGER.info("dentro selsrevicio find");
 
 		try {
-			TcRegistraArchivoDigital archivoDigital = registraArchivo.findOne(idRegistraArchivo);
+			TcRegistraArchivoDigital archivoDigital = registraArchivo.findById(idRegistraArchivo).orElse(null);
 			String fileNameContent = archivoDigital.getPathFile() + archivoDigital.getNombreArchivo();
-			strContent = new DefaultStreamedContent(new FileInputStream(fileNameContent), "image/tiff");
+			strContent = StreamedContents.of(new FileInputStream(fileNameContent), "image/tiff", null, null);
 		} catch (FileNotFoundException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
 					"La Poliza no se encuentra en la base");

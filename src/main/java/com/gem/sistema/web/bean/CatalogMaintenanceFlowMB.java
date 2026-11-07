@@ -1,9 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,18 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -51,8 +52,8 @@ import com.gem.sistema.web.util.FrontProperty;
  * @author Juan Carlos Pedraza Alcalao
  */
 
-@ManagedBean(name = "catalogMaintenanceFlowMB")
-@ViewScoped
+@Component("catalogMaintenanceFlowMB")
+@Scope("view")
 public class CatalogMaintenanceFlowMB extends CommonCatalogMB<Catflu> implements Serializable {
 
 	/** Constante de la version del objeto. */
@@ -70,11 +71,11 @@ public class CatalogMaintenanceFlowMB extends CommonCatalogMB<Catflu> implements
 			.getPropertyValue("catalog.report.csv.catalog.maintenance.catalog.flow");
 
 	/** Componente de repositorio. */
-	@ManagedProperty(value = "#{catfluRepository}")
+	@Value("#{catfluRepository}")
 	private CatfluRepository catfluRepository;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{flowServiceImpl}")
+	@Value("#{flowServiceImpl}")
 	private FlowService flowService;
 
 	/** Nombre del reporte en texto plano. */
@@ -263,7 +264,7 @@ public class CatalogMaintenanceFlowMB extends CommonCatalogMB<Catflu> implements
 			// if (this.getBeanSelected().getId().intValue() == ZERO) {
 			this.findAllValuesCatalog();
 			generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO, MESSAGE_EDITION_SUCCESS);
-			RequestContext.getCurrentInstance().execute("PF('objectsWdt').unselectAllRows();");
+			PrimeFaces.current().executeScript("PF('objectsWdt').unselectAllRows();");
 
 			// }
 			// else {
@@ -370,7 +371,7 @@ public class CatalogMaintenanceFlowMB extends CommonCatalogMB<Catflu> implements
 	}
 
 	/** The Constant SORT_CLVFLU. */
-	private static final Sort SORT_CLVFLU = new Sort(Sort.Direction.ASC, "clvflu");
+	private static final Sort SORT_CLVFLU = Sort.by(Sort.Direction.ASC, "clvflu");
 
 	/*
 	 * (non-Javadoc)
@@ -509,7 +510,7 @@ public class CatalogMaintenanceFlowMB extends CommonCatalogMB<Catflu> implements
 		if (PASS.equals(this.validatePass)) {
 
 			super.insertRow();
-			RequestContext.getCurrentInstance().execute(
+			PrimeFaces.current().executeScript(
 					"jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});");
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Password incorrecto");
@@ -622,7 +623,7 @@ public class CatalogMaintenanceFlowMB extends CommonCatalogMB<Catflu> implements
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString());
+			csvByPl = StreamedContents.of(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

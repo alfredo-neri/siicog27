@@ -3,7 +3,7 @@ package com.gem.sistema.business.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The persistent class for the TC_ARTICULOS_ADQUISICIONES database table.

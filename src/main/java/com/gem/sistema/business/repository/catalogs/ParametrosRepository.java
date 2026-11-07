@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ import com.gem.sistema.business.domain.TcValores;
  */
 @Repository("parametrosRepository")
 public interface ParametrosRepository
-		extends PagingAndSortingRepository<TcParametro, String>, QueryDslPredicateExecutor<TcParametro> {
+		extends PagingAndSortingRepository<TcParametro, String>, CrudRepository<TcParametro, String>, QuerydslPredicateExecutor<TcParametro> {
 
 	/*
 	 * (non-Javadoc)

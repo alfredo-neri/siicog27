@@ -3,15 +3,15 @@
  */
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +32,8 @@ import com.gem.sistema.business.service.catalogos.PolideService;
  *
  * @author Gerardo CUERO
  */
-@ManagedBean
-@ViewScoped
+@Component("polideDataModel")
+@Scope("view")
 public class PolideDataModel extends CustomPagingModel<Polide> {
 
 	/** The Constant serialVersionUID. */
@@ -50,11 +50,11 @@ public class PolideDataModel extends CustomPagingModel<Polide> {
 	/**
 	 * Repositorio de Polide.
 	 */
-	@ManagedProperty(value = "#{polideService}")
+	@Value("#{polideService}")
 	private PolideService polideService;
 
 	/** The polide repository. */
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** The insert. */
@@ -159,7 +159,7 @@ public class PolideDataModel extends CustomPagingModel<Polide> {
 	public SelectPagePolideDTO pageSelect(Integer renglon) {
 		Integer offset = 0;
 		Integer bmin = 0;
-		Pageable pageable = new PageRequest(this.getActualPage().getNumber(), this.getActualPage().getSize());
+		Pageable pageable = PageRequest.of(this.getActualPage().getNumber(), this.getActualPage().getSize());
 		List<Polide> currentData2 = polideService
 				.findAllByFilters(this.getfilters(null), pageable, this.countData(this.getfilters(null)), renglon)
 				.getContent();

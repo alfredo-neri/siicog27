@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,8 +20,8 @@ import com.gem.sistema.business.repository.catalogs.TcReportesFirmasRepository;
 import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean(name = "gastoCategProgramaticaMB")
-@ViewScoped
+@Component("gastoCategProgramaticaMB")
+@Scope("view")
 public class GastoCategProgramaticaMB extends ReportePeriodos {
 	private static final String OUTPUT_REPORT_NAME = "CONAC-GastoCategoriaProgramatica";
 	private static final String CLAVE_REPORT = "RPT_CONAC_GENERIC_EGRESOS";
@@ -30,13 +30,13 @@ public class GastoCategProgramaticaMB extends ReportePeriodos {
 	final static private String VW2 = "VI_GASTO_PROGRAMATICO_T2";
 	final static private String VW3 = "VI_GASTO_PROGRAMATICO_T3";
 	final static private String VW4 = "VI_GASTO_PROGRAMATICO_T4";
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct

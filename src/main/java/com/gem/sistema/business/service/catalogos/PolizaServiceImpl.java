@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.MapUtils;
@@ -346,7 +346,7 @@ public class PolizaServiceImpl implements PolizaService {
 	@Override
 	public TcRetencione findOneRetenciones(TcRetencione tcRetencione) {
 		return tcRetencionesRepository.findOne(
-				TcRetencionesPredicate.findByIdSectorAndPolide(tcRetencione.getIdSector(), tcRetencione.getIdPolide()));
+				TcRetencionesPredicate.findByIdSectorAndPolide(tcRetencione.getIdSector(), tcRetencione.getIdPolide())).orElse(null);
 	}
 
 	public TcRetencionesRepository getTcRetencionesRepository() {
@@ -384,7 +384,7 @@ public class PolizaServiceImpl implements PolizaService {
 	@Override
 	public void deleteRetenciones(TcRetencione tcRetencione) {
 		tcRetencione = this.tcRetencionesRepository.findOne(
-				TcRetencionesPredicate.findByIdSectorAndPolide(tcRetencione.getIdSector(), tcRetencione.getIdPolide()));
+				TcRetencionesPredicate.findByIdSectorAndPolide(tcRetencione.getIdSector(), tcRetencione.getIdPolide())).orElse(null);
 		tcRetencionesRepository.delete(tcRetencione);
 
 	}

@@ -14,6 +14,6 @@ public class CuentaSort {
 	 * @return the sort
 	 */
 	public static Sort sortByAll(){
-		return new Sort(Sort.Direction.ASC, "cuenta", "scuenta", "sscuenta", "ssscuenta", "sssscuenta");
+		return Sort.by(Sort.Direction.ASC, "cuenta", "scuenta", "sscuenta", "ssscuenta", "sssscuenta");
 	}
 }

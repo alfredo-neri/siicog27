@@ -1,29 +1,29 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import com.gem.sistema.business.domain.TcIngresosPropio;
 import com.gem.sistema.business.repository.catalogs.TcIngresoPropioRepository;
 import com.gem.sistema.business.repository.catalogs.TwIngresoPropioDetalleRepository;
 
-@ManagedBean(name = "catalogIngresosPropiosMB")
-@ViewScoped
+@Component("catalogIngresosPropiosMB")
+@Scope("view")
 public class CatalogIngresosPropiosMB extends CommonCatalogMB<TcIngresosPropio> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -33,10 +33,10 @@ public class CatalogIngresosPropiosMB extends CommonCatalogMB<TcIngresosPropio> 
 	private String errorMessage;
 	private int selectedIndex;
 
-	@ManagedProperty("#{tcIngresosPropioRepository}")
+	@Value("#{tcIngresosPropioRepository}")
 	private TcIngresoPropioRepository tcIngresosPropioRepository;
 
-	@ManagedProperty("#{twIngresosPropioDetalleRepository}")
+	@Value("#{twIngresosPropioDetalleRepository}")
 	private TwIngresoPropioDetalleRepository detalleRepository;
 
 	@PostConstruct
@@ -57,7 +57,7 @@ public class CatalogIngresosPropiosMB extends CommonCatalogMB<TcIngresosPropio> 
 		catalog.setClave(catalog.getId() != null && catalog.getId() != ZERO ? catalog.getClave()
 				: tcIngresosPropioRepository.getNewClave());
 		executeOperationSaveOrUpdate(catalog, tcIngresosPropioRepository);
-		RequestContext.getCurrentInstance().execute("document.getElementById('form1:hideButton2').click();");
+		PrimeFaces.current().executeScript("document.getElementById('form1:hideButton2').click();");
 		activateRowEdit(catalog.getIndex());
 
 	}

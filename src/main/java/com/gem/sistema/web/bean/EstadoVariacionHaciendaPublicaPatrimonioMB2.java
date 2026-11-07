@@ -1,19 +1,20 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -42,8 +43,8 @@ import static com.roonin.utils.UtilDate.getLastDay;
 /**
  * The Class EstadoVariacionHaciendaPublicaPatrimonioMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("estadoVariacionHaciendaPublicaPatrimonioMB2")
+@Scope("view")
 public class EstadoVariacionHaciendaPublicaPatrimonioMB2 extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_EDO_VAR_HAC_PUB";
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
@@ -57,31 +58,31 @@ public class EstadoVariacionHaciendaPublicaPatrimonioMB2 extends BaseDirectRepor
 	private StreamedContent psFileTxt;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 	
 
-	@ManagedProperty("#{tcEntidadAdministrativaRepository}")
+	@Value("#{tcEntidadAdministrativaRepository}")
 	private TcEntidadAdministrativaRepository entidadAdministrativaRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -232,7 +233,7 @@ public class EstadoVariacionHaciendaPublicaPatrimonioMB2 extends BaseDirectRepor
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 
@@ -495,7 +496,7 @@ public class EstadoVariacionHaciendaPublicaPatrimonioMB2 extends BaseDirectRepor
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			streamedContent = new DefaultStreamedContent(stream, "application/txt", out.get("O_FILE_NAME").toString());
+			streamedContent = StreamedContents.of(stream, "application/txt", out.get("O_FILE_NAME").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

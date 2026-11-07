@@ -1,17 +1,17 @@
 
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -29,8 +29,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class EstadoAvancePresupuestalEgresosFuenteFinanciamientoMB.
  */
-@ManagedBean(name = "estadoAvancePresupuestalEgresosFuenteFinanciamientoMB")
-@ViewScoped
+@Component("estadoAvancePresupuestalEgresosFuenteFinanciamientoMB")
+@Scope("view")
 public class EstadoAvancePresupuestalEgresosFuenteFinanciamientoMB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
@@ -49,23 +49,23 @@ public class EstadoAvancePresupuestalEgresosFuenteFinanciamientoMB extends BaseD
 	private List<Fuentef> listFuentef;
 
 	/** The tcmes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcmesRepository;
 
 	/** The fuentef repository. */
-	@ManagedProperty("#{fuentefRepository}")
+	@Value("#{fuentefRepository}")
 	private FuentefRepository fuentefRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	public TcPeriodoRepositoy getPeriodoRepositoy() {
@@ -318,7 +318,7 @@ public class EstadoAvancePresupuestalEgresosFuenteFinanciamientoMB extends BaseD
 	public void downloadXls() throws ReportValidationException {
 		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null,
 				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			PrimeFaces.current().executeScript(DOWNLOAD_XLS);
 		}
 	}
 

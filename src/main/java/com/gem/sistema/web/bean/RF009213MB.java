@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDay;
 
 import java.util.HashMap;
@@ -15,10 +18,7 @@ import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
 import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 import com.gem.sistema.business.repository.catalogs.FirmasRepository;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 
 import org.primefaces.model.StreamedContent;
@@ -32,8 +32,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class RF009213MB.
  */
-@ManagedBean(name = "rF009213MB")
-@ViewScoped
+@Component("rF009213MB")
+@Scope("view")
 public class RF009213MB extends BaseDirectReport {
 
 	/** The mes. */
@@ -43,20 +43,20 @@ public class RF009213MB extends BaseDirectReport {
 	private List<TcMes> listMes;
 
 	/** The tcmes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcmesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**

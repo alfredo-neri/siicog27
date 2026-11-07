@@ -1,9 +1,9 @@
 package com.gem.sistema.web.bean;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.domain.TbProceso;
 import com.gem.sistema.business.repository.catalogs.TbProcesoRepository;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-@ManagedBean(name = "registroReportesMB")
-@ViewScoped
+@Component("registroReportesMB")
+@Scope("view")
 public class RegistroReportesMB extends AbstractMB {
 
 	private List<String> listReportes = new ArrayList<String>();
@@ -23,7 +23,7 @@ public class RegistroReportesMB extends AbstractMB {
 	private Date fecha = new Date();
 	private String nombreReporte = "";
 
-	@ManagedProperty("#{tbProcesoRepository}")
+	@Value("#{tbProcesoRepository}")
 	private TbProcesoRepository procesoRepository;
 
 	@PostConstruct

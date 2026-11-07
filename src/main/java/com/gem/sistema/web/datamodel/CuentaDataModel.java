@@ -3,14 +3,14 @@
  */
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,8 +28,8 @@ import com.gem.sistema.business.sorts.CuentaSort;
  *
  * @author gauss
  */
-@ManagedBean(name = "cuentaDataModel")
-@ViewScoped
+@Component("cuentaDataModel")
+@Scope("view")
 public class CuentaDataModel extends CustomPagingModel<Cuenta> {
 
 	/** The Constant serialVersionUID. */
@@ -38,7 +38,7 @@ public class CuentaDataModel extends CustomPagingModel<Cuenta> {
 	// * Repositorio de Cuenta.
 	/** The cuenta service. */
 	// */
-	@ManagedProperty(value = "#{cuentaService}")
+	@Value("#{cuentaService}")
 	private CuentaService cuentaService;
 
 	/** The insert. */

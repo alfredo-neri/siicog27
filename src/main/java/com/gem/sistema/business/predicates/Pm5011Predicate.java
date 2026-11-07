@@ -5,9 +5,9 @@ import com.gem.sistema.business.domain.Pm0511;
 import com.gem.sistema.business.domain.QPm0511;
 import com.gem.sistema.business.domain.QPm5011;
 import com.gem.sistema.ennum.constans.LogicalConstansEnum;
-import com.mysema.query.types.OrderSpecifier;
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,11 +14,8 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
@@ -31,8 +31,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  * @Timeline <strong>Date: </strong>19/08/2021 <strong> Changes: </strong> Se
  *           crean componentes para el proceso<br>
  */
-@ViewScoped
-@ManagedBean(name = "proyectoPresupuestoEgresosMB")
+@Scope("view")
+@Component("proyectoPresupuestoEgresosMB")
 public class ProyectoPresupuestoEgresosMB extends GenericExecuteProcedure {
 	private static final String PASSWORD = "xcargaproyecto";
 	private static final String UPFILE_PATH = "/gem/upfiles/";
@@ -43,7 +43,7 @@ public class ProyectoPresupuestoEgresosMB extends GenericExecuteProcedure {
 	private boolean objDisabled;
 	private List<TwAnteproyecto> anteproyectoList;
 
-	@ManagedProperty("#{twAnteproyectoRepository}")
+	@Value("#{twAnteproyectoRepository}")
 	private TwAnteproyectoRepository anteproyectoRepository;
 
 	@PostConstruct
@@ -78,7 +78,7 @@ public class ProyectoPresupuestoEgresosMB extends GenericExecuteProcedure {
 
 		try {
 
-			this.saveFile(UPFILE_PATH, event.getFile().getFileName(), event.getFile().getInputstream());
+			this.saveFile(UPFILE_PATH, event.getFile().getFileName(), event.getFile().getInputStream());
 
 			this.fileName = event.getFile().getFileName();
 

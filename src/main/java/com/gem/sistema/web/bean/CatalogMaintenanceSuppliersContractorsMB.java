@@ -1,27 +1,24 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
-import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.BooleanUtils;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
@@ -35,7 +32,7 @@ import com.gem.sistema.business.domain.Catprv;
 import com.gem.sistema.business.predicates.CatprvPredicate;
 import com.gem.sistema.business.repository.catalogs.CatprvRepository;
 import com.gem.sistema.web.util.FrontProperty;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -43,8 +40,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogMaintenanceSuppliersContractorsMB")
+@Scope("view")
 public class CatalogMaintenanceSuppliersContractorsMB extends CommonCatalogMB<Catprv> implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -69,7 +66,7 @@ public class CatalogMaintenanceSuppliersContractorsMB extends CommonCatalogMB<Ca
 	private String errorMessage;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{catprvRepository}")
+	@Value("#{catprvRepository}")
 	private CatprvRepository catprvRepository;
 
 	/** Define si la operacion es insertar o actualizar. */
@@ -183,7 +180,7 @@ public class CatalogMaintenanceSuppliersContractorsMB extends CommonCatalogMB<Ca
 			this.getBeanFind().setIdsector(this.getUserDetails().getIdSector());
 			restartData();
 
-			RequestContext.getCurrentInstance().execute("document.getElementById('form1:hideButton3').click();");
+			PrimeFaces.current().executeScript("document.getElementById('form1:hideButton3').click();");
 			titleActive = Boolean.TRUE;
 			return;
 		} else {
@@ -219,7 +216,7 @@ public class CatalogMaintenanceSuppliersContractorsMB extends CommonCatalogMB<Ca
 		generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO, MESSAGE_DELETED_RECORD);
 
 		restartDataOperationDelete();
-		RequestContext.getCurrentInstance().execute("document.getElementById('form1:hideButton3').click();");
+		PrimeFaces.current().executeScript("document.getElementById('form1:hideButton3').click();");
 	}
 
 	/*
@@ -247,7 +244,7 @@ public class CatalogMaintenanceSuppliersContractorsMB extends CommonCatalogMB<Ca
 	}
 
 	/** The Constant BY_CLVPRV. */
-	private static final Sort BY_CLVPRV = new Sort(Sort.Direction.ASC, "clvprv");
+	private static final Sort BY_CLVPRV = Sort.by(Sort.Direction.ASC, "clvprv");
 
 	/*
 	 * (non-Javadoc)

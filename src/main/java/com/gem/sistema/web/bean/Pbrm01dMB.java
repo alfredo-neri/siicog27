@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
@@ -9,11 +13,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -35,8 +36,8 @@ import com.gem.sistema.util.Constants;
  * @Changes Se implementa servicio de firmas
  * @Sector Municipal
  */
-@ManagedBean(name = "pbrm01dMB")
-@ViewScoped
+@Component("pbrm01dMB")
+@Scope("view")
 public class Pbrm01dMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_FICHA_TECNICA_DISENIO_INIDCADORES";
 
@@ -45,19 +46,19 @@ public class Pbrm01dMB extends BaseDirectReport {
 	private StreamedContent file;
 	private String fileName;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{generaTxtFilesService}")
+	@Value("#{generaTxtFilesService}")
 	private GeneraTxtFilesService txtFilesService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct
@@ -106,7 +107,7 @@ public class Pbrm01dMB extends BaseDirectReport {
 			e.printStackTrace();
 		}
 
-		file = new DefaultStreamedContent(stream, Constants.APPLICCTION_TXT, fileName);
+		file = StreamedContents.of(stream, Constants.APPLICCTION_TXT, fileName, null);
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Success", "Se Generó el Archivo: " + fileName);
 
 		return file;

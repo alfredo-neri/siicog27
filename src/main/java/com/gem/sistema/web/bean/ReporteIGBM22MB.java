@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -37,8 +37,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  *           Implementacion del servicio de firmas dinamicas
  *
  */
-@ManagedBean(name = "reporteIGBM22MB")
-@ViewScoped
+@Component("reporteIGBM22MB")
+@Scope("view")
 public class ReporteIGBM22MB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_INVENTARIO_GENERAL_BIENES_MUEBLES";
 
@@ -52,23 +52,23 @@ public class ReporteIGBM22MB extends BaseDirectReport {
 	private List<String> listsemestre;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{reporteIGBM22TXTMB}")
+	@Value("#{reporteIGBM22TXTMB}")
 	private ReporteIGBM22TXTMB reporteIGBM22TXTMB;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public PuestosFirmasService getPuestosFirmasService() {

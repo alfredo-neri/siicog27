@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ import com.gem.sistema.business.domain.TcUnidadMedida;
  */
 @Repository(value = "tcArticulosSARepository")
 public interface TcArticulosSARepository
-		extends PagingAndSortingRepository<TcArticulosSA, Long>, QueryDslPredicateExecutor<TcArticulosSA> {
+		extends PagingAndSortingRepository<TcArticulosSA, Long>, CrudRepository<TcArticulosSA, Long>, QuerydslPredicateExecutor<TcArticulosSA> {
 	@Query("SELECT MAX(a.renglon)+1  FROM TcArticulosSA a join a.adquisicion s WHERE s.id=:idAdquisicion")
 	Optional<Integer> getNextRenglon(@Param("idAdquisicion") Long idAdquisicion);
 

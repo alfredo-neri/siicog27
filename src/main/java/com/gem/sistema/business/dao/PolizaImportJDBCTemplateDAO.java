@@ -1,6 +1,5 @@
 package com.gem.sistema.business.dao;
 
-
 import com.gem.sistema.business.dto.PolizaImportDTO;
 // TODO: Auto-generated Javadoc
 

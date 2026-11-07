@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
@@ -11,17 +14,14 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +44,8 @@ import com.gem.sistema.business.service.reportador.ReportadorTXTServiceImpl;
 /**
  * The Class RF00912010MB.
  */
-@ManagedBean(name = "rF00912010MB")
-@ViewScoped
+@Component("rF00912010MB")
+@Scope("view")
 public class RF00912010MB extends BaseDirectReport {
 
 	/** The Constant FOCUS_IN_PREVIEW. */
@@ -76,21 +76,21 @@ public class RF00912010MB extends BaseDirectReport {
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The r F 00912010 service. */
-	@ManagedProperty("#{rF00912010Service}")
+	@Value("#{rF00912010Service}")
 	private RF00912010Service rF00912010Service;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public TcPeriodoRepositoy getPeriodoRepositoy() {
@@ -101,10 +101,10 @@ public class RF00912010MB extends BaseDirectReport {
 		this.periodoRepositoy = periodoRepositoy;
 	}
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	public ConctbRepository getConctbRepository() {
@@ -355,7 +355,7 @@ public class RF00912010MB extends BaseDirectReport {
 
 		txtPreview = this.generatePreviewService
 				.generatePreview(parametersDTO.getoPathFile() + File.separator + parametersDTO.getoNameFile());
-		RequestContext.getCurrentInstance().execute(FOCUS_IN_PREVIEW);
+		PrimeFaces.current().executeScript(FOCUS_IN_PREVIEW);
 		addToBitacora(false);
 	}
 

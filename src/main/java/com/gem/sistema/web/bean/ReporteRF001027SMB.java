@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -18,8 +18,8 @@ import com.gem.sistema.web.util.GetFileInlineServlet;
 /**
  * The Class ReporteRF001027SMB.
  */
-@ManagedBean(name = "reporteRF001027SMB")
-@ViewScoped
+@Component("reporteRF001027SMB")
+@Scope("view")
 public class ReporteRF001027SMB extends  BaseDirectReport {
 	
 	/** The uuid. */
@@ -29,7 +29,7 @@ public class ReporteRF001027SMB extends  BaseDirectReport {
 	private String mes;
 	
 	/** The reporte RF 001027 service. */
-	@ManagedProperty("#{reporteRF001027Service}")
+	@Value("#{reporteRF001027Service}")
 	private ReporteRF001027Service reporteRF001027Service;
 	
 	/**

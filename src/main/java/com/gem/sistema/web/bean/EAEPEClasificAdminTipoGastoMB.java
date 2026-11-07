@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -22,19 +22,19 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
-@ManagedBean(name = "eAEPEClasificAdminTipoGastoMB")
-@ViewScoped
+@Component("eAEPEClasificAdminTipoGastoMB")
+@Scope("view")
 public class EAEPEClasificAdminTipoGastoMB extends BaseDirectReport {
 	private List<TcPeriodo> listMeses;
 	private Integer mes;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	@PostConstruct

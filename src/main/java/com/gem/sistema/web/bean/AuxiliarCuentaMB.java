@@ -1,9 +1,9 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ViewScoped;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -24,8 +24,8 @@ import org.apache.commons.collections4.CollectionUtils;
 /**
  * The Class AuxiliarCuentaMB.
  */
-@ManagedBean(name = "auxiliarCuentaMB")
-@ViewScoped
+@Component("auxiliarCuentaMB")
+@Scope("view")
 public class AuxiliarCuentaMB extends BaseDirectReport {
 
 	private String cta;
@@ -34,10 +34,10 @@ public class AuxiliarCuentaMB extends BaseDirectReport {
 
 	private List<TcPeriodo> listMes;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	@PostConstruct

@@ -5,7 +5,7 @@ import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ public class Pm0411BSImpl implements Pm0411BS {
 	 */
 	@Override
 	public List<Pm0411> delete(Integer index, List<Pm0411> listPm0411) {
-		pm0411Repository.delete(listPm0411.get(index).getId());
+		pm0411Repository.deleteById(listPm0411.get(index).getId());
 		this.calculationAccumulated(listPm0411.get(index).getIdsector());
 		listPm0411 = orderByTrimestreAsc(listPm0411.get(index).getIdsector());
 		
@@ -118,7 +118,7 @@ public class Pm0411BSImpl implements Pm0411BS {
 	 */
 	@Override
 	public Sort oderBy() {
-		return new Sort(Sort.Direction.ASC, "trimestre");
+		return Sort.by(Sort.Direction.ASC, "trimestre");
 	}
 
 	/* (non-Javadoc)

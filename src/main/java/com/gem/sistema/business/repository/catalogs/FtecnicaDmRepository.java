@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ import com.gem.sistema.business.domain.Ftecnicadm;
  * @version 1
  */
 @Repository("ftecnicaDmRepository")
-public interface FtecnicaDmRepository extends PagingAndSortingRepository<Ftecnicadm, Long>, QueryDslPredicateExecutor<Ftecnicadm>{
+public interface FtecnicaDmRepository extends PagingAndSortingRepository<Ftecnicadm, Long>, CrudRepository<Ftecnicadm, Long>, QuerydslPredicateExecutor<Ftecnicadm>{
 	
 	/*
 	 * (non-Javadoc)
@@ -35,7 +36,7 @@ public interface FtecnicaDmRepository extends PagingAndSortingRepository<Ftecnic
 	@Transactional(timeout = 10)
 	<S extends Ftecnicadm> S save(S entity);
 	
-	@Query("select ft from Ftecnicadm ft where idsector=:idSector order by clvdep asc")
+	@Query("select ft from Ftecnicadm ft where ft.idSector = :idSector order by ft.clvdep asc")
 	List<Ftecnicadm> findAllByIdSector(@Param("idSector") Integer idSector);
 	
 	Integer countByIdSectorAndCvetemas(Integer idSector, String cvetemas);

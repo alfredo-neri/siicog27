@@ -84,7 +84,7 @@ public class Pm4911ServiceImpl implements Pm4911Service {
 	@Override
 	public Pm4911 findById(Long id) {
 		LOGGER.info("Finding id entry by using id: {}", id);
-		Pm4911 result = repository.findOne(id);
+		Pm4911 result = repository.findById(id).orElse(null);
 		LOGGER.info("Found id entry: {}", result);
 		return result;
 	}
@@ -104,7 +104,7 @@ public class Pm4911ServiceImpl implements Pm4911Service {
 	 */
 	@Override
 	public void delete(Long id) {
-		repository.delete(id);
+		repository.deleteById(id);
 	}
 
 }

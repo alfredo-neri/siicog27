@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,8 +18,8 @@ import com.gem.sistema.business.repository.catalogs.TcContratosRepository;
 import com.gem.sistema.business.repository.catalogs.TcEstadosContratoRepository;
 import com.gem.sistema.business.repository.catalogs.TrContratoDetailRepository;
 
-@ManagedBean(name = "calendarioContratosMB")
-@ViewScoped
+@Component("calendarioContratosMB")
+@Scope("view")
 public class CalendarioContratosMB extends AbstractMB {
 	private Boolean canlendarVisible = true;
 	private Long idSeleccionado;
@@ -33,7 +33,7 @@ public class CalendarioContratosMB extends AbstractMB {
 	private List<CalendarioDTO> eventosViernes = new ArrayList<CalendarioDTO>();
 	private List<CalendarioDTO> eventosSabado = new ArrayList<CalendarioDTO>();
 
-	@ManagedProperty("#{tcContratosRepository}")
+	@Value("#{tcContratosRepository}")
 	private TcContratosRepository contratosRepository;
 
 	@PostConstruct

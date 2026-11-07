@@ -1,11 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
@@ -21,7 +21,8 @@ import com.gem.sistema.business.service.catalogos.PolideService;
  * The Class CantidadesPolizaCantidadReferenciaBean.
  */
 @Component(value = "cantidadesPolizaCantidadReferenciaBean")
-@RequestScoped
+// difem26: la anotacion de scope de JSF era ignorada por Spring (singleton compartido)
+@Scope("request")
 public class CantidadesPolizaCantidadReferenciaBean extends AbstractMB {
 
 	/** The Constant LOGGER. */

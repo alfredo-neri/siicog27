@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -10,11 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -32,8 +33,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class RF0010241MB.
  */
-@ManagedBean(name = "rF0010241MB")
-@ViewScoped
+@Component("rF0010241MB")
+@Scope("view")
 public class RF0010241MB extends GenericExecuteProcedure {
 	
 	/** The mes. */
@@ -46,11 +47,11 @@ public class RF0010241MB extends GenericExecuteProcedure {
 	private StreamedContent fileTxt;
 	
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/**
@@ -196,7 +197,7 @@ public class RF0010241MB extends GenericExecuteProcedure {
 			    
 			    e.printStackTrace();
 			   }
-			   fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			   fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			   generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		}
 		

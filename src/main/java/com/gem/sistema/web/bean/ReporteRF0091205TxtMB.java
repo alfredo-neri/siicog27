@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,13 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -32,14 +33,14 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDay;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class ReporteRF0091205TxtMB.
  */
-@ManagedBean(name = "reporteRF0091205TxtMB")
-@ViewScoped
+@Component("reporteRF0091205TxtMB")
+@Scope("view")
 public class ReporteRF0091205TxtMB extends GenericExecuteProcedure {
 
 	/** The n firmas. */
@@ -61,15 +62,15 @@ public class ReporteRF0091205TxtMB extends GenericExecuteProcedure {
 	private List<Catdep> listCatdep;
 	
 	/** The catdep repository. */
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	
@@ -275,7 +276,7 @@ public class ReporteRF0091205TxtMB extends GenericExecuteProcedure {
 			// final String pathFile =
 			// servletContext.getRealPath(out.get("O_RUTA_FILE").toString() +
 			// File.separator + out.get("O_NAME_FILE").toString() );
-			// streamContent = new DefaultStreamedContent(stream, pathFile);
+			// streamContent = StreamedContents.of(stream, pathFile, null, null);
 			// fileTxt = streamContent;
 			
 			try {
@@ -285,7 +286,7 @@ public class ReporteRF0091205TxtMB extends GenericExecuteProcedure {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

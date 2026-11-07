@@ -1,14 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 
 import org.primefaces.model.StreamedContent;
 
@@ -28,17 +29,18 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
  *           ajusta reporte y se implementa firmas dinamicas
  * @Sector Municipal
  */
-@ManagedBean(name = "reporte166MB")
+@Component("reporte166MB")
+@Scope("request")
 public class Reporte166MB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_PRESUPUESTO_EGRESOS_OBJETO_GASTO_DEPENDENCIA";
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct

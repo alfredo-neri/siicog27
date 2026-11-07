@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import com.gem.sistema.business.domain.Tipcta;
  * The Interface TipctaRepository.
  */
 @Repository
-public interface TipctaRepository  extends PagingAndSortingRepository<Tipcta, Long>, QueryDslPredicateExecutor<Tipcta> {
+public interface TipctaRepository  extends PagingAndSortingRepository<Tipcta, Long>, CrudRepository<Tipcta, Long>, QuerydslPredicateExecutor<Tipcta> {
 	
 	/*
 	 * (non-Javadoc)

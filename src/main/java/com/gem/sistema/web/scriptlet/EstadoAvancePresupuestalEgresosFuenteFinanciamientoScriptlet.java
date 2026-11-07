@@ -1,9 +1,5 @@
 package com.gem.sistema.web.scriptlet;
 
-
-
-
-
 import java.math.BigDecimal;
 import java.util.Objects;
 

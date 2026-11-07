@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +19,7 @@ import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.ConstantsClaveEnnum;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -29,8 +29,8 @@ import org.primefaces.model.StreamedContent;
 /**
  * The Class RF0092163MB.
  */
-@ManagedBean(name = "rF0092163MB")
-@ViewScoped
+@Component("rF0092163MB")
+@Scope("view")
 public class RF0092163MB extends BaseDirectReport {
 
 	/** The clave dep aux. */
@@ -40,20 +40,20 @@ public class RF0092163MB extends BaseDirectReport {
 	private List<Catdaa> listCatdaa;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The catdaa repository. */
-	@ManagedProperty("#{catdaaRepository}")
+	@Value("#{catdaaRepository}")
 	private CatdaaRepository catdaaRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	public PuestosFirmasService getPuestosFirmasService() {

@@ -1,9 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,28 +26,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIOutput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
-import javax.persistence.PostRemove;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AjaxBehaviorEvent;
+import jakarta.faces.event.ValueChangeEvent;
+import jakarta.persistence.PostRemove;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -101,17 +102,17 @@ import com.gem.sistema.web.util.GetFileInlineServlet;
 /**
  * The Class PolizaMantenimientoMB2.
  */
-@ManagedBean(name = "polizaMantenimientoMB2")
-@ViewScoped
+@Component("polizaMantenimientoMB2")
+@Scope("view")
 public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implements Serializable {
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepositry;
 
-	@ManagedProperty(value = "#{tbProcesoService}")
+	@Value("#{tbProcesoService}")
 	private TbProcesoService procesoService;
 	
 	private String tipoReporte = "A";
@@ -213,21 +214,21 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	private String idUser;
 
 	/** The object unlock. */
-	@ManagedProperty(value = "#{objectUnlock}")
+	@Value("#{objectUnlock}")
 	ObjectUnlock objectUnlock;
 
 	/** The semaphores. */
-	@ManagedProperty(value = "#{semaphores}")
+	@Value("#{semaphores}")
 	private Semaphores semaphores;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -361,7 +362,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	private List<Poliend> listIncorrectas;
 
 	/** The convert to tiff pdf service. */
-	@ManagedProperty("#{convertToTiffPdfService}")
+	@Value("#{convertToTiffPdfService}")
 	private ConvertToTiffPdfService convertToTiffPdfService;
 
 	/**
@@ -585,7 +586,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	 */
 	public void checkCatflu() {
 		this.setFlowValidationEnable(Boolean.TRUE);
-		RequestContext.getCurrentInstance().execute(ROWEDIT_CLVFLU_ROW_JQUERY);
+		PrimeFaces.current().executeScript(ROWEDIT_CLVFLU_ROW_JQUERY);
 	}
 
 	/**
@@ -604,8 +605,8 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 			orderList = this.reIndexPolifls(orderList);
 		}
 
-		RequestContext.getCurrentInstance()
-				.execute(String.format(EDIT_FLOW_ROW_JQUERY, orderList.get(orderList.size() - 1).getIndex())
+		PrimeFaces.current()
+				.executeScript(String.format(EDIT_FLOW_ROW_JQUERY, orderList.get(orderList.size() - 1).getIndex())
 						+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, orderList.get(orderList.size() - 1).getIndex()));
 	}
 
@@ -671,10 +672,10 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 				if (!this.getCatfluRepository().exists(CatfluPredicates.isLocalidadUnique(
 						Double.valueOf(pl.getClvflu().doubleValue()), this.getUserDetails().getIdSector()))) {
 					PolizaMantenimientoMB2.displayErrorMsg("Esta clave de flujo no esta registrada");
-					RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+					PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 							+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 				} else {
-					RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+					PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 							+ String.format(FOCUS2_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 				}
 			}
@@ -695,7 +696,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 				if (!this.getCatfluRepository().exists(CatfluPredicates.isLocalidadUnique(
 						Double.valueOf(pl.getClvflu().doubleValue()), this.getUserDetails().getIdSector()))) {
 					PolizaMantenimientoMB2.displayErrorMsg("Esta clave de flujo no esta registrada");
-					RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+					PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 							+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 				} else {
 
@@ -726,25 +727,25 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 							} else {
 								PolizaMantenimientoMB2.displayErrorMsg("La suma es mayor a la registrada");
 								this.setActivaAdicionar(Boolean.FALSE);
-								RequestContext.getCurrentInstance()
-										.execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+								PrimeFaces.current()
+										.executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 												+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 							}
 						} else {
 							PolizaMantenimientoMB2.displayErrorMsg(erroMsg);
-							RequestContext.getCurrentInstance()
-									.execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+							PrimeFaces.current()
+									.executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 											+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 						}
 					} else {
 						PolizaMantenimientoMB2.displayErrorMsg("La clave de flujo ya fue previamente registrada");
-						RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+						PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 								+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 					}
 				}
 			} else {
 				PolizaMantenimientoMB2.displayErrorMsg("Los valores de Clave o Cantidad no son validos");
-				RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+				PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 						+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 			}
 		}
@@ -1403,7 +1404,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		if (((null == polifls || polifls.isEmpty())
 				&& !(this.cuentaflu.equalsIgnoreCase("1111") || this.cuentaflu.equalsIgnoreCase("1112")))
 				|| (sumaFf.compareTo(suma) == 0)) {
-			RequestContext.getCurrentInstance().execute("PF('flujoefectivo').hide();");
+			PrimeFaces.current().executeScript("PF('flujoefectivo').hide();");
 		} else {
 			if ((this.cuentaflu.equalsIgnoreCase("1111") || this.cuentaflu.equalsIgnoreCase("1112"))) {
 				if ((sumaFf.compareTo(suma) != 0)) {
@@ -1458,7 +1459,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 			} else {
 				this.imageId = 0l;
 			}
-			RequestContext.getCurrentInstance().execute("PF('polizasWdg').paginator.setPage(0);");
+			PrimeFaces.current().executeScript("PF('polizasWdg').paginator.setPage(0);");
 		} else {
 			polien = new Polien();
 			this.setEditableTable(Boolean.FALSE);
@@ -1557,7 +1558,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 						}
 						this.getPolideDataModel().setSelected(selected);
 						this.getPolideDataModel().setInsert(Boolean.TRUE);
-						RequestContext.getCurrentInstance().execute(
+						PrimeFaces.current().executeScript(
 								"PF('polizasWdg').paginator.setPage(PF('polizasWdg').paginator.cfg.pageCount - 1);");
 					} else {
 						generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR,
@@ -1598,7 +1599,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 									selected.getTippol(), selected.getConpol(), selected.getRenpol(),
 									this.getUserDetails().getIdSector());
 					for (Polifl polifl : polifls) {
-						this.getPoliflRepository().delete(polifl.getId());
+						this.getPoliflRepository().deleteById(polifl.getId());
 					}
 				}
 
@@ -1610,12 +1611,12 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 					this.getPolideDataModel().setSelected(null);
 					this.getPolideDataModel().setGoToPage(PolideDataModel.PREV_PAGE);
 					js.append("PF('polizasWdg').filter();");
-					// RequestContext.getCurrentInstance().execute();
+					// PrimeFaces.current().executeScript();
 				}
 
 			}
 			js.append("PF('polizasWdg').unselectAllRows();");
-			RequestContext.getCurrentInstance().execute(js.toString());
+			PrimeFaces.current().executeScript(js.toString());
 
 			this.persistencePolizaOnDeleteRow();
 			generateNotificationFront(SEVERITY_INFO, StringUtils.EMPTY, "Registro elimado correctamente ");
@@ -1642,7 +1643,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		if (this.getPolideDataModel().getActualPage().isFirst()
 				|| (this.getPolideDataModel().getListPolide().size() == 1
 						&& ((Polide) event.getObject()).getId() == 0)) {
-			RequestContext.getCurrentInstance().execute("PF('polizasWdg').filter();");
+			PrimeFaces.current().executeScript("PF('polizasWdg').filter();");
 		}
 	}
 
@@ -1742,7 +1743,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 
 			errorMsg = new StringBuilder();
 			if (this.validateFormat(catalog) && this.validate(catalog, errorMsg)) {
-				this.polideBuff = this.getPolideRepository().findOne(this.polideBuff.getId());
+				this.polideBuff = this.getPolideRepository().findById(this.polideBuff.getId()).orElse(null);
 				this.getPolideRepository().save(catalog);
 				// TODO RECALCULA LAS SUMATORIAS Y ESTATUS
 				persistencePoliza2WithFlow(catalog);
@@ -1761,19 +1762,19 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 							tippolflu, conpolflu, renpolflu, this.getUserDetails().getIdSector());
 					this.sumaFfBuff = this.getSum(this.orderList);
 					this.orderList = this.reIndexPolifls(this.orderList);
-					RequestContext.getCurrentInstance().execute("PF('ffConfirmWdt').show();");
+					PrimeFaces.current().executeScript("PF('ffConfirmWdt').show();");
 				} else {
-					RequestContext.getCurrentInstance().execute("executeClickHideButton();");
+					PrimeFaces.current().executeScript("executeClickHideButton();");
 				}
 			} else {
-				RequestContext.getCurrentInstance().execute("executeClickHideButton();");
+				PrimeFaces.current().executeScript("executeClickHideButton();");
 			}
 		} else {
 			if (FIND_ACC_NAME.equalsIgnoreCase(this.rowEditFlag)) {
 				this.inmediato = Boolean.FALSE;
 				this.rowEditFlag = StringUtils.EMPTY;
 				Cuenta findedAcc = this.getCuentaRepository()
-						.findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(this.getAccFromPolide(catalog)));
+						.findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(this.getAccFromPolide(catalog))).orElse(null);
 				if (null != findedAcc) {
 					catalog.setConcep(findedAcc.getNomcta());
 					this.polideSelect.setConcep(findedAcc.getNomcta());
@@ -1784,10 +1785,10 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 				errorMsg = new StringBuilder();
 				if (this.validateFormat(catalog) && this.validate(catalog, errorMsg)) {
 					createRow();
-					RequestContext.getCurrentInstance().execute("jQuery('#form1\\\\:hideButton3').click();");
+					PrimeFaces.current().executeScript("jQuery('#form1\\\\:hideButton3').click();");
 					return;
 				}
-				RequestContext.getCurrentInstance().execute("executeClickHideButton();");
+				PrimeFaces.current().executeScript("executeClickHideButton();");
 			}
 		}
 	}
@@ -1821,7 +1822,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 					}
 				}
 			} else {
-				Polide buff = this.getPolideRepository().findOne(polide.getId());
+				Polide buff = this.getPolideRepository().findById(polide.getId()).orElse(null);
 				if (polide.getRenpol().intValue() != buff.getRenpol().intValue()) {
 					BigDecimal maxpol = this.getPolideDataModel().getLastRenpol();
 					if (polide.getRenpol().compareTo(maxpol) > 0) {
@@ -2080,7 +2081,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		// text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**
@@ -2101,7 +2102,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**
@@ -2118,7 +2119,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(focusJs, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/** The render pdf. */
@@ -2230,7 +2231,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	}
 
 	/** The jasper generic service. */
-	@ManagedProperty(value = "#{jasperGenericServiceImpl}")
+	@Value("#{jasperGenericServiceImpl}")
 	protected JasperGenericService jasperGenericService;
 
 	/**
@@ -2372,7 +2373,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 			return;
 		}
 		if (isBandera() == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute("PF('flujoefectivo').show();");
+			PrimeFaces.current().executeScript("PF('flujoefectivo').show();");
 			setBandera(Boolean.FALSE);
 		}
 
@@ -2517,7 +2518,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 				this.getPolideDataModel().setPolien(polien);
 				this.getPolideDataModel().setInsert(Boolean.FALSE);
 				this.getPolideDataModel().setCount(null);
-				RequestContext.getCurrentInstance().execute("PF('polizasWdg').paginator.setPage(0);");
+				PrimeFaces.current().executeScript("PF('polizasWdg').paginator.setPage(0);");
 				TcRegistraArchivoDigital archivoDigital = getExisDigital().getPoliBby(
 						String.valueOf(encabezado.getMespol()), encabezado.getConpol(), encabezado.getTippol(),
 						this.getUserDetails().getIdSector());
@@ -2694,7 +2695,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 					this.getPolideDataModel().setPolien(this.polien);
 					this.getPolideDataModel().setInsert(Boolean.FALSE);
 					this.getPolideDataModel().setCount(null);
-					RequestContext.getCurrentInstance().execute("PF('polizasWdg').filter();");
+					PrimeFaces.current().executeScript("PF('polizasWdg').filter();");
 
 				} else {
 					LOGGER.debug("No se puede usar la poliza, porque alguien mas la esta usando.");
@@ -2757,9 +2758,9 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		this.newFecpol = (Date) event.getObject();
 		if (null == this.polien.getFecpol()) {
 			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "Favor de capturar una fecha valida");
-			RequestContext.getCurrentInstance().execute("errorChangeDate();");
+			PrimeFaces.current().executeScript("errorChangeDate();");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('saveConfirmDateWdt').show();");
+			PrimeFaces.current().executeScript("PF('saveConfirmDateWdt').show();");
 		}
 	}
 
@@ -2772,10 +2773,10 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		System.out.println("File Date: " + this.polien.getFecpol());
 		if (null == this.polien.getFecpol()) {
 			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "Favor de capturar una fecha valida");
-			RequestContext.getCurrentInstance().execute("errorChangeDate();");
+			PrimeFaces.current().executeScript("errorChangeDate();");
 		} else {
 			this.newFecpol = this.polien.getFecpol();
-			RequestContext.getCurrentInstance().execute("PF('saveConfirmDateWdt').show();");
+			PrimeFaces.current().executeScript("PF('saveConfirmDateWdt').show();");
 		}
 		System.out.println("Hello... I am in DateChange");
 	}
@@ -3105,7 +3106,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	 * @return true, if is FE acc
 	 */
 	public static boolean isFEAcc(String cuenta) {
-		return org.apache.commons.collections.CollectionUtils.exists(FE_ACCS, PredicateUtils.equalPredicate(cuenta));
+		return org.apache.commons.collections4.CollectionUtils.exists(FE_ACCS, PredicateUtils.equalPredicate(cuenta));
 	}
 
 	/** The count. */
@@ -3175,7 +3176,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		semaphores.cleanSession(session.getId());
 
-		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, POLEIN_TIO_MES_CONT);
+		Pageable pageable = PageRequest.of(pageIndex, PAGE_SIZE, POLEIN_TIO_MES_CONT);
 		Page<Polien> page = this.getPolienRepository().findAll(PolienPredicates.byTipoMes(this.polien.getTippol(),
 				this.polien.getMespol(), this.getUserDetails().getIdSector()), pageable);
 		if (page.getContent().isEmpty()) {
@@ -3193,7 +3194,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 			this.getPolideDataModel().setPolien(polien);
 			this.getPolideDataModel().setInsert(Boolean.FALSE);
 			this.getPolideDataModel().setCount(null);
-			RequestContext.getCurrentInstance().execute("PF('polizasWdg').paginator.setPage(0);");
+			PrimeFaces.current().executeScript("PF('polizasWdg').paginator.setPage(0);");
 			this.count = this.getPolienRepository().count(PolienPredicates.byTipoMes(this.polien.getTippol(),
 					this.polien.getMespol(), this.getUserDetails().getIdSector()));
 			this.enableButtons(polien);
@@ -3258,12 +3259,12 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		SelectPagePolideDTO selecDTO = this.getPolideDataModel().pageSelect(row);
 		if (selecDTO.isBandera()) {
 			this.actualIndex = selecDTO.getPosicion();
-			RequestContext.getCurrentInstance()
-					.execute("PF('polizasWdg').paginator.setPage(" + selecDTO.getPage()
+			PrimeFaces.current()
+					.executeScript("PF('polizasWdg').paginator.setPage(" + selecDTO.getPage()
 							+ ");PF('polizasWdg').unselectAllRows();PF('polizasWdg').selectRow("
 							+ selecDTO.getPosicion() + ")");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('polizasWdg').paginator.setPage(" + selecDTO.getPage()
+			PrimeFaces.current().executeScript("PF('polizasWdg').paginator.setPage(" + selecDTO.getPage()
 					+ ");PF('polizasWdg').unselectAllRows();");
 			generateNotificationFront(SEVERITY_ERROR, "Error", "El renglon no existe en la póliza");
 		}
@@ -3337,7 +3338,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		}
 		Polide toSelect = this.findByRowIndex(row);
 		this.doChangeConeptAccName(toSelect);
-		RequestContext.getCurrentInstance().execute("PF('polizasWdg').unselectAllRows(); PF('polizasWdg').selectRow("
+		PrimeFaces.current().executeScript("PF('polizasWdg').unselectAllRows(); PF('polizasWdg').selectRow("
 				+ row + ", true);" + "jQuery('div.ui-datatable-scrollable-body').scrollTop(" + scrollSize + ");");
 	}
 
@@ -3522,7 +3523,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 			}
 
 			Cuenta findedAcc = this.getCuentaRepository().findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(
-					(Cuenta) UtilJPA.fillPropertyStringIfNull(this.getAccFromPolide(polide))));
+					(Cuenta) UtilJPA.fillPropertyStringIfNull(this.getAccFromPolide(polide)))).orElse(null);
 			if (null != findedAcc) {
 				polide.setConcep(findedAcc.getNomcta());
 			}
@@ -3560,7 +3561,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	 * Save update.
 	 */
 	public void saveUpdate() {
-		Polien toSave = this.getPolienRepository().findOne(this.polien.getId());
+		Polien toSave = this.getPolienRepository().findById(this.polien.getId()).orElse(null);
 		toSave.setPolclv1(this.polien.getPolclv1());
 		this.getPolienRepository().save(toSave);
 		generateNotificationFront(SEVERITY_INFO, StringUtils.EMPTY, "Encabezado actualizado");
@@ -3570,7 +3571,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	 * Save update date.
 	 */
 	public void saveUpdateDate() {
-		Polien toSave = this.getPolienRepository().findOne(this.polien.getId());
+		Polien toSave = this.getPolienRepository().findById(this.polien.getId()).orElse(null);
 		toSave.setFecpol(this.newFecpol);
 		this.getPolienRepository().save(toSave);
 		generateNotificationFront(SEVERITY_INFO, StringUtils.EMPTY, "Encabezado actualizado");
@@ -3580,7 +3581,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	 * Cancel save update date.
 	 */
 	public void cancelSaveUpdateDate() {
-		this.polien = this.getPolienRepository().findOne(this.polien.getId());
+		this.polien = this.getPolienRepository().findById(this.polien.getId()).orElse(null);
 		;
 	}
 
@@ -3611,7 +3612,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	 */
 	public void findDigitalPoli() {
 		if (this.imageId > 0) {
-			RequestContext.getCurrentInstance().execute("PF('digitalPoliza').show();");
+			PrimeFaces.current().executeScript("PF('digitalPoliza').show();");
 
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
@@ -3776,7 +3777,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		if (previousPage != null && (previousPage.equals(id))) {
 			init();
 			if (null != getPolienRepository().getByFirstMonth(this.getUserDetails().getIdSector())) {
-				RequestContext.getCurrentInstance().execute("refresh();");
+				PrimeFaces.current().executeScript("refresh();");
 			}
 		} else {
 
@@ -3789,7 +3790,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 	 */
 	public void succesCancelEdition() {
 		generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO, MESSAGE_EDITION_CANCELED);
-		RequestContext.getCurrentInstance().execute("PF('polizasWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('polizasWdg').unselectAllRows();");
 	}
 
 	/**
@@ -3806,8 +3807,8 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 			this.nomSelectedAcc = StringUtils.EMPTY;
 			this.polideSelect = null;
 			if (this.actualIndex > -1) {
-				RequestContext.getCurrentInstance()
-						.execute("PF('polizasWdg').unselectAllRows();PF('polizasWdg').selectRow(" + actualIndex + ")");
+				PrimeFaces.current()
+						.executeScript("PF('polizasWdg').unselectAllRows();PF('polizasWdg').selectRow(" + actualIndex + ")");
 				this.actualIndex = -1;
 			}
 		} else {
@@ -3815,7 +3816,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 				this.activateRowEditOnInsert(this.getPolideDataModel().getListPolide()
 						.get(this.getPolideDataModel().getListPolide().size() - 1).getIndex());
 				if (isBandera() == Boolean.TRUE) {
-					RequestContext.getCurrentInstance().execute("PF('flujoefectivo').show();");
+					PrimeFaces.current().executeScript("PF('flujoefectivo').show();");
 					setBandera(Boolean.FALSE);
 				}
 			}
@@ -3829,18 +3830,18 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 		if (this.getPolideDataModel().getListPolide().size() <= 20) {
 			this.activateRowEditOnInsert(this.getPolideDataModel().getListPolide().size() - 1);
 			if (isBandera() == Boolean.TRUE) {
-				RequestContext.getCurrentInstance().execute("PF('flujoefectivo').show();");
+				PrimeFaces.current().executeScript("PF('flujoefectivo').show();");
 				setBandera(Boolean.FALSE);
 			}
 		} else {
-			RequestContext.getCurrentInstance()
-					.execute("PF('polizasWdg').paginator.setPage(PF('polizasWdg').paginator.cfg.pageCount - 1);");
+			PrimeFaces.current()
+					.executeScript("PF('polizasWdg').paginator.setPage(PF('polizasWdg').paginator.cfg.pageCount - 1);");
 		}
 
 	}
 
 	/** The tc registra archivo digital repository. */
-	@ManagedProperty("#{tcRegistraArchivoDigitalRepository}")
+	@Value("#{tcRegistraArchivoDigitalRepository}")
 	private TcRegistraArchivoDigitalRepository tcRegistraArchivoDigitalRepository;
 
 	/**
@@ -3900,9 +3901,9 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 
 //				this.copyFile(tcRegistraArchivoDigital.getPathFile(), endFilename, uuid, TMP_PATH);
 //				patgFileName = copyFile(tcRegistraArchivoDigital.getPathFile(), endFilename, uuid, pathImageTiff);
-//				RequestContext.getCurrentInstance().execute("openDialgoTiff('"+ patgFileName +"')");
+//				PrimeFaces.current().executeScript("openDialgoTiff('"+ patgFileName +"')");
 
-				RequestContext.getCurrentInstance().execute("openDialgoTiff('" + endFilename + "')");
+				PrimeFaces.current().executeScript("openDialgoTiff('" + endFilename + "')");
 			} else {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 						"La póliza no ha sido digitalizada.");
@@ -3978,7 +3979,7 @@ public class PolizaMantenimientoMB2 extends AbstractPolizaMantenimiento implemen
 				// tcRegistraArchivoDigital.getNombreArchivo();
 				endFilename = tcRegistraArchivoDigital.getNombreArchivo();
 				input = new FileInputStream(new File(tcRegistraArchivoDigital.getPathFile() + "/" + endFilename));
-				streamTiff = new DefaultStreamedContent(input, "application/image", endFilename);
+				streamTiff = StreamedContents.of(input, "application/image", endFilename, null);
 				generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", endFilename);
 			} else {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,

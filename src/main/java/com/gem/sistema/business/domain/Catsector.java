@@ -1,7 +1,7 @@
 package com.gem.sistema.business.domain;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 // TODO: Auto-generated Javadoc
@@ -18,7 +18,7 @@ public class Catsector implements Serializable {
 
 	/** The idsector. */
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int idsector;
 
 	/** The id ref. */

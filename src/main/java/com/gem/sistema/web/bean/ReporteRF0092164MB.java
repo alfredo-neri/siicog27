@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -32,8 +32,8 @@ import static com.roonin.utils.UtilDate.getDateOfSystem;
 /**
  * The Class ReporteRF0092164MB.
  */
-@ManagedBean(name = "reporteRF0092164MB")
-@ViewScoped
+@Component("reporteRF0092164MB")
+@Scope("view")
 public class ReporteRF0092164MB extends BaseDirectReport {
 
 	/** The fuente F. */
@@ -49,21 +49,21 @@ public class ReporteRF0092164MB extends BaseDirectReport {
 	TotalMesesDTO totalMesesDTO;
 
 	/** The fuente F repository. */
-	@ManagedProperty("#{fuentefRepository}")
+	@Value("#{fuentefRepository}")
 	private FuentefRepository fuenteFRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The generate totale service. */
-	@ManagedProperty("#{generateTotaleService}")
+	@Value("#{generateTotaleService}")
 	private GenerateTotaleService generateTotaleService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	public PuestosFirmasService getPuestosFirmasService() {

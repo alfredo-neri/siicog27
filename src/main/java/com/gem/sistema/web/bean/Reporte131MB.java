@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDay;
 
@@ -9,14 +12,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -34,8 +34,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class Reporte131MB.
  */
-@ManagedBean(name = "reporte131MB")
-@ViewScoped
+@Component("reporte131MB")
+@Scope("view")
 public class Reporte131MB extends BaseDirectReport {
 	
 	/** The conctb. */
@@ -90,22 +90,22 @@ public class Reporte131MB extends BaseDirectReport {
 	private boolean bAdd = Boolean.FALSE;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The pm 2911 service. */
-	@ManagedProperty("#{pm2911Service}")
+	@Value("#{pm2911Service}")
 	private Pm2911Service pm2911Service;
 
 	/** The pm 2911 repository. */
-	@ManagedProperty("#{pm2911Repository}")
+	@Value("#{pm2911Repository}")
 	private Pm2911Repository pm2911Repository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 
@@ -662,8 +662,8 @@ public class Reporte131MB extends BaseDirectReport {
 			bModificar = Boolean.FALSE;
 			bBorrar = Boolean.FALSE;
 			bAdd = Boolean.FALSE;
-			RequestContext.getCurrentInstance()
-					.execute("PF('pm2511Wdg').paginator.setPage("
+			PrimeFaces.current()
+					.executeScript("PF('pm2511Wdg').paginator.setPage("
 							+ (this.pm2911Repository
 									.findAllByIdsectorOrderBySemesAsc(this.getUserDetails().getIdSector()).size() - 1)
 							+ ")");
@@ -684,8 +684,8 @@ public class Reporte131MB extends BaseDirectReport {
 				bModificar = Boolean.FALSE;
 				bBorrar = Boolean.FALSE;
 				bAdd = Boolean.FALSE;
-				RequestContext.getCurrentInstance()
-						.execute("PF('pm2511Wdg').paginator.setPage(" + (this.pm2911Repository
+				PrimeFaces.current()
+						.executeScript("PF('pm2511Wdg').paginator.setPage(" + (this.pm2911Repository
 								.findAllByIdsectorOrderBySemesAsc(this.getUserDetails().getIdSector()).size() - 1)
 								+ ")");
 				calcularAcumulado();
@@ -722,7 +722,7 @@ public class Reporte131MB extends BaseDirectReport {
 		bAdd = Boolean.FALSE;
 		listPm2911 = pm2911Service.orderBySemestreAsc(this.getUserDetails().getIdSector());
 		comboTri = pm2911Service.orderBySemestreAsc(this.getUserDetails().getIdSector());
-		RequestContext.getCurrentInstance().execute("PF('pm2511Wdg').paginator.setPage("
+		PrimeFaces.current().executeScript("PF('pm2511Wdg').paginator.setPage("
 				+ (this.pm2911Repository.findAllByIdsectorOrderBySemesAsc(this.getUserDetails().getIdSector()).size()
 						- 1)
 				+ ")");

@@ -1,10 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.MIN_LENGTH_FIELD_CAMPO8_INDICATORS;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,18 +21,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -44,7 +45,7 @@ import com.gem.sistema.business.predicates.MuniNepPredicates;
 import com.gem.sistema.business.repository.catalogs.IndicadoresRepository;
 import com.gem.sistema.business.repository.catalogs.MuniNepRepository;
 import com.gem.sistema.web.util.FrontProperty;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 
 // TODO: Auto-generated Javadoc
@@ -53,8 +54,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogIndicatorsMB")
+@Scope("view")
 public class CatalogIndicatorsMB extends CommonCatalogMB<Indicadores> implements Serializable {
 
 	/** Serial default. */
@@ -99,7 +100,7 @@ public class CatalogIndicatorsMB extends CommonCatalogMB<Indicadores> implements
 	private List<Muninep> programsStructure;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muniNepRepository;
 
 	/**
@@ -112,7 +113,7 @@ public class CatalogIndicatorsMB extends CommonCatalogMB<Indicadores> implements
 	private Muninep programStructureSelected;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{indicadoresRepository}")
+	@Value("#{indicadoresRepository}")
 	private IndicadoresRepository indicadoresRepository;
 
 	/** Campo requerido Clave de Contrato. */
@@ -366,7 +367,7 @@ public class CatalogIndicatorsMB extends CommonCatalogMB<Indicadores> implements
 	 * @return the sort
 	 */
 	private static Sort sortByIdSectorAsc() {
-		return new Sort(Sort.Direction.ASC, "cveind");
+		return Sort.by(Sort.Direction.ASC, "cveind");
 	}
 
 	/*
@@ -422,8 +423,8 @@ public class CatalogIndicatorsMB extends CommonCatalogMB<Indicadores> implements
 		LOGGER.info(":: Cambiar estructura programatica " + rowSelected + ":: ");
 		rowSelected.setClvFun(programStructureSelected.getCampo8());
 		activateRowEdit(rowSelected.getIndex());
-		final RequestContext context = RequestContext.getCurrentInstance();
-		context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + FIELD_CVEFUN);
+		final PrimeFaces context = PrimeFaces.current();
+		context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + FIELD_CVEFUN);
 	}
 
 	/**
@@ -652,8 +653,8 @@ public class CatalogIndicatorsMB extends CommonCatalogMB<Indicadores> implements
 
 		activateRowEdit(rowSelected.getIndex());
 
-		final RequestContext context = RequestContext.getCurrentInstance();
-		context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvFun");
+		final PrimeFaces context = PrimeFaces.current();
+		context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvFun");
 
 		LOGGER.info(":: Cambiar estructura programatica_2***: " + rowSelected);
 
@@ -706,7 +707,7 @@ public class CatalogIndicatorsMB extends CommonCatalogMB<Indicadores> implements
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString());
+			csvByPl = StreamedContents.of(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

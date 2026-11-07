@@ -3,6 +3,7 @@
  */
 package com.gem.sistema.load.fileupload.service;
 
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -15,7 +16,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ import com.gem.sistema.load.fileupload.validators.results.IngreResultBean;
 public class OutboundFIleServiceImpl implements OutboundFIleService {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CsvFileValidatorImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CsvFileValidatorImpl.class);
 
 	/** The Constant HEADER. */
 	private static final String HEADER = "\n\t      Reng cuenta SCTA      SSCTA           SSSCTA SSSSCTA F.FIN E1 E2 E3 E4 E5 E6 E7 E8               suma              total st\n"
@@ -298,7 +299,7 @@ public class OutboundFIleServiceImpl implements OutboundFIleService {
 	 */
 	public void loadIngresoToTable() {
 
-		this.ingresoRepositoty.save(this.results);
+		this.ingresoRepositoty.saveAll(this.results);
 
 	}
 

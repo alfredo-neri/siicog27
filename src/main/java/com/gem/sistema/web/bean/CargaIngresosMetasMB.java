@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.io.File;
@@ -11,11 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,8 +36,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.CopyFileUtil;
 import com.gem.sistema.util.UtilFront;
 
-@ManagedBean(name = "cargaIngresosMetasMB")
-@ViewScoped
+@Component("cargaIngresosMetasMB")
+@Scope("view")
 public class CargaIngresosMetasMB extends BaseDirectReport {
 
 	private static final String PATH = "/gem/upfiles/";
@@ -50,19 +51,19 @@ public class CargaIngresosMetasMB extends BaseDirectReport {
 
 	private List<TwMetasIngreso> listMestas = new ArrayList<TwMetasIngreso>();
 
-	@ManagedProperty("#{twMetasIngresoRepository}")
+	@Value("#{twMetasIngresoRepository}")
 	private TwMetasIngresoRepository twMetasIngresoRepository;
 
-	@ManagedProperty("#{cargaIngresoMetasService}")
+	@Value("#{cargaIngresoMetasService}")
 	private CargaIngresoMetasService cargaIngresoMetasService;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
 	public ConctbRepository getConctbRepository() {
@@ -99,7 +100,7 @@ public class CargaIngresosMetasMB extends BaseDirectReport {
 
 		String newName = UUID.randomUUID() + "" + event.getFile().getFileName();
 		try {
-			String filePath = CopyFileUtil.copyFile(newName, event.getFile().getInputstream(), PATH);
+			String filePath = CopyFileUtil.copyFile(newName, event.getFile().getInputStream(), PATH);
 			this.fileError = this.cargaIngresoMetasService.validaIngresoPropios(filePath);
 			if (StringUtils.isNotEmpty(fileError)) {
 				UtilFront.generateNotificationFront(FacesMessage.SEVERITY_ERROR, "¡Error!",
@@ -137,7 +138,7 @@ public class CargaIngresosMetasMB extends BaseDirectReport {
 		StreamedContent st = null;
 		try {
 			File file = new File(this.getFileError());
-			st = new DefaultStreamedContent(new FileInputStream(file), "text/csv", file.getName());
+			st = StreamedContents.of(new FileInputStream(file), "text/csv", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

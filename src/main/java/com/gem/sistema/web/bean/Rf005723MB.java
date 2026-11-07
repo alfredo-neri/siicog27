@@ -1,13 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -24,18 +25,18 @@ import com.gem.sistema.util.Constants;
  * @author Alfredo Neri
  *
  */
-@ManagedBean
-@ViewScoped
+@Component("rf005723MB")
+@Scope("view")
 public class Rf005723MB extends BaseDirectReportByPL {
 
 	private String fileName;
 
 	private StreamedContent file;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{generaTxtService}")
+	@Value("#{generaTxtService}")
 	private GeneraTxtService generaTxtService;
 
 	@PostConstruct
@@ -59,7 +60,7 @@ public class Rf005723MB extends BaseDirectReportByPL {
 		} catch (FileNotFoundException ex) {
 
 		}
-		file = new DefaultStreamedContent(stream, Constants.APPLICCTION_TXT, fileName);
+		file = StreamedContents.of(stream, Constants.APPLICCTION_TXT, fileName, null);
 		return file;
 	}
 

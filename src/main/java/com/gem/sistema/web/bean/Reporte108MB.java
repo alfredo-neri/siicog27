@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.Calendar;
@@ -7,15 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.data.PageEvent;
@@ -35,8 +35,8 @@ import com.gem.sistema.web.datamodel.Pm0511DataModel;
 /**
  * The Class Reporte108MB.
  */
-@ManagedBean(name = "reporte108MB")
-@ViewScoped
+@Component("reporte108MB")
+@Scope("view")
 public class Reporte108MB extends BaseDirectReport {
 
 	/** The Constant VIEW_EDIT_ROW_ACTIVATE_PENCIL. */
@@ -116,19 +116,19 @@ public class Reporte108MB extends BaseDirectReport {
 	private Firmas firmas;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The pm 0511 service. */
-	@ManagedProperty("#{pm0511Service}")
+	@Value("#{pm0511Service}")
 	private Pm0511Service pm0511Service;
 
 	/** The pm 0511 repository. */
-	@ManagedProperty("#{pm0511Repository}")
+	@Value("#{pm0511Repository}")
 	private Pm0511Repository pm0511Repository;
 
 	/**
@@ -608,17 +608,17 @@ public class Reporte108MB extends BaseDirectReport {
 		// listPm0511.get(listPm0511.size()).setConse(Integer.valueOf(listPm0511.size()).toString());
 		//
 		activateRowEdit(listPm0511.size() - 1);
-		RequestContext.getCurrentInstance().execute("PF('pm0511Wdg').paginator.setPage(" + (this.getPage() - 1) + ");");
+		PrimeFaces.current().executeScript("PF('pm0511Wdg').paginator.setPage(" + (this.getPage() - 1) + ");");
 
 		if (listPm0511.size() > 20) {
 			Integer indexOf = this.getRowCurrent(listPm0511.size());
 			this.activateRowEdit(indexOf);
 
-			RequestContext.getCurrentInstance().execute(String.format(FOCUS_BY_ROWID, (listPm0511.size() - 1)));
+			PrimeFaces.current().executeScript(String.format(FOCUS_BY_ROWID, (listPm0511.size() - 1)));
 		}
 
 		// if (listPm0511.size() > 20) {
-		// RequestContext.getCurrentInstance().execute(GO_LAST_PAGE);
+		// PrimeFaces.current().executeScript(GO_LAST_PAGE);
 		// }
 
 	}
@@ -684,7 +684,7 @@ public class Reporte108MB extends BaseDirectReport {
 		if (CollectionUtils.isEmpty(listPm0511)) {
 			this.activateRowEdit(listPm0511.size());
 			listPm0511.add(lastIndex, selectPm0511);
-			// RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+			// PrimeFaces.current().executeScript(UPDATE_OBJETS);
 		} else {
 			if (listPm0511.get(lastIndex).isbGuardar() == Boolean.TRUE) {
 				listPm0511 = pm0511Service.orderByAsc(this.getUserDetails().getIdSector());
@@ -697,7 +697,7 @@ public class Reporte108MB extends BaseDirectReport {
 				this.setbCancelar(Boolean.TRUE);
 				this.setbLimpiar(Boolean.TRUE);
 				this.setbEdition(Boolean.FALSE);
-				RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+				PrimeFaces.current().executeScript(UPDATE_OBJETS);
 			} else {
 				this.activateRowEdit(lastIndex);
 				if (listPm0511.size() > 20) {
@@ -705,11 +705,11 @@ public class Reporte108MB extends BaseDirectReport {
 					this.activateRowEdit(index);
 				}
 				listPm0511.set(lastIndex, selectPm0511);
-				// RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+				// PrimeFaces.current().executeScript(UPDATE_OBJETS);
 			}
 
 			// this.activateRowEdit(listPm0511.size());
-			// RequestContext.getCurrentInstance().execute("jQuery('#form1\\\\:hiddenUpdate').click();");
+			// PrimeFaces.current().executeScript("jQuery('#form1\\\\:hiddenUpdate').click();");
 		}
 		// if
 		// (listPm0511.get(selectPm0511.getIndex()).isbGuardar()==Boolean.FALSE)
@@ -717,7 +717,7 @@ public class Reporte108MB extends BaseDirectReport {
 		//
 		// this.activateRowEdit(listPm0511.size() - 1);
 		//
-		// RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+		// PrimeFaces.current().executeScript(UPDATE_OBJETS);
 		// } else {
 		//
 		// }
@@ -766,7 +766,7 @@ public class Reporte108MB extends BaseDirectReport {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**
@@ -838,7 +838,7 @@ public class Reporte108MB extends BaseDirectReport {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**
@@ -875,12 +875,12 @@ public class Reporte108MB extends BaseDirectReport {
 				this.activateRowEditOnInsert(this.getListPm0511().size());
 
 			} else {
-				// RequestContext.getCurrentInstance()
+				// PrimeFaces.current()
 				// .execute("PF('pm0511Wdg').paginator.setPage(" +
 				// (this.getPage() -
 				// 1) + ");");
 				this.activateRowEdit(listPm0511.size() - 1);
-				// RequestContext.getCurrentInstance()
+				// PrimeFaces.current()
 				// .execute("PF('pm0511Wdg').paginator.setPage(PF('polizasWdg').paginator.cfg.pageCount
 				// - 1);");
 			}

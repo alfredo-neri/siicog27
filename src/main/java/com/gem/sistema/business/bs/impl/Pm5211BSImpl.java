@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,7 +206,7 @@ public class Pm5211BSImpl implements Pm5211BS {
 	 */
 	@Override
 	public List<Pm5211> delete(List<Pm5211> listPm5211, Integer index) {
-		pm5211Repository.delete(listPm5211.get(index).getId());
+		pm5211Repository.deleteById(listPm5211.get(index).getId());
 		listPm5211.remove(index);
 		listPm5211 = this.orderByMendsualAsc(listPm5211.get(index).getIdsector());
 		Pm5211 pm5211 = new Pm5211();
@@ -305,7 +305,7 @@ public class Pm5211BSImpl implements Pm5211BS {
 	 * @see com.gem.sistema.business.bs.Pm5211BS#orderByMensual()
 	 */
 	public Sort orderByMensual() {
-		return new Sort(Sort.Direction.ASC, "mensual");
+		return Sort.by(Sort.Direction.ASC, "mensual");
 	}
 
 	

@@ -1,12 +1,12 @@
 
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +33,8 @@ import org.primefaces.model.StreamedContent;
  *           crea reporte<br>
  * @Sector Municipal
  */
-@ManagedBean(name = "cPLDFEstadoSituacionFinancieraMB")
-@ViewScoped
+@Component("cPLDFEstadoSituacionFinancieraMB")
+@Scope("view")
 public class CPLDFEstadoSituacionFinancieraMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_CP_LDF_EDOSITFIN";
 
@@ -47,16 +47,16 @@ public class CPLDFEstadoSituacionFinancieraMB extends BaseDirectReport {
 
 	private EdoSF3211DTO edoSF3211DTO;
 
-	@ManagedProperty("#{edoSF3211Service}")
+	@Value("#{edoSF3211Service}")
 	private EdoSF3211Service edoSF3211Service;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct

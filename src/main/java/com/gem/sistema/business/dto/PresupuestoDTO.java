@@ -1,6 +1,5 @@
 package com.gem.sistema.business.dto;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class PresupuestoDTO.

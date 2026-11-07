@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -102,7 +102,7 @@ public class PolizaCierreServiceImpl implements PolizaCierreService{
         errors++;
       }
 
-      Page<Polien> p = polienRepository.findOneByAnioAndMesOrderByIdAsc(wanoemp,wmesemp,idSector, new PageRequest(0,1));
+      Page<Polien> p = polienRepository.findOneByAnioAndMesOrderByIdAsc(wanoemp,wmesemp,idSector, PageRequest.of(0,1));
       if (p != null && p.getContent().size() > 0){
         consumer.accept("w", "El mes "+p.getContent().get(0).getMespol()+" no esta afectado");
       }
@@ -827,7 +827,7 @@ private void setCtaAbonosYCargosToPolien(Polien polien, BigDecimal sumCta,
     if(isInInvalidState(idSector)){
       consumer.accept("w", "Ya existen las polizas de cierre");
       
-      RequestContext.getCurrentInstance().execute("PF(dialogWgt).hide()");
+      PrimeFaces.current().executeScript("PF(dialogWgt).hide()");
       return false;
     }
 

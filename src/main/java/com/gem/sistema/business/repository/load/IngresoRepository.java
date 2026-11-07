@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.load;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -11,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.gem.sistema.business.domain.Ingreso;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -19,7 +20,7 @@ import com.mysema.query.types.Predicate;
  */
 @Repository(value = "ingresoRepository")
 public interface IngresoRepository
-		extends PagingAndSortingRepository<Ingreso, Long>, QueryDslPredicateExecutor<Ingreso> {
+		extends PagingAndSortingRepository<Ingreso, Long>, CrudRepository<Ingreso, Long>, QuerydslPredicateExecutor<Ingreso> {
 
 	/*
 	 * (non-Javadoc)
@@ -31,7 +32,7 @@ public interface IngresoRepository
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll()
+	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll()
 	 */
 	List<Ingreso> findAll(Predicate prdct);
 

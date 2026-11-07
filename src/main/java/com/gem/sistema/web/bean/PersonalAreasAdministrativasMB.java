@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.domain.TcAreaAdministrativa;
 import com.gem.sistema.business.domain.TcPersonalAdministrativo;
@@ -16,8 +16,8 @@ import com.gem.sistema.business.repository.catalogs.TcAreaAdministrativaReposito
 import com.gem.sistema.business.repository.catalogs.TcPersonalAdministrativoRepository;
 import com.gem.sistema.util.Regex;
 
-@ManagedBean(name = "personalAreasAdministrativasMB")
-@ViewScoped
+@Component("personalAreasAdministrativasMB")
+@Scope("view")
 public class PersonalAreasAdministrativasMB extends AbstractMB {
 
 	private TcAreaAdministrativa areaSelected = new TcAreaAdministrativa();
@@ -32,13 +32,13 @@ public class PersonalAreasAdministrativasMB extends AbstractMB {
 	/** variable de bsuqea de personal */
 	private String busquedaPersonal = "";
 
-	@ManagedProperty("#{tcAreaAdministrativaRepository}")
+	@Value("#{tcAreaAdministrativaRepository}")
 	private TcAreaAdministrativaRepository administrativaRepository;
 
-	@ManagedProperty("#{tcPersonalAdministrativoRepository}")
+	@Value("#{tcPersonalAdministrativoRepository}")
 	private TcPersonalAdministrativoRepository personalAdministrativoRepository;
 
-	@ManagedProperty("#{tcAdquisicionRepository}")
+	@Value("#{tcAdquisicionRepository}")
 	private TcAdquisicionRepository adquisicionRepository;
 
 	@PostConstruct
@@ -99,7 +99,7 @@ public class PersonalAreasAdministrativasMB extends AbstractMB {
 		if (areaSelected != null) {
 			try {
 				if (personalAdministrativoRepository.countByAdministrativa(areaSelected) == 0) {
-					administrativaRepository.delete(areaSelected.getId());
+					administrativaRepository.deleteById(areaSelected.getId());
 					areas = areas.stream().filter(p -> p.getId() != areaSelected.getId()).collect(Collectors.toList());
 					displayInfoMessage("El area:" + areaSelected.getDescripcion() + " se ha eliminado correctamente");
 				} else {
@@ -201,7 +201,7 @@ public class PersonalAreasAdministrativasMB extends AbstractMB {
 			try {
 				if (adquisicionRepository.countByAdministrativo(administrativoSelected) == 0) {
 
-					personalAdministrativoRepository.delete(administrativoSelected.getId());
+					personalAdministrativoRepository.deleteById(administrativoSelected.getId());
 					personal = personal.stream().filter(p -> p.getId() != administrativoSelected.getId())
 							.collect(Collectors.toList());
 					displayInfoMessage("El personal se ha eliminado correctamente");

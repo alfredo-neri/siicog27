@@ -1,18 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.event.ActionEvent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -40,8 +38,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean(name = "polizaImprimirMB")
-@ViewScoped
+@Component("polizaImprimirMB")
+@Scope("view")
 public class PolizaImprimirMB implements Serializable {
 
 	/**
@@ -66,15 +64,15 @@ public class PolizaImprimirMB implements Serializable {
 	protected static final String MESSAGE_ERROR = FrontProperty.getPropertyValue("catalog.message.error");
 
 	/** The poliza service. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 
 	/** The cattpo repositry. */
-	@ManagedProperty("#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepositry;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The lis cattpo. */
@@ -260,11 +258,9 @@ public class PolizaImprimirMB implements Serializable {
 		String msg = this.validate();
 		if (StringUtils.isEmpty(msg)) {
 			this.setRenderPdf(Boolean.TRUE);
-			this.streamedContent = new DefaultStreamedContent(
-					this.polizaService.getReportByTipopolMespolConpol(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
+			this.streamedContent = StreamedContents.of(this.polizaService.getReportByTipopolMespolConpol(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
 							"escudo_ecatepec.png", this.cattpo, Integer.valueOf(this.tcMes), this.minConpol,
-							this.maxConpol, getUserDetails().getIdSector(), this.getUserDetails().getUsername()),
-					"application/pdf");
+							this.maxConpol, getUserDetails().getIdSector(), this.getUserDetails().getUsername()), "application/pdf", null, null);
 			try {
 				this.filePdfPath = this.polizaService.savePDFFile(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
 						"escudo_ecatepec.png", this.cattpo, Integer.valueOf(this.tcMes), this.minConpol, this.maxConpol,
@@ -288,7 +284,7 @@ public class PolizaImprimirMB implements Serializable {
 	public StreamedContent getStreamedContent() {
 		if (streamedContent != null)
 			try {
-				streamedContent.getStream().reset();
+				streamedContent.getStream().get().reset();
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
 			}

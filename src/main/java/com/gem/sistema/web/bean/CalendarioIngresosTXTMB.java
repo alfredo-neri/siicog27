@@ -1,9 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,12 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -35,8 +36,8 @@ import com.gem.sistema.business.utils.ConvertCharsetUtils;
 /**
  * The Class CalendarioIngresosTXTMB.
  */
-@ManagedBean(name = "calendarioIngresosTXTMB")
-@ViewScoped
+@Component("calendarioIngresosTXTMB")
+@Scope("view")
 public class CalendarioIngresosTXTMB extends GenericExecuteProcedure {
 
 	/** The Constant NAME_PROCEDURE. */
@@ -67,10 +68,10 @@ public class CalendarioIngresosTXTMB extends GenericExecuteProcedure {
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	public ConctbRepository getConctbRepository() {
@@ -239,8 +240,7 @@ public class CalendarioIngresosTXTMB extends GenericExecuteProcedure {
 
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt",
-					outParameters.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", outParameters.get("O_NAME_FILE").toString(), null);
 
 		} else {
 			generateNotificationFront(SEVERITY_INFO, "Info!", outParameters.get("O_MSG_ERROR").toString());
@@ -282,7 +282,7 @@ public class CalendarioIngresosTXTMB extends GenericExecuteProcedure {
 			}
 
 			txtPreview = this.generatePreviewService.generatePreview(fileNameOut);
-			RequestContext.getCurrentInstance().execute(FOCUS_IN_PREVIEW);
+			PrimeFaces.current().executeScript(FOCUS_IN_PREVIEW);
 		}
 		addToBitacora(false);
 	}

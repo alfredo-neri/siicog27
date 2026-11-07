@@ -3,7 +3,7 @@ package com.gem.sistema.business.service.catalogos;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.TemporalType;
+import jakarta.persistence.TemporalType;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

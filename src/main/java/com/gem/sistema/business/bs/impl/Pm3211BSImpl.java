@@ -3,7 +3,7 @@ package com.gem.sistema.business.bs.impl;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

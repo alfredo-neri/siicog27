@@ -1,6 +1,6 @@
 package com.gem.sistema.business.predicates;
 import com.gem.sistema.business.domain.QTcMes;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 /**
  * The Class TcMesPredicate.

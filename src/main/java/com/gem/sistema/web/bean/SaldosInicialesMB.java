@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ExternalContext;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ExternalContext;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.security.auth.login.AccountException;
 
 import com.gem.sistema.business.domain.MonthlyAbstractEntity;
@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.math.BigDecimal;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class SaldosInicialesMB.
  */
-@ManagedBean(name = "saldosInicialesMB")
-@ViewScoped
+@Component("saldosInicialesMB")
+@Scope("view")
 public class SaldosInicialesMB extends AbstractMB {
 
 	/** The cve acceso. */
@@ -68,7 +68,7 @@ public class SaldosInicialesMB extends AbstractMB {
 	private Boolean monthsDisabled = false;
 
 	/** The saldos iniciales service. */
-	@ManagedProperty("#{saldosInicialesService}")
+	@Value("#{saldosInicialesService}")
 	private SaldosInicialesService saldosInicialesService;
 
 	/** The Constant cuentas821x. */
@@ -356,22 +356,22 @@ public class SaldosInicialesMB extends AbstractMB {
 	 * @param account the account
 	 */
 	public void accountSelectMunicipal(Cuenta account) {
-		RequestContext context = RequestContext.getCurrentInstance();
+		PrimeFaces context = PrimeFaces.current();
 
 		if (account.getCuenta().equals("8110")) {
 			mentity = saldosInicialesService.getIngreso(account, "8110", getIdSectorForCurrentUser());
 			System.out.println("adding ingreso: " + mentity);
-			context.addCallbackParam("details", true);
+			context.ajax().addCallbackParam("details", true);
 		} else if (muniPasoAccounts.contains(account.getCuenta())) {
 			mentity = saldosInicialesService.findPasoForClaveProgramaAndPartida(account.getScuenta(),
 					account.getSscuenta(), account.getSsscuenta(), getIdSectorForCurrentUser(), (isNull) -> {
 						displayErrorMessage("no existe egreso 6004");
 					});
-			context.addCallbackParam("details", false);
+			context.ajax().addCallbackParam("details", false);
 		} else if (muniMonthlyDisabledAccounts.contains(account.getCuenta())) {
-			context.addCallbackParam("details", false);
+			context.ajax().addCallbackParam("details", false);
 		} else {
-			context.addCallbackParam("details", false);
+			context.ajax().addCallbackParam("details", false);
 		}
 	}
 
@@ -381,19 +381,19 @@ public class SaldosInicialesMB extends AbstractMB {
 	 * @param cuenta the cuenta
 	 */
 	public void accountSelectCentral(Cuenta cuenta) {
-		RequestContext context = RequestContext.getCurrentInstance();
+		PrimeFaces context = PrimeFaces.current();
 
 		if ("6003".equals(cuenta.getCuenta()) || "6007".equals(cuenta.getCuenta())) {
 			setSalIniBtnDisabled(true);
-			context.addCallbackParam("details", false);
+			context.ajax().addCallbackParam("details", false);
 		} else {
 			setSalIniBtnDisabled(false);
 		}
 		if (!("6001".equals(cuenta.getCuenta()) || "6004".equals(cuenta.getCuenta()))) {
 			setMonthsDisabled(true);
-			context.addCallbackParam("details", false);
+			context.ajax().addCallbackParam("details", false);
 		} else {
-			context.addCallbackParam("details", true);
+			context.ajax().addCallbackParam("details", true);
 			if ("6001".equals(cuenta.getCuenta())) {
 				mentity = saldosInicialesService.getIngreso(cuenta, "6001", getIdSectorForCurrentUser());
 			} else if ("6004".equals(cuenta.getCuenta())) {
@@ -401,9 +401,9 @@ public class SaldosInicialesMB extends AbstractMB {
 						cuenta.getSscuenta(), cuenta.getSsscuenta(), getIdSectorForCurrentUser(), (isNull) -> {
 							displayErrorMessage("no existe egreso 6004");
 						});
-				context.addCallbackParam("details", false);
+				context.ajax().addCallbackParam("details", false);
 			} else if (!("6003".equals(cuenta.getCuenta()) || "6007".equals(cuenta.getCuenta()))) {
-				context.addCallbackParam("details", true);
+				context.ajax().addCallbackParam("details", true);
 				setMonthsDisabled(false);
 			}
 		}
@@ -547,8 +547,8 @@ public class SaldosInicialesMB extends AbstractMB {
 				setSdoInicial(BigDecimal.ZERO);
 				setAntecesor("");
 				setCuenta("");
-				RequestContext context = RequestContext.getCurrentInstance();
-				context.addCallbackParam("details", false);
+				PrimeFaces context = PrimeFaces.current();
+				context.ajax().addCallbackParam("details", false);
 				displayInfoMessage("Actualizado");
 			}
 		} else {
@@ -563,8 +563,8 @@ public class SaldosInicialesMB extends AbstractMB {
 				setSdoInicial(BigDecimal.ZERO);
 				setAntecesor("");
 				setCuenta("");
-				RequestContext context = RequestContext.getCurrentInstance();
-				context.addCallbackParam("details", false);
+				PrimeFaces context = PrimeFaces.current();
+				context.ajax().addCallbackParam("details", false);
 				displayInfoMessage("Actualizado");
 			}
 		}

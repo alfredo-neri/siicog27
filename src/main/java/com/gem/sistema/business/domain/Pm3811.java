@@ -1,9 +1,7 @@
 package com.gem.sistema.business.domain;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
-
+import jakarta.persistence.*;
 import java.util.Date;
 
 // TODO: Auto-generated Javadoc

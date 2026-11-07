@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.event.ActionEvent;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +34,8 @@ import com.gem.sistema.web.util.FrontProperty;
  * The Class PolizaCopiarMB.
  */
 
-@ManagedBean(name = "polizaCopiarMB")
-@ViewScoped
+@Component("polizaCopiarMB")
+@Scope("view")
 public class PolizaCopiarMB extends AbstractMB implements Serializable {
 
 	/**
@@ -65,19 +65,19 @@ public class PolizaCopiarMB extends AbstractMB implements Serializable {
 	protected static final String MESSAGE_INFO3 = FrontProperty.getPropertyValue("catalog.message.info4");
 
 	/** The poliza service. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 
 	/** The cattpo repositry. */
-	@ManagedProperty("#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepositry;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The polien repository. */
-	@ManagedProperty(value = "#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
 	/** The lis cattpo. */
@@ -111,7 +111,7 @@ public class PolizaCopiarMB extends AbstractMB implements Serializable {
 	private boolean render = Boolean.TRUE;
 
 	/** The copome service. */
-	@ManagedProperty("#{copomeService}")
+	@Value("#{copomeService}")
 	private CopomeService copomeService;
 
 	/**

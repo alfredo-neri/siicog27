@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import com.gem.sistema.business.domain.TcAfectacionIngreso;
 import com.gem.sistema.business.predicates.PolienPredicates;
 import com.gem.sistema.business.repository.catalogs.ConctbRepository;
@@ -16,22 +16,22 @@ import com.gem.sistema.business.repository.catalogs.PolienRepository;
 import com.gem.sistema.business.repository.catalogs.TcAfectacionIngresoRepository;
 import com.gem.sistema.business.service.catalogos.TwIngresoPropioDetalleService;
 
-@ManagedBean(name = "afectacionIngresoMB")
-@ViewScoped
+@Component("afectacionIngresoMB")
+@Scope("view")
 public class AfectacionIngresoMB extends AbstractMB {
 	private List<TcAfectacionIngreso> afectacionList = new ArrayList<TcAfectacionIngreso>();
 	private TcAfectacionIngreso selected;
 
-	@ManagedProperty("#{twIngresoPropioDetalleService}")
+	@Value("#{twIngresoPropioDetalleService}")
 	private TwIngresoPropioDetalleService twIngresoPropioDetalleService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty(value = "#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
-	@ManagedProperty(value = "#{tcAfectacionIngresoRepository}")
+	@Value("#{tcAfectacionIngresoRepository}")
 	private TcAfectacionIngresoRepository afectacionRepository;
 
 	@PostConstruct

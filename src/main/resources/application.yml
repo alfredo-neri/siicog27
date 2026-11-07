@@ -1,0 +1,114 @@
+# SIICOG 27 - configuracion de Spring Boot
+# Sustituye a web.xml, applicationContext*.xml y al datasource JNDI de WildFly (jdbc/DIFEMDS_26).
+# Los datos de conexion se toman de variables de entorno; nunca se versionan.
+
+siicog27:
+  # @Transactional en servicios: inactivo en difem26 (ver PersistenceConfig). No activar sin pruebas.
+  transacciones-declarativas: false
+  # version del pom.xml (Maven la sustituye al empaquetar); se muestra en el pie y en el login
+  version: '@project.version@'
+  # con java -jar, carpeta donde se expande el contenido web del WAR (reportes, vistas); ver WebConfig
+  contenido-web: ${SIICOG27_CONTENIDO_WEB:${java.io.tmpdir}/siicog27-web}
+
+spring:
+  application:
+    name: siicog27
+  autoconfigure:
+    # Boot activaria @Transactional en todos los servicios; se controla desde PersistenceConfig
+    exclude: org.springframework.boot.transaction.autoconfigure.TransactionAutoConfiguration
+
+  datasource:
+    # Conexion directa. Para usar un recurso JNDI de un Tomcat externo, definir en su lugar
+    # SPRING_DATASOURCE_JNDI_NAME=java:comp/env/jdbc/SIICOG27DS
+    url: ${SIICOG27_DB_URL:jdbc:db2://localhost:50000/SIICOG27}
+    username: ${SIICOG27_DB_USER:db2inst1}
+    password: ${SIICOG27_DB_PASSWORD:}
+    driver-class-name: com.ibm.db2.jcc.DB2Driver
+    hikari:
+      pool-name: siicog27
+      maximum-pool-size: ${SIICOG27_DB_POOL:20}
+      # hibernate.connection.isolation=2 del XML original
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        # difem26 usaba los nombres de Hibernate tal cual (sin la estrategia snake_case de Spring Boot).
+        # Sin esto Hibernate buscaria columnas con otro nombre.
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate:
+        # se conserva del XML original: hay codigo que navega relaciones LAZY fuera de transaccion
+        enable_lazy_load_no_trans: true
+        format_sql: false
+    show-sql: false
+
+  messages:
+    basename: messages
+    encoding: UTF-8
+
+  servlet:
+    multipart:
+      # thresholdSize del FileUploadFilter de PrimeFaces en web.xml (10 MB)
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${SIICOG27_PORT:8080}
+  servlet:
+    context-path: /siicog27
+    # sirve los estaticos de webapp (resources/, reports/img, tmp/) como hacia WildFly
+    register-default-servlet: true
+    session:
+      timeout: 30m
+    # context-param solo para el Tomcat embebido; en WildFly / Tomcat externo se leen de WEB-INF/web.xml
+    # (los mismos valores: si cambia uno, cambiar los dos)
+    context-parameters:
+      jakarta.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE: "true"
+      jakarta.faces.FACELETS_SKIP_COMMENTS: "true"
+      jakarta.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL: "true"
+      jakarta.faces.PARTIAL_STATE_SAVING: "true"
+      jakarta.faces.STATE_SAVING_METHOD: server
+      # tema propio (resources/primefaces-siicog), generado con herramientas/tema/generar_tema_siicog.py
+      primefaces.THEME: siicog
+      primefaces.UPLOADER: native
+
+joinfaces:
+  faces:
+    project-stage: ${SIICOG27_FACES_STAGE:production}
+
+logging:
+  file:
+    name: ${SIICOG27_LOG_DIR:logs}/siicog27.log
+  logback:
+    rollingpolicy:
+      max-file-size: 5MB
+      max-history: 5
+  level:
+    root: warn
+    com.gem.sistema: info
+    org.springframework: warn
+    org.hibernate: info
+    # mantener siempre en ERROR (venia asi de difem26)
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: error
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    show-sql: true
+joinfaces:
+  faces:
+    project-stage: development
+logging:
+  level:
+    root: info

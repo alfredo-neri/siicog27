@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -11,15 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.data.domain.Sort;
@@ -43,8 +44,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class Reporte50MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporte50MB")
+@Scope("view")
 public class Reporte50MB extends BaseDirectReport {
 	private static final String PROCEDURE_NAME = "SP_GENERA_TXT_REPORTE50";
 	/** The Constant ACTIVOS. */
@@ -54,7 +55,7 @@ public class Reporte50MB extends BaseDirectReport {
 	private static final Integer INACTIVOS = 2;
 	
 	/** The Constant SORT_ORDER. */
-	private static final Sort SORT_ORDER = new Sort(Direction.ASC, "mensual");
+	private static final Sort SORT_ORDER = Sort.by(Direction.ASC, "mensual");
 	
 	/** The mes. */
 	private String mes;
@@ -117,10 +118,10 @@ public class Reporte50MB extends BaseDirectReport {
 	private boolean bMensual = Boolean.TRUE;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 	
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 	
 	/**
@@ -145,18 +146,19 @@ public class Reporte50MB extends BaseDirectReport {
 	private List<Pm5611> listpm5611;
 	
 	/** The r F 0092164 DTO. */
-	@ManagedProperty("#{rF0092164DTO}")
+	// difem26: "#{rF0092164DTO}" no corresponde a ningun bean; JSF inyectaba null. Pendiente de corregir.
+	@Value("#{null}")
 	private RF0092164DTO rF0092164DTO;
 
 	/** The list RF 0092164 DTO. */
 	private List<RF0092164DTO> listRF0092164DTO;
 
 	/** The pm 5611 repository. */
-	@ManagedProperty("#{pm5611Repository}")
+	@Value("#{pm5611Repository}")
 	private Pm5611Repository pm5611Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**
@@ -178,11 +180,11 @@ public class Reporte50MB extends BaseDirectReport {
 	}
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The pm 5611 service. */
-	@ManagedProperty("#{pm5611Service}")
+	@Value("#{pm5611Service}")
 	private Pm5611Service pm5611Service;
 
 	/**
@@ -811,8 +813,8 @@ public class Reporte50MB extends BaseDirectReport {
 		if (tcMes.getMes().equals("00") || Integer.valueOf(tcMes.getMes()) > 12) {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!",
 					"El mes que intenta ingresar no existe, El mes de ser mayor o igual a 1 y menor o igual a 12");
-			RequestContext.getCurrentInstance()
-					.execute("$(document.getElementById('form1:objects:" + row + ":mensual')).focus();");
+			PrimeFaces.current()
+					.executeScript("$(document.getElementById('form1:objects:" + row + ":mensual')).focus();");
 		} else {
 			String mh = tcMesRepository.findByMes(tcMes.getMes()).getDescripcion();
 			listpm5611.get(row).setMes(mh);
@@ -830,7 +832,7 @@ public class Reporte50MB extends BaseDirectReport {
 		pm5611 = listpm5611.get(row);
 		listpm5611.remove(row);
 
-		pm5611Repository.delete(listpm5611.get(row).getId());
+		pm5611Repository.deleteById(listpm5611.get(row).getId());
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se elimino la información");
 		this.validate(INACTIVOS);
 		bBtnModify = Boolean.FALSE;
@@ -842,7 +844,7 @@ public class Reporte50MB extends BaseDirectReport {
 		} else {
 			mes = "00";
 		}
-		RequestContext.getCurrentInstance().execute("PF('pm5611Wdg').paginator.setPage(0)");
+		PrimeFaces.current().executeScript("PF('pm5611Wdg').paginator.setPage(0)");
 		isbBorrar();
 
 	}
@@ -893,7 +895,7 @@ public class Reporte50MB extends BaseDirectReport {
 		this.setbLblMensula(Boolean.TRUE);
 		this.setbMensul(Boolean.FALSE);
 		this.setbBorrar(Boolean.FALSE);
-		//RequestContext.getCurrentInstance().execute("PF('pm5611Wdg').paginator.setPage(1)");
+		//PrimeFaces.current().executeScript("PF('pm5611Wdg').paginator.setPage(1)");
 
 	}
 
@@ -917,7 +919,7 @@ public class Reporte50MB extends BaseDirectReport {
 
 		listpm5611.get(row).setMes("ENERO");
 
-		RequestContext.getCurrentInstance().execute("PF('pm5611Wdg').paginator.setPage(" + row + ")");
+		PrimeFaces.current().executeScript("PF('pm5611Wdg').paginator.setPage(" + row + ")");
 	}
 
 	/** The parameters. */
@@ -993,7 +995,7 @@ public class Reporte50MB extends BaseDirectReport {
 
 				e.printStackTrace();
 			}
-			txt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			txt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());

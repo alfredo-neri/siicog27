@@ -2,13 +2,14 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gem.sistema.business.domain.Indicadores;
-import com.mysema.query.types.Predicate;;
+import com.querydsl.core.types.Predicate;;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -17,7 +18,7 @@ import com.mysema.query.types.Predicate;;
  * @author 
  */
 @Repository
-public interface IndicadoresRepository extends PagingAndSortingRepository<Indicadores, Long>, QueryDslPredicateExecutor<Indicadores>{
+public interface IndicadoresRepository extends PagingAndSortingRepository<Indicadores, Long>, CrudRepository<Indicadores, Long>, QuerydslPredicateExecutor<Indicadores>{
 	
 	/*
 	 * (non-Javadoc)

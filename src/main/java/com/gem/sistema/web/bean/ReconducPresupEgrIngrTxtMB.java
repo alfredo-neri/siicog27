@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,13 +12,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +31,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class ReconducPresupEgrIngrTxtMB.
  */
-@ManagedBean(name = "reconducPresupEgrIngrTxtMB")
-@ViewScoped
+@Component("reconducPresupEgrIngrTxtMB")
+@Scope("view")
 public class ReconducPresupEgrIngrTxtMB extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -49,11 +49,11 @@ public class ReconducPresupEgrIngrTxtMB extends AbstractMB {
 
 	/** The tc mes repository. */
 	// @Autowired
-	@ManagedProperty(value = "#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The reconduccion presup egr ingr service. */
-	@ManagedProperty(value = "#{reconducPresupEgrIngrService}")
+	@Value("#{reconducPresupEgrIngrService}")
 	private ReconducPresupEgrIngrService reconduccionPresupEgrIngrService;
 
 	/**

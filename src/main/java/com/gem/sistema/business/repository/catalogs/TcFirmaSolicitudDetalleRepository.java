@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,8 +16,8 @@ import com.gem.sistema.business.domain.TcFirmaSolicitudDetalle;
  * The Interface TcFirmaSolicitudDetalleRepository.
  */
 @Repository(value = "tcFirmaSolicitudDetalleRepository")
-public interface TcFirmaSolicitudDetalleRepository extends PagingAndSortingRepository<TcFirmaSolicitudDetalle, Long>,
-		QueryDslPredicateExecutor<TcFirmaSolicitudDetalle> {
+public interface TcFirmaSolicitudDetalleRepository extends PagingAndSortingRepository<TcFirmaSolicitudDetalle, Long>, CrudRepository<TcFirmaSolicitudDetalle, Long>,
+		QuerydslPredicateExecutor<TcFirmaSolicitudDetalle> {
 
 	@Query("select d,f,u from TcFirmaSolicitudDetalle d "
 			+ "left join fetch d.firma f join d.adquisicion a left join fetch f.usuario u "

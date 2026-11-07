@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.business.predicates.TcUsuarioPredicates.findByIdSector;
 
 import java.io.BufferedWriter;
@@ -24,13 +28,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AjaxBehaviorEvent;
 import javax.imageio.ImageIO;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -39,13 +40,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import com.gem.sistema.business.domain.AbstractEntity;
 import com.gem.sistema.business.domain.Catdep;
@@ -104,8 +105,8 @@ import com.gem.sistema.util.Regex;
 import com.gem.sistema.web.util.GetFileInlineServlet;
 import com.gem.sistema.web.util.ImagesFirmasDigitales;
 
-@ManagedBean(name = "solicitudesAdquisicionesMB")
-@ViewScoped
+@Component("solicitudesAdquisicionesMB")
+@Scope("view")
 public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 	private static final String DOWNLOAD_TXT = " jQuery('#formArticulos\\\\:downTxt').click();";
 	private Integer COLUMNAS_A_LEER_ECXEL[] = { 1, 2, 3, 4, 5, 6 };
@@ -208,91 +209,92 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 	/** Lista de modificaciones por solicitud */
 	private List<ModificaionSolicitud> modificaionBySA = new ArrayList<ModificaionSolicitud>();
 
-	@ManagedProperty(value = "#{modificacionSolicitudRepository}")
+	@Value("#{modificacionSolicitudRepository}")
 	private ModificacionSolicitudRepository modificacionSolicitudRepository;
 
-	@ManagedProperty("#{tcEstadosContratoRepository}")
+	@Value("#{tcEstadosContratoRepository}")
 	private TcEstadosContratoRepository estadosContratoRepository;
 
-	@ManagedProperty("#{pasoRepository}")
+	@Value("#{pasoRepository}")
 	private PasoRepository pasoRepository;
 
-	@ManagedProperty("#{tcAdquisicionProgramaRepository}")
+	@Value("#{tcAdquisicionProgramaRepository}")
 	private TcAdquisicionProgramasRepository adquisicionProgramaRepository;
 
-	@ManagedProperty("#{tcFirmaSolicitudDetalleRepository}")
+	@Value("#{tcFirmaSolicitudDetalleRepository}")
 	private TcFirmaSolicitudDetalleRepository firmaSolicitudDetalleRepository;
 
-	@ManagedProperty("#{tcPersonalAdministrativoRepository}")
+	@Value("#{tcPersonalAdministrativoRepository}")
 	private TcPersonalAdministrativoRepository personalAdministrativoRepository;
 
-	@ManagedProperty("#{tcFirmaDigitalRepository}")
+	@Value("#{tcFirmaDigitalRepository}")
 	private TcFirmaDigitalRepository firmaDigitalRepository;
 
-	@ManagedProperty("#{tcEstadosContratoRepository}")
+	@Value("#{tcEstadosContratoRepository}")
 	private TcEstadosContratoRepository tcEstadosContratoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
-	@ManagedProperty("#{tcAdquisicionRepository}")
+	@Value("#{tcAdquisicionRepository}")
 	private TcAdquisicionRepository adquisicionRepository;
 
-	@ManagedProperty("#{tcTramitesRepository}")
+	@Value("#{tcTramitesRepository}")
 	private TcTramitesRepository tramitesRepository;
 
-	@ManagedProperty("#{tcAreaAdministrativaRepository}")
+	@Value("#{tcAreaAdministrativaRepository}")
 	private TcAreaAdministrativaRepository administrativaRepository;
 
-	@ManagedProperty("#{tcTiposGastoRepository}")
+	@Value("#{tcTiposGastoRepository}")
 	private TcTiposGastoRepository tiposGastoRepository;
 
-	@ManagedProperty("#{tcOrigenRecursoRepository}")
+	@Value("#{tcOrigenRecursoRepository}")
 	private TcOrigenRecursoRepository origenRecursoRepository;
 
-	@ManagedProperty("#{tcTiposPagoRepository}")
+	@Value("#{tcTiposPagoRepository}")
 	private TcTiposPagoRepository formasPagoRepository;
 
-	@ManagedProperty("#{tcBienServicioRepository}")
+	@Value("#{tcBienServicioRepository}")
 	private TcBienServicioRepository bienServicioRepository;
 
-	@ManagedProperty(value = "#{tcUsuarioRepository}")
+	@Value("#{tcUsuarioRepository}")
 	private TcUsuarioRepository tcUsuarioRepository;
 
-	@ManagedProperty(value = "#{tcArticulosSARepository}")
+	@Value("#{tcArticulosSARepository}")
 	private TcArticulosSARepository articulosRepository;
 
-	@ManagedProperty(value = "#{tcUnidadMedidaRepository}")
+	@Value("#{tcUnidadMedidaRepository}")
 	private TcUnidadMedidaRepository unidadMedidaRepository;
 
-	@ManagedProperty("#{natgasRepository}")
+	@Value("#{natgasRepository}")
 	private NatgasRepository natgasRepository;
 
-	@ManagedProperty("#{tcSubgiroRepository}")
+	@Value("#{tcSubgiroRepository}")
 	private TcSubgiroRepository subgiroRepository;
 
-	@ManagedProperty("#{tcAdquisicionGiroSubgiroRepository}")
+	@Value("#{tcAdquisicionGiroSubgiroRepository}")
 	private TcAdquisicionGiroSubgiroRepository giroSubgiroRepository;
 
-	@ManagedProperty("#{adquisicionesService}")
+	// difem26: "#{adquisicionesService}" no corresponde a ningun bean; JSF inyectaba null. Pendiente de corregir.
+	@Value("#{null}")
 	private AdquisicionesService adquisicionesService;
 
-	@ManagedProperty("#{poiReadParse}")
+	@Value("#{poiReadParse}")
 	private POIReadParseService poiReadParseService;
 
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
-	@ManagedProperty("#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muniNepRepository;
 
-	@ManagedProperty("#{fuenteFGobiernoRepository}")
+	@Value("#{fuenteFGobiernoRepository}")
 	private FuenteFGobiernoRepository fuenteFGobiernoRepository;
 
 	@PostConstruct
@@ -444,7 +446,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 	/** Develve el estado incial de una solicitud en el momento de caputura */
 	public void reset() {
 		if (solicitudCaptured != null && solicitudCaptured.getId() != null && solicitudCaptured.getId() > 0) {
-			solicitudCaptured = adquisicionRepository.findOne(solicitudCaptured.getId());
+			solicitudCaptured = adquisicionRepository.findById(solicitudCaptured.getId()).orElse(null);
 			buscar();
 		} else {
 			solicitudCaptured = getDefaultAdquisicion();
@@ -777,7 +779,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 			for (int i = 1; i < 5; i++) {
 				firmasBySA.add(new TcFirmaSolicitudDetalle(i, null, solicitudCaptured));
 			}
-			firmasBySA = (List<TcFirmaSolicitudDetalle>) firmaSolicitudDetalleRepository.save(firmasBySA);
+			firmasBySA = (List<TcFirmaSolicitudDetalle>) firmaSolicitudDetalleRepository.saveAll(firmasBySA);
 		}
 		createPathImgs();
 	}
@@ -795,7 +797,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 			for (int i = 5; i < 8; i++) {
 				firmasBySA.add(new TcFirmaSolicitudDetalle(i, null, solicitudCaptured));
 			}
-			firmasBySA = (List<TcFirmaSolicitudDetalle>) firmaSolicitudDetalleRepository.save(firmasBySA);
+			firmasBySA = (List<TcFirmaSolicitudDetalle>) firmaSolicitudDetalleRepository.saveAll(firmasBySA);
 		}
 		createPathImgs();
 	}
@@ -919,7 +921,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 					if (!file.getFileName().contains(".xls")) {
 						displayInfoMessage("Solo se permite archivos de ecxel");
 					} else {
-						inp = file.getInputstream();
+						inp = file.getInputStream();
 						Workbook wb = WorkbookFactory.create(inp);
 						if (validarEcxel(wb)) {
 							Sheet sheet = wb.getSheetAt(0);
@@ -950,7 +952,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 								});
 								if (remplazar) {
 									articulosRepository
-											.delete(articulosRepository.findAllByAdquisicion(solicitudCaptured));
+											.deleteAll(articulosRepository.findAllByAdquisicion(solicitudCaptured));
 								} else {
 									articulosACargar.forEach(a -> {
 										TcArticulosSA articuloBase = articulosRepository
@@ -963,7 +965,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 								if (!erros.isEmpty()) {
 									erros.forEach(this::displayInfoMessage);
 								} else {
-									articulosRepository.save(articulosACargar);
+									articulosRepository.saveAll(articulosACargar);
 									displayInfoMessage(
 											"Se han cargado: " + articulosACargar.size() + " articulos a la solicitud: "
 													+ solicitudCaptured.getNumeroControl() + " correctamente");
@@ -1090,8 +1092,8 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 				}
 			});
 			bw.close();
-			fileErrors = new DefaultStreamedContent(new FileInputStream(file), "text/csv", file.getName());
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			fileErrors = StreamedContents.of(new FileInputStream(file), "text/csv", file.getName(), null);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -1235,7 +1237,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 		try {
 			List<TcAdquisicionGiroSubgiro> subgiros = giroSubgiroRepository.findAllByAdquisicion(solicitudCaptured);
 			if (!subgiros.isEmpty()) {
-				giroSubgiroRepository.delete(subgiros);
+				giroSubgiroRepository.deleteAll(subgiros);
 			}
 			for (TcSubgiro subgiro : subgirosSelected) {
 				giroSubgiroRepository.save(new TcAdquisicionGiroSubgiro(subgiro, solicitudCaptured));
@@ -1288,7 +1290,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 
 	public void deleteCodigoProgramatico() {
 		if (codigoIdToDelete != null && codigoIdToDelete > 0) {
-			adquisicionProgramaRepository.delete(codigoIdToDelete);
+			adquisicionProgramaRepository.deleteById(codigoIdToDelete);
 			codigosBySA = codigosBySA.stream().filter(c -> !c.getId().equals(codigoIdToDelete))
 					.collect(Collectors.toList());
 			displayInfoMessage("El codigo se ha eliminado correctamente");
@@ -1318,7 +1320,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 		if (event.getFile() == null)
 			displayInfoMessage("No se ha podido cargar ala rchivo contacte a su administrador");
 		else {
-			if (event.getFile().getContents().length == 0)
+			if (event.getFile().getContent().length == 0)
 				displayInfoMessage("El archivo no puede ser vacio");
 			else {
 				String name = event.getFile().getFileName();
@@ -1326,7 +1328,7 @@ public class SolicitudesAdquisicionesMB extends BaseDirectReport {
 				if (!permitedTypes.contains(type))
 					displayInfoMessage("EL tipo de archivo no es permitido");
 				else {
-					modificaionSolicitud = new ModificaionSolicitud(solicitudCaptured, event.getFile().getContents(),
+					modificaionSolicitud = new ModificaionSolicitud(solicitudCaptured, event.getFile().getContent(),
 							name, type, new Date(), this.getUsername());
 					displayInfoMessage("Cargado correctamente");
 				}

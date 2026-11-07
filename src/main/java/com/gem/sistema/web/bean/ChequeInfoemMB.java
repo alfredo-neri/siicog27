@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -16,19 +20,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 
 import com.gem.sistema.business.bs.ReporteChequeContratoService;
 import com.gem.sistema.business.domain.*;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -36,19 +37,19 @@ import com.gem.sistema.business.service.catalogos.EmpleadoInfoemService;
 import com.gem.sistema.business.service.catalogos.RegistroPagoChequeService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 
-@ManagedBean(name = "chequeInfoemMB")
-@ViewScoped
+@Component("chequeInfoemMB")
+@Scope("view")
 public class ChequeInfoemMB extends BaseDirectReport {
 
 	private static final String NOMBRE_PROVEEDOR = "INSTITUTO DE SEGURIDAD SOCIAL DEL ESTADO DE MEXICO Y MUNICIPIOS";
 
-	@ManagedProperty("#{empleadoInfoemService}")
+	@Value("#{empleadoInfoemService}")
 	private EmpleadoInfoemService empleadoInfoemService;
 
-	@ManagedProperty("#{registroPagoChequeService}")
+	@Value("#{registroPagoChequeService}")
 	private RegistroPagoChequeService registroPagoChequeService;
 
-	@ManagedProperty("#{reporteChequeContratoService}")
+	@Value("#{reporteChequeContratoService}")
 	private ReporteChequeContratoService reporteChequeContratoService;
 
 	private TwRegistroPagoCheque selectPagoCheque;
@@ -142,7 +143,7 @@ public class ChequeInfoemMB extends BaseDirectReport {
 	public void cancelCheque(Integer id) {
 		idAux = id;
 		cancelTregistroCheque = this.registroPagoChequeService.findByIdCheque(idAux);
-		RequestContext.getCurrentInstance().execute("PF('dlgChequesCan').show()");
+		PrimeFaces.current().executeScript("PF('dlgChequesCan').show()");
 
 	}
 
@@ -155,7 +156,7 @@ public class ChequeInfoemMB extends BaseDirectReport {
 
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info",
 				"El Cheque con Folio : " + cancelTregistroCheque.getFolio() + " se cancelo correctamente");
-		RequestContext.getCurrentInstance().execute("PF('dlgChequesCan').hide()");
+		PrimeFaces.current().executeScript("PF('dlgChequesCan').hide()");
 		consultarCheques();
 
 	}
@@ -679,8 +680,7 @@ public class ChequeInfoemMB extends BaseDirectReport {
 		/*
 		 * InputStream stream =
 		 * FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(
-		 * PATH_OUT + "reporte.xls"); fileCheques = new DefaultStreamedContent(stream,
-		 * "application/vnd.ms-excel", "reporte.xls");
+		 * PATH_OUT + "reporte.xls"); fileCheques = StreamedContents.of(stream, * "application/vnd.ms-excel", "reporte.xls", null);
 		 */
 		File file = new File(nameFile);
 		try {
@@ -689,7 +689,7 @@ public class ChequeInfoemMB extends BaseDirectReport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		fileCheques = new DefaultStreamedContent(stream3, "application/vnd.ms-excel", file.getName());
+		fileCheques = StreamedContents.of(stream3, "application/vnd.ms-excel", file.getName(), null);
 		return fileCheques;
 	}
 

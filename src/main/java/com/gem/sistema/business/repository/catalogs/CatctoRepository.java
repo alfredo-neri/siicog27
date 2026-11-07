@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import com.gem.sistema.business.domain.Catcto;;
  * The Interface CatctoRepository.
  */
 @Repository
-public interface CatctoRepository extends PagingAndSortingRepository<Catcto, Long>, QueryDslPredicateExecutor<Catcto>{
+public interface CatctoRepository extends PagingAndSortingRepository<Catcto, Long>, CrudRepository<Catcto, Long>, QuerydslPredicateExecutor<Catcto>{
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#findAll()

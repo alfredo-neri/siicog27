@@ -5,13 +5,14 @@ import java.util.List;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gem.sistema.business.domain.Natgas;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -19,7 +20,7 @@ import com.mysema.query.types.Predicate;
  */
 @Repository(value = "natgasRepository")
 public interface NatgasRepository
-		extends PagingAndSortingRepository<Natgas, Long>, QueryDslPredicateExecutor<Natgas>, NatgasRepositoryCustom {
+		extends PagingAndSortingRepository<Natgas, Long>, CrudRepository<Natgas, Long>, QuerydslPredicateExecutor<Natgas>, NatgasRepositoryCustom {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#findAll()
@@ -33,7 +34,7 @@ public interface NatgasRepository
 	<S extends Natgas> S save(S entity);
 
 	/* (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate)
+	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll(com.querydsl.core.types.Predicate)
 	 */
 	List<Natgas> findAll(Predicate prdct);
 

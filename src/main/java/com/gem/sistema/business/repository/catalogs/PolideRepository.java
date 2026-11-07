@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ import com.gem.sistema.business.domain.Polide;
  */
 @Repository("polideRepository")
 public interface PolideRepository
-		extends PagingAndSortingRepository<Polide, Long>, QueryDslPredicateExecutor<Polide>, PolideRepositoryCustom {
+		extends PagingAndSortingRepository<Polide, Long>, CrudRepository<Polide, Long>, QuerydslPredicateExecutor<Polide>, PolideRepositoryCustom {
 
 	/*
 	 * (non-Javadoc)

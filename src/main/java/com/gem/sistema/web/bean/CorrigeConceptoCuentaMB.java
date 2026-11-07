@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import com.gem.sistema.business.service.catalogos.AccountService;
 import com.gem.sistema.business.domain.Cuenta;
 import com.gem.sistema.web.security.model.GemUser;
@@ -17,8 +17,8 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class CorrigeConceptoCuentaMB.
  */
-@ManagedBean(name = "corrigeConceptoCuentaMB")
-@ViewScoped
+@Component("corrigeConceptoCuentaMB")
+@Scope("view")
 public class CorrigeConceptoCuentaMB extends AbstractMB {
 
   /** The cta. */
@@ -44,7 +44,7 @@ public class CorrigeConceptoCuentaMB extends AbstractMB {
 
 
   /** The account service. */
-  @ManagedProperty("#{accountService}")
+  @Value("#{accountService}")
   private AccountService accountService;
 
   /**

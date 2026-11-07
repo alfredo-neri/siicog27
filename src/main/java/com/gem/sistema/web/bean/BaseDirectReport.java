@@ -3,17 +3,17 @@
  */
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
@@ -66,26 +66,26 @@ public abstract class BaseDirectReport {
 	protected String endFilename = null;
 
 	/** The tc imagenes muni repository. */
-	@ManagedProperty(value = "#{tcImagenesMuniRepository}")
+	@Value("#{tcImagenesMuniRepository}")
 	protected TcImagenesMuniRepository tcImagenesMuniRepository;
 
-	@ManagedProperty(value = "#{tbProcesoService}")
+	@Value("#{tbProcesoService}")
 	private TbProcesoService procesoService;
 
 	/** The tc imagenes ent admin repository. */
-	@ManagedProperty(value = "#{tcImagenesEntAdminRepository}")
+	@Value("#{tcImagenesEntAdminRepository}")
 	protected TcImagenesEntAdminRepository tcImagenesEntAdminRepository;
 
 	/** The reportes repository. */
-	@ManagedProperty(value = "#{reportesRepository}")
+	@Value("#{reportesRepository}")
 	protected ReportesRepository reportesRepository;
 
 	/** The jasper generic service. */
-	@ManagedProperty(value = "#{jasperGenericServiceImpl}")
+	@Value("#{jasperGenericServiceImpl}")
 	protected JasperGenericService jasperGenericService;
 
 	/** The reporteador directo impl. */
-	@ManagedProperty(value = "#{reporteadorDirectoImpl}")
+	@Value("#{reporteadorDirectoImpl}")
 	protected ReporteadorDirecto reporteadorDirectoImpl;
 
 	/**

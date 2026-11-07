@@ -1,7 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,13 +24,10 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.business.utils.ConvertCharsetUtils;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -36,8 +37,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 /**
  * The Class EstadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB.
  */
-@ManagedBean(name = "estadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB")
-@ViewScoped
+@Component("estadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB")
+@Scope("view")
 public class EstadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB extends GenericExecuteProcedure {
 	
 	/** The Constant FOCUS_BY_ROWID. */
@@ -71,18 +72,18 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 	
 	/** The tcmes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcmesRepository;
 
 	/** The xcatpro repository. */
-	@ManagedProperty("#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 	
 	public ValidatePolicyService getValidatePolicyService() {
@@ -322,7 +323,7 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB
 			String srcFiles = out.get("O_RUTA_FILE").toString() + "/" + out.get("O_NAME_FILE").toString();
 			try {
 				stream = new FileInputStream(new File(srcFiles));
-				fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+				fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			} catch (IOException ioe) {
 				System.out.println("Error creating file: " + ioe);
 			}
@@ -359,11 +360,11 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB
 			File target = new File(out.get("O_RUTA_FILE").toString() + "/test.txt");
 			ConvertCharsetUtils.transform(source, charSetUFT, target, charSetISO);
 			
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", "test.txt");
+			fileTxt = StreamedContents.of(stream, "application/txt", "test.txt", null);
 			
 			txtPreview = this.generatePreviewService
 					.generatePreview(out.get("O_RUTA_FILE").toString() + "/test.txt");
-			RequestContext.getCurrentInstance().execute(FOCUS_BY_ROWID);
+			PrimeFaces.current().executeScript(FOCUS_BY_ROWID);
 		}
 
 	}
@@ -371,7 +372,7 @@ public class EstadoAvancePresupuestalEgresosFinalidadFuncionProgramaProyectoFfMB
 	public void downloadTxt() throws ReportValidationException {
 		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null, this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 			this.downLoadFile();
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 
 	}

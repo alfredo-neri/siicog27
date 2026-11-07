@@ -1,11 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -15,15 +15,15 @@ import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 /**
  * The Class ReporteNomina21MB.
  */
-@ManagedBean(name = "reporteNomina21MB")
-@ViewScoped
+@Component("reporteNomina21MB")
+@Scope("view")
 public class ReporteNomina21MB extends BaseDirectReport {
 
 	/** The mes. */
 	private Integer mes;
 	
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 

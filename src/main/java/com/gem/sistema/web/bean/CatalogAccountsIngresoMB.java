@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 import com.gem.sistema.business.domain.Cuenta;
@@ -20,8 +20,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class CatalogAccountsMB2.
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogAccountsIngresoMB")
+@Scope("view")
 public class CatalogAccountsIngresoMB extends BaseDirectReport {
 
 	/** Longitud del primer nivel de cuentas. */
@@ -53,13 +53,13 @@ public class CatalogAccountsIngresoMB extends BaseDirectReport {
 	private Cuenta cuenta;
 
 	/** Servicios para el modulo de centas. */
-	@ManagedProperty(value = "#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
 	/**
 	 * Repositorio de Cuenta.
 	 */
-	@ManagedProperty(value = "#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/** Ruta donde se encuentra el archivo jasper del reporte de cuentas. */
@@ -82,7 +82,8 @@ public class CatalogAccountsIngresoMB extends BaseDirectReport {
 	}
 
 	private String getCondiciones() {
-		String cond = " WHERE SUBSTR(C.cuenta,1,1)=4 ";
+		// Hibernate 7 no compara texto con numero: '4' en lugar de 4 (mismo SQL en DB2)
+		String cond = " WHERE SUBSTR(C.cuenta,1,1)='4' ";
 		validateAndAddFillZeros();
 		if (cuenta.getCuenta() != null && !cuenta.getCuenta().equals("")) {
 			cond += " AND C.cuenta='" + cuenta.getCuenta() + "'";

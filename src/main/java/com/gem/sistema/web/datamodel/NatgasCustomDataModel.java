@@ -3,14 +3,14 @@
  */
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
@@ -26,8 +26,8 @@ import com.gem.sistema.business.service.catalogos.NatgasService;
  *
  * @author gauss
  */
-@ManagedBean(name = "natgasCustomDataModel")
-@ViewScoped
+@Component("natgasCustomDataModel")
+@Scope("view")
 public class NatgasCustomDataModel extends CustomPagingModel<Natgas> {
 
 	/** The Constant serialVersionUID. */
@@ -36,7 +36,7 @@ public class NatgasCustomDataModel extends CustomPagingModel<Natgas> {
 	// * Repositorio de Natgas.
 	/** The natgas service. */
 	// */
-	@ManagedProperty(value = "#{natgasService}")
+	@Value("#{natgasService}")
 	private NatgasService natgasService;
 
 	/** The selected. */

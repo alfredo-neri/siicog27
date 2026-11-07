@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -26,8 +26,8 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class RF009118MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF009118MB")
+@Scope("view")
 public class RF009118MB extends BaseDirectReport {
 
 	private static final String CLAVE_REPORT = "RPT_ESTADO_EGRESOSD";
@@ -39,20 +39,20 @@ public class RF009118MB extends BaseDirectReport {
 	private Integer firmas;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The report by PL. */
-	@ManagedProperty(value = "#{baseDirectReportByPL}")
+	@Value("#{baseDirectReportByPL}")
 	private BaseDirectReportByPL reportByPL;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public ConctbRepository getConctbRepository() {

@@ -1,5 +1,7 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.Constants.ZERO;
 
@@ -10,15 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,8 +47,8 @@ import com.roonin.utils.UtilDate;
 /**
  * The Class MatrizIndicadoresMB.
  */
-@ManagedBean(name = "matrizIndicadoresMB")
-@ViewScoped
+@Component("matrizIndicadoresMB")
+@Scope("view")
 public class MatrizIndicadoresMB extends AbstractMB {
 
 	/** The Constant CLOSE_PANEL_JQUERY. */
@@ -254,19 +252,19 @@ public class MatrizIndicadoresMB extends AbstractMB {
 	private int currentPageDet = 0;
 
 	/** The matriz indicadores service. */
-	@ManagedProperty("#{matrizIndicadoresService}")
+	@Value("#{matrizIndicadoresService}")
 	private MatrizIndicadoresService matrizIndicadoresService;
 
-	@ManagedProperty("#{finalidadRepository}")
+	@Value("#{finalidadRepository}")
 	private FinalidadRepository finalidadRepository;
 
-	@ManagedProperty("#{propositoRepository}")
+	@Value("#{propositoRepository}")
 	private PropositoRepository propositoRepository;
 
-	@ManagedProperty("#{componenteRepository}")
+	@Value("#{componenteRepository}")
 	private ComponenteRepository componenteRepository;
 
-	@ManagedProperty("#{actividadRepository}")
+	@Value("#{actividadRepository}")
 	private ActividadRepository actividadRepository;
 	/** The deshabilitado editables. */
 	private boolean deshabilitadoEditables;
@@ -578,7 +576,7 @@ public class MatrizIndicadoresMB extends AbstractMB {
 						f.setFeccap(Calendar.getInstance().getTime());
 
 						f.setSectorid(getUserDetails().getIdSector());
-						Finalidad valida = this.finalidadRepository.findOne(FinalidadPredicates.eixtsFinalidad(f));
+						Finalidad valida = this.finalidadRepository.findOne(FinalidadPredicates.eixtsFinalidad(f)).orElse(null);
 						if (null == valida || bModificar) {
 							matrizIndicadoresService.saveIndicador(f, 1);
 
@@ -636,7 +634,7 @@ public class MatrizIndicadoresMB extends AbstractMB {
 						p.setFeccap(UtilDate.getDateSystem());
 						p.setSectorid(getUserDetails().getIdSector());
 						p.setIdRef(0L);
-						Proposito valida = this.propositoRepository.findOne(PropositoPredicates.existeProposito(p));
+						Proposito valida = this.propositoRepository.findOne(PropositoPredicates.existeProposito(p)).orElse(null);
 						if (null == valida || bModificar) {
 							matrizIndicadoresService.saveIndicador(p, 2);
 							llenarListaDependencias();
@@ -690,7 +688,7 @@ public class MatrizIndicadoresMB extends AbstractMB {
 						c.setFeccap(UtilDate.getDateSystem());
 						c.setIdRef(0L);
 						c.setSectorid(getUserDetails().getIdSector());
-						Componente valida = this.componenteRepository.findOne(ComponentePredicates.existecomponente(c));
+						Componente valida = this.componenteRepository.findOne(ComponentePredicates.existecomponente(c)).orElse(null);
 						if (null == valida || bModificar) {
 							matrizIndicadoresService.saveIndicador(c, 3);
 							llenarListaDependencias();
@@ -747,7 +745,7 @@ public class MatrizIndicadoresMB extends AbstractMB {
 						a.setCvecom(getComponenteActual());
 						a.setIdRef(0L);
 						a.setSectorid(getUserDetails().getIdSector());
-						Actividad validar = this.actividadRepository.findOne(ActividadPredicate.existeActividad(a));
+						Actividad validar = this.actividadRepository.findOne(ActividadPredicate.existeActividad(a)).orElse(null);
 						if (null == validar || bModificar) {
 							matrizIndicadoresService.saveIndicador(a, 4);
 
@@ -1578,8 +1576,8 @@ public class MatrizIndicadoresMB extends AbstractMB {
 				this.setCapturaDeshabilitado(true);
 				this.setCapturaDeshabilitadoObjetivo(true);
 				this.setDeshabilitadoEditables(true);
-				RequestContext.getCurrentInstance()
-						.execute("PF('indWdg').paginator.setPage(" + (currentPage - 1) + ");");
+				PrimeFaces.current()
+						.executeScript("PF('indWdg').paginator.setPage(" + (currentPage - 1) + ");");
 
 				UtilFront.generateNotificationFront(FacesMessage.SEVERITY_INFO,
 						"Matriz de Indicador borrado correctamente.", "Matriz de Indicador borrado correctamente.");
@@ -3041,7 +3039,7 @@ public class MatrizIndicadoresMB extends AbstractMB {
 		executeToggle.append(CLOSE_PANEL_JQUERY);
 		executeToggle.append(index);
 		executeToggle.append(CLOSE_COMPLETE_JQUERY);
-		RequestContext.getCurrentInstance().execute(executeToggle.toString());
+		PrimeFaces.current().executeScript(executeToggle.toString());
 	}
 
 	/**
@@ -3054,7 +3052,7 @@ public class MatrizIndicadoresMB extends AbstractMB {
 		executeToggle.append(OPEN_PANEL_JQUERY);
 		executeToggle.append(index);
 		executeToggle.append(OPEN_COMPLETE_JQUERY);
-		RequestContext.getCurrentInstance().execute(executeToggle.toString());
+		PrimeFaces.current().executeScript(executeToggle.toString());
 	}
 
 	public FinalidadRepository getFinalidadRepository() {

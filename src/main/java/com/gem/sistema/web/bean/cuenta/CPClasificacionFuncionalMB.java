@@ -1,14 +1,15 @@
 package com.gem.sistema.web.bean.cuenta;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDay;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -22,27 +23,27 @@ import com.gem.sistema.business.service.reportador.GeneraTxtFilesService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.bean.BaseDirectReport;
 
-@ManagedBean(name = "cpClasificacionFuncionalMB")
-@ViewScoped
+@Component("cpClasificacionFuncionalMB")
+@Scope("view")
 public class CPClasificacionFuncionalMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_INFOEM";
 	
 //	private StreamedContent file;
 //	private String fileName;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{generaTxtFilesService}")
+	@Value("#{generaTxtFilesService}")
 	private GeneraTxtFilesService txtFilesService;
 	
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	@PostConstruct
@@ -245,7 +246,7 @@ public class CPClasificacionFuncionalMB extends BaseDirectReport {
 //		} catch (FileNotFoundException ex) {
 //
 //		}
-//		file = new DefaultStreamedContent(stream, Constants.APPLICCTION_TXT, fileName);
+//		file = StreamedContents.of(stream, Constants.APPLICCTION_TXT, fileName, null);
 //		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se Generó el Archivo: " + fileName);
 //		return file;
 //	}

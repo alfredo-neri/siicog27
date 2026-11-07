@@ -5,7 +5,7 @@ import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +85,7 @@ public class Pm2611BSImpl implements Pm2611BS {
 	 */
 	@Override
 	public List<Pm2611> delete(Integer index, List<Pm2611> listPm2611) {
-		pm2611Repository.delete(listPm2611.get(index).getId());
+		pm2611Repository.deleteById(listPm2611.get(index).getId());
 		listPm2611 = orderByTrimestreAsc(listPm2611.get(index).getIdsector());
 		generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se elimino la información correctamente");
 		return listPm2611;
@@ -143,7 +143,7 @@ public class Pm2611BSImpl implements Pm2611BS {
 	 */
 	@Override
 	public Sort oderBy() {
-		return new Sort(Sort.Direction.ASC, "semes");
+		return Sort.by(Sort.Direction.ASC, "semes");
 	}
 
 	/*

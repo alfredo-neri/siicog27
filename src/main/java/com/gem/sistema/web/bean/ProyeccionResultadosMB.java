@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getDateSystem;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -19,8 +19,8 @@ import com.gem.sistema.business.repository.catalogs.ConctbRepository;
 import com.gem.sistema.business.service.catalogos.ProyeccionResultadoService;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 
-@ManagedBean(name = "proyeccionResultadosMB")
-@ViewScoped
+@Component("proyeccionResultadosMB")
+@Scope("view")
 public class ProyeccionResultadosMB extends AbstractMB {
 
 	private static final String VIEW_EDIT_ROW_ACTIVATE_PENCIL = "jQuery('span.ui-icon-pencil').eq(";
@@ -60,10 +60,10 @@ public class ProyeccionResultadosMB extends AbstractMB {
 
 	private Boolean bAdicionar;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{proyeccionResultadoService}")
+	@Value("#{proyeccionResultadoService}")
 	private ProyeccionResultadoService service;
 
 	@PostConstruct
@@ -108,14 +108,14 @@ public class ProyeccionResultadosMB extends AbstractMB {
 //		listBalancepre.add(balancepreNew);
 //
 //		this.activateRowEdit(listBalancepre.size() - 1);
-//		RequestContext.getCurrentInstance()
+//		PrimeFaces.current()
 //				.execute("PF('balanceWdg').paginator.setPage(" + (this.getPage() - 1) + ");");
 //
 //		if (listBalancepre.size() > 20) {
 //			Integer indexOf = this.getRowCurrent(listBalancepre.size());
 //			this.activateRowEdit(indexOf);
 //
-//			RequestContext.getCurrentInstance().execute(String.format(FOCUS_BY_ROWID, (listBalancepre.size() - 1)));
+//			PrimeFaces.current().executeScript(String.format(FOCUS_BY_ROWID, (listBalancepre.size() - 1)));
 //		}
 //
 //		dataModelBalancepre.setListT(listBalancepre);
@@ -144,7 +144,7 @@ public class ProyeccionResultadosMB extends AbstractMB {
 		} else {
 			if (dataProyRes.getListT().get(lastIndex).isbGuardar() == Boolean.TRUE) {
 				listProyRes = service.findAllByTipo(tipo);
-				RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+				PrimeFaces.current().executeScript(UPDATE_OBJETS);
 			} 
 //			else {
 //				if (bModifcar == Boolean.TRUE ) {
@@ -236,7 +236,7 @@ public class ProyeccionResultadosMB extends AbstractMB {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	public void activateRowEdit(final int index) {
@@ -246,7 +246,7 @@ public class ProyeccionResultadosMB extends AbstractMB {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	public String[] getValue(String data) {

@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
@@ -10,15 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
@@ -36,8 +36,8 @@ import com.gem.sistema.business.service.catalogos.TcTabuladorSueldosTrimestralSe
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 
-@ManagedBean
-@ViewScoped
+@Component("tabuladorSueldosTrimestralMB")
+@Scope("view")
 public class TabuladorSueldosTrimestralMB extends BaseDirectReport implements Serializable {
 
 	/**
@@ -59,21 +59,21 @@ public class TabuladorSueldosTrimestralMB extends BaseDirectReport implements Se
 	private List<Integer> listTrimestre;
 	private List<TcTabularSueldosTrimestral> listTabulador;
 
-	@ManagedProperty("#{tcTabuladorSueldosTrimestralService}")
+	@Value("#{tcTabuladorSueldosTrimestralService}")
 	private TcTabuladorSueldosTrimestralService tabuladorService;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	private DataModelGeneric<TcTabularSueldosTrimestral> dataModeler;
@@ -137,7 +137,7 @@ public class TabuladorSueldosTrimestralMB extends BaseDirectReport implements Se
 
 	public void handleFileUpload(FileUploadEvent event) {
 		try {
-			this.tabuladorService.saveFile(event.getFile().getFileName(), event.getFile().getInputstream());
+			this.tabuladorService.saveFile(event.getFile().getFileName(), event.getFile().getInputStream());
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Infor",
 					"La información se catrgo correctamente");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -298,7 +298,7 @@ public class TabuladorSueldosTrimestralMB extends BaseDirectReport implements Se
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	public String getPuesto() {

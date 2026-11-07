@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.ArrayList;
@@ -11,15 +14,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -35,20 +35,20 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class IndicadorTasaRecaudacionImpuestoPredialMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("indicadorTasaRecaudacionImpuestoPredialMB")
+@Scope("view")
 public class IndicadorTasaRecaudacionImpuestoPredialMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The service. */
-	@ManagedProperty("#{pm4911Service}")
+	@Value("#{pm4911Service}")
 	private Pm4911Service service;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The master list. */
@@ -141,7 +141,7 @@ public class IndicadorTasaRecaudacionImpuestoPredialMB extends BaseDirectReport 
 	// if(currentPage == lastRecord){
 	// actualizaSeleccionado();
 	// }
-	// RequestContext.getCurrentInstance().execute("PF('dataGridPm4911').getPaginator().setPage("
+	// PrimeFaces.current().executeScript("PF('dataGridPm4911').getPaginator().setPage("
 	// + lastRecord + ");");
 	// }
 
@@ -175,8 +175,8 @@ public class IndicadorTasaRecaudacionImpuestoPredialMB extends BaseDirectReport 
 		entity.setMensual(selectableMonth.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGridPm4911').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGridPm4911').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -210,8 +210,8 @@ public class IndicadorTasaRecaudacionImpuestoPredialMB extends BaseDirectReport 
 			boolean isNotLastMonth = masterList.stream().anyMatch(p -> p.getMensual() > nuevo.getMensual());
 
 			sortMasterList();
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGridPm4911').getPaginator().setPage(" + (selected.getMensual() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGridPm4911').getPaginator().setPage(" + (selected.getMensual() - 1) + ");");
 
 			// Si esta modificando y no es el último registro se debe recalcular
 			// desde el mes modificado has el último mes

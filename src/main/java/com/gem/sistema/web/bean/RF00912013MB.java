@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,14 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,14 +34,14 @@ import com.gem.sistema.business.utils.ConvertCharsetUtils;
 
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class RF00912013MB.
  */
-@ManagedBean(name = "rF00912013MB")
-@ViewScoped
+@Component("rF00912013MB")
+@Scope("view")
 public class RF00912013MB extends GenericExecuteProcedure {
 
 	/** The Constant charSetISO. */
@@ -62,7 +63,7 @@ public class RF00912013MB extends GenericExecuteProcedure {
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
 	/** The list mes. */
@@ -90,11 +91,11 @@ public class RF00912013MB extends GenericExecuteProcedure {
 	}
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/**
@@ -289,7 +290,7 @@ public class RF00912013MB extends GenericExecuteProcedure {
 			// final String pathFile =
 			// servletContext.getRealPath(out.get("O_RUTA_FILE").toString() +
 			// File.separator + out.get("O_NAME_FILE").toString() );
-			// streamContent = new DefaultStreamedContent(stream, pathFile);
+			// streamContent = StreamedContents.of(stream, pathFile, null, null);
 			// fileTxt = streamContent;
 
 			try {
@@ -299,7 +300,7 @@ public class RF00912013MB extends GenericExecuteProcedure {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		} else {
 			generateNotificationFront(SEVERITY_ERROR, "Error!", out.get("O_MSG_ERROR").toString());
@@ -334,7 +335,7 @@ public class RF00912013MB extends GenericExecuteProcedure {
 			}
 
 			txtPreview = this.generatePreviewService.generatePreview(fileNameOut);
-			RequestContext.getCurrentInstance().execute(FOCUS_IN_PREVIEW);
+			PrimeFaces.current().executeScript(FOCUS_IN_PREVIEW);
 		}
 		addToBitacora(false);
 	}

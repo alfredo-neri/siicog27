@@ -1,6 +1,6 @@
 package com.gem.sistema.web.semaphore;
 
-
+import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +18,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class Semaphores.
  */
-@ManagedBean(eager=true)
-@ApplicationScoped()
+@Component("semaphores")
+
 public class Semaphores{
 	
 	/** The Constant LOGGER. */

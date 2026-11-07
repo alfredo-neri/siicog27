@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.math.BigDecimal;
@@ -8,14 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -33,8 +33,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class Reporte54MB.
  */
-@ManagedBean(name = "reporte54MB")
-@ViewScoped
+@Component("reporte54MB")
+@Scope("view")
 public class Reporte54MB extends BaseDirectReport {
 
 	/** The Constant INITIAL. */
@@ -194,23 +194,23 @@ public class Reporte54MB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The pm 5511 repository. */
-	@ManagedProperty("#{pm5511Repository}")
+	@Value("#{pm5511Repository}")
 	private Pm5511Repository pm5511Repository;
 
 	/** The pm 5511 service. */
-	@ManagedProperty("#{pm5511Service}")
+	@Value("#{pm5511Service}")
 	private Pm5511Service pm5511service;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**

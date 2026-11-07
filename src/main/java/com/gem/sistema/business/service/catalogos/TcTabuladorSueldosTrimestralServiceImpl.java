@@ -148,7 +148,7 @@ public class TcTabuladorSueldosTrimestralServiceImpl implements TcTabuladorSueld
 
 	@Override
 	public void deleteById(Long id) {
-		this.tabuladorRepositoy.delete(id);
+		this.tabuladorRepositoy.deleteById(id);
 		
 	}
 

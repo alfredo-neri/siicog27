@@ -2,9 +2,9 @@ package com.gem.sistema.business.domain;
 
 import static com.gem.sistema.business.common.PreCondition.isTrue;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

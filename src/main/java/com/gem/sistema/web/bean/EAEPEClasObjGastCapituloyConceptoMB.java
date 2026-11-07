@@ -1,6 +1,10 @@
 
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,11 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -33,9 +34,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
-@ManagedBean(name = "EAEPEClasObjGastCapituloyConceptoMB")
-@ViewScoped
-
+@Component("EAEPEClasObjGastCapituloyConceptoMB")
+@Scope("view")
 public class EAEPEClasObjGastCapituloyConceptoMB extends BaseDirectReport {
 	
 	private static final String PROCEDURE_NAME = "SP_GENERA_TXT_EAEPE";
@@ -47,21 +47,21 @@ public class EAEPEClasObjGastCapituloyConceptoMB extends BaseDirectReport {
 	private String orden = "S";
 
 	private Integer pesos;
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
 	
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 	
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	private ExecutePlService executePlService;
 	private StreamedContent txt;
 	
@@ -230,7 +230,7 @@ public class EAEPEClasObjGastCapituloyConceptoMB extends BaseDirectReport {
 
 				e.printStackTrace();
 			}
-			txt = new DefaultStreamedContent(stream, "application/txt", out.get("O_FILE_NAME").toString());
+			txt = StreamedContents.of(stream, "application/txt", out.get("O_FILE_NAME").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", out.get("O_MSJ_ERROR").toString());

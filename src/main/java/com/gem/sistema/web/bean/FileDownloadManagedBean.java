@@ -1,7 +1,7 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.bean.SessionScoped;
-
+import org.springframework.context.annotation.Scope;
+import com.gem.sistema.web.util.StreamedContents;
 import org.primefaces.model.StreamedContent;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
  * The Class FileDownloadManagedBean.
  */
 @Component(value="fileDownloadManagedBean")
-@SessionScoped
+// difem26: la anotacion de scope de JSF era ignorada por Spring (singleton compartido)
+@Scope("session")
 public class FileDownloadManagedBean {
 	
 	
@@ -23,8 +24,8 @@ public class FileDownloadManagedBean {
 	
 	{
         try {
-//            content = new DefaultStreamedContent(new FileInputStream(
-//                    new File(DEFAULT_PATH+"")),"application/pdf","primefaces_5");
+//            content = StreamedContents.of(new FileInputStream(
+//                    new File(DEFAULT_PATH+"")), "application/pdf", "primefaces_5", null);
         }
         catch(Exception e){
             // Nothing

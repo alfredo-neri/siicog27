@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -37,8 +37,8 @@ import static com.roonin.utils.UtilDate.getLastDay;
 /**
  * The Class RF009126GMB.
  */
-@ManagedBean(name = "rF009126GMB")
-@ViewScoped
+@Component("rF009126GMB")
+@Scope("view")
 public class RF009126GMB extends BaseDirectReport {
 
 	/** The Constant LOGGER. */
@@ -78,29 +78,29 @@ public class RF009126GMB extends BaseDirectReport {
 	private Conctb conctb;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The catdep repository. */
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 	
 	/** The xcatpro repository. */
-	@ManagedProperty("#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 	
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -118,7 +118,7 @@ public class RF009126GMB extends BaseDirectReport {
 	public void setPeriodoRepositoy(TcPeriodoRepositoy periodoRepositoy) {
 		this.periodoRepositoy = periodoRepositoy;
 	}
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 	
 	/**

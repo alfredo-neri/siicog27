@@ -1,17 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +31,8 @@ import com.gem.sistema.util.UtilFront;
 /**
  * The Class IndicadoresCapturaMB.
  */
-@ManagedBean(name = "indicadoresCapturaMB")
-@ViewScoped
+@Component("indicadoresCapturaMB")
+@Scope("view")
 public class IndicadoresCapturaMB extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -129,10 +129,10 @@ public class IndicadoresCapturaMB extends AbstractMB {
 	Integer currentPage = 0;
 
 	/** The indicadores captura service. */
-	@ManagedProperty("#{indicadoresCapturaService}")
+	@Value("#{indicadoresCapturaService}")
 	private IndicadoresCapturaService indicadoresCapturaService;
 	
-	@ManagedProperty("#{muniNepRepository}")
+	@Value("#{muniNepRepository}")
 	private MuniNepRepository muniNepRepository;
 	
 	/** The deshabilitado editables. */

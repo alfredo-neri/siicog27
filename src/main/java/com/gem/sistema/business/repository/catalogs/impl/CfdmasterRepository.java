@@ -1,6 +1,7 @@
 package com.gem.sistema.business.repository.catalogs.impl;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import com.gem.sistema.business.domain.Cfdmaster;
  * The Interface CfdmasterRepository.
  */
 @Repository("cfdmasterRepository")
-public interface CfdmasterRepository extends PagingAndSortingRepository<Cfdmaster,Long>{
+public interface CfdmasterRepository extends PagingAndSortingRepository<Cfdmaster,Long>, CrudRepository<Cfdmaster,Long>{
   
   /**
    * Find first by order by id.

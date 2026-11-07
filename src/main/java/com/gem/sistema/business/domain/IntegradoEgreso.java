@@ -1,6 +1,6 @@
 package com.gem.sistema.business.domain;
 
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 
 // TODO: Auto-generated Javadoc
 /**

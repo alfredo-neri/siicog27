@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -15,20 +19,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,8 +52,8 @@ import com.gem.sistema.util.UtilFront;
  *
  * @author Sam
  */
-@ManagedBean(name = "obrasMB")
-@SessionScoped
+@Component("obrasMB")
+@Scope("session")
 public class ObrasMB extends AbstractFileUploadBudgetFlow implements Serializable {
 
 	private static final String DEFAULT_PATH = "/tmp/";
@@ -129,19 +130,19 @@ public class ObrasMB extends AbstractFileUploadBudgetFlow implements Serializabl
 	List<Obra> lista = new ArrayList<Obra>();
 
 	/** The obras repository. */
-	@ManagedProperty("#{obrasRepository}")
+	@Value("#{obrasRepository}")
 	private ObrasRepository obrasRepository;
 
 	/** The obras service. */
-	@ManagedProperty("#{obrasService}")
+	@Value("#{obrasService}")
 	ObrasService obrasService;
 
 	/** The csv service. */
-	@ManagedProperty("#{csvService}")
+	@Value("#{csvService}")
 	private ReadCSVService csvService;
 
 	/** The paso repository. */
-	@ManagedProperty("#{pasoRepository}")
+	@Value("#{pasoRepository}")
 	private PasoRepository pasoRepository;
 
 	/** The adicionar. */
@@ -171,7 +172,7 @@ public class ObrasMB extends AbstractFileUploadBudgetFlow implements Serializabl
 	/** The autoi 13. */
 	private BigDecimal autoi13;
 
-	@ManagedProperty("#{obrasCsvValidator}")
+	@Value("#{obrasCsvValidator}")
 	private FileContentValidator obrasCsvValidator;
 
 	/**
@@ -674,7 +675,7 @@ public class ObrasMB extends AbstractFileUploadBudgetFlow implements Serializabl
 	public void borrar(Integer row) {
 
 		try {
-			obrasRepository.delete(obrasList.get(row).getId());
+			obrasRepository.deleteById(obrasList.get(row).getId());
 			this.setDeshabilitado(true);
 			obrasList.clear();
 			findAllObras();
@@ -842,8 +843,8 @@ public class ObrasMB extends AbstractFileUploadBudgetFlow implements Serializabl
 			try {
 				
 				String newUUIDName = UUID.randomUUID() + file.getFileName();
-				if (applyContenFileValidators(this.inputFile(newUUIDName, file.getInputstream(), DEFAULT_PATH_UPLOAD))) {
-					obrasCargaAutomaticaDTO = csvService.processCsvFile(file.getInputstream(), errorMsg);
+				if (applyContenFileValidators(this.inputFile(newUUIDName, file.getInputStream(), DEFAULT_PATH_UPLOAD))) {
+					obrasCargaAutomaticaDTO = csvService.processCsvFile(file.getInputStream(), errorMsg);
 					if (!obrasCargaAutomaticaDTO.getErrorMsg().isEmpty()) {
 						if (obrasCargaAutomaticaDTO.getErrorMsg().startsWith("1")) {
 							FacesMessage message = new FacesMessage(
@@ -899,8 +900,8 @@ public class ObrasMB extends AbstractFileUploadBudgetFlow implements Serializabl
 			System.out.println("******* " + obrasResp.length());
 			InputStream fileInputStream = new FileInputStream(obrasResp);
 
-			setFile2(new DefaultStreamedContent(fileInputStream, "text/plain", "obras_resp.txt"));
-			RequestContext.getCurrentInstance().execute("descargar();");
+			setFile2(StreamedContents.of(fileInputStream, "text/plain", "obras_resp.txt", null));
+			PrimeFaces.current().executeScript("descargar();");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

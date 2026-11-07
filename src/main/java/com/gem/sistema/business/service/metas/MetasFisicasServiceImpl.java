@@ -395,7 +395,7 @@ public class MetasFisicasServiceImpl implements MetasFisicasService {
 	 */
 	@Override
 	public void deleteMeta(Long id) {
-		ppMettRepository.delete(id);
+		ppMettRepository.deleteById(id);
 	}
 
 	/*
@@ -489,7 +489,7 @@ public class MetasFisicasServiceImpl implements MetasFisicasService {
 	 */
 	@Override
 	public void deleteCabecero(Long id) {
-		ppcappRepository.delete(id);
+		ppcappRepository.deleteById(id);
 	}
 
 	/**

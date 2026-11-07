@@ -3,13 +3,14 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.gem.sistema.business.domain.TcMatriz;
 
 @Repository("tcMatrizRepository")
-public interface TcMatrizRepository extends PagingAndSortingRepository<TcMatriz, Long> {
+public interface TcMatrizRepository extends PagingAndSortingRepository<TcMatriz, Long>, CrudRepository<TcMatriz, Long> {
 
 	List<TcMatriz> findAll(Sort sort);
 

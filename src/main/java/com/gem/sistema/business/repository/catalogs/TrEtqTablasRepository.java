@@ -1,14 +1,15 @@
 package com.gem.sistema.business.repository.catalogs;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.gem.sistema.business.domain.TrEtiqTabla;
 
 public interface TrEtqTablasRepository
-		extends PagingAndSortingRepository<TrEtiqTabla, Long>, QueryDslPredicateExecutor<TrEtiqTabla> {
+		extends PagingAndSortingRepository<TrEtiqTabla, Long>, CrudRepository<TrEtiqTabla, Long>, QuerydslPredicateExecutor<TrEtiqTabla> {
 	@Query(nativeQuery = true, value = "SELECT TR.ID" + "     FROM GEMUSER.TR_ETIQ_TABLAS TR,\n"
 			+ "          GEMUSER.TC_ETIQUETAS TE,\n" + "          GEMUSER.TC_TABLAS TC\n"
 			+ "WHERE TR.ID_ETIQUETA = TE.ID\n" + "  AND TR.ID_TABLA    = TC.ID\n" + "  AND TC.ID          = :id\n"

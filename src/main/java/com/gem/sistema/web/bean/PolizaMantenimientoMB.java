@@ -1,8 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -15,28 +19,25 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIOutput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.ValueChangeEvent;
-import javax.servlet.ServletContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.AjaxBehaviorEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.ValueChangeEvent;
+import jakarta.servlet.ServletContext;
 
-import org.apache.commons.collections.PredicateUtils;
+import org.apache.commons.collections4.PredicateUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.Predicate;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -88,8 +89,8 @@ import com.gem.sistema.web.util.LockedPolice;
 /**
  * The Class PolizaMantenimientoMB.
  */
-@ManagedBean(name = "polizaMantenimientoMB")
-@SessionScoped
+@Component("polizaMantenimientoMB")
+@Scope("session")
 public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -102,7 +103,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	private static final String FOUS_JQUERY = "jQuery('#cuenta').eq(%1$s).each(function(){jQuery(this).focus});";
 
 	/** The con poliz sirvice. */
-	@ManagedProperty(value = "#{consultaPolizaSirveImpl}")
+	@Value("#{consultaPolizaSirveImpl}")
 	private ConsultaPolizaSirve conPolizSirvice;
 	
 	/** The year. */
@@ -163,7 +164,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	private String lockUser;
 
 	/** The copome service. */
-	@ManagedProperty("#{copomeService}")
+	@Value("#{copomeService}")
 	private CopomeService copomeService;
 
 	/** The Constant POLIZA_CARGO_ABONO_MSG. */
@@ -320,11 +321,11 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	}
 
 	/** The polifl repository. */
-	@ManagedProperty("#{poliflRepository}")
+	@Value("#{poliflRepository}")
 	private PoliflRepository poliflRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**
@@ -517,7 +518,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	}
 
 	/** The catflu repository. */
-	@ManagedProperty(value = "#{catfluRepository}")
+	@Value("#{catfluRepository}")
 	private CatfluRepository catfluRepository;
 
 	/**
@@ -543,7 +544,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 */
 	public void checkCatflu() {
 		this.flowValidationEnable = Boolean.TRUE;
-		RequestContext.getCurrentInstance().execute(ROWEDIT_CLVFLU_ROW_JQUERY);
+		PrimeFaces.current().executeScript(ROWEDIT_CLVFLU_ROW_JQUERY);
 	}
 
 	/** The Constant EDIT_FLOW_ROW_JQUERY. */
@@ -577,8 +578,8 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 			orderList = this.reIndexPolifls(orderList);
 		}
 
-		RequestContext.getCurrentInstance()
-				.execute(String.format(EDIT_FLOW_ROW_JQUERY, orderList.get(orderList.size() - 1).getIndex())
+		PrimeFaces.current()
+				.executeScript(String.format(EDIT_FLOW_ROW_JQUERY, orderList.get(orderList.size() - 1).getIndex())
 						+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, orderList.get(orderList.size() - 1).getIndex()));
 	}
 
@@ -644,10 +645,10 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 				if (!this.catfluRepository.exists(CatfluPredicates.isLocalidadUnique(
 						Double.valueOf(pl.getClvflu().doubleValue()), this.getUserDetails().getIdSector()))) {
 					PolizaMantenimientoMB.displayErrorMsg("Esta clave de flujo no esta registrada");
-					RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+					PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 							+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 				} else {
-					RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+					PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 							+ String.format(FOCUS2_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 				}
 			}
@@ -668,7 +669,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 				if (!this.catfluRepository.exists(CatfluPredicates.isLocalidadUnique(
 						Double.valueOf(pl.getClvflu().doubleValue()), this.getUserDetails().getIdSector()))) {
 					PolizaMantenimientoMB.displayErrorMsg("Esta clave de flujo no esta registrada");
-					RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+					PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 							+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 				} else {
 
@@ -698,25 +699,25 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 							} else {
 								PolizaMantenimientoMB.displayErrorMsg("La suma es mayor a la registrada");
 								activaAdicionar = Boolean.FALSE;
-								RequestContext.getCurrentInstance()
-										.execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+								PrimeFaces.current()
+										.executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 												+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 							}
 						} else {
 							PolizaMantenimientoMB.displayErrorMsg(erroMsg);
-							RequestContext.getCurrentInstance()
-									.execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+							PrimeFaces.current()
+									.executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 											+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 						}
 					} else {
 						PolizaMantenimientoMB.displayErrorMsg("La clave de flujo ya fue previamente registrada");
-						RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+						PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 								+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 					}
 				}
 			} else {
 				PolizaMantenimientoMB.displayErrorMsg("Los valores de Clave o Cantidad no son validos");
-				RequestContext.getCurrentInstance().execute(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
+				PrimeFaces.current().executeScript(String.format(EDIT_FLOW_ROW_JQUERY, pl.getIndex())
 						+ String.format(FOCUS_FLOW_CLVFLU_ROW_JQUERY, pl.getIndex()));
 			}
 		}
@@ -1014,11 +1015,11 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	private Cuenta rowSelected;
 
 	/** The data year system service. */
-	@ManagedProperty(value = "#{dataYearSystemService}")
+	@Value("#{dataYearSystemService}")
 	private DataYearSystemService dataYearSystemService;
 
 	/** The polien repository. */
-	@ManagedProperty(value = "#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
 	/** The polien. */
@@ -1058,7 +1059,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	private TcMes tcMes;
 
 	/** The tc mes repository. */
-	@ManagedProperty(value = "#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The polide. */
@@ -1140,15 +1141,15 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	}
 
 	/** The cattpo repository. */
-	@ManagedProperty(value = "#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepository;
 
 	/** The polide repository. */
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** The cuenta adicional service. */
-	@ManagedProperty(value = "#{cuentaAdicionalService}")
+	@Value("#{cuentaAdicionalService}")
 	private CuentaAdicionalService cuentaAdicionalService;
 
 	/** The suma cargo. */
@@ -1173,7 +1174,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	private Integer mesActivo;
 
 	/** The cuenta poliza data model. */
-	@ManagedProperty(value = "#{cuentaPolizaDataModel}")
+	@Value("#{cuentaPolizaDataModel}")
 	private CuentaPolizaDataModel cuentaPolizaDataModel;
 	/**
 	 * Mapa para guardar las filas seleccionadas del catalogo de naturaleza de
@@ -1285,7 +1286,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	public StreamedContent getStreamedContent() {
 		if (streamedContent != null)
 			try {
-				streamedContent.getStream().reset();
+				streamedContent.getStream().get().reset();
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
@@ -1780,7 +1781,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		if (((null == polifls || polifls.isEmpty())
 				&& !(this.cuentaflu.equalsIgnoreCase("1111") || this.cuentaflu.equalsIgnoreCase("1112")))
 				|| (sumaFf.compareTo(suma) == 0)) {
-			RequestContext.getCurrentInstance().execute("PF('flujoefectivo').hide();");
+			PrimeFaces.current().executeScript("PF('flujoefectivo').hide();");
 		} else {
 			if ((this.cuentaflu.equalsIgnoreCase("1111") || this.cuentaflu.equalsIgnoreCase("1112"))) {
 				if ((sumaFf.compareTo(suma) != 0)) {
@@ -1988,14 +1989,14 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 							selected.getMespol(), selected.getTippol(), selected.getConpol(), selected.getRenpol(),
 							this.getUserDetails().getIdSector());
 					for (Polifl polifl : polifls) {
-						this.poliflRepository.delete(polifl.getId());
+						this.poliflRepository.deleteById(polifl.getId());
 					}
 				}
 				this.polideRepository.delete(selected);
 
 			}
 			listPolide.remove(selected.getIndex());
-			RequestContext.getCurrentInstance().execute("PF('polizasWdg').unselectAllRows();");
+			PrimeFaces.current().executeScript("PF('polizasWdg').unselectAllRows();");
 			listPolide = this.reIndexWithoutRenpol((conPolizSirvice.findPoliceBy(polien.getTippol(), polien.getMespol(),
 					polien.getConpol(), this.getUserDetails().getIdSector())));
 			// listPolide =
@@ -2030,7 +2031,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		this.polideSelect = null;
 		// generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO,
 		// MESSAGE_EDITION_CANCELED);
-		// RequestContext.getCurrentInstance().execute("PF('polizasWdg').unselectAllRows();");
+		// PrimeFaces.current().executeScript("PF('polizasWdg').unselectAllRows();");
 	}
 
 	/**
@@ -2082,7 +2083,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	public static final int LENGTH_FIVE_LEVEL = 3;
 
 	/** Servicios para el modulo de centas. */
-	@ManagedProperty(value = "#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
 	/** The error msg. */
@@ -2119,7 +2120,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 
 			errorMsg = new StringBuilder();
 			if (this.validate(catalog, errorMsg)) {
-				this.polideBuff = this.polideRepository.findOne(this.polideBuff.getId());
+				this.polideBuff = this.polideRepository.findById(this.polideBuff.getId()).orElse(null);
 				this.polideRepository.save(catalog);
 				persistencePoliza2WithFlow(this.listPolide, catalog);
 				if (this.bandera) {
@@ -2135,19 +2136,19 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 					this.orderList = poliflRepository.findByMespolAndTippolAndConpolAndRenpolAndIdsector(mespolflu,
 							tippolflu, conpolflu, renpolflu, this.getUserDetails().getIdSector());
 					this.sumaFfBuff = this.getSum(this.orderList);
-					RequestContext.getCurrentInstance().execute("PF('ffConfirmWdt').show();");
+					PrimeFaces.current().executeScript("PF('ffConfirmWdt').show();");
 				} else {
-					RequestContext.getCurrentInstance().execute("executeClickHideButton();");
+					PrimeFaces.current().executeScript("executeClickHideButton();");
 				}
 			} else {
-				RequestContext.getCurrentInstance().execute("executeClickHideButton();");
+				PrimeFaces.current().executeScript("executeClickHideButton();");
 			}
 		} else {
 			if (FIND_ACC_NAME.equalsIgnoreCase(this.rowEditFlag)) {
 				this.inmediato = Boolean.FALSE;
 				this.rowEditFlag = StringUtils.EMPTY;
 				Cuenta findedAcc = this.cuentaRepository
-						.findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(this.getAccFromPolide(catalog)));
+						.findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(this.getAccFromPolide(catalog))).orElse(null);
 				if (null != findedAcc) {
 					catalog.setConcep(findedAcc.getNomcta());
 					this.polideSelect.setConcep(findedAcc.getNomcta());
@@ -2160,7 +2161,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 				if (this.validate(catalog, errorMsg)) {
 					createRow();
 				}
-				RequestContext.getCurrentInstance().execute("executeClickHideButton();");
+				PrimeFaces.current().executeScript("executeClickHideButton();");
 			}
 		}
 		// listPolide =
@@ -2198,7 +2199,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 					}
 				}
 			} else {
-				Polide buff = this.polideRepository.findOne(polide.getId());
+				Polide buff = this.polideRepository.findById(polide.getId()).orElse(null);
 				if (polide.getRenpol().intValue() != buff.getRenpol().intValue()) {
 					BigDecimal maxpol = getLastRenpol();
 					if (polide.getRenpol().compareTo(maxpol) > 0) {
@@ -2258,7 +2259,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	}
 
 	/** The cuenta repository. */
-	@ManagedProperty(value = "#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/**
@@ -2484,7 +2485,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOUS_JQUERY, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**
@@ -2501,7 +2502,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(focusJs, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	/**
@@ -2625,7 +2626,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	protected static final String MESSAGE_ERROR = FrontProperty.getPropertyValue("catalog.message.error");
 
 	/** The poliza service. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 
 	/**
@@ -2655,10 +2656,9 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 
 		if (validate()) {
 			this.setRenderPdf(Boolean.TRUE);
-			this.streamedContent = new DefaultStreamedContent(
-					this.polizaService.getReportByTipopolMespolConpol(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
+			this.streamedContent = StreamedContents.of(this.polizaService.getReportByTipopolMespolConpol(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
 							"escudo_ecatepec.png", polien.getTippol(), polien.getMespol(), polien.getConpol(),
-							polien.getConpol(), getUserDetails().getIdSector(), this.getUserDetails().getUsername()));
+							polien.getConpol(), getUserDetails().getIdSector(), this.getUserDetails().getUsername()), null, null, null);
 			try {
 				this.filePdfPath = this.polizaService.savePDFFile(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
 						"escudo_ecatepec.png", polien.getTippol(), polien.getMespol(), polien.getConpol(),
@@ -2701,7 +2701,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		}
 		if (bandera == Boolean.TRUE) {
 
-			RequestContext.getCurrentInstance().execute("PF('flujoefectivo').show();");
+			PrimeFaces.current().executeScript("PF('flujoefectivo').show();");
 			bandera = Boolean.FALSE;
 		}
 
@@ -2807,7 +2807,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	}
 
 	/** The exis digital. */
-	@ManagedProperty("#{tcRegistraArchivoDigitalRepository}")
+	@Value("#{tcRegistraArchivoDigitalRepository}")
 	private TcRegistraArchivoDigitalRepository exisDigital;
 
 	/**
@@ -3107,9 +3107,9 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		this.newFecpol = (Date) event.getObject();
 		if (null == this.polien.getFecpol()) {
 			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "Favor de capturar una fecha valida");
-			RequestContext.getCurrentInstance().execute("errorChangeDate();");
+			PrimeFaces.current().executeScript("errorChangeDate();");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('saveConfirmDateWdt').show();");
+			PrimeFaces.current().executeScript("PF('saveConfirmDateWdt').show();");
 		}
 	}
 
@@ -3127,9 +3127,9 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		System.out.println("File Date: " + this.polien.getFecpol());
 		if (null == this.polien.getFecpol()) {
 			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "Favor de capturar una fecha valida");
-			RequestContext.getCurrentInstance().execute("errorChangeDate();");
+			PrimeFaces.current().executeScript("errorChangeDate();");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('saveConfirmDateWdt').show();");
+			PrimeFaces.current().executeScript("PF('saveConfirmDateWdt').show();");
 		}
 		System.out.println("Hello... I am in DateChange");
 	}
@@ -3725,7 +3725,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 * @return true, if is FE acc
 	 */
 	public static boolean isFEAcc(String cuenta) {
-		return org.apache.commons.collections.CollectionUtils.exists(FE_ACCS, PredicateUtils.equalPredicate(cuenta));
+		return org.apache.commons.collections4.CollectionUtils.exists(FE_ACCS, PredicateUtils.equalPredicate(cuenta));
 	}
 
 	/** The count. */
@@ -3738,7 +3738,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	private static final Integer PAGE_SIZE = 1;
 
 	/** The Constant POLEIN_TIO_MES_CONT. */
-	private static final Sort POLEIN_TIO_MES_CONT = new Sort(Sort.Direction.ASC, "tippol", "mespol", "conpol");
+	private static final Sort POLEIN_TIO_MES_CONT = Sort.by(Sort.Direction.ASC, "tippol", "mespol", "conpol");
 	
 	/** The Constant FIND_ACC_NAME. */
 	private static final String FIND_ACC_NAME = "FIND_ACC_NAME";
@@ -3795,7 +3795,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 * @param pageIndex the page index
 	 */
 	private void doFind(Integer pageIndex) {
-		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, POLEIN_TIO_MES_CONT);
+		Pageable pageable = PageRequest.of(pageIndex, PAGE_SIZE, POLEIN_TIO_MES_CONT);
 		Page<Polien> page = this.polienRepository.findAll(PolienPredicates.byTipoMes(this.polien.getTippol(),
 				this.polien.getMespol(), this.getUserDetails().getIdSector()), pageable);
 		if (page.getContent().isEmpty()) {
@@ -3958,7 +3958,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		}
 		Polide toSelect = this.findByRowIndex(row);
 		this.doChangeConeptAccName(toSelect);
-		RequestContext.getCurrentInstance().execute("PF('polizasWdg').unselectAllRows(); PF('polizasWdg').selectRow("
+		PrimeFaces.current().executeScript("PF('polizasWdg').unselectAllRows(); PF('polizasWdg').selectRow("
 				+ row + ", true);" + "jQuery('div.ui-datatable-scrollable-body').scrollTop(" + scrollSize + ");");
 	}
 
@@ -4053,7 +4053,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 			this.actualIndex = selectedPolide.getIndex();
 			this.nomSelectedConcept = selectedPolide.getConcep();
 			Cuenta findedAcc = this.cuentaRepository
-					.findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(this.getAccFromPolide(selectedPolide)));
+					.findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(this.getAccFromPolide(selectedPolide))).orElse(null);
 			if (null != findedAcc) {
 				this.nomSelectedAcc = findedAcc.getNomcta();
 			}
@@ -4143,7 +4143,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 			}
 
 			Cuenta findedAcc = this.cuentaRepository.findOne(CuentaPredicates.findByAccounCompositeInlcudeEmpty(
-					(Cuenta) UtilJPA.fillPropertyStringIfNull(this.getAccFromPolide(this.getPolideSelect()))));
+					(Cuenta) UtilJPA.fillPropertyStringIfNull(this.getAccFromPolide(this.getPolideSelect())))).orElse(null);
 			if (null != findedAcc) {
 				this.getPolideSelect().setConcep(findedAcc.getNomcta());
 			}
@@ -4181,7 +4181,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 * Save update.
 	 */
 	public void saveUpdate() {
-		Polien toSave = this.polienRepository.findOne(this.polien.getId());
+		Polien toSave = this.polienRepository.findById(this.polien.getId()).orElse(null);
 		toSave.setPolclv1(this.polien.getPolclv1());
 		this.polienRepository.save(toSave);
 		generateNotificationFront(SEVERITY_INFO, StringUtils.EMPTY, "Encabezado actualizado");
@@ -4191,7 +4191,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 * Save update date.
 	 */
 	public void saveUpdateDate() {
-		Polien toSave = this.polienRepository.findOne(this.polien.getId());
+		Polien toSave = this.polienRepository.findById(this.polien.getId()).orElse(null);
 		toSave.setFecpol(this.newFecpol);
 		this.polienRepository.save(toSave);
 		generateNotificationFront(SEVERITY_INFO, StringUtils.EMPTY, "Encabezado actualizado");
@@ -4201,7 +4201,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 * Cancel save update date.
 	 */
 	public void cancelSaveUpdateDate() {
-		this.polien = this.polienRepository.findOne(this.polien.getId());
+		this.polien = this.polienRepository.findById(this.polien.getId()).orElse(null);
 		;
 	}
 
@@ -4232,7 +4232,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 */
 	public void findDigitalPoli() {
 		if (this.imageId > 0) {
-			RequestContext.getCurrentInstance().execute("PF('digitalPoliza').show();");
+			PrimeFaces.current().executeScript("PF('digitalPoliza').show();");
 
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
@@ -4469,7 +4469,7 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 		if (previousPage != null && (previousPage.equals(id))) {
 			init();
 			if (null != polienRepository.getByFirstMonth(this.getUserDetails().getIdSector())) {
-				RequestContext.getCurrentInstance().execute("refresh();");
+				PrimeFaces.current().executeScript("refresh();");
 			}
 		} else {
 
@@ -4482,6 +4482,6 @@ public class PolizaMantenimientoMB extends AbstractMB implements Serializable {
 	 */
 	public void succesCancelEdition() {
 		generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO, MESSAGE_EDITION_CANCELED);
-		RequestContext.getCurrentInstance().execute("PF('polizasWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('polizasWdg').unselectAllRows();");
 	}
 }

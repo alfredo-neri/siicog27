@@ -1,7 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,10 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -27,8 +28,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class EAEPEIntegrado222MB.
  */
-@ManagedBean(name = "eAEPEIntegrado222MB")
-@ViewScoped
+@Component("eAEPEIntegrado222MB")
+@Scope("view")
 public class EAEPEIntegrado222MB extends GenericExecuteProcedure {
 	
 	private Integer noDecimales;
@@ -44,7 +45,7 @@ public class EAEPEIntegrado222MB extends GenericExecuteProcedure {
 	private StreamedContent fileTxt;
 
 	/** The contb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository contbRepository;
 
 	/**
@@ -151,8 +152,7 @@ public class EAEPEIntegrado222MB extends GenericExecuteProcedure {
 
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt",
-					outParameters.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", outParameters.get("O_NAME_FILE").toString(), null);
 
 		} else {
 			generateNotificationFront(SEVERITY_INFO, "Info!", outParameters.get("O_MSG_ERROR").toString());

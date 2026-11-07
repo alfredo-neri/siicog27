@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
@@ -15,15 +18,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -38,20 +38,20 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class InventarioGeneralBienesMueblesCapturaInformacionMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("inventarioGeneralBienesMueblesCapturaInformacionMB")
+@Scope("view")
 public class InventarioGeneralBienesMueblesCapturaInformacionMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The repository. */
-	@ManagedProperty("#{bienesmRepository}")
+	@Value("#{bienesmRepository}")
 	private BienesmRepository repository;
 
 	/** The cuenta repository. */
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/** The master list. */
@@ -165,8 +165,8 @@ public class InventarioGeneralBienesMueblesCapturaInformacionMB extends BaseDire
 		entity.setMes(selectableMonth.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -201,7 +201,7 @@ public class InventarioGeneralBienesMueblesCapturaInformacionMB extends BaseDire
 			Bienesm bienesm = repository.save(nuevo);
 			masterList.set(currentPage, bienesm);
 			selected = bienesm;
-			RequestContext.getCurrentInstance().execute("PF('dataGrid').getPaginator().setPage(" + currentPage + ");");
+			PrimeFaces.current().executeScript("PF('dataGrid').getPaginator().setPage(" + currentPage + ");");
 
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY, msg);
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -235,8 +235,8 @@ public class InventarioGeneralBienesMueblesCapturaInformacionMB extends BaseDire
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY,
 					"Capturar consecutivo diferente de cero.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance()
-					.execute("focusEl('form1:dataGrid:" + currentPage + ":inputConsecutivo');");
+			PrimeFaces.current()
+					.executeScript("focusEl('form1:dataGrid:" + currentPage + ":inputConsecutivo');");
 		} else if (Objects.nonNull(bienesm) && Objects.isNull(nuevo.getId())) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, StringUtils.EMPTY, "El consecutivo "
 					+ bienesm.getConsec() + " para el mes " + bienesm.getMes() + " ya existe en la base de datos.");
@@ -291,7 +291,7 @@ public class InventarioGeneralBienesMueblesCapturaInformacionMB extends BaseDire
 			// selected.setObsncpip("");
 			// selected.setObstcrpip("");
 		} else {
-			selected = repository.findOne(selected.getId());
+			selected = repository.findById(selected.getId()).orElse(null);
 			masterList.set(currentPage, selected);
 		}
 	}
@@ -300,7 +300,7 @@ public class InventarioGeneralBienesMueblesCapturaInformacionMB extends BaseDire
 	 * Delete.
 	 */
 	public void delete() {
-		repository.delete(selected.getId());
+		repository.deleteById(selected.getId());
 		masterList.remove(currentPage);
 		currentPage = currentPage > 0 ? currentPage - 1 : 0;
 		actualizaSeleccionado();
@@ -330,7 +330,7 @@ public class InventarioGeneralBienesMueblesCapturaInformacionMB extends BaseDire
 		if (StringUtils.isNotEmpty(value)) {
 			selected.setSssscta(StringUtils.leftPad(value, 3, StringUtils.EMPTY + ZERO));
 		}
-		RequestContext.getCurrentInstance().update("form1:panel-filtros");
+		PrimeFaces.current().ajax().update("form1:panel-filtros");
 	}
 
 	/**

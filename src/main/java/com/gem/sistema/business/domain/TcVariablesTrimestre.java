@@ -1,7 +1,7 @@
 package com.gem.sistema.business.domain;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 //
 //import org.hibernate.annotations.Cascade;
 //import org.hibernate.annotations.CascadeType;

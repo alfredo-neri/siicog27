@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,9 +12,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import jakarta.faces.application.FacesMessage;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -21,8 +22,8 @@ import com.gem.sistema.ennum.constans.RespaldoEnnum;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.roonin.utils.ZipFolder.zipDirectory;
 
-@ManagedBean(name = "respaldosMB")
-@ViewScoped
+@Component("respaldosMB")
+@Scope("view")
 public class RespaldosMB extends AbstractMB implements Runnable {
 
 	private static final Long DURMIENDO = 120000l;
@@ -39,7 +40,7 @@ public class RespaldosMB extends AbstractMB implements Runnable {
 
 			InputStream pathBakup = new FileInputStream(
 					new File(RespaldoEnnum.PATH_BAKUPS.getValue() + RespaldoEnnum.NAME_ZIP.getValue()));
-			respaldo = new DefaultStreamedContent(pathBakup, "application/zip", RespaldoEnnum.NAME_ZIP.getValue());
+			respaldo = StreamedContents.of(pathBakup, "application/zip", RespaldoEnnum.NAME_ZIP.getValue(), null);
 
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", "Se Generaro correctamente el respaldo");
 		} catch (Exception e) {

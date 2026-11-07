@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
@@ -29,8 +29,8 @@ import com.roonin.utils.UtilDate;
 /**
  * The Class RF9111MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF9111MB")
+@Scope("view")
 public class RF9111MB extends BaseDirectReport {
 
 	private static final String CLAVE_REPORT = "RPT_FLUJO_EFECTIVO";
@@ -42,22 +42,22 @@ public class RF9111MB extends BaseDirectReport {
 	private TcMes descripMes;
 
 	/** The report by PL. */
-	@ManagedProperty(value = "#{baseDirectReportByPL}")
+	@Value("#{baseDirectReportByPL}")
 	private BaseDirectReportByPL reportByPL;
 
 	/** The tc mes repository. */
-	@ManagedProperty(value = "#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	private static final String NAME_PROCEDURE = "SP_GENERA_XLS_FLUJO_EFECTIVO";
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/**

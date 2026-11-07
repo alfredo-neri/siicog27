@@ -6,8 +6,10 @@ package com.gem.sistema.web.datamodel;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -92,6 +94,22 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
     protected abstract Sort orderBy();
     
     /**
+     * Spring Data 4 no acepta Sort null (la 1.9 si): las subclases que devuelven null en orderBy()
+     * se cargan sin orden. Las tablas sin paginador piden pageSize 0: se carga un bloque amplio
+     * (no Pageable.unpaged(), porque los repositorios nativos llaman a getOffset()).
+     */
+    protected Pageable pageRequest(int first, int pageSize) {
+        Sort sort = orderBy();
+        if (sort == null) {
+            sort = Sort.unsorted();
+        }
+        if (pageSize <= 0) {
+            return PageRequest.of(0, 100_000, sort);
+        }
+        return PageRequest.of(first / pageSize, pageSize, sort);
+    }
+
+    /**
      * Load.
      *
      * @param first the first
@@ -100,9 +118,62 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
      * @return the list
      */
     //@Override
+    /**
+     * PrimeFaces 16: el conteo se pide por separado antes de cargar la pagina.
+     * Los filtros llegan como FilterMeta y se traducen al mapa campo -> valor que usan las subclases.
+     */
+    @Override
+    public int count(Map<String, FilterMeta> filterBy) {
+        return countData(toLegacyFilters(filterBy));
+    }
+
+    /**
+     * PrimeFaces 16: sustituye a load(first, pageSize, sortField, sortOrder, filters) de PrimeFaces 5.
+     * El orden lo define la subclase en orderBy(), igual que antes.
+     */
+    @Override
+    public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+        Pageable page = pageRequest(first, pageSize);
+        return fetchData(page, toLegacyFilters(filterBy));
+    }
+
+    /**
+     * Convierte los filtros de PrimeFaces 16 al formato de PrimeFaces 5 (campo -> valor capturado).
+     *
+     * @param filterBy filtros de la tabla
+     * @return mapa campo -> valor, sin los filtros vacios
+     */
+    public static Map<String, Object> toLegacyFilters(Map<String, FilterMeta> filterBy) {
+        Map<String, Object> filters = new java.util.HashMap<>();
+        if (filterBy != null) {
+            for (FilterMeta meta : filterBy.values()) {
+                if (meta.getFilterValue() != null) {
+                    filters.put(meta.getField(), meta.getFilterValue());
+                }
+            }
+        }
+        return filters;
+    }
+
+    /**
+     * Convierte un mapa campo -> valor al formato de filtros de PrimeFaces 16.
+     * Sustituye a DataTable.setFilters(Map) de PrimeFaces 5.
+     *
+     * @param filters mapa campo -> valor
+     * @return filtros para DataTable.setFilterByAsMap
+     */
+    public static Map<String, FilterMeta> toFilterMeta(Map<String, Object> filters) {
+        Map<String, FilterMeta> filterBy = new java.util.HashMap<>();
+        if (filters != null) {
+            filters.forEach((field, value) -> filterBy.put(field,
+                    FilterMeta.builder().field(field).filterValue(value).build()));
+        }
+        return filterBy;
+    }
+
     public List<T> load(int first, int pageSize,  Map<String, Object> filters) {
     	
-        Pageable page = new PageRequest(first / pageSize, pageSize, orderBy());
+        Pageable page = pageRequest(first, pageSize);
         setRowCount(countData(filters));
         return fetchData(page, filters);
     }
@@ -116,7 +187,7 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
    */
   //@Override
     public List<T> load(int first, int pageSize) {
-        Pageable page = new PageRequest(first / pageSize, pageSize, orderBy());
+        Pageable page = pageRequest(first, pageSize);
 
         setRowCount(countData());
         return fetchData(page);
@@ -129,7 +200,7 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
     	//return load(first,  pageSize);
     	
     	
-    	 Pageable page = new PageRequest(first / pageSize, pageSize, orderBy());
+    	 Pageable page = pageRequest(first, pageSize);
 
          setRowCount(countData(filters));
          return fetchData(page, filters);
@@ -145,7 +216,7 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
             return false;
         }
 
-        int index = rowIndex % pageSize;
+        int index = pageSize > 0 ? rowIndex % pageSize : rowIndex;
         return index >= 0 && index < items.size();
     }
 
@@ -153,7 +224,7 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
      * @see org.primefaces.model.LazyDataModel#getRowKey(java.lang.Object)
      */
     @Override
-    public Object getRowKey(T entity) {
+    public String getRowKey(T entity) {
         return getId(entity);
     }
 
@@ -166,7 +237,7 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
             return null;
         }
 
-        int index = rowIndex % pageSize;
+        int index = pageSize > 0 ? rowIndex % pageSize : rowIndex;
         if (index >= items.size()) {
             return null;
         }
@@ -252,7 +323,7 @@ public abstract class CustomPagingModel<T> extends LazyDataModel<T> {
      * @see org.primefaces.model.LazyDataModel#getWrappedData()
      */
     @Override
-    public Object getWrappedData() {
+    public List<T> getWrappedData() {
         return items;
     }
 

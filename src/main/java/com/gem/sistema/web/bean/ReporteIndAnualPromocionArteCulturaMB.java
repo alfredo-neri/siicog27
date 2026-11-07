@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,12 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
@@ -35,8 +35,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  * The Class ReporteIndAnualPromocionArteCulturaMB.
  */
 //@Component(value = "reporteIndAnualPromocionArteCulturaMB")
-@ManagedBean
-@ViewScoped
+@Component("reporteIndAnualPromocionArteCulturaMB")
+@Scope("view")
 public class ReporteIndAnualPromocionArteCulturaMB extends BaseDirectReport {
 
 	/** The list. */
@@ -70,14 +70,14 @@ public class ReporteIndAnualPromocionArteCulturaMB extends BaseDirectReport {
 	private int currentPage = 0;
 
 	/** The pm 1111 repository. */
-	@ManagedProperty("#{pm1111Repository}")
+	@Value("#{pm1111Repository}")
 	private Pm1111Repository pm1111Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 
@@ -285,7 +285,7 @@ public class ReporteIndAnualPromocionArteCulturaMB extends BaseDirectReport {
 		try {
 			boolean answer = false;
 			try {
-				pm1111Repository.delete(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
+				pm1111Repository.deleteById(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
 				answer = true;
 			} catch (Exception e) {
 				answer = false;

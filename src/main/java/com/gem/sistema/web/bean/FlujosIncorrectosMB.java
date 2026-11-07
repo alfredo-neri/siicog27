@@ -1,24 +1,24 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage.Severity;
+import jakarta.faces.context.FacesContext;
 
 import com.gem.sistema.business.service.catalogos.FlujosIncorrectosService;
 import com.gem.sistema.business.vo.FlujosIncorrectosVO;
 
-@ManagedBean(name = "flujosIncorrectosMB")
-@ViewScoped
+@Component("flujosIncorrectosMB")
+@Scope("view")
 public class FlujosIncorrectosMB {
 
-	@ManagedProperty(value = "#{flujosIncorrectosService}")
+	@Value("#{flujosIncorrectosService}")
 	private FlujosIncorrectosService flujosService;
 
 	private List<Integer> listMont;

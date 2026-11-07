@@ -1,9 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,12 +23,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import javax.faces.bean.ViewScoped;
 
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -46,8 +47,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogMaintenanceBeneficiaryInstitutionsMB")
+@Scope("view")
 public class CatalogMaintenanceBeneficiaryInstitutionsMB extends CommonCatalogMB<Catben> implements Serializable {
 
 	/** Constante de la version del objeto. */
@@ -70,7 +71,7 @@ public class CatalogMaintenanceBeneficiaryInstitutionsMB extends CommonCatalogMB
 			.getPropertyValue("catalog.report.procedure.name.generic");
 
 	/**  Componente de repositorio. */
-	@ManagedProperty(value = "#{catbenRepository}")
+	@Value("#{catbenRepository}")
 	private CatbenRepository catbenRepository;
 
 	/**  Fila seleccionada de instituciones beneficiarias. */
@@ -441,7 +442,7 @@ public class CatalogMaintenanceBeneficiaryInstitutionsMB extends CommonCatalogMB
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString());
+			csvByPl = StreamedContents.of(stream, "application/csv", out.get("O_FULL_FILE_PATH").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSJ_ERROR").toString());
 		}
 

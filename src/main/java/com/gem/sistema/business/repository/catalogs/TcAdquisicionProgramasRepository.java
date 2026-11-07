@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,8 +22,8 @@ import com.gem.sistema.business.domain.TcAdquisicionPrograma;
  * The Interface TcAdquisicionProgramaRepository.
  */
 @Repository(value = "tcAdquisicionProgramaRepository")
-public interface TcAdquisicionProgramasRepository extends PagingAndSortingRepository<TcAdquisicionPrograma, Long>,
-		QueryDslPredicateExecutor<TcAdquisicionPrograma> {
+public interface TcAdquisicionProgramasRepository extends PagingAndSortingRepository<TcAdquisicionPrograma, Long>, CrudRepository<TcAdquisicionPrograma, Long>,
+		QuerydslPredicateExecutor<TcAdquisicionPrograma> {
 
 	Long countByAdquisicion(TcAdquisicion adquisicion);
 

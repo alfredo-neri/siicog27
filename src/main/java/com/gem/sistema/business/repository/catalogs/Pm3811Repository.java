@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,7 @@ import com.gem.sistema.business.domain.Pm3811;
  * The Interface Pm3811Repository.
  */
 @Repository("pm3811Repository")
-public interface Pm3811Repository extends PagingAndSortingRepository<Pm3811, Long>, QueryDslPredicateExecutor<Pm3811> {
+public interface Pm3811Repository extends PagingAndSortingRepository<Pm3811, Long>, CrudRepository<Pm3811, Long>, QuerydslPredicateExecutor<Pm3811> {
 	/*
 	 * (non-Javadoc)
 	 *

@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean.cuenta;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -23,22 +23,22 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 import com.gem.sistema.util.UtilLastDay;
 import com.gem.sistema.web.bean.BaseDirectReport;
 
-@ManagedBean(name = "clasificacionAdministrativaPoderCuentaPublicaMB")
-@ViewScoped
+@Component("clasificacionAdministrativaPoderCuentaPublicaMB")
+@Scope("view")
 public class ClasificacionAdministrativaPoderCuentaPublicaMB extends BaseDirectReport {
 	private List<TcPeriodo> listMeses;
 	private Integer mes;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{informeAnaliticoDeudaPublicaService}")
+	@Value("#{informeAnaliticoDeudaPublicaService}")
 	private ServiceLDF service;
 
 	@PostConstruct

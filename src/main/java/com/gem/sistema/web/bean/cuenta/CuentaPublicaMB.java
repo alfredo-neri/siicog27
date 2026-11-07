@@ -1,67 +1,68 @@
 package com.gem.sistema.web.bean.cuenta;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 
-@ManagedBean(name = "cuentaPublicaMB")
-@ViewScoped
+@Component("cuentaPublicaMB")
+@Scope("view")
 public class CuentaPublicaMB {
 
-	@ManagedProperty("#{ingresoEgresoCuentaPublicaMB}")
+	@Value("#{ingresoEgresoCuentaPublicaMB}")
 	private IngresoEgresoCuentaPublicaMB ingresoEgreso;
 
-	@ManagedProperty("#{cpEgresoProgramaMB}")
+	@Value("#{cpEgresoProgramaMB}")
 	private CPEgresoProgramaMB cpEgresoProgramaMB;
 
-	@ManagedProperty("#{cpEgresoPilarEjeTransversalMB}")
+	@Value("#{cpEgresoPilarEjeTransversalMB}")
 	private CPEgresoPilarEjeTransversalMB cpEgresoPilarEjeTransversalMB;
 
-	@ManagedProperty("#{cpCategoriaProgamaticaMB}")
+	@Value("#{cpCategoriaProgamaticaMB}")
 	private CPCategoriaProgramaticaMB cpCategoriaProgamaticaMB;
 
-	@ManagedProperty("#{cpAvanceOperativoMB}")
+	@Value("#{cpAvanceOperativoMB}")
 	private CPAvanceOperativoMB cpAvanceOperativoMB;
 
-	@ManagedProperty("#{cpEgresoCapituloMB}")
+	@Value("#{cpEgresoCapituloMB}")
 	private CPEgresoCapituloMB cpEgresoCapituloMB;
 
-	@ManagedProperty("#{cpEgresoObjetoGastoMB}")
+	@Value("#{cpEgresoObjetoGastoMB}")
 	private CPEgresoObjetoGastoMB cpEgresoObjetoGastoMB;
 
-	@ManagedProperty("#{cpClasAdminEntidadesMB}")
+	@Value("#{cpClasAdminEntidadesMB}")
 	private CPClasAdminEntidadesMB cpClasAdminEntidadesMB;
 
-	@ManagedProperty("#{cpClasAdminDependenciaMB}")
+	@Value("#{cpClasAdminDependenciaMB}")
 	private CPClasAdminDependenciaMB cpClasAdminDependenciaMB;
 
-	@ManagedProperty("#{cpClasAdminPoderOrgMB}")
+	@Value("#{cpClasAdminPoderOrgMB}")
 	private CPClasAdminPoderOrgMB cpClasAdminPoderOrgMB;
 
-	@ManagedProperty("#{cpIngresosMB}")
+	@Value("#{cpIngresosMB}")
 	private CPIngresosMB cpIngresosMB;
 
-	@ManagedProperty("#{cPIndicadoresPosturaMB}")
+	@Value("#{cPIndicadoresPosturaMB}")
 	private CPIndicadoresPosturaMB cPIndicadoresPosturaMB;
 
-	@ManagedProperty("#{endeudamientoNetoCuentaPublicaMB}")
+	@Value("#{endeudamientoNetoCuentaPublicaMB}")
 	private EndeudamientoNetoCuentaPublicaMB endeudamientoNetoCuentaPublicaMB;
 
-	@ManagedProperty("#{clasificEcoTipoGastoCeuntaPublicaMB}")
+	@Value("#{clasificEcoTipoGastoCeuntaPublicaMB}")
 	private ClasificEcoTipoGastoCeuntaPublicaMB clasificEcoTipoGastoCeuntaPublicaMB;
 
-	@ManagedProperty("#{interesDeudaCuentaPublicaMB}")
+	@Value("#{interesDeudaCuentaPublicaMB}")
 	private InteresDeudaCuentaPublicaMB interesDeudaCuentaPublicaMB;
 
-	@ManagedProperty("#{estadoSituacionFinancieraDetalladoCuentaPublicaMB}")
+	@Value("#{estadoSituacionFinancieraDetalladoCuentaPublicaMB}")
 	private EstadoSituacionFinancieraDetalladoCuentaPublicaMB estadoSituacionFinancieraDetalladoCuentaPublicaMB;
 
-	@ManagedProperty("#{informeAnaliticoDeudaPublicaCuentaPublicaMB}")
+	@Value("#{informeAnaliticoDeudaPublicaCuentaPublicaMB}")
 	private InformeAnaliticoDeudaPublicaCuentaPublicaMB informeAnaliticoDeudaPublicaCuentaPublicaMB;
 	                    
-	@ManagedProperty("#{cPBalancePresupuestarioMB}")
+	// difem26: "#{cPBalancePresupuestarioMB}" no corresponde a ningun bean; JSF inyectaba null. Pendiente de corregir.
+	@Value("#{null}")
 	private CPBalancePresupuestarioMB cpBalancePresupuestarioMB;
 
 	public IngresoEgresoCuentaPublicaMB getIngresoEgreso() {

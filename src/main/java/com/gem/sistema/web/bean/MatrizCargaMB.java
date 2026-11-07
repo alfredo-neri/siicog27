@@ -1,13 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.UUID;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
@@ -18,14 +19,14 @@ import com.gem.sistema.business.dto.OutputDataProcedure;
 import com.gem.sistema.business.service.catalogos.MatrizCargaService;
 import com.gem.sistema.util.CopyFileUtil;
 
-@ManagedBean(name = "matrizCargaMB")
-@ViewScoped
+@Component("matrizCargaMB")
+@Scope("view")
 public class MatrizCargaMB extends AbstractMB {
 
 	private static final String PATH = "/gem/upfiles/";
 	private String fileError = null;
 
-	@ManagedProperty("#{matrizCargaService}")
+	@Value("#{matrizCargaService}")
 	private MatrizCargaService matrizCargaService;
 
 	@PostConstruct
@@ -39,7 +40,7 @@ public class MatrizCargaMB extends AbstractMB {
 			if (StringUtils.isNotEmpty(newName)) {
 				try {
 
-					String path = CopyFileUtil.copyFile(newName, event.getFile().getInputstream(), PATH);
+					String path = CopyFileUtil.copyFile(newName, event.getFile().getInputStream(), PATH);
 					if (event.getFile().getSize() <= 0) {
 						displayInfoMessage("El archivo no puede ser vacio");
 
@@ -82,7 +83,7 @@ public class MatrizCargaMB extends AbstractMB {
 		StreamedContent st = null;
 		try {
 			File file = new File(this.getFileError());
-			st = new DefaultStreamedContent(new FileInputStream(file), "text/csv", file.getName());
+			st = StreamedContents.of(new FileInputStream(file), "text/csv", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

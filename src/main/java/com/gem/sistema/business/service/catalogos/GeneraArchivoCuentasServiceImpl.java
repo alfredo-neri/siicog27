@@ -3,6 +3,7 @@
  */
 package com.gem.sistema.business.service.catalogos;
 
+import com.gem.sistema.web.util.StreamedContents;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -104,7 +105,7 @@ public class GeneraArchivoCuentasServiceImpl implements GeneraArchivoCuentasServ
 	 */
 	@Override
 	public StreamedContent getTxtFile(Map<String, Object> filters) {
-		this.tcReporteTxt = this.reportesRepository.findOne(REPORT_TXT_ID);
+		this.tcReporteTxt = this.reportesRepository.findById(REPORT_TXT_ID).orElse(null);
 		ArchivoCuentas archivoCuentas = this.generaArchivoCuentasDAO.generateFile(CUENTAS_TXT_HEAD,
 				String.format(this.tcReporteTxt.getQry1(), this.cuentaService.getWhereFromFilters(filters)),
 				String.format(this.tcReporteTxt.getNombreArchivo(), UUID.randomUUID().toString()));
@@ -128,7 +129,7 @@ public class GeneraArchivoCuentasServiceImpl implements GeneraArchivoCuentasServ
 			File out = new File(archivoCuentas.getFullFilePath() + "_result");
 			GeneraArchivoCuentasServiceImpl.transform(new File(archivoCuentas.getFullFilePath()), UTF_8, out, encoding);
 			fis = new FileInputStream(out);
-			toReturn = new DefaultStreamedContent(fis, typeContent, fileName, encoding);
+			toReturn = StreamedContents.of(fis, typeContent, fileName, encoding);
 		} catch (FileNotFoundException e) {
 			LOGGER.error(e.getMessage(), e);
 		} catch (IOException e) {
@@ -163,7 +164,7 @@ public class GeneraArchivoCuentasServiceImpl implements GeneraArchivoCuentasServ
 	 */
 	@Override
 	public StreamedContent getCsvFile(Map<String, Object> filters) {
-		this.tcReporteCsv = this.reportesRepository.findOne(REPORT_CSV_ID);
+		this.tcReporteCsv = this.reportesRepository.findById(REPORT_CSV_ID).orElse(null);
 		ArchivoCuentas archivoCuentas = this.generaArchivoCuentasDAO.generateFile(CUENTAS_CSV_HEAD,
 				String.format(this.tcReporteCsv.getQry1(), this.cuentaService.getWhereFromFilters(filters)),
 				String.format(this.tcReporteCsv.getNombreArchivo(), UUID.randomUUID().toString()));

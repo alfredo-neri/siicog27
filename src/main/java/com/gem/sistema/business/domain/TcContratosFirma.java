@@ -3,7 +3,7 @@ package com.gem.sistema.business.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * The persistent class for the TC_CONTRATOS_FIRMAS database table.

@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -24,19 +24,19 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class Conciliacion5000vs8000DetalleMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("conciliacion5000vs8000DetalleMB")
+@Scope("view")
 public class Conciliacion5000vs8000DetalleMB extends BaseDirectReport {
 
 	
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/** The mes inicial. */
@@ -120,10 +120,10 @@ public class Conciliacion5000vs8000DetalleMB extends BaseDirectReport {
 			if (this.validatePolicyService.isOpenMonth(monthValidate, null,
 					this.getUserDetails().getIdSector()) == Boolean.TRUE) {
 				createFilePdfInline();
-				RequestContext.getCurrentInstance()
-						.execute("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '45em');");
+				PrimeFaces.current()
+						.executeScript("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '45em');");
 			}
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 	}
 
@@ -147,7 +147,7 @@ public class Conciliacion5000vs8000DetalleMB extends BaseDirectReport {
 					"Favor de capturar una Partida.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
-		RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+		PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		return flag;
 	}
 

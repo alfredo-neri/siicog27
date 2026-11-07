@@ -34,7 +34,7 @@ public class ChangePasswordDAOImpl implements ChangePasswordDAO {
 	public void save(TcParametro tcParametro, TcModulosOperacione tcModulosOperacione) {
 		String passEcript = passwordEncoder.encode(tcParametro.getValor());
 		tcModulosOperacione = this.tcModulosOperacioneRepository
-				.findOne(TcModulosOperacionePredicate.findByprocesoAndSector(tcModulosOperacione));
+				.findOne(TcModulosOperacionePredicate.findByprocesoAndSector(tcModulosOperacione)).orElse(null);
 		tcParametro.setCveParametro(tcModulosOperacione.getClvProceso());
 		tcParametro.setValor(passEcript);
 		tcParametro.setDescripcion(tcModulosOperacione.getNombreProceso());
@@ -46,9 +46,9 @@ public class ChangePasswordDAOImpl implements ChangePasswordDAO {
 	@Override
 	public void changePassword(TcParametro tcParametro, TcModulosOperacione tcModulosOperacione) {
 		tcModulosOperacione = this.tcModulosOperacioneRepository
-				.findOne(TcModulosOperacionePredicate.findByprocesoAndSector(tcModulosOperacione));
+				.findOne(TcModulosOperacionePredicate.findByprocesoAndSector(tcModulosOperacione)).orElse(null);
 		TcParametro param = this.parametrosRepository.findOne(ParametrosPredicate
-				.findByDataType(tcModulosOperacione.getClvProceso(), ConstansEnum.TYPE_PASS.getValue()));
+				.findByDataType(tcModulosOperacione.getClvProceso(), ConstansEnum.TYPE_PASS.getValue())).orElse(null);
 		String passEcript = passwordEncoder.encode(tcParametro.getValor());
 		param.setValor(passEcript);
 		this.parametrosRepository.save(param);
@@ -78,9 +78,9 @@ public class ChangePasswordDAOImpl implements ChangePasswordDAO {
 	public boolean validatePassword(TcParametro tcParametro, TcModulosOperacione tcModulosOperacione) {
 
 		tcModulosOperacione = this.tcModulosOperacioneRepository
-				.findOne(TcModulosOperacionePredicate.findByprocesoAndSector(tcModulosOperacione));
+				.findOne(TcModulosOperacionePredicate.findByprocesoAndSector(tcModulosOperacione)).orElse(null);
 		param = this.parametrosRepository.findOne(ParametrosPredicate
-				.findByDataType(tcModulosOperacione.getClvProceso(), ConstansEnum.TYPE_PASS.getValue()));
+				.findByDataType(tcModulosOperacione.getClvProceso(), ConstansEnum.TYPE_PASS.getValue())).orElse(null);
 		if (null != param) {
 			boolean bandera = this.passwordEncoder.matches(tcParametro.getValor(), param.getValor());
 
@@ -109,7 +109,7 @@ public class ChangePasswordDAOImpl implements ChangePasswordDAO {
 
 	@Override
 	public boolean passwordisTrue(String password, String keyPass) {
-		TcParametro tcParametro = this.parametrosRepository.findOne(ParametrosPredicate.findByDataType(keyPass, ConstansEnum.TYPE_PASS.getValue()));
+		TcParametro tcParametro = this.parametrosRepository.findOne(ParametrosPredicate.findByDataType(keyPass, ConstansEnum.TYPE_PASS.getValue())).orElse(null);
 		return passwordEncoder.matches(password, tcParametro.getValor());
 	}
 

@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDay;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
@@ -12,15 +15,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -39,8 +39,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class IndicadorSemestralPatrullasOperacionMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("indicadorSemestralPatrullasOperacionMB")
+@Scope("view")
 public class IndicadorSemestralPatrullasOperacionMB extends BaseDirectReport {
 
 	/** The conctb. */
@@ -50,18 +50,18 @@ public class IndicadorSemestralPatrullasOperacionMB extends BaseDirectReport {
 	private TcMes tcMes;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The service. */
-	@ManagedProperty("#{pm0611Service}")
+	@Value("#{pm0611Service}")
 	private Pm0611Service service;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/** The master list. */
@@ -281,8 +281,8 @@ public class IndicadorSemestralPatrullasOperacionMB extends BaseDirectReport {
 		entity.setSemestral(selectableSemesters.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -322,8 +322,8 @@ public class IndicadorSemestralPatrullasOperacionMB extends BaseDirectReport {
 
 			sortMasterList();
 			currentPage = masterList.indexOf(nuevo);
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').getPaginator().setPage(" + (selected.getSemestral() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').getPaginator().setPage(" + (selected.getSemestral() - 1) + ");");
 
 			defaultValues(nuevo);
 			Pm0611 Pm0611 = service.save(nuevo);

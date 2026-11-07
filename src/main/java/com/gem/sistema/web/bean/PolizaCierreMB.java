@@ -1,10 +1,10 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import javax.security.auth.login.AccountException;
 // import com.gem.sistema.business.domain.Cuenta;
 // import com.gem.sistema.business.repository.catalogs.CuentaRepository;
@@ -20,9 +20,9 @@ import java.math.BigDecimal;
 /**
  * The Class PolizaCierreMB.
  */
-@ManagedBean(name = "polizaCierreMB")
+@Component("polizaCierreMB")
 
-@ViewScoped
+@Scope("view")
 public class PolizaCierreMB extends AbstractMB{
 
   /** The clave. */
@@ -68,7 +68,7 @@ public class PolizaCierreMB extends AbstractMB{
   }
 
   /** The poliza cierre service. */
-  @ManagedProperty("#{polizaCierreService}")
+  @Value("#{polizaCierreService}")
   private PolizaCierreService polizaCierreService;
 
   /**

@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Repository;
 import com.gem.sistema.business.domain.TwIngresoPropiosDetalle;
 
 @Repository(value = "twIngresosPropioDetalleRepository")
-public interface TwIngresoPropioDetalleRepository extends PagingAndSortingRepository<TwIngresoPropiosDetalle, Long>,
-		QueryDslPredicateExecutor<TwIngresoPropiosDetalle> {
+public interface TwIngresoPropioDetalleRepository extends PagingAndSortingRepository<TwIngresoPropiosDetalle, Long>, CrudRepository<TwIngresoPropiosDetalle, Long>,
+		QuerydslPredicateExecutor<TwIngresoPropiosDetalle> {
 
 	List<TwIngresoPropiosDetalle> findAll();
 

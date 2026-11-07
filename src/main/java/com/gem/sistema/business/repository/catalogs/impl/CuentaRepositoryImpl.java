@@ -7,12 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import com.gem.sistema.business.domain.Cuenta;
 import com.gem.sistema.business.repository.catalogs.CuentaRepositoryCustom;
@@ -24,7 +24,7 @@ import com.gem.sistema.business.repository.catalogs.CuentaRepositoryCustom;
  * @author Luis Sosa
  */
 
-public class CuentaRepositoryImpl extends QueryDslRepositorySupport implements CuentaRepositoryCustom {
+public class CuentaRepositoryImpl extends QuerydslRepositorySupport implements CuentaRepositoryCustom {
 
 	/** The Constant queryCtaCount. */
 	private static final String queryCtaCount = "SELECT COUNT(*) FROM GEMUSER.CUENTA ";
@@ -194,7 +194,7 @@ public class CuentaRepositoryImpl extends QueryDslRepositorySupport implements C
 			total = count.longValue();
 		}
 
-		int offset = pageable.getOffset();
+		int offset = (int) pageable.getOffset();
 		Integer limitMin = offset + 1;
 		Integer limitMax = offset + pageable.getPageSize();
 

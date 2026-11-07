@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.ArrayList;
@@ -11,15 +14,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -36,24 +36,24 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class AtencionIntegralAdolescentesSituacionVulnerableMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("atencionIntegralAdolescentesSituacionVulnerableMB")
+@Scope("view")
 public class AtencionIntegralAdolescentesSituacionVulnerableMB extends BaseDirectReport {
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
 	/** The service. */
-	@ManagedProperty("#{pm2211Service}")
+	@Value("#{pm2211Service}")
 	private Pm2211Service service;
 
 	/** The master list. */
@@ -175,8 +175,8 @@ public class AtencionIntegralAdolescentesSituacionVulnerableMB extends BaseDirec
 		entity.setTrimestre(selectableTrimesters.get(0));
 
 		masterList.add(entity);
-		RequestContext.getCurrentInstance()
-				.execute("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('dataGrid').getPaginator().setPage(" + (masterList.size() - 1) + ");");
 		if (currentPage == -1) {
 			currentPage = 0;
 			actualizaSeleccionado();
@@ -211,8 +211,8 @@ public class AtencionIntegralAdolescentesSituacionVulnerableMB extends BaseDirec
 
 			sortMasterList();
 			currentPage = masterList.indexOf(nuevo);
-			RequestContext.getCurrentInstance()
-					.execute("PF('dataGrid').getPaginator().setPage(" + (selected.getTrimestre() - 1) + ");");
+			PrimeFaces.current()
+					.executeScript("PF('dataGrid').getPaginator().setPage(" + (selected.getTrimestre() - 1) + ");");
 
 			// Si esta modificando y no es el último registro se debe recalcular
 			// desde el mes modificado has el último mes

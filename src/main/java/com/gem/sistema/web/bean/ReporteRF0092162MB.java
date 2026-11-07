@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -26,8 +26,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class ReporteRF0092162MB.
  */
-@ManagedBean(name = "reporteRF0092162MB")
-@ViewScoped
+@Component("reporteRF0092162MB")
+@Scope("view")
 public class ReporteRF0092162MB extends BaseDirectReport{
 	
 	/** The clv dep. */
@@ -59,13 +59,13 @@ public class ReporteRF0092162MB extends BaseDirectReport{
 	
 	
 	
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
 	public TcPeriodoRepositoy getPeriodoRepositoy() {
@@ -111,7 +111,7 @@ public class ReporteRF0092162MB extends BaseDirectReport{
 	}
 
 	/** The catdgm repository. */
-	@ManagedProperty("#{catdgmRepository}")
+	@Value("#{catdgmRepository}")
 	private CatdgmRepository catdgmRepository;
 	
 	/**

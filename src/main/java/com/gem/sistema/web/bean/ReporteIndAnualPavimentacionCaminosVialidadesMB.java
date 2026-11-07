@@ -1,7 +1,10 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,12 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
@@ -34,8 +34,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class ReporteIndAnualPavimentacionCaminosVialidadesMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("reporteIndAnualPavimentacionCaminosVialidadesMB")
+@Scope("view")
 public class ReporteIndAnualPavimentacionCaminosVialidadesMB extends BaseDirectReport {
 
 	/** The master list. */
@@ -69,17 +69,17 @@ public class ReporteIndAnualPavimentacionCaminosVialidadesMB extends BaseDirectR
 	private Conctb conctb;
 
 	/** The pm 3011 repository. */
-	@ManagedProperty("#{pm3011Repository}")
+	@Value("#{pm3011Repository}")
 	private Pm3011Repository pm3011Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -324,7 +324,7 @@ public class ReporteIndAnualPavimentacionCaminosVialidadesMB extends BaseDirectR
 		try {
 			boolean answer = false;
 			try {
-				pm3011Repository.delete(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
+				pm3011Repository.deleteById(Long.valueOf(masterList.get(currentPage).getId().toString()).longValue());
 				answer = true;
 			} catch (Exception e) {
 				answer = false;

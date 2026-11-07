@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,7 @@ import com.gem.sistema.business.domain.Predial;
  */
 @Repository(value="predialRepository")
 public interface PredialRepository
-		extends PagingAndSortingRepository<Predial, Long>, QueryDslPredicateExecutor<Predial>{
+		extends PagingAndSortingRepository<Predial, Long>, CrudRepository<Predial, Long>, QuerydslPredicateExecutor<Predial>{
 	/*
 	 * (non-Javadoc)
 	 *

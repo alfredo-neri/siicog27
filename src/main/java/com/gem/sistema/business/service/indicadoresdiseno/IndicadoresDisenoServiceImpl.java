@@ -35,9 +35,9 @@ import com.gem.sistema.business.repository.catalogs.XcatproRepository;
 public class IndicadoresDisenoServiceImpl implements IndicadoresDisenoService {
 
 	/** The Constant ORDER_BY_ID. */
-	private static final Sort ORDER_BY_ID = new Sort(Direction.ASC, "id");
+	private static final Sort ORDER_BY_ID = Sort.by(Direction.ASC, "id");
 
-	private static final Sort ORDER_BY_CLVDEP = new Sort(Direction.ASC, "clvdep");
+	private static final Sort ORDER_BY_CLVDEP = Sort.by(Direction.ASC, "clvdep");
 
 	/** The cpd repository. */
 	@Autowired
@@ -86,7 +86,7 @@ public class IndicadoresDisenoServiceImpl implements IndicadoresDisenoService {
 	public boolean deleteDiseno(long id) {
 		boolean ans = false;
 		try {
-			ftecnicaDmRepository.delete(id);
+			ftecnicaDmRepository.deleteById(id);
 			ans = true;
 		} catch (Exception e) {
 			ans = false;
@@ -102,7 +102,7 @@ public class IndicadoresDisenoServiceImpl implements IndicadoresDisenoService {
 	public boolean salvarDiseno(FtecnicadmDTO ftecnicadmDTO) {
 
 		Ftecnicadm aux = this.disenoDTO2Entity(ftecnicadmDTO);
-		Ftecnicadm ftecnicadm = ftecnicaDmRepository.findOne(FtecnicaDmPredicate.validaFichaTecnicaDiseno(aux));
+		Ftecnicadm ftecnicadm = ftecnicaDmRepository.findOne(FtecnicaDmPredicate.validaFichaTecnicaDiseno(aux)).orElse(null);
 		if (null == ftecnicadm) {
 			ftecnicaDmRepository.save(aux);
 			return true;
@@ -150,7 +150,7 @@ public class IndicadoresDisenoServiceImpl implements IndicadoresDisenoService {
 	public boolean deleteDetalle(long id) {
 		boolean ans = false;
 		try {
-			ftecnicaDdRepository.delete(id);
+			ftecnicaDdRepository.deleteById(id);
 			ans = true;
 		} catch (Exception e) {
 			ans = false;

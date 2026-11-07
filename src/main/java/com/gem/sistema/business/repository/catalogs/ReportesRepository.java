@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import com.gem.sistema.business.domain.Xcatpro;
  * @author 
  */
 @Repository(value = "reportesRepository")
-public interface ReportesRepository extends PagingAndSortingRepository<TcReporte, Long>, QueryDslPredicateExecutor<TcReporte>{
+public interface ReportesRepository extends PagingAndSortingRepository<TcReporte, Long>, CrudRepository<TcReporte, Long>, QuerydslPredicateExecutor<TcReporte>{
 	
 	/*
 	 * (non-Javadoc)

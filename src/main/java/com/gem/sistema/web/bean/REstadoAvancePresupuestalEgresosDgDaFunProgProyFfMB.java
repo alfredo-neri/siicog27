@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,21 +18,18 @@ import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.ConstantsClaveEnnum;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class REstadoAvancePresupuestalEgresosDgDaFunProgProyFfMB.
  */
-@ManagedBean(name = "rEstadoAvancePresupuestalEgresosDgDaFunProgProyFfMB")
-@ViewScoped
+@Component("rEstadoAvancePresupuestalEgresosDgDaFunProgProyFfMB")
+@Scope("view")
 public class REstadoAvancePresupuestalEgresosDgDaFunProgProyFfMB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -46,17 +46,17 @@ public class REstadoAvancePresupuestalEgresosDgDaFunProgProyFfMB extends BaseDir
 	private List<String> listPrograma;
 
 	/** The tcmes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcmesRepository;
 
 	/** The xcatpro repository. */
-	@ManagedProperty("#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/**
@@ -173,7 +173,7 @@ public class REstadoAvancePresupuestalEgresosDgDaFunProgProyFfMB extends BaseDir
 		this.xcatproRepository = xcatproRepository;
 	}
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {
@@ -263,7 +263,7 @@ public class REstadoAvancePresupuestalEgresosDgDaFunProgProyFfMB extends BaseDir
 	public void downloadTxt() {
 		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null,
 				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 
 	}

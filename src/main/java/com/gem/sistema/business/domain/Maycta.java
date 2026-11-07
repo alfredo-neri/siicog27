@@ -4,11 +4,11 @@ import static com.gem.sistema.business.common.PreCondition.isTrue;
 import static com.gem.sistema.business.common.PreCondition.notNull;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

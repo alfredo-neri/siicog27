@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedProperty;
 
 import org.primefaces.model.StreamedContent;
 
@@ -26,13 +26,13 @@ public abstract class ReporteComparativo extends BaseDirectReport {
 	protected List<Integer> listMes = new ArrayList<Integer>();
 	protected Conctb conctb = new Conctb();
 
-	@ManagedProperty(value = "#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	protected TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty(value = "#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	protected ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	protected PuestosFirmasService puestosFirmasService;
 
 	protected void initAll() {

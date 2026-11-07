@@ -4,7 +4,8 @@ import java.util.List;
 
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ import com.gem.sistema.business.domain.Mir;;
  * @author 
  */
 @Repository("mirRepository")
-public interface MirRepository extends PagingAndSortingRepository<Mir, Long>, QueryDslPredicateExecutor<Mir>{
+public interface MirRepository extends PagingAndSortingRepository<Mir, Long>, CrudRepository<Mir, Long>, QuerydslPredicateExecutor<Mir>{
 	
 	/*
 	 * (non-Javadoc)

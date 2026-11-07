@@ -3,22 +3,22 @@
  */
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import com.gem.sistema.business.domain.Pasot;
 import com.gem.sistema.business.repository.catalogs.PasotRepository;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -31,8 +31,8 @@ import com.mysema.query.types.Predicate;
  * @author Gerardo CUERO
  *
  */
-@ManagedBean(name = "pasotDataModel")
-@ViewScoped
+@Component("pasotDataModel")
+@Scope("view")
 public class PasotDataModel extends CustomPagingModel<Pasot> {
 
 	/**
@@ -42,7 +42,7 @@ public class PasotDataModel extends CustomPagingModel<Pasot> {
 	
 	/** Componente de servicio. */
 	// @Autowired
-	@ManagedProperty(value = "#{pasotRepository}")
+	@Value("#{pasotRepository}")
 	private PasotRepository pasotRepository;
 
 	/* (non-Javadoc)

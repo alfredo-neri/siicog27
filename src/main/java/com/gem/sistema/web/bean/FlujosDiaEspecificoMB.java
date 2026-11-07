@@ -1,18 +1,18 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Firmas;
@@ -25,15 +25,15 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class FlujosDiaEspecificoMB.
  */
-@ManagedBean
-@ViewScoped
+@Component("flujosDiaEspecificoMB")
+@Scope("view")
 public class FlujosDiaEspecificoMB extends BaseDirectReport {
 
 	/** The firmas repository. */
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -126,14 +126,14 @@ public class FlujosDiaEspecificoMB extends BaseDirectReport {
 	public void createFilePdfInlineValidate() {
 		if (Objects.nonNull(fecha)) {
 			createFilePdfInline();
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
-			RequestContext.getCurrentInstance()
-					.execute("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '45em');");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
+			PrimeFaces.current()
+					.executeScript("$(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '45em');");
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"Seleccione una fecha por favor.");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			RequestContext.getCurrentInstance().execute("PF('blockUIWidget').unblock();");
+			PrimeFaces.current().executeScript("PF('blockUIWidget').unblock();");
 		}
 	}
 
@@ -142,7 +142,7 @@ public class FlujosDiaEspecificoMB extends BaseDirectReport {
 	 */
 	public void createFileTxtInlineValidate() {
 		if (Objects.nonNull(fecha)) {
-			RequestContext.getCurrentInstance().execute("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
+			PrimeFaces.current().executeScript("$(PrimeFaces.escapeClientId('form1:donwloadTxt')).click();");
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"Seleccione una fecha por favor.");
@@ -155,7 +155,7 @@ public class FlujosDiaEspecificoMB extends BaseDirectReport {
 	 */
 	public void createFileXlsInlineValidate() {
 		if (Objects.nonNull(fecha)) {
-			RequestContext.getCurrentInstance().execute("$(PrimeFaces.escapeClientId('form1:donwloadXls')).click();");
+			PrimeFaces.current().executeScript("$(PrimeFaces.escapeClientId('form1:donwloadXls')).click();");
 		} else {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, StringUtils.EMPTY,
 					"Seleccione una fecha por favor.");

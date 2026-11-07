@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class UploadFileEgresosMB.
  */
-@ManagedBean(name = "uploadFileEgresosMB")
-@ViewScoped
+@Component("uploadFileEgresosMB")
+@Scope("view")
 public class UploadFileEgresosMB extends AbstractMB{
 	
 	/** Constante para utilizar el log de la aplicacion. */

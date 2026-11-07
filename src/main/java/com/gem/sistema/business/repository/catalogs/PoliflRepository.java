@@ -3,7 +3,7 @@ package com.gem.sistema.business.repository.catalogs;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -17,7 +17,7 @@ import com.gem.sistema.business.domain.TcMes;
  * The Interface PoliflRepository.
  */
 @Repository(value = "poliflRepository")
-public interface PoliflRepository extends PagingAndSortingRepository<Polifl, Long>, QueryDslPredicateExecutor<TcMes> {
+public interface PoliflRepository extends PagingAndSortingRepository<Polifl, Long>, CrudRepository<Polifl, Long>, QuerydslPredicateExecutor<TcMes> {
 
 	/*
 	 * (non-Javadoc)

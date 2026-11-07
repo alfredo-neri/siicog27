@@ -1,8 +1,8 @@
 package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.QTcCuentasAdicionales;
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 // TODO: Auto-generated Javadoc
 /**

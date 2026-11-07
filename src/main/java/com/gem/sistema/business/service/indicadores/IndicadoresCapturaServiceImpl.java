@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +29,7 @@ import com.gem.sistema.business.repository.catalogs.MuniNepRepository;
 import com.gem.sistema.business.repository.catalogs.PpCapturaRepository;
 import com.gem.sistema.business.repository.catalogs.PpMetaRepository;
 import com.gem.sistema.business.repository.catalogs.XcatproRepository;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -462,7 +462,7 @@ public class IndicadoresCapturaServiceImpl implements IndicadoresCapturaService 
 	 */
 	@Override
 	public void deleteCabecero(Long id) {
-		ppCapturaRepository.delete(id);
+		ppCapturaRepository.deleteById(id);
 	}
 
 	/*
@@ -474,7 +474,7 @@ public class IndicadoresCapturaServiceImpl implements IndicadoresCapturaService 
 	@Override
 	public void deleteMeta(Long id) {
 		System.out.println("deleteMeta: " + id);
-		ppMetaRepository.delete(id);
+		ppMetaRepository.deleteById(id);
 	}
 
 	/**

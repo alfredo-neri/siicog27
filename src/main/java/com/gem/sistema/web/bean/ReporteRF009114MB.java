@@ -1,8 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,11 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -40,8 +41,8 @@ import com.gem.sistema.business.service.reportador.ReportValidationException;
 /**
  * The Class ReporteRF009114MB.
  */
-@ManagedBean(name = "reporteRF009114MB")
-@ViewScoped
+@Component("reporteRF009114MB")
+@Scope("view")
 public class ReporteRF009114MB extends BaseDirectReport {
 	
 	private static final String CLAVE_REPORT = "RPT_EDO_INGRESOS_EGRESOS";
@@ -50,19 +51,19 @@ public class ReporteRF009114MB extends BaseDirectReport {
 	private List<Integer> listNivel;
 
 	/** The mes repository. */
-	@ManagedProperty(value = "#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository mesRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 	
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	public TcPeriodoRepositoy getPeriodoRepositoy() {
@@ -91,7 +92,7 @@ public class ReporteRF009114MB extends BaseDirectReport {
 	private StreamedContent contentCSV;
 
 	/** The reporte service. */
-	@ManagedProperty(value = "#{reporteRF009114Service}")
+	@Value("#{reporteRF009114Service}")
 	private ReporteRF009114Service reporteService;
 
 	String sSql;
@@ -126,7 +127,7 @@ public class ReporteRF009114MB extends BaseDirectReport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		contentCSV = new DefaultStreamedContent(stream, "application/txt", endFilename.substring(13));
+		contentCSV = StreamedContents.of(stream, "application/txt", endFilename.substring(13), null);
 		endFilename = "";
 
 		return contentCSV;
@@ -211,7 +212,7 @@ public class ReporteRF009114MB extends BaseDirectReport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		contentTXT = new DefaultStreamedContent(stream, "application/txt", endFilename.substring(13));
+		contentTXT = StreamedContents.of(stream, "application/txt", endFilename.substring(13), null);
 		endFilename = "";
 
 	}
@@ -278,7 +279,7 @@ public class ReporteRF009114MB extends BaseDirectReport {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			contentCSV = new DefaultStreamedContent(stream, "application/txt", endFilename.substring(13));
+			contentCSV = StreamedContents.of(stream, "application/txt", endFilename.substring(13), null);
 			endFilename = "";
 		} else {
 			generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Error!", reportsDTO.getoMsgError());

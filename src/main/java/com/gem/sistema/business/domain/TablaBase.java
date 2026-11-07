@@ -2,8 +2,8 @@ package com.gem.sistema.business.domain;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 // TODO: Auto-generated Javadoc
 /**

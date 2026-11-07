@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 
 import com.gem.sistema.business.domain.Conctb;
@@ -31,8 +31,8 @@ import static com.roonin.utils.UtilDate.getLastDay;
 /**
  * The Class RF009129MB.
  */
-@ManagedBean(name = "rF009129MB")
-@ViewScoped
+@Component("rF009129MB")
+@Scope("view")
 public class RF009129MB extends BaseDirectReport {
 
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
@@ -68,23 +68,23 @@ public class RF009129MB extends BaseDirectReport {
 
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	/** The catdaa repository. */
-	@ManagedProperty("#{catdaaRepository}")
+	@Value("#{catdaaRepository}")
 	private CatdaaRepository catdaaRepository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 
 	/** The fuentef repository. */
-	@ManagedProperty("#{fuentefRepository}")
+	@Value("#{fuentefRepository}")
 	private FuentefRepository fuentefRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	/**
@@ -277,7 +277,7 @@ public class RF009129MB extends BaseDirectReport {
 		this.catdaaRepository = catdaaRepository;
 	}
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	public ValidatePolicyService getValidatePolicyService() {
@@ -418,7 +418,7 @@ public class RF009129MB extends BaseDirectReport {
 	public void downloadTxt() throws ReportValidationException {
 		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null,
 				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 	}
 

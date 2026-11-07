@@ -3,6 +3,10 @@
  */
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -12,12 +16,9 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -25,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +45,8 @@ import com.gem.sistema.load.fileupload.validators.FileContentValidator;
  *
  * @author Gerardo CUERO
  */
-@ManagedBean(name = "edoAnalitoIngrePIntegradoImpMB")
-@ViewScoped
+@Component("edoAnalitoIngrePIntegradoImpMB")
+@Scope("view")
 public class EdoAnalitoIngrePIntegradoImpMB extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -76,23 +77,23 @@ public class EdoAnalitoIngrePIntegradoImpMB extends AbstractMB {
 	private String mes = "01";
 
 	/** The path file service. */
-	@ManagedProperty("#{pathFileSystemservice}")
+	@Value("#{pathFileSystemservice}")
 	private PathFileSystemserviceImpl pathFileService;
 
 	/** The parametros repository. */
-	@ManagedProperty("#{parametrosRepository}")
+	@Value("#{parametrosRepository}")
 	private ParametrosRepository parametrosRepository;
 
 	/** The edo AI presup integra csv validator. */
-	@ManagedProperty("#{edoAIPresupIntegraCsvValidator}")
+	@Value("#{edoAIPresupIntegraCsvValidator}")
 	private FileContentValidator edoAIPresupIntegraCsvValidator;
 
 	/** The edo AEP import service. */
-	@ManagedProperty("#{edoAEPImportService}")
+	@Value("#{edoAEPImportService}")
 	private EdoAEPImportService edoAEPImportService;
 
 	/** The conctb repositpry. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepositpry;
 
 	/**
@@ -260,7 +261,7 @@ public class EdoAnalitoIngrePIntegradoImpMB extends AbstractMB {
 								+ FilenameUtils.EXTENSION_SEPARATOR_STR + FilenameUtils.getExtension(fileName);
 						String fullPath = pathFile + File.separator + fileNameProcess;
 						File file2Process = new File(fullPath);
-						FileUtils.writeByteArrayToFile(file2Process, event.getFile().getContents());
+						FileUtils.writeByteArrayToFile(file2Process, event.getFile().getContent());
 
 						final FileUpload fileUpload = new FileUpload();
 						fileUpload.setFile(file2Process);
@@ -356,7 +357,7 @@ public class EdoAnalitoIngrePIntegradoImpMB extends AbstractMB {
 		LOGGER.info("Recibiendo Archivo" + filename);
 		try {
 			File file = new File(filename);
-			return new DefaultStreamedContent(new FileInputStream(file), "text/csv", file.getName());
+			return StreamedContents.of(new FileInputStream(file), "text/csv", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Error Descargando Archivo" + e);
 			e.printStackTrace();
@@ -374,7 +375,7 @@ public class EdoAnalitoIngrePIntegradoImpMB extends AbstractMB {
 		LOGGER.info("Recibiendo Archivo" + filename);
 		try {
 			File file = new File(filename);
-			return new DefaultStreamedContent(new FileInputStream(file), "text/plain", file.getName());
+			return StreamedContents.of(new FileInputStream(file), "text/plain", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Error Descargando Archivo" + e);
 			e.printStackTrace();

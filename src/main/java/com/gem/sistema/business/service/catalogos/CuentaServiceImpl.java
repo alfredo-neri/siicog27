@@ -86,7 +86,7 @@ final class CuentaServiceImpl implements CuentaService {
 	@Override
 	public Cuenta findCuentaById(Long id) {
 		LOGGER.info("Finding cuenta entry by using id: {}", id);
-		Cuenta cuentaResult = repository.findOne(id);
+		Cuenta cuentaResult = repository.findById(id).orElse(null);
 		LOGGER.info("Found cuenta entry: {}", cuentaResult);
 		return cuentaResult;
 	}

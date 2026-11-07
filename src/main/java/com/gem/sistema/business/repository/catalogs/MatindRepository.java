@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,7 @@ import com.gem.sistema.business.dto.MatrizIndicadoresDTO;
  * The Interface MatindRepository.
  */
 @Repository
-public interface MatindRepository extends PagingAndSortingRepository<Matind, Long>, QueryDslPredicateExecutor<Matind> {
+public interface MatindRepository extends PagingAndSortingRepository<Matind, Long>, CrudRepository<Matind, Long>, QuerydslPredicateExecutor<Matind> {
 
 	/* (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#findAll()

@@ -1,21 +1,22 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.activation.MimetypesFileTypeMap;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,7 +158,7 @@ public abstract class AbstracUploadFileMunicipio extends AbstractMB {
 		logger.info("Recibiendo Archivo" + filename);
 		try {
 			File file = new File(filename);
-			return new DefaultStreamedContent(new FileInputStream(file), "text/plain", file.getName());
+			return StreamedContents.of(new FileInputStream(file), "text/plain", file.getName(), null);
 		} catch (FileNotFoundException e) {
 			logger.error("Error Descargando Archivo" + e);
 			e.printStackTrace();
@@ -219,7 +220,7 @@ public abstract class AbstracUploadFileMunicipio extends AbstractMB {
 					newFile = new File("/gem/upfiles", newName);
 					
 					
-					FileUtils.copyInputStreamToFile(file.getInputstream(), newFile);
+					FileUtils.copyInputStreamToFile(file.getInputStream(), newFile);
 					if(file != null ){
 						//newFile = new File(getDefaulPath() + UUID.randomUUID() + "-" + FilenameUtils.removeExtension(file.getFileName()).concat(".txt"));
 						

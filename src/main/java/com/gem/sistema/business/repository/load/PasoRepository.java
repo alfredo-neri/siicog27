@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.query.Procedure;
 
 import com.gem.sistema.business.domain.Paso;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Interface PasoRepository.
  */
 @Repository(value = "pasoRepository")
-public interface PasoRepository extends PagingAndSortingRepository<Paso, Long>, QueryDslPredicateExecutor<Paso> {
+public interface PasoRepository extends PagingAndSortingRepository<Paso, Long>, CrudRepository<Paso, Long>, QuerydslPredicateExecutor<Paso> {
 
 	/*
 	 * (non-Javadoc)
@@ -31,7 +32,7 @@ public interface PasoRepository extends PagingAndSortingRepository<Paso, Long>, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll()
+	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll()
 	 */
 	List<Paso> findAll(Predicate prdct);
 
@@ -49,7 +50,7 @@ public interface PasoRepository extends PagingAndSortingRepository<Paso, Long>, 
 	 * @param programa the programa
 	 * @return the integer
 	 */
-	@Query("select count(1) from Paso p where substr(p.partida,1,1) = '6' and p.catsector = 1 and p.programa = :programa")
+	@Query("select count(1) from Paso p where substr(p.partida,1,1) = '6' and p.catsector.idsector = 1 and p.programa = :programa")
 	Integer validatePrograma(@Param("programa") String programa);
 
 	/**
@@ -57,7 +58,7 @@ public interface PasoRepository extends PagingAndSortingRepository<Paso, Long>, 
 	 *
 	 * @return the big decimal
 	 */
-	@Query("select sum(p.auto113) from Paso p where substr(p.partida,1,1) = '6' and p.catsector = 1")
+	@Query("select sum(p.auto113) from Paso p where substr(p.partida,1,1) = '6' and p.catsector.idsector = 1")
 	BigDecimal existBudget();
 
 	/**

@@ -1,19 +1,19 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.TabCloseEvent;
 import org.primefaces.event.ToggleEvent;
@@ -37,8 +37,8 @@ import com.gem.sistema.business.domain.TwObra;
 import com.gem.sistema.business.domain.TwObraPago;
 import com.gem.sistema.business.service.catalogos.ControlPresupuestarioService;
 
-@ManagedBean(name = "controlPresupuestalMB")
-@ViewScoped
+@Component("controlPresupuestalMB")
+@Scope("view")
 public class ControlPresupuestalMB extends AbstractMB {
 
 	private static final String CLAVE_FAM = "FAM";
@@ -124,8 +124,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('obrasDlg').show();");
-		RequestContext.getCurrentInstance().update("thirdForm");
+		PrimeFaces.current().executeScript("PF('obrasDlg').show();");
+		PrimeFaces.current().ajax().update("thirdForm");
 	}
 
 	public void openDialogAreas() {
@@ -140,8 +140,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('areasDlg').show();");
-		RequestContext.getCurrentInstance().update("secondForm");
+		PrimeFaces.current().executeScript("PF('areasDlg').show();");
+		PrimeFaces.current().ajax().update("secondForm");
 	}
 
 	public void openDialogAcciones() {
@@ -156,8 +156,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('accionesDlg').show();");
-		RequestContext.getCurrentInstance().update("secondForm");
+		PrimeFaces.current().executeScript("PF('accionesDlg').show();");
+		PrimeFaces.current().ajax().update("secondForm");
 	}
 
 	public void openDialogFacturasFam() {
@@ -182,8 +182,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('facturasDlg').show();");
-		RequestContext.getCurrentInstance().update("secondForm");
+		PrimeFaces.current().executeScript("PF('facturasDlg').show();");
+		PrimeFaces.current().ajax().update("secondForm");
 	}
 
 	public void openDialogContratosFam() {
@@ -198,8 +198,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('contratosDlg').show();");
-		RequestContext.getCurrentInstance().update("secondForm");
+		PrimeFaces.current().executeScript("PF('contratosDlg').show();");
+		PrimeFaces.current().ajax().update("secondForm");
 	}
 
 	public void openDialogDependencias() {
@@ -214,8 +214,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('dependenciaDlg').show();");
-		RequestContext.getCurrentInstance().update("thirdForm");
+		PrimeFaces.current().executeScript("PF('dependenciaDlg').show();");
+		PrimeFaces.current().ajax().update("thirdForm");
 	}
 
 	public void openDialogPresupuestosFam() {
@@ -230,8 +230,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.TRUE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('configuracionPresupuestoFamDlg').show();");
-		RequestContext.getCurrentInstance().update("secondForm");
+		PrimeFaces.current().executeScript("PF('configuracionPresupuestoFamDlg').show();");
+		PrimeFaces.current().ajax().update("secondForm");
 	}
 
 	public void openDialogPresupuestosPad() {
@@ -246,8 +246,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.TRUE;
 
-		RequestContext.getCurrentInstance().execute("PF('configuracionPresupuestoPadDlg').show();");
-		RequestContext.getCurrentInstance().update("thirdForm");
+		PrimeFaces.current().executeScript("PF('configuracionPresupuestoPadDlg').show();");
+		PrimeFaces.current().ajax().update("thirdForm");
 	}
 
 	public void openDialogPagosObras() {
@@ -270,8 +270,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('pagosObrasDlg').show();");
-		RequestContext.getCurrentInstance().update("thirdForm");
+		PrimeFaces.current().executeScript("PF('pagosObrasDlg').show();");
+		PrimeFaces.current().ajax().update("thirdForm");
 	}
 
 	public void openDialogContratosPad() {
@@ -290,8 +290,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 		this.renderDialogPresupuestosFAM = Boolean.FALSE;
 		this.renderDialogPresupuestosPAD = Boolean.FALSE;
 
-		RequestContext.getCurrentInstance().execute("PF('contratosPadDlg').show();");
-		RequestContext.getCurrentInstance().update("thirdForm");
+		PrimeFaces.current().executeScript("PF('contratosPadDlg').show();");
+		PrimeFaces.current().ajax().update("thirdForm");
 	}
 
 	private void loadDataContratosPad() {
@@ -304,14 +304,14 @@ public class ControlPresupuestalMB extends AbstractMB {
 
 			this.tcContrato = contrato;
 
-			RequestContext.getCurrentInstance().update("secondForm:float-input1");
-			RequestContext.getCurrentInstance().update("secondForm:float-input2");
-			RequestContext.getCurrentInstance().update("secondForm:float-input3");
+			PrimeFaces.current().ajax().update("secondForm:float-input1");
+			PrimeFaces.current().ajax().update("secondForm:float-input2");
+			PrimeFaces.current().ajax().update("secondForm:float-input3");
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 					"Warn! Contrato no encontrado, Favor de seleccionar una contrato valido.", null));
 
-			RequestContext.getCurrentInstance().update("secondForm:messagesContratosFam");
+			PrimeFaces.current().ajax().update("secondForm:messagesContratosFam");
 		}
 	}
 
@@ -324,21 +324,21 @@ public class ControlPresupuestalMB extends AbstractMB {
 			if (polizaSelected != null) {
 				this.contratoFactura.setPoliza(polizaSelected);
 
-				RequestContext.getCurrentInstance().update("secondForm:fechaPoliza");
+				PrimeFaces.current().ajax().update("secondForm:fechaPoliza");
 
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 						"Warn! Póliza no encontrada, Favor de seleccionar una poliza que se encuentre registrada.",
 						null));
-				RequestContext.getCurrentInstance().update("secondForm:messagesFacturasFam");
+				PrimeFaces.current().ajax().update("secondForm:messagesFacturasFam");
 			}
 		} else {
-			RequestContext.getCurrentInstance().update("secondForm:messagesFacturasFam");
+			PrimeFaces.current().ajax().update("secondForm:messagesFacturasFam");
 		}
 
 	}
 
-	@ManagedProperty(value = "#{controlPresupuestarioService}")
+	@Value("#{controlPresupuestarioService}")
 	private ControlPresupuestarioService controlPresupuestarioService;
 
 	@PostConstruct
@@ -456,13 +456,13 @@ public class ControlPresupuestalMB extends AbstractMB {
 //			if (polizaSelected != null) {
 //				this.contratoFactura.setPoliza(polizaSelected);
 //
-//				RequestContext.getCurrentInstance().update("secondForm:fechaPoliza");
+//				PrimeFaces.current().ajax().update("secondForm:fechaPoliza");
 //
 //			} else {
 //				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 //						"Warn! Póliza no encontrada, Favor de seleccionar una poliza que se encuentre registrada.",
 //						null));
-//				RequestContext.getCurrentInstance().update("secondForm:messagesFacturasFam");
+//				PrimeFaces.current().ajax().update("secondForm:messagesFacturasFam");
 //			}
 
 	}
@@ -571,7 +571,7 @@ public class ControlPresupuestalMB extends AbstractMB {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"Error! El Area ya se encuentra registrada.", null));
 				continuar = Boolean.FALSE;
-				RequestContext.getCurrentInstance().update("secondForm:messagesAreas");
+				PrimeFaces.current().ajax().update("secondForm:messagesAreas");
 				break;
 			}
 		}
@@ -587,9 +587,9 @@ public class ControlPresupuestalMB extends AbstractMB {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info!", "El Area se ha registrado correctamente."));
 
-			RequestContext.getCurrentInstance().execute("PF('areasDlg').hide();");
-			RequestContext.getCurrentInstance().update("form:fam");
-			RequestContext.getCurrentInstance().update("form:messages");
+			PrimeFaces.current().executeScript("PF('areasDlg').hide();");
+			PrimeFaces.current().ajax().update("form:fam");
+			PrimeFaces.current().ajax().update("form:messages");
 		}
 	}
 
@@ -620,8 +620,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 
 				}
 
-				RequestContext.getCurrentInstance().execute("PF('accionesDlg').hide();");
-				RequestContext.getCurrentInstance().update("form:messages");
+				PrimeFaces.current().executeScript("PF('accionesDlg').hide();");
+				PrimeFaces.current().ajax().update("form:messages");
 
 			}
 		} else {
@@ -658,8 +658,8 @@ public class ControlPresupuestalMB extends AbstractMB {
 //			FacesContext.getCurrentInstance().addMessage(null,
 //					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info!", "La Acción se ha registrado correctamente."));
 //
-//			RequestContext.getCurrentInstance().execute("PF('accionesDlg').hide();");
-//			RequestContext.getCurrentInstance().update("form:messages");
+//			PrimeFaces.current().executeScript("PF('accionesDlg').hide();");
+//			PrimeFaces.current().ajax().update("form:messages");
 //		}
 	}
 
@@ -712,9 +712,9 @@ public class ControlPresupuestalMB extends AbstractMB {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 					"Info! El Contrato se ha registrado correctamente.", null));
 
-			RequestContext.getCurrentInstance().execute("PF('contratosPadDlg').hide();");
-			RequestContext.getCurrentInstance().update("thirdForm");
-			RequestContext.getCurrentInstance().update("form:messages");
+			PrimeFaces.current().executeScript("PF('contratosPadDlg').hide();");
+			PrimeFaces.current().ajax().update("thirdForm");
+			PrimeFaces.current().ajax().update("form:messages");
 
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -738,9 +738,9 @@ public class ControlPresupuestalMB extends AbstractMB {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Info! La Acción se ha registrado correctamente.", null));
 
-				RequestContext.getCurrentInstance().execute("PF('obrasDlg').hide();");
-				RequestContext.getCurrentInstance().update("thirdForm");
-				RequestContext.getCurrentInstance().update("form:messages");
+				PrimeFaces.current().executeScript("PF('obrasDlg').hide();");
+				PrimeFaces.current().ajax().update("thirdForm");
+				PrimeFaces.current().ajax().update("form:messages");
 
 				Integer index = listPresupuestoDependencias.indexOf(this.twObra.getPresupuestoDependencia());
 				listPresupuestoDependencias.get(index).getObras().add(twObra);
@@ -825,11 +825,11 @@ public class ControlPresupuestalMB extends AbstractMB {
 								.add(pago);
 					}
 
-					RequestContext.getCurrentInstance().execute("PF('pagosObrasDlg').hide();");
-					RequestContext.getCurrentInstance().update("thirdForm");
-					RequestContext.getCurrentInstance().update("form:messages");
-					RequestContext.getCurrentInstance()
-							.update("form:dependencias:" + indexDependencia + ":obras:" + indexObra + ":pagos");
+					PrimeFaces.current().executeScript("PF('pagosObrasDlg').hide();");
+					PrimeFaces.current().ajax().update("thirdForm");
+					PrimeFaces.current().ajax().update("form:messages");
+					PrimeFaces.current()
+							.ajax().update("form:dependencias:" + indexDependencia + ":obras:" + indexObra + ":pagos");
 
 				}
 			}
@@ -878,13 +878,13 @@ public class ControlPresupuestalMB extends AbstractMB {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info!",
 					"La Dependencia se ha registrado correctamente."));
 
-			RequestContext.getCurrentInstance().execute("PF('dependenciaDlg').hide();");
-			RequestContext.getCurrentInstance().update("form:messages");
+			PrimeFaces.current().executeScript("PF('dependenciaDlg').hide();");
+			PrimeFaces.current().ajax().update("form:messages");
 		}
 	}
 
 	public void showModal() {
-		RequestContext.getCurrentInstance().execute("PF('" + this.modalName + "').show();");
+		PrimeFaces.current().executeScript("PF('" + this.modalName + "').show();");
 	}
 
 	public void saveFactura() {
@@ -904,13 +904,13 @@ public class ControlPresupuestalMB extends AbstractMB {
 
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info!",
 					"La Factura se ha registrado correctamente."));
-			RequestContext.getCurrentInstance().execute("PF('facturasDlg').hide();");
-			RequestContext.getCurrentInstance().update("facturaForm:dialogId");
-			RequestContext.getCurrentInstance().update("form:tabView:areas");
-			RequestContext.getCurrentInstance().update("form:messages");
+			PrimeFaces.current().executeScript("PF('facturasDlg').hide();");
+			PrimeFaces.current().ajax().update("facturaForm:dialogId");
+			PrimeFaces.current().ajax().update("form:tabView:areas");
+			PrimeFaces.current().ajax().update("form:messages");
 
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('facturasDlg').open();");
+			PrimeFaces.current().executeScript("PF('facturasDlg').open();");
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warn!",
 					"Póliza no encontrada, Favor de seleccionar una poliza que se encuentre registrada."));
 		}
@@ -933,12 +933,12 @@ public class ControlPresupuestalMB extends AbstractMB {
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Info!", "Contrato registrado correctamente."));
-			RequestContext.getCurrentInstance().execute("PF('contratosDlg').hide();");
-			RequestContext.getCurrentInstance().update("contratoForm:dialogId");
-			RequestContext.getCurrentInstance().update("form:tabView:areas");
-			RequestContext.getCurrentInstance().update("form:messages");
+			PrimeFaces.current().executeScript("PF('contratosDlg').hide();");
+			PrimeFaces.current().ajax().update("contratoForm:dialogId");
+			PrimeFaces.current().ajax().update("form:tabView:areas");
+			PrimeFaces.current().ajax().update("form:messages");
 		} else {
-			RequestContext.getCurrentInstance().execute("PF('contratosDlg').open();");
+			PrimeFaces.current().executeScript("PF('contratosDlg').open();");
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warn!",
 					"Contrato no encontrado, Favor de seleccionar una contrato valido."));
 		}

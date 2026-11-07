@@ -3,9 +3,9 @@ package com.gem.sistema.business.domain;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.naming.Name;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.apache.commons.lang3.StringUtils;
 

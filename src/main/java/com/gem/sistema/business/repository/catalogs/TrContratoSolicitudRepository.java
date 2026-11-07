@@ -6,11 +6,12 @@ import com.gem.sistema.business.domain.TcAdquisicion;
 import com.gem.sistema.business.domain.TcContrato;
 import com.gem.sistema.business.domain.TrContratoSolicitud;
 
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository(value = "trContratoSolicitudRepository")
-public interface TrContratoSolicitudRepository extends PagingAndSortingRepository<TrContratoSolicitud, Long>{
+public interface TrContratoSolicitudRepository extends PagingAndSortingRepository<TrContratoSolicitud, Long>, CrudRepository<TrContratoSolicitud, Long>{
 
 	List<TrContratoSolicitud> findAllByContrato(TcContrato contrato);
 	

@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean.cuenta;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -17,16 +17,16 @@ import com.gem.sistema.business.service.catalogos.ServiceLDF;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.bean.BaseDirectReport;
 
-@ManagedBean(name = "cpObligacionesDiferentesFinanciamientoMB")
-@ViewScoped
+@Component("cpObligacionesDiferentesFinanciamientoMB")
+@Scope("view")
 public class CPObligacionesDiferentesFinanciamientoMB extends BaseDirectReport {
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
-	@ManagedProperty("#{informeAnaliticoDeudaPublicaService}")
+	@Value("#{informeAnaliticoDeudaPublicaService}")
 	private ServiceLDF service;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
 	@PostConstruct

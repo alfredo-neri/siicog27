@@ -1,20 +1,19 @@
 
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,8 @@ import org.slf4j.LoggerFactory;
  * The Class LoginController.
  */
 //@Named()
-@ManagedBean
-@RequestScoped
+@Component("loginController")
+@Scope("request")
 public class LoginController implements Serializable {
 	
 	/** The Constant serialVersionUID. */

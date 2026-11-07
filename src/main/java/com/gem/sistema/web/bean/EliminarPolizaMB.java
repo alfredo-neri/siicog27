@@ -1,11 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.event.SelectEvent;
 import com.gem.sistema.business.domain.Cattpo;
@@ -21,8 +21,8 @@ import com.gem.sistema.business.repository.catalogs.TcMesRepository;
 import com.gem.sistema.business.repository.catalogs.TwChequeRepository;
 import com.gem.sistema.business.service.catalogos.PolizaService;
 
-@ManagedBean(name = "eliminarPolizaMB")
-@ViewScoped
+@Component("eliminarPolizaMB")
+@Scope("view")
 public class EliminarPolizaMB extends AbstractMB {
 
 	private Integer mes;
@@ -39,22 +39,22 @@ public class EliminarPolizaMB extends AbstractMB {
 	private String deleteMsn = "";
 	private TwCheque chequeActual;
 
-	@ManagedProperty(value = "#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty(value = "#{cattpoRepository}")
+	@Value("#{cattpoRepository}")
 	private CattpoRepository cattpoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 
-	@ManagedProperty("#{twChequeRepository}")
+	@Value("#{twChequeRepository}")
 	private TwChequeRepository chequeRepository;
 
 	@PostConstruct

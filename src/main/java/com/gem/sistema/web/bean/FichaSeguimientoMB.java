@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -8,16 +11,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.PrimeFacesContext;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 
 import com.gem.sistema.business.domain.TcFicha;
@@ -38,8 +38,8 @@ import com.gem.sistema.util.UtilFront;
  * 
  * @sector Municipal
  */
-@ViewScoped
-@ManagedBean(name = "fichaSeguimientoMB")
+@Scope("view")
+@Component("fichaSeguimientoMB")
 public class FichaSeguimientoMB extends AbstractMB {
 
 	private String generalSearch = StringUtils.EMPTY;
@@ -55,7 +55,7 @@ public class FichaSeguimientoMB extends AbstractMB {
 	private Integer currentPage = 0;
 	private Integer currentPageVariable = 0;
 
-	@ManagedProperty("#{matrizFichasIndicadoresService}")
+	@Value("#{matrizFichasIndicadoresService}")
 	private MatrizFichasIndicadoresService matrizFichasIndicadoresService;
 
 	@PostConstruct
@@ -157,9 +157,9 @@ public class FichaSeguimientoMB extends AbstractMB {
 
 	public void changeVariable() {
 		listFichas.get(currentPage).getVariables().get(currentPageVariable).setVariable(variableSelected);
-		RequestContext.getCurrentInstance().execute("PF('variableWdg').unselectAllRows();");
-		RequestContext.getCurrentInstance().execute("PF('variableWdg').clearFilters();");
-		RequestContext.getCurrentInstance().execute("PF('catalogVariablesDlg').hide();");
+		PrimeFaces.current().executeScript("PF('variableWdg').unselectAllRows();");
+		PrimeFaces.current().executeScript("PF('variableWdg').clearFilters();");
+		PrimeFaces.current().executeScript("PF('catalogVariablesDlg').hide();");
 	}
 
 	public void addVariable() {
@@ -180,8 +180,8 @@ public class FichaSeguimientoMB extends AbstractMB {
 				.add("formCaptura:fichasTable:" + currentPage + ":pnlBotonesDetalle");
 		PrimeFacesContext.getCurrentInstance().getPartialViewContext().getRenderIds()
 				.add("formCaptura:fichasTable:" + currentPage + ":tablaDetalle");
-		RequestContext.getCurrentInstance()
-				.execute("PF('detalleWdg').getPaginator().setPage(" + currentPageVariable + ")");
+		PrimeFaces.current()
+				.executeScript("PF('detalleWdg').getPaginator().setPage(" + currentPageVariable + ")");
 
 		PrimeFacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("growl");
 	}

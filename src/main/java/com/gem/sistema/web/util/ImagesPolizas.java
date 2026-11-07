@@ -1,12 +1,11 @@
 package com.gem.sistema.web.util;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.IOException;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -18,12 +17,12 @@ import com.gem.sistema.business.service.catalogos.ConsultaPolizaSirveImpl;
 /**
  * The Class ImagesPolizas.
  */
-@ManagedBean(name = "imagesPoliza")
-@RequestScoped
+@Component("imagesPoliza")
+@Scope("request")
 public class ImagesPolizas {
 
 	/** The consulta poliza sirve impl. */
-	@ManagedProperty("#{consultaPolizaSirveImpl}")
+	@Value("#{consultaPolizaSirveImpl}")
 	private ConsultaPolizaSirveImpl consultaPolizaSirveImpl;
 
 	/**

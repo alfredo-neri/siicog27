@@ -3,6 +3,7 @@
  */
 package com.gem.sistema.load.fileupload.service;
 
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -16,7 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ import com.gem.sistema.load.fileupload.validators.results.EgresResultBean;
 public class InboundFileServiceImpl implements InboundFileService {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(CsvFileValidatorImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CsvFileValidatorImpl.class);
 
 	/** CHARSET. */
 	private static final String CHARSET = "ISO-8859-1";

@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +30,8 @@ import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;;
 /**
  * The Class RF0010113MB.
  */
-@ManagedBean(name = "rF0010113MB")
-@ViewScoped
+@Component("rF0010113MB")
+@Scope("view")
 public class RF0010113MB extends BaseDirectReport {
 
 	/** The mes. */
@@ -44,16 +44,16 @@ public class RF0010113MB extends BaseDirectReport {
 	private List<TcMes> listMes;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 	
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	public ConctbRepository getConctbRepository() {
@@ -82,7 +82,7 @@ public class RF0010113MB extends BaseDirectReport {
 
 	/** Servicio para validacion de mes aprturado, polizas, afectacion */
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/**

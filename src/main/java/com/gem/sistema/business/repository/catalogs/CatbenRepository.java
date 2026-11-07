@@ -3,13 +3,14 @@ package com.gem.sistema.business.repository.catalogs;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gem.sistema.business.domain.Catben;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,7 +19,7 @@ import com.mysema.query.types.Predicate;
  * @author 
  */
 @Repository
-public interface CatbenRepository extends PagingAndSortingRepository<Catben, Long>, QueryDslPredicateExecutor<Catben> {
+public interface CatbenRepository extends PagingAndSortingRepository<Catben, Long>, CrudRepository<Catben, Long>, QuerydslPredicateExecutor<Catben> {
 	
 	/*
 	 * (non-Javadoc)
@@ -35,7 +36,7 @@ public interface CatbenRepository extends PagingAndSortingRepository<Catben, Lon
 	
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate)
+	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll(com.querydsl.core.types.Predicate)
 	 */
 	List<Catben> findAll(Predicate prdct);
     

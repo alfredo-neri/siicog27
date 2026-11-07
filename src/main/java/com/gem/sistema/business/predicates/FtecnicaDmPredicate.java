@@ -2,7 +2,7 @@ package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.Ftecnicadm;
 import com.gem.sistema.business.domain.QFtecnicadm;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 public class FtecnicaDmPredicate {
 

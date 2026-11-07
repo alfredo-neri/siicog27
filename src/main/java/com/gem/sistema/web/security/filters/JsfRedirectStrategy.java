@@ -7,9 +7,9 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.util.StringUtils;
@@ -32,7 +32,7 @@ public class JsfRedirectStrategy implements InvalidSessionStrategy {
     	private String invalidSessionUrl;
 
 	/* (non-Javadoc)
-	 * @see org.springframework.security.web.session.InvalidSessionStrategy#onInvalidSessionDetected(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 * @see org.springframework.security.web.session.InvalidSessionStrategy#onInvalidSessionDetected(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)

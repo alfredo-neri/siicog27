@@ -1,10 +1,11 @@
 package com.gem.sistema.business.dao.impl;
 
+import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +26,7 @@ public class GeneratePrevieReportBSImpl implements GeneratePrevieReportBS {
 	private static final String JUMP_LINEA = "\n";
 	
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(GeneratePrevieReportBSImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GeneratePrevieReportBSImpl.class);
 
 	/*
 	 * (non-Javadoc)

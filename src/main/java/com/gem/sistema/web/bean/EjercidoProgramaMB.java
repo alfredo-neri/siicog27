@@ -1,16 +1,17 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.activation.MimetypesFileTypeMap;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -19,13 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.gem.sistema.business.service.catalogos.GeneraTxtService;
 import com.gem.sistema.util.Constants;
 
-@ManagedBean(name = "ejercidoProgramaMB")
-@ViewScoped
+@Component("ejercidoProgramaMB")
+@Scope("view")
 public class EjercidoProgramaMB {
 
 	private static final String FILE_NAME = "ejercidoPorCapitulo.txt";
 
-	@ManagedProperty("#{generaTxtService}")
+	@Value("#{generaTxtService}")
 	private GeneraTxtService generaTxtService;
 
 	private StreamedContent file;
@@ -62,7 +63,7 @@ public class EjercidoProgramaMB {
 		} catch (FileNotFoundException ex) {
 
 		}
-		file = new DefaultStreamedContent(stream, Constants.APPLICCTION_CSV, FILE_NAME);
+		file = StreamedContents.of(stream, Constants.APPLICCTION_CSV, FILE_NAME, null);
 		return file;
 	}
 

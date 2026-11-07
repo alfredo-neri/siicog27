@@ -1,7 +1,11 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,13 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -34,8 +35,8 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class Reporte261MB.
  */
-@ManagedBean(name = "reporte261MB")
-@ViewScoped
+@Component("reporte261MB")
+@Scope("view")
 public class Reporte261MB extends GenericExecuteProcedure {
 	
 	/** The mes. */
@@ -60,7 +61,7 @@ public class Reporte261MB extends GenericExecuteProcedure {
 	private static final String FOCUS_BY_ROWID = "PrimeFaces.focus('form1:preViewTxt');";
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
 	/**
@@ -106,7 +107,7 @@ public class Reporte261MB extends GenericExecuteProcedure {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", out.get("O_NAME_FILE").toString());
+			fileTxt = StreamedContents.of(stream, "application/txt", out.get("O_NAME_FILE").toString(), null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		}
 
@@ -266,7 +267,7 @@ public class Reporte261MB extends GenericExecuteProcedure {
 			}
 
 			txtPreview = this.generatePreviewService.generatePreview(fileNameOut);
-			RequestContext.getCurrentInstance().execute(FOCUS_BY_ROWID);
+			PrimeFaces.current().executeScript(FOCUS_BY_ROWID);
 			// generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!",
 			// out.get("O_MSG_ERROR").toString());
 		}

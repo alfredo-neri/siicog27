@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,18 +12,15 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import com.gem.sistema.business.repository.catalogs.CatdepRepository;
 import com.gem.sistema.business.repository.catalogs.MayctaRepository;
@@ -41,8 +42,8 @@ import com.gem.sistema.web.security.model.GemUser;
 /**
  * The Class CargaCuentas50008000MB.
  */
-@ManagedBean(name = "cargacuenta58MB")
-@ViewScoped
+@Component("cargacuenta58MB")
+@Scope("view")
 public class CargaCuentas50008000MB extends AbstractMB {
 	private static final String DOWNLOAD_TXT = " jQuery('#form1\\\\:downTxt').click();";
 
@@ -92,25 +93,25 @@ public class CargaCuentas50008000MB extends AbstractMB {
 	private boolean active = true;
 
 	/** The catdep repository. */
-	@ManagedProperty("#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** The xcatpro repository. */
-	@ManagedProperty("#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
 	/** The natgas repository. */
-	@ManagedProperty(value = "#{natgasRepository}")
+	@Value("#{natgasRepository}")
 	private NatgasRepository natgasRepository;
 
 	/** The account service. */
-	@ManagedProperty("#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
-	@ManagedProperty("#{mayctaRepository}")
+	@Value("#{mayctaRepository}")
 	private MayctaRepository mayctaRepository;
 
-	@ManagedProperty("#{cargaCuentas58Service}")
+	@Value("#{cargaCuentas58Service}")
 	private CargaCuentas58Service cargaCuentas58Service;
 
 	private UploadedFile file;
@@ -409,7 +410,7 @@ public class CargaCuentas50008000MB extends AbstractMB {
 	 */
 	void createMissingAccounts(String currentAccount, String[] names, Long idSector, String modScta, String modSscta,
 			String modSsscta) {
-		Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(currentAccount));
+		Maycta maycta = this.mayctaRepository.findOne(MayctaPredicates.existAccount(currentAccount)).orElse(null);
 		if (accountService.findFirstByCuentaAndScuentaAndSscuentaAndSsscuentaAndSssscuentaAndIdsector(currentAccount,
 				modScta, modSscta, modSsscta, "", idSector) == null) {
 			accountService.saveAccount(new Cuenta(currentAccount, modScta, modSscta, modSsscta, "", names[2],
@@ -436,7 +437,7 @@ public class CargaCuentas50008000MB extends AbstractMB {
 		fileName = UUID.randomUUID() + event.getFile().getFileName();
 
 		try {
-			String pathFillFullName = CopyFileUtil.copyFile(fileName, event.getFile().getInputstream(), PATH_FILE);
+			String pathFillFullName = CopyFileUtil.copyFile(fileName, event.getFile().getInputStream(), PATH_FILE);
 			outParameters = this.cargaCuentas58Service.cargaCueta(pathFillFullName,
 					this.getUserDetails().getUsername());
 			if (Integer.valueOf(outParameters.get("O_COD_ERROR").toString()) == 1) {
@@ -451,8 +452,7 @@ public class CargaCuentas50008000MB extends AbstractMB {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				downloadFile = new DefaultStreamedContent(stream1, "application/txt",
-						outParameters.get("O_FULL_PATH").toString().substring(12));
+				downloadFile = StreamedContents.of(stream1, "application/txt", outParameters.get("O_FULL_PATH").toString().substring(12), null);
 			}
 		} catch (IOException e) {
 			displayInfoMessage("Error al cargar el archivo");

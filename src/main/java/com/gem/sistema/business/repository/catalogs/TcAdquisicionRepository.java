@@ -3,7 +3,8 @@ package com.gem.sistema.business.repository.catalogs;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,9 +19,9 @@ import com.gem.sistema.business.domain.TcPersonalAdministrativo;
  */
 @Repository(value = "tcAdquisicionRepository")
 public interface TcAdquisicionRepository
-		extends PagingAndSortingRepository<TcAdquisicion, Long>, QueryDslPredicateExecutor<TcAdquisicion> {
+		extends PagingAndSortingRepository<TcAdquisicion, Long>, CrudRepository<TcAdquisicion, Long>, QuerydslPredicateExecutor<TcAdquisicion> {
 
-	@Query("SELECT (DECODE(MAX(a.numeroControl),NULL,0,MAX(a.numeroControl)))+1 from TcAdquisicion a")
+	@Query("SELECT COALESCE(MAX(a.numeroControl), 0) + 1 from TcAdquisicion a")
 	Integer getNextConsecutivo();
 
 	@Query("SELECT a FROM TcAdquisicion a 				" + " left join fetch a.bienServicio b "
@@ -43,6 +44,6 @@ public interface TcAdquisicionRepository
 	TcAdquisicion findFirstByNumeroControl(@Param("numeroControl") Integer numeroControl);
 
 	@Transactional
-	void delete(Long id);
+	void deleteById(Long id);
 
 }

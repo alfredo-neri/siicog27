@@ -1,9 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,16 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -54,8 +55,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogDependenciesCentralMB")
+@Scope("view")
 public class CatalogDependenciesCentralMB extends CommonCatalogMB<Catdep> implements Serializable {
 
 	/** The Constant charSetISO. */
@@ -136,19 +137,19 @@ public class CatalogDependenciesCentralMB extends CommonCatalogMB<Catdep> implem
 	private List<Catdaa> dependenciesAuxiliary;
 
 	/** Servicios de dependencias central. */
-	@ManagedProperty(value = "#{dependenciesServiceImpl}")
+	@Value("#{dependenciesServiceImpl}")
 	private DependenciesService dependenciesService;
 
 	/** Repositorio de Catdep. */
-	@ManagedProperty(value = "#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
 	/** The polide repository. */
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** The insert. */
@@ -270,7 +271,7 @@ public class CatalogDependenciesCentralMB extends CommonCatalogMB<Catdep> implem
 //			if (tieneSucesores(catalog)) {
 //				if (catalog.getUltniv().toUpperCase().equals("S")) {
 //					this.errorMessage = "La clave de la dependencia tiene sucesores";
-//					RequestContext.getCurrentInstance()
+//					PrimeFaces.current()
 //							.execute("document.getElementById('form1:hideButton3').click();");
 //					activateRowEdit(catalog.getIndex());
 //					generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, this.errorMessage);
@@ -294,7 +295,7 @@ public class CatalogDependenciesCentralMB extends CommonCatalogMB<Catdep> implem
 			// catalog.setClvdep(fillZerosToRight(catalog.getClvdep(),
 			// LENGTH_CLVDEP));
 			executeOperationSaveOrUpdate(catalog, catdepRepository);
-			RequestContext.getCurrentInstance().execute("document.getElementById('form1:hideButton2').click();");
+			PrimeFaces.current().executeScript("document.getElementById('form1:hideButton2').click();");
 			// restartData();
 		} else {
 			if (errorMsg.length() == ZERO) {
@@ -457,7 +458,7 @@ public class CatalogDependenciesCentralMB extends CommonCatalogMB<Catdep> implem
 		restartFilteredList();
 	}
 
-	// private static final Sort CATDEP_CLV = new Sort(Sort.Direction.ASC,
+	// private static final Sort CATDEP_CLV = Sort.by(Sort.Direction.ASC,
 	// "clvdep");
 
 	/**
@@ -833,7 +834,7 @@ public class CatalogDependenciesCentralMB extends CommonCatalogMB<Catdep> implem
 
 				e.printStackTrace();
 			}
-			csvByPl = new DefaultStreamedContent(stream, "application/csv", fileNameOut);
+			csvByPl = StreamedContents.of(stream, "application/csv", fileNameOut, null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", fileNameOut);
 		}
 	}
@@ -887,7 +888,7 @@ public class CatalogDependenciesCentralMB extends CommonCatalogMB<Catdep> implem
 
 				e.printStackTrace();
 			}
-			txtByPl = new DefaultStreamedContent(stream, "application/txt", fileNameOut);
+			txtByPl = StreamedContents.of(stream, "application/txt", fileNameOut, null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", fileNameOut);
 		}
 	}

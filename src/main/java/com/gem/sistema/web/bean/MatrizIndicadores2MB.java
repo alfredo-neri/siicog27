@@ -1,16 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 
 import com.gem.sistema.business.domain.Catdaa;
@@ -36,8 +36,8 @@ import com.gem.sistema.util.UtilFront;
  *           ajustan componentes y metodo de creacion de fichas
  * @Sector Municipal
  */
-@ViewScoped
-@ManagedBean(name = "matrizIndicadores2MB")
+@Scope("view")
+@Component("matrizIndicadores2MB")
 public class MatrizIndicadores2MB extends AbstractMB {
 
 	private String dependenciaSearch = StringUtils.EMPTY;
@@ -60,10 +60,10 @@ public class MatrizIndicadores2MB extends AbstractMB {
 
 	private TcNivel componenteSelected;
 
-	@ManagedProperty("#{matrizFichasIndicadoresService}")
+	@Value("#{matrizFichasIndicadoresService}")
 	private MatrizFichasIndicadoresService matrizFichasIndicadoresService;
 
-	@ManagedProperty("#{tcMatrizRepository}")
+	@Value("#{tcMatrizRepository}")
 	private TcMatrizRepository matrizRepository;
 
 	@PostConstruct
@@ -115,7 +115,7 @@ public class MatrizIndicadores2MB extends AbstractMB {
 			}
 		}
 
-		RequestContext.getCurrentInstance().update("formIndCaptura:indTable:" + currentPage + ":desDep");
+		PrimeFaces.current().ajax().update("formIndCaptura:indTable:" + currentPage + ":desDep");
 	}
 
 	public void changeDependenciaAux() {
@@ -129,7 +129,7 @@ public class MatrizIndicadores2MB extends AbstractMB {
 			}
 		}
 
-		RequestContext.getCurrentInstance().update("formIndCaptura:indTable:" + currentPage + ":desDepAux");
+		PrimeFaces.current().ajax().update("formIndCaptura:indTable:" + currentPage + ":desDepAux");
 	}
 
 	public void changeProyecto() {
@@ -142,8 +142,8 @@ public class MatrizIndicadores2MB extends AbstractMB {
 			}
 		}
 
-		RequestContext.getCurrentInstance().update("formIndCaptura:indTable:" + currentPage + ":desProyecto");
-		RequestContext.getCurrentInstance().update("formIndCaptura:indTable:" + currentPage + ":objProyecto");
+		PrimeFaces.current().ajax().update("formIndCaptura:indTable:" + currentPage + ":desProyecto");
+		PrimeFaces.current().ajax().update("formIndCaptura:indTable:" + currentPage + ":objProyecto");
 	}
 
 	public void changeTemaDesarrollo() {
@@ -157,7 +157,7 @@ public class MatrizIndicadores2MB extends AbstractMB {
 			}
 		}
 
-		RequestContext.getCurrentInstance().update("formIndCaptura:indTable:" + currentPage + ":desDesarrollo");
+		PrimeFaces.current().ajax().update("formIndCaptura:indTable:" + currentPage + ":desDesarrollo");
 	}
 
 	public void replicarMatriz() {
@@ -199,8 +199,8 @@ public class MatrizIndicadores2MB extends AbstractMB {
 		this.loadListPrincipal();
 		this.loadSecondList(currentPage);
 
-		RequestContext.getCurrentInstance().execute("PF('indWdg').getPaginator().setPage(" + currentPage + ")");
-		RequestContext.getCurrentInstance().update("formIndCaptura:indTable:" + currentPage + ":tabs");
+		PrimeFaces.current().executeScript("PF('indWdg').getPaginator().setPage(" + currentPage + ")");
+		PrimeFaces.current().ajax().update("formIndCaptura:indTable:" + currentPage + ":tabs");
 	}
 
 	public void saveEncabezado() {
@@ -233,8 +233,8 @@ public class MatrizIndicadores2MB extends AbstractMB {
 								matrizRepository.save(listMatriz.get(currentPage));
 								this.cancel();
 
-								RequestContext.getCurrentInstance()
-										.update("formIndCaptura:indTable:" + currentPage + ":tabs");
+								PrimeFaces.current()
+										.ajax().update("formIndCaptura:indTable:" + currentPage + ":tabs");
 								UtilFront.generateNotificationFront(FacesMessage.SEVERITY_INFO, "Success",
 										"Se ha actualizado correctamente el encabezado");
 							} else {
@@ -316,8 +316,8 @@ public class MatrizIndicadores2MB extends AbstractMB {
 					currentPageActividad = 0;
 					currentPageComponente = 0;
 
-					RequestContext.getCurrentInstance().execute("PF('comWdg').getPaginator().setPage(0)");
-					RequestContext.getCurrentInstance().execute("PF('actWdg').getPaginator().setPage(0)");
+					PrimeFaces.current().executeScript("PF('comWdg').getPaginator().setPage(0)");
+					PrimeFaces.current().executeScript("PF('actWdg').getPaginator().setPage(0)");
 				}
 
 			}
@@ -333,7 +333,7 @@ public class MatrizIndicadores2MB extends AbstractMB {
 		currentPageComponente = event.getPage();
 		currentPageActividad = 0;
 
-		RequestContext.getCurrentInstance().execute("PF('actWdg').getPaginator().setPage(0)");
+		PrimeFaces.current().executeScript("PF('actWdg').getPaginator().setPage(0)");
 	}
 
 	public void changePageActividad(PageEvent event) {

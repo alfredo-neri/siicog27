@@ -1,8 +1,8 @@
 package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.QMaycta;
-import com.mysema.query.types.OrderSpecifier;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**

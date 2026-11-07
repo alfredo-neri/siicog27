@@ -1,10 +1,12 @@
 package com.gem.sistema.web.bean;
 
-import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +17,13 @@ import com.gem.sistema.business.service.catalogos.TbProcesoService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.util.FrontProperty;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class GenericExecuteProcedure.
  */
-@ManagedBean
-@ViewScoped
+@Component("genericExecuteProcedure")
+@Scope("view")
 public abstract class GenericExecuteProcedure extends AbstractMB {
 
 	/** The Constant LOGGER. */
@@ -39,10 +39,10 @@ public abstract class GenericExecuteProcedure extends AbstractMB {
 	protected String fileName;
 
 	/** The execute pl service. */
-	@ManagedProperty("#{executePlService}")
+	@Value("#{executePlService}")
 	protected ExecutePlService executePlService;
 
-	@ManagedProperty(value = "#{tbProcesoService}")
+	@Value("#{tbProcesoService}")
 	private TbProcesoService procesoService;
 
 	/**

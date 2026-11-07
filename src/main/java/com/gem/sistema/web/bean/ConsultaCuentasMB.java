@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.datamodel.CustomPagingModel;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.clearFields;
 
 import java.io.Serializable;
@@ -9,17 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.data.PageEvent;
 import org.slf4j.Logger;
@@ -41,8 +42,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class ConsultaCuentasMB.
  */
-@ManagedBean(name = "consultaCuentasMB")
-@ViewScoped
+@Component("consultaCuentasMB")
+@Scope("view")
 public class ConsultaCuentasMB extends AbstractMB implements Serializable {
 
 	/**
@@ -82,11 +83,11 @@ public class ConsultaCuentasMB extends AbstractMB implements Serializable {
 	public static final int LENGTH_FIVE_LEVEL = 3;
 
 	/** Servicios para el modulo de centas. */
-	@ManagedProperty(value = "#{accountService}")
+	@Value("#{accountService}")
 	private AccountService accountService;
 
 	/** The polien repository. */
-	@ManagedProperty("#{polienRepository}")
+	@Value("#{polienRepository}")
 	private PolienRepository polienRepository;
 
 	/**
@@ -111,24 +112,24 @@ public class ConsultaCuentasMB extends AbstractMB implements Serializable {
 	/**
 	 * Repositorio de Cuenta.
 	 */
-	@ManagedProperty(value = "#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	/**
 	 * Repositorio de Maycta.
 	 */
-	@ManagedProperty(value = "#{mayctaRepository}")
+	@Value("#{mayctaRepository}")
 	private MayctaRepository mayctaRepository;
 
 	/** The cuenta data model. */
-	@ManagedProperty(value = "#{cuentaDataModel}")
+	@Value("#{cuentaDataModel}")
 	private CuentaDataModel cuentaDataModel;
 
 	/** The con poliz sirvice. */
-	@ManagedProperty(value = "#{consultaPolizaSirveImpl}")
+	@Value("#{consultaPolizaSirveImpl}")
 	private ConsultaPolizaSirve conPolizSirvice;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/** The bean find. */
@@ -255,10 +256,10 @@ public class ConsultaCuentasMB extends AbstractMB implements Serializable {
 		final DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot()
 				.findComponent(VIEW_CATALOG_FORM1).findComponent(VIEW_CATALOG_FORM1_OBJECTS);
 		// dataTable.setFirst(ZERO);
-		dataTable.setFilters(this.findByAccountLikeComposite(this.getCuentaDataModel().getBeanFind()));
+		dataTable.setFilterByAsMap(CustomPagingModel.toFilterMeta(this.findByAccountLikeComposite(this.getCuentaDataModel().getBeanFind())));
 		dataTable.processUpdates(FacesContext.getCurrentInstance());
 
-		RequestContext.getCurrentInstance().execute("PF('tbCuentas').filter();");
+		PrimeFaces.current().executeScript("PF('tbCuentas').filter();");
 	}
 
 	/**
@@ -348,7 +349,7 @@ public class ConsultaCuentasMB extends AbstractMB implements Serializable {
 		this.getCuentaDataModel().setReset(Boolean.TRUE);
 		this.getCuentaDataModel().setCount(null);
 
-		RequestContext.getCurrentInstance().execute("PF('tbCuentas').clearFilters();");
+		PrimeFaces.current().executeScript("PF('tbCuentas').clearFilters();");
 	}
 
 	/**
@@ -485,7 +486,7 @@ public class ConsultaCuentasMB extends AbstractMB implements Serializable {
 			this.getCuentaDataModel().setInsert(Boolean.FALSE);
 		} else {
 			if (this.getCuentaDataModel().getInsert()) {
-				RequestContext.getCurrentInstance().execute(
+				PrimeFaces.current().executeScript(
 						"jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});");
 			}
 		}

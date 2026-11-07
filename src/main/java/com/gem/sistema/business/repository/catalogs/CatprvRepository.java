@@ -2,20 +2,21 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gem.sistema.business.domain.Catprv;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Interface CatprvRepository.
  */
 @Repository
-public interface CatprvRepository extends PagingAndSortingRepository<Catprv, Long>, QueryDslPredicateExecutor<Catprv> {
+public interface CatprvRepository extends PagingAndSortingRepository<Catprv, Long>, CrudRepository<Catprv, Long>, QuerydslPredicateExecutor<Catprv> {
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#findAll()
@@ -29,7 +30,7 @@ public interface CatprvRepository extends PagingAndSortingRepository<Catprv, Lon
 	<S extends Catprv> S save(S entity);
 	
 	/* (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate)
+	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll(com.querydsl.core.types.Predicate)
 	 */
 	List<Catprv> findAll(Predicate prdct);
 	

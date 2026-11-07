@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilReport.getNameFileReport;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
@@ -7,10 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.primefaces.model.StreamedContent;
 
@@ -36,8 +36,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
  *           implementa Servicio de firmas dinamicas
  *
  */
-@ManagedBean(name = "reporteIGBBCMB")
-@ViewScoped
+@Component("reporteIGBBCMB")
+@Scope("view")
 public class ReporteIGBBCMB extends BaseDirectReport {
 	private static final String CLAVE_REPORT = "RPT_INVENTARIO_GENERAL_BIENES_MUEBLES_BAJO_COSTO";
 	/** The conctb. */
@@ -50,20 +50,20 @@ public class ReporteIGBBCMB extends BaseDirectReport {
 	private List<String> listsemestre;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{reporte025MB}")
+	@Value("#{reporte025MB}")
 	private Reporte025MB reporte025mb;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reporteFirmasRepository;
 
 	/**

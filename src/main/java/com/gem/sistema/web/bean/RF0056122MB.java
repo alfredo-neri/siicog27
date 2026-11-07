@@ -1,13 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.IOException;
 import java.util.Map;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 import org.primefaces.model.StreamedContent;
 
 
@@ -22,8 +21,8 @@ import com.gem.sistema.web.util.FrontProperty;
 /**
  * The Class RF0056122MB.
  */
-@ManagedBean
-@ViewScoped
+@Component("rF0056122MB")
+@Scope("view")
 public class RF0056122MB extends BaseDirectReportByPL {
 	
 	/**

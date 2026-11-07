@@ -3,6 +3,9 @@
  */
 package com.gem.sistema.web.datamodel;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.business.predicates.TcUsuarioPredicates.findByIdSector;
 import static com.gem.sistema.business.predicates.TcUsuarioPredicates.findByUsuario;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -11,11 +14,8 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +31,8 @@ import com.gem.sistema.business.repository.catalogs.CatmunRepository;
 import com.gem.sistema.business.repository.catalogs.TcEntePubCentralRepository;
 import com.gem.sistema.business.repository.catalogs.TcEntidadAdministrativaRepository;
 import com.gem.sistema.business.repository.catalogs.TcUsuarioRepository;
-import com.mysema.query.BooleanBuilder;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,8 +40,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author gauss s
  */
-@ManagedBean(name = "tcUsuarioDataModel")
-@ViewScoped
+@Component("tcUsuarioDataModel")
+@Scope("view")
 public class TcUsuarioDataModel extends CustomPagingModel<TcUsuario> {
 
 	/**
@@ -50,23 +50,23 @@ public class TcUsuarioDataModel extends CustomPagingModel<TcUsuario> {
 	private static final long serialVersionUID = 1L;
 	
 	/** Componente de servicio. */
-	@ManagedProperty(value = "#{tcUsuarioRepository}")
+	@Value("#{tcUsuarioRepository}")
 	private TcUsuarioRepository tcUsuarioRepository;
 
 	/** The tc entidad administrativa repository. */
-	@ManagedProperty(value = "#{tcEntidadAdministrativaRepository}")
+	@Value("#{tcEntidadAdministrativaRepository}")
 	private TcEntidadAdministrativaRepository tcEntidadAdministrativaRepository;
 
 	/** The tc ente pub central repository. */
-	@ManagedProperty(value = "#{tcEntePubCentralRepository}")
+	@Value("#{tcEntePubCentralRepository}")
 	private TcEntePubCentralRepository tcEntePubCentralRepository;
 
 	/** The catdep repository. */
-	@ManagedProperty(value = "#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** The catmun repository. */
-	@ManagedProperty(value = "#{catmunRepository}")
+	@Value("#{catmunRepository}")
 	private CatmunRepository catmunRepository;
 
 	/** The id sector. */
@@ -144,7 +144,7 @@ public class TcUsuarioDataModel extends CustomPagingModel<TcUsuario> {
 	 */
 	@Override
 	protected Sort orderBy() {
-		return new Sort(Sort.Direction.DESC, "id");
+		return Sort.by(Sort.Direction.DESC, "id");
 	}
 
 	/**
@@ -171,20 +171,20 @@ public class TcUsuarioDataModel extends CustomPagingModel<TcUsuario> {
 		String localidadDesc = StringUtils.EMPTY;
 		if (tcUsuario.getTipoUsuario().getId() == 1) {
 			TcEntidadAdministrativa tcEntidadAdministrativa = this.tcEntidadAdministrativaRepository
-					.findOne(tcUsuario.getIdEntidadAdmini());
+					.findById(tcUsuario.getIdEntidadAdmini()).orElse(null);
 			if (tcEntidadAdministrativa != null) {
 				entidadDesc = tcEntidadAdministrativa.getDescripcion();
 			}
-			Catmun catmun = this.catmunRepository.findOne(tcUsuario.getIdLocalidad());
+			Catmun catmun = this.catmunRepository.findById(tcUsuario.getIdLocalidad()).orElse(null);
 			if (catmun != null) {
 				localidadDesc = catmun.getNommun();
 			}
 		} else {
-			TcEntePubCentral tcEntePub = this.tcEntePubCentralRepository.findOne(tcUsuario.getIdEntidadAdmini());
+			TcEntePubCentral tcEntePub = this.tcEntePubCentralRepository.findById(tcUsuario.getIdEntidadAdmini()).orElse(null);
 			if (null != tcEntePub) {
 				entidadDesc = tcEntePub.getDesc();
 			}
-			Catdep catdep = this.catdepRepository.findOne(tcUsuario.getIdLocalidad());
+			Catdep catdep = this.catdepRepository.findById(tcUsuario.getIdLocalidad()).orElse(null);
 			if (catdep != null) {
 				localidadDesc = catdep.getNomdep();
 			}

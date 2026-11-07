@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,8 @@ import com.gem.sistema.business.repository.catalogs.IntegradoiRepository;
 /**
  * The Class PresupuestoIntegradoIMB.
  */
-@ManagedBean(name = "presupuestoIntegradoIMB")
-@ViewScoped
+@Component("presupuestoIntegradoIMB")
+@Scope("view")
 public class PresupuestoIntegradoIMB implements Serializable{
 	
 	/** The Constant serialVersionUID. */
@@ -213,11 +213,11 @@ public class PresupuestoIntegradoIMB implements Serializable{
 	
 	
 	/** The integradoi repository. */
-	@ManagedProperty(value= "#{integradoiRepository}")
+	@Value("#{integradoiRepository}")
 	private IntegradoiRepository integradoiRepository;
 	
 	/** The cuenta repository. */
-	@ManagedProperty(value= "#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 	
 	/**

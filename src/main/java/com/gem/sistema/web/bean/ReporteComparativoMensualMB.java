@@ -1,5 +1,9 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.io.File;
@@ -11,13 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -32,8 +33,8 @@ import com.gem.sistema.business.utils.ConvertCharsetUtils;
 /**
  * The Class ReporteComparativoMensualMB.
  */
-@ManagedBean(name = "reporteComparativoMensual")
-@ViewScoped
+@Component("reporteComparativoMensual")
+@Scope("view")
 public class ReporteComparativoMensualMB extends GenericExecuteProcedure {
 	private static final String FOCUS_IN_PREVIEW = "PrimeFaces.focus('form1:preViewTxt');";
 	private final static String charSetISO = "ISO-8859-1";
@@ -57,10 +58,10 @@ public class ReporteComparativoMensualMB extends GenericExecuteProcedure {
 	private Boolean bPreView = Boolean.FALSE;
 
 	/** The generate preview service. */
-	@ManagedProperty("#{generatePreviewService}")
+	@Value("#{generatePreviewService}")
 	private GeneratePreviewService generatePreviewService;
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 
 	/**
@@ -168,7 +169,7 @@ public class ReporteComparativoMensualMB extends GenericExecuteProcedure {
 				e.printStackTrace();
 			}
 			fileName = out.get("O_FILE").toString();
-			fileTxt = new DefaultStreamedContent(stream, "application/txt", fileName);
+			fileTxt = StreamedContents.of(stream, "application/txt", fileName, null);
 			generateNotificationFront(FacesMessage.SEVERITY_INFO, "Info!", out.get("O_MSG_ERROR").toString());
 		}
 		addToBitacora(false);
@@ -223,7 +224,7 @@ public class ReporteComparativoMensualMB extends GenericExecuteProcedure {
 			this.validatePolicyService.isAfectMonth(mes, null, this.getUserDetails().getIdSector());
 			this.validatePolicyService.existPolices(mes, null, this.getUserDetails().getIdSector());
 
-			RequestContext.getCurrentInstance().execute(DOWNLOAD_TXT);
+			PrimeFaces.current().executeScript(DOWNLOAD_TXT);
 		}
 
 	}
@@ -257,7 +258,7 @@ public class ReporteComparativoMensualMB extends GenericExecuteProcedure {
 			}
 
 			txtPreview = this.generatePreviewService.generatePreview(fileNameOut);
-			RequestContext.getCurrentInstance().execute(FOCUS_IN_PREVIEW);
+			PrimeFaces.current().executeScript(FOCUS_IN_PREVIEW);
 		}
 		addToBitacora(false);
 	}

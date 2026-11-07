@@ -1,12 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import com.gem.sistema.business.domain.Natgas;
 import com.gem.sistema.business.domain.TcSubgiro;
@@ -14,8 +14,8 @@ import com.gem.sistema.business.repository.catalogs.NatgasRepository;
 import com.gem.sistema.business.repository.catalogs.TcAdquisicionGiroSubgiroRepository;
 import com.gem.sistema.business.repository.catalogs.TcSubgiroRepository;
 
-@ManagedBean(name = "girosSubgirosMB")
-@ViewScoped
+@Component("girosSubgirosMB")
+@Scope("view")
 public class GirosSubgirosMB extends AbstractMB {
 
 	private TcSubgiro subgiroSelected = new TcSubgiro();
@@ -28,13 +28,13 @@ public class GirosSubgirosMB extends AbstractMB {
 	/** variable de busquedaSibgiros */
 	private String busqueda = "";
 	private Long idTemporal;
-	@ManagedProperty("#{natgasRepository}")
+	@Value("#{natgasRepository}")
 	private NatgasRepository natgasRepository;
 
-	@ManagedProperty("#{tcSubgiroRepository}")
+	@Value("#{tcSubgiroRepository}")
 	private TcSubgiroRepository subgiroRepository;
 
-	@ManagedProperty("#{tcAdquisicionGiroSubgiroRepository}")
+	@Value("#{tcAdquisicionGiroSubgiroRepository}")
 	private TcAdquisicionGiroSubgiroRepository giroSubgiroRepository;
 
 	@PostConstruct
@@ -84,7 +84,7 @@ public class GirosSubgirosMB extends AbstractMB {
 					.orElse(new TcSubgiro());
 			try {
 				if (giroSubgiroRepository.countBySubgiro(deleteSubgiro) == 0) {
-					subgiroRepository.delete(deleteSubgiro.getId());
+					subgiroRepository.deleteById(deleteSubgiro.getId());
 					subgiros = subgiros.stream().filter(p -> p.getId() != deleteSubgiro.getId())
 							.collect(Collectors.toList());
 					displayInfoMessage("El sub-giro comercial: " + deleteSubgiro.getClave() + " - "

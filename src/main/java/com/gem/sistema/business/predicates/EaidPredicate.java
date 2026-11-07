@@ -2,7 +2,7 @@ package com.gem.sistema.business.predicates;
 
 import com.gem.sistema.business.domain.Eaid;
 import com.gem.sistema.business.domain.QEaid;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 public class EaidPredicate {
 

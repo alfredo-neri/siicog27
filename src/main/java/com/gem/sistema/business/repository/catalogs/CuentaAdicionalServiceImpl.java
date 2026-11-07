@@ -66,7 +66,7 @@ public class CuentaAdicionalServiceImpl implements CuentaAdicionalService {
 	}
 
 	/** The Constant BY_ALL. */
-	public static final Sort BY_ALL = new Sort(Sort.Direction.ASC, "invertir");
+	public static final Sort BY_ALL = Sort.by(Sort.Direction.ASC, "invertir");
 	
 	
 	/**

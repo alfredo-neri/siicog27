@@ -1,7 +1,6 @@
 package com.gem.sistema.load.fileupload;
 
-
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 
 public interface POIReadParseService {

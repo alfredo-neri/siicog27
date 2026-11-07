@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,8 +18,8 @@ import com.gem.sistema.business.domain.TcRegistraArchivoDigital;
  * The Interface TcRegistraArchivoDigitalRepository.
  */
 @Repository("tcRegistraArchivoDigitalRepository")
-public interface TcRegistraArchivoDigitalRepository extends PagingAndSortingRepository<TcRegistraArchivoDigital, Long>,
-		QueryDslPredicateExecutor<TcRegistraArchivoDigital> {
+public interface TcRegistraArchivoDigitalRepository extends PagingAndSortingRepository<TcRegistraArchivoDigital, Long>, CrudRepository<TcRegistraArchivoDigital, Long>,
+		QuerydslPredicateExecutor<TcRegistraArchivoDigital> {
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -132,7 +133,7 @@ public interface TcRegistraArchivoDigitalRepository extends PagingAndSortingRepo
 	 * @param fileName the file name
 	 */
 	@Modifying
-	@Query("update TcRegistraArchivoDigital ar set nombre_archivo = :fileName  where ar.mes = :mes and ar.numero = :numero and ar.tipo = :tipo ")
+	@Query("update TcRegistraArchivoDigital ar set ar.nombreArchivo = :fileName  where ar.mes = :mes and ar.numero = :numero and ar.tipo = :tipo ")
 	void updateFilePolicy(@Param("mes") String mes, @Param("numero") int numero, @Param("tipo") String tipo,
 			@Param("fileName") String fileName);
 

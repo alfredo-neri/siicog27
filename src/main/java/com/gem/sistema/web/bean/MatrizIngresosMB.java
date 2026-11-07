@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 
 import java.util.ArrayList;
@@ -7,10 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.event.SelectEvent;
@@ -19,8 +19,8 @@ import com.gem.sistema.business.domain.Cuenta;
 import com.gem.sistema.business.dto.MatrizIngreso;
 import com.gem.sistema.business.repository.catalogs.CuentaRepository;
 
-@ManagedBean(name = "matrizIngresosMB")
-@ViewScoped
+@Component("matrizIngresosMB")
+@Scope("view")
 public class MatrizIngresosMB extends AbstractMB {
 	/** Longitud del primer nivel de cuentas. */
 	public static final int LENGTH_FIRST_LEVEL = 4;
@@ -45,7 +45,7 @@ public class MatrizIngresosMB extends AbstractMB {
 	private List<Cuenta> cuentasRecaudado = new ArrayList<Cuenta>();
 	private String busqueda = "";
 
-	@ManagedProperty("#{cuentaRepository}")
+	@Value("#{cuentaRepository}")
 	private CuentaRepository cuentaRepository;
 
 	@PostConstruct

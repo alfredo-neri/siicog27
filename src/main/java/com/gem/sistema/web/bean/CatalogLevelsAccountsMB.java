@@ -1,19 +1,16 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.context.annotation.Scope;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.primefaces.event.RowEditEvent;
@@ -29,7 +26,7 @@ import com.gem.sistema.business.predicates.MayctaPredicates;
 import com.gem.sistema.business.repository.catalogs.MayctaRepository;
 import com.gem.sistema.business.service.catalogos.MayCtaService;
 import com.gem.sistema.web.util.FrontProperty;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,8 +34,8 @@ import com.mysema.query.types.Predicate;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogLevelsAccountsMB")
+@Scope("view")
 public class CatalogLevelsAccountsMB extends CommonCatalogMB<Maycta> implements Serializable {
 	
 	/** Constante de la version del objeto. */
@@ -48,11 +45,12 @@ public class CatalogLevelsAccountsMB extends CommonCatalogMB<Maycta> implements 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CatalogLevelsAccountsMB.class);
 	
 	/** The may cta service. */
-	@ManagedProperty(value = "#{mayCtaServiceImpl}")
+	// difem26: "#{mayCtaServiceImpl}" no corresponde a ningun bean; JSF inyectaba null. Pendiente de corregir.
+	@Value("#{null}")
 	private MayCtaService mayCtaService;
 
 	/**  Componente de servicio. */
-	@ManagedProperty(value = "#{mayctaRepository}")
+	@Value("#{mayctaRepository}")
 	private MayctaRepository mayctaRepository;
 	
 	/**  Campo requerido Clave de Contrato. */

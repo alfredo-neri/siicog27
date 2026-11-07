@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import static com.gem.sistema.util.StringUtils.validateStringWithRegex;
 
@@ -7,16 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -39,8 +39,8 @@ import com.gem.sistema.web.security.model.GemUser;
  * @author Alfredo Neri
  *
  */
-@ManagedBean(name = "datosImpresionMB")
-@ViewScoped
+@Component("datosImpresionMB")
+@Scope("view")
 public class DatosImpresionMB extends AbstractMB {
 	private static final String PATH_IMG_FILE = "/gem/img/";
 	private static final String REGEX_PUESTO = "^\\s*([a-zA-Z. áÁéÉíÍóÓúÚñÑ]*)\\s*$";
@@ -68,19 +68,19 @@ public class DatosImpresionMB extends AbstractMB {
 	private String claveOrganimo;
 	private Long test;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService firmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{tcReportesFirmasRepository}")
+	@Value("#{tcReportesFirmasRepository}")
 	private TcReportesFirmasRepository reportesFirmasRepository;
 
-	@ManagedProperty("#{tcClaveRepository}")
+	@Value("#{tcClaveRepository}")
 	private TcClaveRepository claveRepository;
 
 	@PostConstruct
@@ -169,7 +169,7 @@ public class DatosImpresionMB extends AbstractMB {
 	public void handleFileUpload(FileUploadEvent event) {
 
 		try {
-			CopyFileUtil.copyFile(event.getFile().getFileName(), event.getFile().getInputstream(), PATH_IMG_FILE);
+			CopyFileUtil.copyFile(event.getFile().getFileName(), event.getFile().getInputStream(), PATH_IMG_FILE);
 			conctb.setImagePathLeft(PATH_IMG_FILE + event.getFile().getFileName());
 			conctbRepository.save(conctb);
 		} catch (IOException e) {
@@ -184,7 +184,7 @@ public class DatosImpresionMB extends AbstractMB {
 	public void uploadImageRigth(FileUploadEvent event) {
 
 		try {
-			CopyFileUtil.copyFile(event.getFile().getFileName(), event.getFile().getInputstream(), PATH_IMG_FILE);
+			CopyFileUtil.copyFile(event.getFile().getFileName(), event.getFile().getInputStream(), PATH_IMG_FILE);
 			conctb.setImagePathRigth(PATH_IMG_FILE + event.getFile().getFileName());
 			conctbRepository.save(conctb);
 		} catch (IOException e) {
@@ -211,15 +211,15 @@ public class DatosImpresionMB extends AbstractMB {
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 						"Error!", "El Puesto es incorrecto, solo se permite valores alfabeticos."));
-				RequestContext.getCurrentInstance()
-						.execute(String.format(EDIT_PUESTO_ROW_JQUERY, objDataTable.getRowIndex())
+				PrimeFaces.current()
+						.executeScript(String.format(EDIT_PUESTO_ROW_JQUERY, objDataTable.getRowIndex())
 								+ String.format(FOCUS_FLOW_PUESTO_ROW_JQUERY, objDataTable.getRowIndex()));
 			}
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 					"El Puesto es obligatorio.", "Favor de capturar el puesto."));
-			RequestContext.getCurrentInstance()
-					.execute(String.format(EDIT_PUESTO_ROW_JQUERY, objDataTable.getRowIndex())
+			PrimeFaces.current()
+					.executeScript(String.format(EDIT_PUESTO_ROW_JQUERY, objDataTable.getRowIndex())
 							+ String.format(FOCUS_FLOW_PUESTO_ROW_JQUERY, objDataTable.getRowIndex()));
 		}
 	}
@@ -242,15 +242,15 @@ public class DatosImpresionMB extends AbstractMB {
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 						"Error!", "El Puesto y/o Nombre son incorrectos, solo se permite valores alfabeticos."));
-				RequestContext.getCurrentInstance()
-						.execute(String.format(EDIT_FIRMA_ROW_JQUERY, objDataTable.getRowIndex())
+				PrimeFaces.current()
+						.executeScript(String.format(EDIT_FIRMA_ROW_JQUERY, objDataTable.getRowIndex())
 								+ String.format(FOCUS_FLOW_FIRMA_ROW_JQUERY, objDataTable.getRowIndex()));
 			}
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 					"El Puesto y Nombre es obligatorio.", "Favor de capturar el nombre y/o Puesto."));
-			RequestContext.getCurrentInstance()
-					.execute(String.format(EDIT_FIRMA_ROW_JQUERY, objDataTable.getRowIndex())
+			PrimeFaces.current()
+					.executeScript(String.format(EDIT_FIRMA_ROW_JQUERY, objDataTable.getRowIndex())
 							+ String.format((StringUtils.isEmpty(firma.getNombre()) ? FOCUS_FLOW_FIRMA_ROW_JQUERY
 									: FOCUS_FLOW_PUESTO_ROW_JQUERY), objDataTable.getRowIndex()));
 		}

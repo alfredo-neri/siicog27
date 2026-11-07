@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getDateSystem;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
@@ -7,13 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -31,8 +31,8 @@ import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.web.datamodel.DataModelGeneric;
 
-@ManagedBean(name = "clciPdfMB")
-@ViewScoped
+@Component("clciPdfMB")
+@Scope("view")
 public class ClciPdfMB extends BaseDirectReport {
 
 	private static final Integer TIPO_PERIODO = 3;
@@ -72,22 +72,22 @@ public class ClciPdfMB extends BaseDirectReport {
 
 	private Boolean bAdicionar;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepository;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{balancepreService}")
+	@Value("#{balancepreService}")
 	private BalancepreService balancepreService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
 	@PostConstruct
@@ -122,14 +122,14 @@ public class ClciPdfMB extends BaseDirectReport {
 		listBalancepre.add(balancepreNew);
 
 		this.activateRowEdit(listBalancepre.size() - 1);
-		RequestContext.getCurrentInstance()
-				.execute("PF('balanceWdg').paginator.setPage(" + (this.getPage() - 1) + ");");
+		PrimeFaces.current()
+				.executeScript("PF('balanceWdg').paginator.setPage(" + (this.getPage() - 1) + ");");
 
 		if (listBalancepre.size() > 20) {
 			Integer indexOf = this.getRowCurrent(listBalancepre.size());
 			this.activateRowEdit(indexOf);
 
-			RequestContext.getCurrentInstance().execute(String.format(FOCUS_BY_ROWID, (listBalancepre.size() - 1)));
+			PrimeFaces.current().executeScript(String.format(FOCUS_BY_ROWID, (listBalancepre.size() - 1)));
 		}
 
 		dataModelBalancepre.setListT(listBalancepre);
@@ -161,7 +161,7 @@ public class ClciPdfMB extends BaseDirectReport {
 			if (dataModelBalancepre.getListT().get(lastIndex).isbGuardar() == Boolean.TRUE) {
 				listBalancepre = balancepreService.findAllByTrimestre(this.getUserDetails().getIdSector(),
 						this.getUserDetails().getIdMunicipio(), conctb.getId(), trimestre);
-				RequestContext.getCurrentInstance().execute(UPDATE_OBJETS);
+				PrimeFaces.current().executeScript(UPDATE_OBJETS);
 			} else {
 				if (bModifcar == Boolean.TRUE && balancepreSelected.isbGuardar() == Boolean.FALSE) {
 					this.activateRowEdit(currentIndex);
@@ -252,7 +252,7 @@ public class ClciPdfMB extends BaseDirectReport {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	public void activateRowEdit(final int index) {
@@ -262,7 +262,7 @@ public class ClciPdfMB extends BaseDirectReport {
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 	Map<String, Object> parameters;

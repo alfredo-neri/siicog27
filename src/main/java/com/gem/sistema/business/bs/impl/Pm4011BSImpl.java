@@ -5,7 +5,7 @@ import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -34,7 +34,7 @@ public class Pm4011BSImpl implements Pm4011BS {
 	private static final Boolean FALSE = Boolean.FALSE;
 
 	/** The Constant SORT. */
-	private static final Sort SORT = new Sort(Direction.ASC, "clvreq");
+	private static final Sort SORT = Sort.by(Direction.ASC, "clvreq");
 
 	/** The pm 4011 repository. */
 	@Autowired

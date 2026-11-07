@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import com.gem.sistema.business.domain.Bienesinm;
  */
 @Repository(value="bienesinmRepository")
 public interface BienesinmRepository
-		extends PagingAndSortingRepository<Bienesinm, Long>, QueryDslPredicateExecutor<Bienesinm>{
+		extends PagingAndSortingRepository<Bienesinm, Long>, CrudRepository<Bienesinm, Long>, QuerydslPredicateExecutor<Bienesinm>{
 	/*
 	 * (non-Javadoc)
 	 *

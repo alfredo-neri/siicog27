@@ -3,7 +3,6 @@
  */
 package com.gem.sistema.business.service.callsp;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Interface CallSpService.

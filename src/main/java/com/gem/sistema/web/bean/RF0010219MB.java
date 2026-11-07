@@ -1,13 +1,13 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -25,8 +25,8 @@ import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 /**
  * The Class RF0010219MB.
  */
-@ManagedBean(name = "rF0010219MB")
-@ViewScoped
+@Component("rF0010219MB")
+@Scope("view")
 public class RF0010219MB extends BaseDirectReport {
 
 	/** The mes. */
@@ -39,15 +39,15 @@ public class RF0010219MB extends BaseDirectReport {
 	private Conctb conctb; 
 
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 	
 
-	@ManagedProperty("#{validatePolicyService}")
+	@Value("#{validatePolicyService}")
 	private ValidatePolicyService validatePolicyService;
 	
 	public ValidatePolicyService getValidatePolicyService() {

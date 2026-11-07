@@ -2,7 +2,8 @@ package com.gem.sistema.business.repository.catalogs;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import com.gem.sistema.business.domain.Ftecnicasd;
  * The Interface FtecnicasdRepository.
  */
 @Repository
-public interface FtecnicasdRepository  extends PagingAndSortingRepository<Ftecnicasd, Long>, QueryDslPredicateExecutor<Ftecnicasd> {
+public interface FtecnicasdRepository  extends PagingAndSortingRepository<Ftecnicasd, Long>, CrudRepository<Ftecnicasd, Long>, QuerydslPredicateExecutor<Ftecnicasd> {
     
     /* (non-Javadoc)
      * @see org.springframework.data.repository.CrudRepository#findAll()

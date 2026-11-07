@@ -1,14 +1,12 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,8 +20,8 @@ import com.gem.sistema.business.service.catalogos.PolizaService;
 /**
  * The Class PrecierrePresupuestalMB.
  */
-@ManagedBean(name = "precierrePresupuestalMB")
-@ViewScoped
+@Component("precierrePresupuestalMB")
+@Scope("view")
 public class PrecierrePresupuestalMB extends AbstractMB {
 	
 	/** The list mes. */
@@ -33,11 +31,11 @@ public class PrecierrePresupuestalMB extends AbstractMB {
 	private Integer mes;
 	
 	/** The tc mes repository. */
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 	
 	/** The poliza service. */
-	@ManagedProperty("#{polizaService}")
+	@Value("#{polizaService}")
 	private PolizaService polizaService;
 	
 	/** The activo. */

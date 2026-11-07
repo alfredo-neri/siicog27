@@ -1,25 +1,25 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.Constants.ZERO;
 import static com.gem.sistema.util.Util.fillZerosToRight;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
-import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_INFO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
@@ -44,8 +44,8 @@ import com.gem.sistema.web.util.FrontProperty;
  *
  * @author Juan Carlos Pedraza Alcala
  */
-@ManagedBean
-@ViewScoped
+@Component("catalogDependenciesMB")
+@Scope("view")
 public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Serializable {
 
 	/** The Constant serialVersionUID. */
@@ -104,23 +104,23 @@ public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Se
 	private List<Catdaa> dependenciesAuxiliary;
 
 	/** Repositorio de Catdep. */
-	@ManagedProperty(value = "#{catdepRepository}")
+	@Value("#{catdepRepository}")
 	private CatdepRepository catdepRepository;
 
 	/** Repositorio de Catdaa. */
-	@ManagedProperty(value = "#{catdaaRepository}")
+	@Value("#{catdaaRepository}")
 	private CatdaaRepository catdaaRepository;
 
 	/** Repositorio de Catdgm. */
-	@ManagedProperty(value = "#{catdgmRepository}")
+	@Value("#{catdgmRepository}")
 	private CatdgmRepository catdgmRepository;
 
 	/** The xcatpro repository. */
-	@ManagedProperty(value = "#{xcatproRepository}")
+	@Value("#{xcatproRepository}")
 	private XcatproRepository xcatproRepository;
 
 	/** The polide repository. */
-	@ManagedProperty(value = "#{polideRepository}")
+	@Value("#{polideRepository}")
 	private PolideRepository polideRepository;
 
 	/** Registro seleccionado. */
@@ -351,7 +351,7 @@ public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Se
 			generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO,
 					"No se puede editar porque tiene programas asociados");
 			this.onRowCancel(event);
-//			RequestContext.getCurrentInstance().execute("jQuery('span.ui-icon-close').eq(" + catalog.getIndex()
+//			PrimeFaces.current().executeScript("jQuery('span.ui-icon-close').eq(" + catalog.getIndex()
 //					+ ").each(function(){jQuery(this).click()});");
 
 		} else {
@@ -560,8 +560,8 @@ public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Se
 		if (null != depGeneralSelected) {
 			rowSelected.setClaveDgm(depGeneralSelected.getClave());
 			activateRowEdit(indexBuffer);
-			final RequestContext context = RequestContext.getCurrentInstance();
-			context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvdgm");
+			final PrimeFaces context = PrimeFaces.current();
+			context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvdgm");
 		}
 	}
 
@@ -593,8 +593,8 @@ public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Se
 		if (null != depAuxiliarySelected) {
 			rowSelected.setClaveDaa(depAuxiliarySelected.getClave());
 			activateRowEdit(rowSelected.getIndex());
-			final RequestContext context = RequestContext.getCurrentInstance();
-			context.update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvdaa");
+			final PrimeFaces context = PrimeFaces.current();
+			context.ajax().update(VIEW_CATALOG_FORM1_OBJECTS + rowSelected.getIndex() + ":clvdaa");
 		}
 
 	}
@@ -887,7 +887,7 @@ public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Se
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, index));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 
 	}
 
@@ -901,7 +901,7 @@ public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Se
 		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 		text.append(String.format(FOCUS_BY_ROWID, rowSelected.getIndex()));
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 
 	}
 
@@ -917,7 +917,7 @@ public class CatalogDependenciesMB extends CommonCatalogMB<Catdep> implements Se
 		text.append(VIEW_CANCEL_ROW_ACTIVATE_PENCIL_COMPLEMENT);
 		text.append(" ");
 
-		RequestContext.getCurrentInstance().execute(text.toString());
+		PrimeFaces.current().executeScript(text.toString());
 	}
 
 }

@@ -1,14 +1,14 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,8 +16,8 @@ import com.gem.sistema.business.domain.TcModulosOperacione;
 import com.gem.sistema.business.domain.TcParametro;
 import com.gem.sistema.business.service.catalogos.ChangePasswordService;
 
-@ManagedBean(name = "changePassMB")
-@ViewScoped
+@Component("changePassMB")
+@Scope("view")
 public class ChangePassMB extends AbstractMB {
 
 	private static final Integer INDEX_HOME = 0;
@@ -35,18 +35,29 @@ public class ChangePassMB extends AbstractMB {
 	private String clvModulo;
 	private List<TcModulosOperacione> listModulo;
 
-	@ManagedProperty("#{changePasswordService}")
+	@Value("#{changePasswordService}")
 	private ChangePasswordService changePasswordService;
 
 	@PostConstruct
 	public void init() {
 		idSector = this.getUserDetails().getIdSector();
 		listModulo = this.changePasswordService.findBySector(idSector);
+		// sin modulos en TC_MODULOS_OPERACIONES la pantalla abre vacia en lugar de fallar
+		if (listModulo == null || listModulo.isEmpty()) {
+			generateNotificationFront(FacesMessage.SEVERITY_WARN, "Info!",
+					"No hay módulos de operación registrados para el sector.");
+			return;
+		}
 		clvModulo = listModulo.get(INDEX_HOME).getClvProceso();
 
 	}
 
 	public void save() {
+		if (StringUtils.isBlank(clvModulo)) {
+			generateNotificationFront(FacesMessage.SEVERITY_WARN, "Info!",
+					"No hay módulos de operación registrados para el sector.");
+			return;
+		}
 		tcParametro = new TcParametro();
 		tcModulosOperacione = new TcModulosOperacione();
 		if (StringUtils.isNotBlank(password)) {

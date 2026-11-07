@@ -1,5 +1,8 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.gem.sistema.util.UtilFront.generateNotificationFront;
 
 import java.util.Calendar;
@@ -7,14 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -34,8 +34,8 @@ import com.gem.sistema.util.ConstantsClaveEnnum;
 /**
  * The Class Reporte155MB.
  */
-@ManagedBean(name = "reporte155MB")
-@ViewScoped
+@Component("reporte155MB")
+@Scope("view")
 public class Reporte155MB extends BaseDirectReport {
 	/** The Constant TRUE. */
 	private static final Boolean TRUE = Boolean.TRUE;
@@ -81,21 +81,21 @@ public class Reporte155MB extends BaseDirectReport {
 	private List<Pm4011> listPm4011;
 
 	/** The pm 4011 service. */
-	@ManagedProperty("#{pm4011Service}")
+	@Value("#{pm4011Service}")
 	private Pm4011Service pm4011Service;
 
 	/** The pm 4011 repository. */
-	@ManagedProperty("#{pm4011Repository}")
+	@Value("#{pm4011Repository}")
 	private Pm4011Repository pm4011Repository;
 
 	/** The conctb repository. */
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy periodoRepositoy;
 
 	public PuestosFirmasService getPuestosFirmasService() {
@@ -412,7 +412,7 @@ public class Reporte155MB extends BaseDirectReport {
 		pm4011 = new Pm4011();
 		int indexof = 0;
 		listPm4011.add(indexof, pm4011);
-		RequestContext.getCurrentInstance().execute("PF('pm4011Wdg').paginator.setPage(" + indexof + ");");
+		PrimeFaces.current().executeScript("PF('pm4011Wdg').paginator.setPage(" + indexof + ");");
 	}
 
 	/**
@@ -589,7 +589,7 @@ public class Reporte155MB extends BaseDirectReport {
 
 		if (TRUE == this.getbUpdate()) {
 			pm4011 = this.getPm4011Repository()
-					.findOne(Pm4011Predicate.findByClaveAndIdSector(oldClv, this.getUserDetails().getIdSector()));
+					.findOne(Pm4011Predicate.findByClaveAndIdSector(oldClv, this.getUserDetails().getIdSector())).orElse(null);
 			listPm4011.set(index, pm4011);
 			if (pm4011.getCumple().equals("SI")) {
 				listPm4011.get(index).setCumple("1");

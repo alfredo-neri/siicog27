@@ -1,29 +1,30 @@
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import com.gem.sistema.business.service.catalogos.ConvertService;
 
-@ManagedBean(name = "convertidorTxtMB")
-@ViewScoped
+@Component("convertidorTxtMB")
+@Scope("view")
 public class ConvertidorTxtMB extends AbstractMB {
 
-	@ManagedProperty("#{convertService}")
+	@Value("#{convertService}")
 	private ConvertService convertService;
 
 	private StreamedContent downloadFile;
@@ -40,9 +41,9 @@ public class ConvertidorTxtMB extends AbstractMB {
 			file = event.getFile();
 			try {
 
-				fullathName = this.convertService.readExcel(file.getInputstream(), file.getFileName(), outFileName);
+				fullathName = this.convertService.readExcel(file.getInputStream(), file.getFileName(), outFileName);
 				inputStrem = new FileInputStream(new File(fullathName));
-				downloadFile = new DefaultStreamedContent(inputStrem, "application/txt", outFileName + ".txt");
+				downloadFile = StreamedContents.of(inputStrem, "application/txt", outFileName + ".txt", null);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

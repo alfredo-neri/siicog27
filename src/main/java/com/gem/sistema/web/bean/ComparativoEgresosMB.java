@@ -1,15 +1,15 @@
 package com.gem.sistema.web.bean;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,8 +30,8 @@ import com.gem.sistema.business.service.catalogos.TcPeriodoService;
 import com.gem.sistema.business.service.reportador.ReportValidationException;
 import com.gem.sistema.util.ConstantsClaveEnnum;
 
-@ManagedBean(name = "comparativoEgresosMB")
-@ViewScoped
+@Component("comparativoEgresosMB")
+@Scope("view")
 public class ComparativoEgresosMB extends BaseDirectReport {
 
 	private static final Log LOG = LogFactory.getLog(ComparativoEgresosMB.class);
@@ -40,25 +40,25 @@ public class ComparativoEgresosMB extends BaseDirectReport {
 
 	private static final String REPORT_NAME = "comparativoEgresos";
 
-	@ManagedProperty("#{tcPeriodoService}")
+	@Value("#{tcPeriodoService}")
 	private TcPeriodoService tcPeriodoService;
 	
-	@ManagedProperty("#{tcPeriodoRepositoy}")
+	@Value("#{tcPeriodoRepositoy}")
 	private TcPeriodoRepositoy tcPeriodoRepositoy;
 
-	@ManagedProperty("#{eaidService}")
+	@Value("#{eaidService}")
 	private EaidService eaidService;
 
-	@ManagedProperty("#{puestosFirmasService}")
+	@Value("#{puestosFirmasService}")
 	private PuestosFirmasService puestosFirmasService;
 
-	@ManagedProperty("#{conctbRepository}")
+	@Value("#{conctbRepository}")
 	private ConctbRepository conctbRepository;
 
-	@ManagedProperty("#{tcMesRepository}")
+	@Value("#{tcMesRepository}")
 	private TcMesRepository tcMesRepository;
 
-	@ManagedProperty("#{firmasRepository}")
+	@Value("#{firmasRepository}")
 	private FirmasRepository firmasRepository;
 
 	private TrPuestoFirma presidente;
@@ -76,7 +76,7 @@ public class ComparativoEgresosMB extends BaseDirectReport {
 
 	private List<TcPeriodo> listPeriodo;
 
-	@ManagedProperty("#{comparativoEgresosService}")
+	@Value("#{comparativoEgresosService}")
 	private ComparativoEgresosService comparativoEgresosService;
 
 	@PostConstruct

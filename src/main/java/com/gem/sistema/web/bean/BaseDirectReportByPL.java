@@ -3,6 +3,10 @@
  */
 package com.gem.sistema.web.bean;
 
+import com.gem.sistema.web.util.StreamedContents;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,16 +16,13 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -48,8 +49,8 @@ import com.gem.sistema.web.util.GetFileInlineServlet;
 /**
  * The Class BaseDirectReportByPL.
  */
-@ManagedBean
-@ViewScoped
+@Component("baseDirectReportByPL")
+@Scope("view")
 public class BaseDirectReportByPL {
 
 	/** The Constant LOGGER. */
@@ -59,10 +60,10 @@ public class BaseDirectReportByPL {
 	protected static final String MESSAGE_ERROR = FrontProperty.getPropertyValue("catalog.message.error");
 
 	/** The call sp service. */
-	@ManagedProperty(value = "#{callSpReportServiceImpl}")
+	@Value("#{callSpReportServiceImpl}")
 	protected CallSpService callSpService;
 
-	@ManagedProperty(value = "#{tbProcesoService}")
+	@Value("#{tbProcesoService}")
 	private TbProcesoService procesoService;
 
 	/**
@@ -131,8 +132,7 @@ public class BaseDirectReportByPL {
 	 */
 	public StreamedContent sendFileByStream(File fileToSend) throws FileNotFoundException {
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		return new DefaultStreamedContent(new FileInputStream(fileToSend),
-				externalContext.getMimeType(fileToSend.getName()), fileToSend.getName());
+		return StreamedContents.of(new FileInputStream(fileToSend), externalContext.getMimeType(fileToSend.getName()), fileToSend.getName(), null);
 	}
 
 	protected void addToBitacora(Boolean endOrStart) {

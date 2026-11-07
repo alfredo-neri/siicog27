@@ -43,7 +43,7 @@ import com.gem.sistema.business.repository.catalogs.PpMetaRepository;
 import com.gem.sistema.business.repository.catalogs.PropositoRepository;
 import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
 import com.gem.sistema.business.repository.catalogs.XcatproRepository;
-import com.mysema.query.types.Predicate;
+import com.querydsl.core.types.Predicate;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -292,7 +292,7 @@ public class MatrizIndicadoresServiceImpl implements MatrizIndicadoresService {
 	 */
 	@Override
 	public void deleteCabecero(Long id) {
-		matindRepository.delete(id);
+		matindRepository.deleteById(id);
 	}
 
 	/*
@@ -305,16 +305,16 @@ public class MatrizIndicadoresServiceImpl implements MatrizIndicadoresService {
 	public void deleteIndicador(Long id, Integer tipo) {
 		switch (tipo) {
 		case 1:
-			finalidadRepository.delete(id);
+			finalidadRepository.deleteById(id);
 			break;
 		case 2:
-			propositoRepository.delete(id);
+			propositoRepository.deleteById(id);
 			break;
 		case 3:
-			componenteRepository.delete(id);
+			componenteRepository.deleteById(id);
 			break;
 		case 4:
-			actividadRepository.delete(id);
+			actividadRepository.deleteById(id);
 			break;
 		default:
 			break;
@@ -472,7 +472,7 @@ public class MatrizIndicadoresServiceImpl implements MatrizIndicadoresService {
 	 */
 	@Override
 	public Componente findComponenteById(long id) {
-		return componenteRepository.findOne(id);
+		return componenteRepository.findById(id).orElse(null);
 	}
 
 	/*
@@ -483,7 +483,7 @@ public class MatrizIndicadoresServiceImpl implements MatrizIndicadoresService {
 	 */
 	@Override
 	public Proposito findPropositoById(long id) {
-		return propositoRepository.findOne(id);
+		return propositoRepository.findById(id).orElse(null);
 	}
 
 	/*
@@ -494,7 +494,7 @@ public class MatrizIndicadoresServiceImpl implements MatrizIndicadoresService {
 	 */
 	@Override
 	public Finalidad findFinalidadById(long id) {
-		return finalidadRepository.findOne(id);
+		return finalidadRepository.findById(id).orElse(null);
 	}
 
 	/*
@@ -505,7 +505,7 @@ public class MatrizIndicadoresServiceImpl implements MatrizIndicadoresService {
 	 */
 	@Override
 	public Actividad findActividadById(long id) {
-		return actividadRepository.findOne(id);
+		return actividadRepository.findById(id).orElse(null);
 	}
 
 	/**
@@ -733,7 +733,7 @@ public class MatrizIndicadoresServiceImpl implements MatrizIndicadoresService {
 	@Override
 	public MatrizIndicadoresDTO resetCaptura(MatrizIndicadoresDTO matrizDTO) {
 		return this.entityToDto(this.matindRepository.findOne(MatindPredicates
-				.existsMatrizIndicadores(matrizDTO.getClvdepg(), matrizDTO.getCveprog(), matrizDTO.getCvetemas())));
+				.existsMatrizIndicadores(matrizDTO.getClvdepg(), matrizDTO.getCveprog(), matrizDTO.getCvetemas())).orElse(null));
 	}
 
 	/*
