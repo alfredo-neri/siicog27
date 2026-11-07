@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Avance Presupuestal de Egresos Anexo 3"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+
+						<p:panelGrid columns="3" styleClass="ui-noborder">
+
+							<h:outputText value="Mes: " for="mesInputOri" />
+							<p:selectOneMenu id="idDependencia" value="#{rF00912010MB.mes}">
+								<f:selectItems value="#{rF00912010MB.listMes}" var="meses"
+									itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="capitulo" value="#{rF00912010MB.capitulo}">
+								<f:selectItem itemLabel="Todos los Capítulos" itemValue="0" />
+								<f:selectItem itemLabel="Capítulo 1000" itemValue="1" />
+								<f:selectItem itemLabel="Capítulo 2000" itemValue="2" />
+								<f:selectItem itemLabel="Capítulo 3000" itemValue="3" />
+								<f:selectItem itemLabel="Capítulo 4000" itemValue="4" />
+								<f:selectItem itemLabel="Capítulo 5000" itemValue="5" />
+								<f:selectItem itemLabel="Capítulo 6000" itemValue="6" />
+								<f:selectItem itemLabel="Capítulo 7000" itemValue="7" />
+								<f:selectItem itemLabel="Capítulo 8000" itemValue="8" />
+								<f:selectItem itemLabel="Capítulo 9000" itemValue="9" />
+							</p:selectOneMenu>
+
+						</p:panelGrid>
+						<p:panelGrid columns="2" styleClass="ui-noborder green">
+							<!-- <p:commandButton value="Vista Previa" id="preView"
+								actionListener="#{rF00912010MB.preView}" icon="ui-icon-zoomout"
+								update=":form1:preViewTxt" onclick="PF('preViewTxtWg').show();" /> -->
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF00912010MB.executeProcedure}" value="Correcto"
+								ajax="false">
+							</p:commandButton>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{rF00912010MB.fileXls}" />
+							</h:commandLink>
+						</p:panelGrid>
+					</p:panelGrid>
+
+					<p:panelGrid>
+						<p:outputLabel rendered="#{rF00912010MB.bPreView}"
+							style="max-height: 400px; min-height: 400px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="230" id="preViewTxt"
+								style="font-family: monospace; font-size: 8pt;"
+								widgetVar="preViewTxtWg" rendered="#{rF00912010MB.bPreView}"
+								autoResize="true" readonly="true"
+								value="#{rF00912010MB.txtPreview}" />
+						</p:outputLabel>
+					</p:panelGrid>
+
+				</p:panel>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

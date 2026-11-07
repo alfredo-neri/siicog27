@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogProgramsMB.onPageLoad}" update=":form1:objects" />
+
+				<p:remoteCommand name="updatedata" id="dataupdate"
+					update=":form1:objects" />
+
+				<p:remoteCommand name="consultDependencies"
+					actionListener="#{catalogProgramsMB.consultDependencies}"
+					oncomplete="PF('catalogDependenciesDlg').show(), PF('dependenciesWdg').clearFilters();"
+					update=":form1:dependencies" />
+				<p:remoteCommand name="consultProgramStructure"
+					actionListener="#{catalogProgramsMB.consultProgramStructure}"
+					oncomplete="PF('catalogProgramStructureDlg').show(), PF('programStructureWdg').clearFilters();"
+					update=":form1:programStructure" />
+				<p:remoteCommand name="consultFinancialSources"
+					actionListener="#{catalogProgramsMB.consultFinancialSources}"
+					oncomplete="PF('catalogFinalSourcesDlg').show(), PF('financialSourcesWdg').clearFilters();"
+					update=":form1:financialSource" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel"
+					header="B&uacute;squeda Cat&aacute;logo de Programas"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<br />
+					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+
+						<h:outputText value="Dependencia" for="dependencieInput"
+							styleClass="control-label"
+							 />
+						<p:inputText id="dependencieInput" styleClass="form-control"
+							value="#{catalogProgramsMB.beanFind.clvdep}" maxlength="15"
+							validatorMessage="Dependencia solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+								for="dependencieInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramsMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Nombre" for="nameInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px;padding-right: 30px; " />
+						<p:inputText id="nameInput" styleClass="form-control"
+							value="#{catalogProgramsMB.beanFind.nompro}"
+							style="margin-top: 10px;" maxlength="150"
+							validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚñÑ_-]*)\s*$"
+								for="nameInput" />
+
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramsMB.findValuesCatalog}" />
+						</p:inputText>
+						<p:outputPanel layout="block" styleClass="col-md-4 col-centered row-centered" style="text-align:center">
+
+							<br />
+							<br />
+
+							<p:commandButton value="Buscar"
+								update=":form1:messagesEdit, :form1:objects"
+								actionListener="#{catalogProgramsMB.findValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+							<p:commandButton value="Limpiar"
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+								actionListener="#{catalogProgramsMB.findAllValuesCatalog}"
+								onstart="PF('blockUIWidget').block()" immediate="true"
+								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:dependencieInput').value='';document.getElementById('form1:nameInput').value='';" />
+
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:panel>
+
+				<br />
+
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #8a2035"
+					styleClass="col-centered row-centered">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+						actionListener="#{catalogProgramsMB.insertRow}"
+						onclick="PF('programsWdg').clearFilters();"
+						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogProgramsMB.list}" styleClass="green et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10" rowIndexVar="rowIndexCaptura"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" selection="#{catalogProgramsMB.rowSelected}"
+					rowKey="#{object.index}"
+					filteredValue="#{catalogProgramsMB.filteredList}"
+					widgetVar="programsWdg">
+
+					<f:facet name="header">Cat&aacute;logo de Programas</f:facet>
+					<p:ajax event="rowEditInit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden')});"
+						listener="#{catalogProgramsMB.onInitRowEdit}" />
+					<p:ajax event="rowEdit" listener="#{catalogProgramsMB.onRowEdit}"
+						update=":form1:messagesEdit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogProgramsMB.onRowCancel}"
+						update=":form1:messagesEdit"
+						onstart="PF('blockUIWidget').block(); $('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});"
+						oncomplete="PF('blockUIWidget').unblock();" />
+
+
+					<p:column headerText="Dependencia" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.clvdep}" />
+					</p:column>
+
+					<p:column headerText="Dependencia" exportable="false"
+						style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvdep}" />
+							</f:facet>
+							<f:facet name="input">
+								<div class="ui-grid ui-grid-responsive">
+									<div class="ui-grid-row">
+										<div class="ui-grid-col-12">
+											<p:inputText id="clvdep" value="#{object.clvdep}"
+												style="width:100%" maxlength="15" required="true"
+												requiredMessage="El campo Dependencia es requerido"
+												validatorMessage="Dependencia solo permite valores alfanum&eacute;ricos">
+												<p:ajax event="blur" update="clvdep"
+													listener="#{catalogProgramsMB.formatearClvDep(rowIndexCaptura)}"></p:ajax>
+												<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+													for="clvdep" />
+
+											</p:inputText>
+										</div>
+										<div class="ui-grid-col-2" align="center">
+											<p:commandLink id="searchclvdep"
+												styleClass="glyphicon glyphicon-search"
+												onclick=" consultDependencies(); return false;"
+												style="width:18px;height:18px;" />
+										</div>
+									</div>
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Programa" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.clvfun}" />
+					</p:column>
+
+					<p:column headerText="Programa" exportable="false"
+						style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvfun}" />
+							</f:facet>
+							<f:facet name="input">
+
+								<div class="ui-grid ui-grid-responsive">
+									<div class="ui-grid-row">
+										<div class="ui-grid-col-12">
+											<p:inputText id="clvfun" value="#{object.clvfun}"
+												style="width:100%" required="true"
+												requiredMessage="El campo Programa es requerido"
+												maxlength="10"
+												validatorMessage="Programa solo permite valores alfanum&eacute;ricos y debe tener una longitud de 10"
+												converterMessage="Programa solo permite valores alfanum&eacute;ricos y debe tener una longitud de 10">
+												<p:ajax event="blur" update="clvfun"></p:ajax>
+												<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+													for="clvfun" />
+												<f:validateLength minimum="10" maximum="10" />
+
+											</p:inputText>
+										</div>
+										<div class="ui-grid-col-2" align="center">
+											<p:commandLink id="searchclvfun"
+												styleClass="glyphicon glyphicon-search"
+												onclick="consultProgramStructure(); return false;"
+												style="width:18px;height:18px;" />
+										</div>
+									</div>
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Fuente Fin" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.clvfin}" />
+					</p:column>
+
+					<p:column headerText="Fuente Fin" exportable="false"
+						style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvfin}" />
+							</f:facet>
+							<f:facet name="input">
+
+								<div class="ui-grid ui-grid-responsive">
+									<div class="ui-grid-row">
+										<div class="ui-grid-col-9">
+											<p:inputText id="clvfuen" value="#{object.clvfin}"
+												style="width:100%" required="true"
+												requiredMessage="El campo F. Fin es requerido" maxlength="8"
+												validatorMessage="F. Fin solo permite valores alfanum&eacute;ricos">
+
+												<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+													for="clvfuen" />
+											</p:inputText>
+										</div>
+										<div class="ui-grid-col-3" align="center">
+											<p:commandLink id="searchclvfuen"
+												styleClass="glyphicon glyphicon-search"
+												onclick="consultFinancialSources(); return false;"
+												style="width:18px;height:18px;" />
+										</div>
+									</div>
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Nombre" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nompro}" />
+					</p:column>
+
+
+					<p:column headerText="Nombre" exportable="false" style="width:50%">
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nompro}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nompro" value="#{object.nompro}"
+									style="width:100%" required="true"
+									requiredMessage="El campo Nombre es requerido" maxlength="250"
+									validatorMessage="Nombre solo permite valores alfanum&eacute;ricos"
+									disabled="true">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+										for="nompro" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Borrar" style="width:5%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogProgramsMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:5%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramsMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogProgramsMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramsMB.list}">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogProgramsMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramsMB.list}"
+							actionListener="#{catalogProgramsMB.getFileCsvPl}">
+							<p:graphicImage value="csv.png" width="24" />
+
+							<!-- <p:dataExporter type="csv" target="objects" fileName="Programas"
+								encoding="ISO-8859-1" pageOnly="false" /> -->
+
+							<p:fileDownload value="#{catalogProgramsMB.csvByPl}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramsMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogProgramsMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+
+
+				<br />
+				<br />
+
+
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar"
+							update=":form1:messagesEdit,:form1:objects"
+							actionListener="#{catalogProgramsMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+
+				<p:dialog header="Consulta al Cat&aacute;logo de Dependencias"
+					widgetVar="catalogDependenciesDlg" resizable="false" width="800"
+					height="650" showEffect="clip" hideEffect="clip" modal="true">
+					<br />
+					<p:outputPanel id="panelCatalogDependencies" layout="block"
+						style="text-align:left">
+						<p:dataTable id="dependencies" var="dependence"
+							value="#{catalogProgramsMB.dependencies}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single" sortBy="#{dependence.clvdep}"
+							selection="#{catalogProgramsMB.dependenceSelected}"
+							rowKey="#{dependence.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogProgramsMB.filteredDependencies}"
+							widgetVar="dependenciesWdg">
+
+							<p:ajax event="rowDblselect"
+								update=":form1:objects, :form1:focusTable"
+								listener="#{catalogProgramsMB.onClvdepRowDblClckSelect}"
+								oncomplete="PF('catalogDependenciesDlg').hide();"></p:ajax>
+
+
+							<f:facet name="header">Cat&aacute;logo de Dependencias</f:facet>
+
+							<p:column headerText="Clave" width="40%" exportable="true"
+								filterMaxLength="10" filterMatchMode="contains"
+								filterBy="#{dependence.clvdep}">
+								<h:outputText value="#{dependence.clvdep}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width:60%"
+								filterMatchMode="contains" filterBy="#{dependence.nomdep}">
+								<h:outputText value="#{dependence.nomdep}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<br />
+						<br />
+
+						<p:commandButton value="Aceptar"
+							update=":form1:objects, :form1:focusTable"
+							actionListener="#{catalogProgramsMB.changeDependence}"
+							oncomplete="PF('catalogDependenciesDlg').hide();"
+							style="padding: 5px; position: absolute; right: 50%;" />
+
+						<p:commandButton value="Cancelar"
+							update=":form1:objects, :form1:focusTable"
+							actionListener="#{catalogProgramsMB.activateRowEdit}"
+							oncomplete="PF('catalogDependenciesDlg').hide();"
+							style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+					</p:outputPanel>
+				</p:dialog>
+
+
+				<p:dialog
+					header="Consulta al Cat&aacute;logo de Estructura Programatica"
+					widgetVar="catalogProgramStructureDlg" resizable="false"
+					width="700" height="490" showEffect="clip" hideEffect="clip"
+					modal="true">
+
+					<p:outputPanel id="panelCatalogProgramStructure" layout="block"
+						style="text-align:left">
+						<p:dataTable id="programStructure" var="program"
+							value="#{catalogProgramsMB.programsStructure}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single" sortBy="#{program.campo7}"
+							selection="#{catalogProgramsMB.programStructureSelected}"
+							rowKey="#{program.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogProgramsMB.filteredProgramStructure}"
+							widgetVar="programStructureWdg">
+
+							<p:ajax event="rowDblselect"
+								update=":form1:objects, :form1:focusTable"
+								listener="#{catalogProgramsMB.onClvfunRowDblClckSelect}"
+								oncomplete="PF('catalogProgramStructureDlg').hide();"></p:ajax>
+
+							<p:column headerText="FN/Fun/SF/Prog/Proy" width="25%"
+								filterMatchMode="startsWith" filterBy="#{program.campo7}"
+								filterMaxLength="10" style="text-align:center;">
+
+								<h:outputText value="#{program.campo7}" />
+
+							</p:column>
+
+
+
+							<p:column headerText="Nombre" width="65%"
+								filterMatchMode="startsWith" filterBy="#{program.campo6}">
+								<h:outputText value="#{program.campo6}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<br />
+
+						<p:commandButton value="Aceptar"
+							actionListener="#{catalogProgramsMB.changeProgramStructure}"
+							oncomplete="PF('catalogProgramStructureDlg').hide();"
+							style="padding: 5px; position: absolute; right: 50%;" />
+
+						<p:commandButton value="Cancelar"
+							update=":form1:objects, :form1:focusTable"
+							actionListener="#{catalogProgramsMB.activateRowEdit}"
+							oncomplete="PF('catalogProgramStructureDlg').hide();"
+							style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+				<p:dialog
+					header="Consulta al Cat&aacute;logo de Fuentes de Financiamiento"
+					widgetVar="catalogFinalSourcesDlg" resizable="false" width="720"
+					height="460" showEffect="clip" hideEffect="clip" modal="true">
+					<p:outputPanel id="panelCatalogFinancialSources" layout="block"
+						style="text-align:left">
+						<p:dataTable id="financialSource" var="source"
+							value="#{catalogProgramsMB.financialSources}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single" sortBy="#{source.liga}"
+							selection="#{catalogProgramsMB.financialSourcesSelected}"
+							rowKey="#{source.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogProgramsMB.filteredFinancialSources}"
+							widgetVar="financialSourcesWdg">
+							<p:ajax event="rowDblselect"
+								update=":form1:objects, :form1:focusTable"
+								listener="#{catalogProgramsMB.onClvfuenRowDblClckSelect}"
+								oncomplete="PF('catalogFinalSourcesDlg').hide();"></p:ajax>
+
+							<p:column headerText="Fuente Financiamiento" width="40%"
+								exportable="true" filterMaxLength="3" filterMatchMode="contains"
+								filterBy="#{source.liga}">
+								<h:outputText value="#{source.clvfte}" />
+							</p:column>-
+ 				 					 															
+							<p:column headerText="Nombre" style="width:60%"
+								filterMatchMode="contains" filterBy="#{source.nombref}">
+								<h:outputText value="#{source.nombref}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<center>
+
+							<p:panelGrid columns="3" layout="grid">
+								<p:column></p:column>
+								<p:column>
+									<p:row style="align:center">
+										<p:column>
+											<p:commandButton value="Aceptar"
+												actionListener="#{catalogProgramsMB.changeFinancialSources}"
+												oncomplete="PF('catalogFinalSourcesDlg').hide();"
+												style="padding: 5px; position: absolute; right: 50%;" />
+										</p:column>
+										<p:column>
+											<p:commandButton value="Cancelar"
+												actionListener="#{catalogProgramsMB.activateRowEdit}"
+												oncomplete="PF('catalogFinalSourcesDlg').hide();"
+												style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+										</p:column>
+
+									</p:row>
+								</p:column>
+								<p:column></p:column>
+							</p:panelGrid>
+						</center>
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

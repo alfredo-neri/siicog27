@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Canalizaci&oacute;n de los Recursos Municipales"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+
+						<p:panelGrid columns="2" styleClass="ui-noborder">
+							<h:outputText value="Mes: " for="idMes" />
+							<p:selectOneMenu id="idMes" value="#{ipm42111MB.mes}">
+								<f:selectItems value="#{ipm42111MB.listMes}" var="meses"
+									itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+								<p:ajax event="change" listener="#{ipm42111MB.changeMes()}"
+									update=":form1:cap100, :form1:cap200, :form1:cap300, :form1:cap400, :form1:cap500, :form1:cap600, :form1:cap700, :form1:cap800, :form1:cap900"></p:ajax>
+							</p:selectOneMenu>
+						</p:panelGrid>
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="OBSERVACIONES" />
+							<h:outputText value="" />
+							<h:outputText value="Capítulo 1000: " for="cap100" />
+							<p:inputText id="cap100" value="#{ipm42111MB.pm4211.obs1}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 2000: " for="cap200" />
+							<p:inputText id="cap200" value="#{ipm42111MB.pm4211.obs2}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 3000: " for="cap300" />
+							<p:inputText id="cap300" value="#{ipm42111MB.pm4211.obs3}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 4000: " for="cap400" />
+							<p:inputText id="cap400" value="#{ipm42111MB.pm4211.obs4}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 5000: " for="cap500" />
+							<p:inputText id="cap500" value="#{ipm42111MB.pm4211.obs5}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 6000: " for="cap600" />
+							<p:inputText id="cap600" value="#{ipm42111MB.pm4211.obs6}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 7000: " for="cap700" />
+							<p:inputText id="cap700" value="#{ipm42111MB.pm4211.obs7}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 8000: " for="cap800" />
+							<p:inputText id="cap800" value="#{ipm42111MB.pm4211.obs8}"
+								maxlength="350">
+							</p:inputText>
+							<h:outputText value="Capítulo 9000: " for="cap900" />
+							<p:inputText id="cap900" value="#{ipm42111MB.pm4211.obs9}"
+								maxlength="350">
+							</p:inputText>
+
+
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{ipm42111MB.viewPdf()}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador">
+							</p:commandButton>
+
+						</p:panelGrid>
+					</p:panelGrid>
+
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{ipm42111MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{ipm42111MB.uuid}&amp;filename=#{ipm42111MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

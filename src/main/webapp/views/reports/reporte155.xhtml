@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="panel"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel"
+					header="Indicadores Anual de Transparencia en el Ámbito Municipal">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte155MB.listPm4011}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1" selection="#{reporte155MB.pm4011}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm4011Wdg" rowIndexVar="rowIndex">
+						<p:ajax event="page" listener="#{reporte155MB.chagePage}" />
+						<p:column>
+							<p:panelGrid id="buttons" styleClass="col-centered">
+								<p:row>
+									<p:column>
+										<p:commandButton value="Modificar" id="update"
+											rendered="#{reporte155MB.bVisible}"
+											disabled="#{reporte155MB.bModificar}"
+											actionListener="#{reporte155MB.update(rowIndex)}"
+											update=":form1:object, :form1:messagesEdit" />
+										<p:commandButton value="Salvar" id="save"
+											rendered="#{reporte155MB.bSalvar}"
+											actionListener="#{reporte155MB.save(rowIndex)}"
+											update=":form1:object, :form1:messagesEdit" />
+										<p:commandButton value="Limpiar" id="clena"
+											disabled="#{!reporte155MB.bEdit}"
+											update=":form1:object, :form1:messagesEdit"
+											actionListener="#{reporte155MB.clean(rowIndex)}" />
+
+										<p:commandButton value="Adicionar" id="Add"
+											disabled="#{reporte155MB.bAdd}"
+											actionListener="#{reporte155MB.add(rowIndex)}"
+											update=":form1:object, :form1:messagesEdit" />
+
+										<p:commandButton value="Borrar" id="delete"
+											disabled="#{reporte155MB.bDelete}"
+											actionListener="#{reporte155MB.delete(rowIndex)}"
+											update=":form1:object, :form1:messagesEdit" >
+											
+											<p:confirm header="Confirmación"
+										message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+								</p:commandButton>
+
+										<p:commandButton value="Cancelar" id="cancel"
+											disabled="#{reporte155MB.bCancel}"
+											actionListener="#{reporte155MB.cancel}"
+											update=":form1:object, :form1:messagesEdit" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid id="panelAnual" styleClass="col-centered">
+
+								<p:row>
+									<p:column style="width: 5%">
+										<p:outputLabel value="Anual" id="lblAnual" />
+									</p:column>
+									<p:column style="width: 10%">
+										<p:outputLabel value="#{objects.anual}" id="lblAnio"
+											rendered="#{!reporte155MB.bEdit}" />
+										<p:inputText readonly="true" value="#{reporte155MB.anio}"
+											id="anio" size="4" rendered="#{reporte155MB.bEdit}" />
+									</p:column>
+									<p:column style="width: 10%">
+										<p:outputLabel value="Clave" id="lblClave" />
+									</p:column>
+									<p:column style="width: 10%">
+										<p:outputLabel id="lblClvreq" value="#{objects.clvreq}"
+											rendered="#{!reporte155MB.bEdit}" />
+										<pe:inputNumber id="txtClvreq" value="#{objects.clvreq}"
+											minValue="0" decimalPlaces="0" decimalSeparator=""
+											maxValue="99" maxlength="2" size="2"
+											rendered="#{reporte155MB.bEdit}" required="true" requiredMessage="La clave es obligatoria"/>
+											
+											
+									</p:column>
+									<p:column style="width: 10%">
+										<p:outputLabel value="Pagina" id="pagina" />
+									</p:column>
+									<p:column style="width: 55%">
+										<p:outputLabel id="lblMail" value="#{objects.correo}"
+											rendered="#{!reporte155MB.bEdit}" />
+										<p:inputText id="txtMail" value="#{objects.correo}" size="60"
+											rendered="#{reporte155MB.bEdit}" maxlength="50">
+											<!-- <f:validateRegex pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$" /> -->
+										</p:inputText>
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+							<p:panelGrid id="details">
+								<p:row>
+									<p:column>
+										<p:row>
+											<p:column>
+												<p:outputLabel value="Requerimientos" />
+											</p:column>
+											<p:column>
+												<p:outputLabel value="Cumple" />
+											</p:column>
+											<p:column>
+												<p:outputLabel value="Evidencia Documental" />
+											</p:column>
+											<p:column>
+												<p:outputLabel value="Observaciones" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:inputTextarea value="#{objects.requer}" id="lblreq"
+													rendered="#{!reporte155MB.bEdit}" cols="24" rows="4"
+													disabled="true" maxlength="500" />
+												<p:inputTextarea cols="24" rows="4" id="txtRed"
+													onkeypress="if (event.keyCode == 13) {return false;}"
+													rendered="#{reporte155MB.bEdit}" value="#{objects.requer}" maxlength="490"/>
+											</p:column>
+											<p:column>
+												<p:outputLabel value="#{objects.cumple}" id="lblcumple"
+													rendered="#{!reporte155MB.bEdit}" />
+												<p:selectOneRadio id="radioCumple" value="#{objects.cumple}"
+													rendered="#{reporte155MB.bEdit}">
+													<f:selectItem itemLabel="Si" itemValue="1" />
+													<f:selectItem itemLabel="No" itemValue="0" />
+													<p:ajax update="radioCumple" event="blur" />
+													<p:ajax update="radioCumple" event="change" />
+												</p:selectOneRadio>
+											</p:column>
+											<p:column>
+												<p:inputTextarea value="#{objects.evidencia}" id="lblevi"
+													rendered="#{!reporte155MB.bEdit}" cols="24" rows="4"
+													disabled="true"  maxlength="190"/>
+												<p:inputTextarea cols="24" rows="4" id="txtEvi"
+													value="#{objects.evidencia}"
+													onkeypress="if (event.keyCode == 13) {return false;}"
+													rendered="#{reporte155MB.bEdit}" maxlength="190" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea value="#{objects.obs}" id="lblObs"
+													rendered="#{!reporte155MB.bEdit}" cols="24" rows="4"
+													disabled="true" maxlength="340" />
+												<p:inputTextarea cols="24" rows="4" id="txtObs"
+													onkeypress="if (event.keyCode == 13) {return false;}"
+													value="#{objects.obs}" rendered="#{reporte155MB.bEdit}" maxlength="340" />
+											</p:column>
+										</p:row>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid styleClass="col-centered row-centered">
+						<p:row>
+							<p:column>
+								<p:commandButton value="Correcto" id="correcto"
+									onstart="PF('blockUIWidget').block()"
+									oncomplete="PF('blockUIWidget').unblock()"
+									icon="ui-icon-circle-arrow-s"
+									update="form1:inlinePdf,  :form1:messagesEdit"
+									actionListener="#{reporte155MB.createFilePdfInline}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte155MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte155MB.uuid}&amp;filename=#{reporte155MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+					
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

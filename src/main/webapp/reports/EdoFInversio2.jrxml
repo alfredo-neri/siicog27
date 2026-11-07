@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EdoFInversio" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8428e4ee-af62-4dae-a681-1c2a8bec0796">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEM_LUNUX"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="pMes" class="java.lang.Integer"/>
+	<parameter name="pIdsector" class="java.lang.Integer"/>
+	<parameter name="pMesAnt" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT T1.CLVFLU,
+       SUM( T1.CANFLU_ANT)CANFLU_ANT,
+       SUM(T1.CANFLU_ACT)CANFLU_ACT,
+       T1.NOMFLU
+FROM (SELECT DECIMAL(PF.CLVFLU,24,2) CLVFLU,
+       PF.MESPOL,
+      CASE WHEN PF.MESPOL <= $P{pMesAnt} THEN SUM(PF.CANFLU) ELSE 0 END  CANFLU_ANT,
+      CASE WHEN PF.MESPOL <= $P{pMes} THEN SUM(PF.CANFLU) ELSE 0 END  CANFLU_ACT,
+       CF.NOMFLU NOMFLU
+     FROM POLIFL PF,
+          CATFLU CF
+     WHERE PF.CLVFLU = CF.CLVFLU
+      AND PF.IDSECTOR = CF.IDSECTOR
+      AND PF.MESPOL <= $P{pMes}
+      AND PF.IDSECTOR = $P{pIdsector}
+      AND PF.CLVFLU IN(25.00,26.00,27.00)
+     GROUP BY PF.CLVFLU,
+              CF.NOMFLU,
+              PF.MESPOL 
+     ORDER BY PF.CLVFLU)T1
+  GROUP BY  T1.CLVFLU,
+            T1.NOMFLU]]>
+	</queryString>
+	<field name="CLVFLU" class="java.math.BigDecimal"/>
+	<field name="CANFLU_ANT" class="java.math.BigDecimal"/>
+	<field name="CANFLU_ACT" class="java.math.BigDecimal"/>
+	<field name="NOMFLU" class="java.lang.String"/>
+	<variable name="vCatfluAct" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANFLU_ACT}==null?new BigDecimal(0.00):$F{CANFLU_ACT}]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{vCatfluAct}==null ?new BigDecimal(0.00):$V{vCatfluAct}]]></initialValueExpression>
+	</variable>
+	<variable name="vCatfluAnt" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANFLU_ANT}]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{vCatfluAnt}==null ? new BigDecimal(0.00):$V{vCatfluAnt}]]></initialValueExpression>
+	</variable>
+	<group name="Group_Totales">
+		<groupFooter>
+			<band height="15">
+				<staticText>
+					<reportElement x="0" y="0" width="392" height="15" uuid="ffc1756d-1c56-4b0e-b652-5315e3874b25">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Flujos Netos de Efectivo por Actividades por Invesión]]></text>
+				</staticText>
+				<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement x="392" y="0" width="90" height="15" uuid="7afea37f-5a1c-40ed-a080-6f6c4903ef16">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{vCatfluAct}==null?new BigDecimal(0.00):$V{vCatfluAct}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement x="482" y="0" width="90" height="15" uuid="da89d111-ffbb-41db-8f8a-68975b6668a2">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box rightPadding="2">
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{vCatfluAnt}==null ? new BigDecimal(0.00) :$V{vCatfluAnt}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="572" height="15" uuid="06cbcfdc-491a-4de8-8711-da930d6ccf83">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Flujos de Efectivo de las Actividades de Inversión]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="392" height="15" uuid="112dac43-e82e-440c-9d8a-97c5f55ceaef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMFLU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="392" y="0" width="90" height="15" uuid="776e3d55-e29d-45df-b2fd-363706412685">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CANFLU_ACT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="482" y="0" width="90" height="15" uuid="d820cf0d-7054-4475-82da-e2ef601c25d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box rightPadding="2">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CANFLU_ANT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

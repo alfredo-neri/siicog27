@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<script type="text/javascript">
+        function showStatus() {
+            PF('statusDialog').show();
+        }
+        function hideStatus() {
+            PF('statusDialog').hide();
+        }
+    </script>
+
+			<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+
+
+			<p:panel id="pIngresos" header="Presupuesto de ingresos"
+				styleClass="green col-md-3 col-centered row-centered shadow-panel"
+				widgetVar="pIngresos">
+				<h:form id="uploadForm" enctype="multipart/form-data">
+					<p:messages id="messagesKey" showDetail="true" closable="true"
+						globalOnly="true" />
+
+
+					<p:panelGrid id="grid" columns="3" cellpadding="5"
+						styleClass="col-centered row-centered">
+
+
+						<p:outputLabel for="accion" value="Revisar/Cargar (R/C):"
+							styleClass="control-label" />
+						<p:selectOneMenu id="accion"
+							value="#{uploadBuggetIngresosMB.accion}" style="width:125px"
+							required="true">
+							<f:selectItem itemLabel="Revisar" itemValue="R" />
+							<f:selectItem itemLabel="Cargar" itemValue="C" />
+						</p:selectOneMenu>
+						<p:message for="accion" />
+
+
+						<h:outputLabel for="archivo" value="Seleccione un archivo:" />
+						<p:fileUpload id="archivo" value="#{uploadBuggetIngresosMB.file}"
+							mode="simple" skinSimple="true" required="true"
+							sizeLimit="100000" allowTypes="/(\.|\/)(txt)$/" label="..."
+							accept=".csv" />
+						<p:message for="accion" />
+
+
+
+					</p:panelGrid>
+					<p:commandButton type="button" value="Correcto"
+						onclick="PF('confirmFile').show();" />
+
+
+					<p:confirmDialog widgetVar="confirmFile"
+						message="Este proceso puede tardar algunos minutos. Porfavor oprima aceptar y espere"
+						header="Confirmacion" severity="alert">
+						<p:commandButton value="Aceptar" ajax="false" label="Correcto"
+							style="margin-top:10px;padding:5px;"
+							action="#{uploadBuggetIngresosMB.upload}"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					</p:confirmDialog>
+
+
+					<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+						draggable="false" closable="false">
+						<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+					</p:dialog>
+					<p:commandButton value="Descargar archivo de Errores" ajax="false"
+						style="margin-top:10px;padding:5px;"
+						onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)"
+						rendered="#{not empty uploadBuggetIngresosMB.errorFileName}">
+						<p:fileDownload
+							value="#{uploadBuggetIngresosMB.retrieveErrorDocument( uploadBuggetIngresosMB.errorFileName )}"></p:fileDownload>
+					</p:commandButton>
+
+
+				</h:form>
+
+			</p:panel>
+
+
+
+
+
+
+
+
+
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

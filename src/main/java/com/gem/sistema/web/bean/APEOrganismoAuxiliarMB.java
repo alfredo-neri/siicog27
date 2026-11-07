@@ -1,0 +1,262 @@
+package com.gem.sistema.web.bean;
+
+import static com.gem.sistema.util.UtilFront.generateNotificationFront;
+import static com.gem.sistema.util.UtilReport.getNameFileReport;
+import static com.roonin.utils.UtilDate.getLastDayByAnoEmp;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
+
+import com.gem.sistema.business.domain.Catdep;
+import com.gem.sistema.business.domain.Conctb;
+import com.gem.sistema.business.domain.TcMes;
+import com.gem.sistema.business.domain.TcPeriodo;
+import com.gem.sistema.business.domain.TcReportesFirma;
+import com.gem.sistema.business.repository.catalogs.CatdepRepository;
+import com.gem.sistema.business.repository.catalogs.ConctbRepository;
+import com.gem.sistema.business.repository.catalogs.TcMesRepository;
+import com.gem.sistema.business.repository.catalogs.TcPeriodoRepositoy;
+import com.gem.sistema.business.repository.catalogs.TcReportesFirmasRepository;
+import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
+import com.gem.sistema.business.service.catalogos.ValidatePolicyService;
+import com.gem.sistema.business.service.reportador.QueryGeneratorService;
+import com.gem.sistema.business.service.reportador.ReportValidationException;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Reporte55MB.
+ */
+@ManagedBean(name = "aPEOrganismoAuxiliarMB")
+@ViewScoped
+public class APEOrganismoAuxiliarMB extends BaseDirectReport {
+
+	private static final String DOWNLOAD_XLS = " jQuery('#form1\\\\:downXls').click();";
+	private static final String CLAVE_REPORT = "RPT_OGANISMOS_AUXILIARES";
+
+	/** The mes. */
+	private String mes;
+
+	/** The list mes. */
+	private List<TcMes> listMes;
+
+	/** The secretaria. */
+	private String secretaria;
+
+	private Catdep catdep;
+
+	/** The catdep repository. */
+	@ManagedProperty("#{catdepRepository}")
+	private CatdepRepository catdepRepository;
+
+	/** The tc mes repository. */
+	@ManagedProperty("#{tcMesRepository}")
+	private TcMesRepository tcMesRepository;
+
+	@ManagedProperty("#{validatePolicyService}")
+	private ValidatePolicyService validatePolicyService;
+
+	@ManagedProperty("#{queryGeneratorService}")
+	private QueryGeneratorService queryGeneratorService;
+
+	@ManagedProperty("#{tcPeriodoRepositoy}")
+	private TcPeriodoRepositoy periodoRepositoy;
+
+	@ManagedProperty("#{conctbRepository}")
+	private ConctbRepository conctbRepository;
+
+	@ManagedProperty("#{puestosFirmasService}")
+	private PuestosFirmasService puestosFirmasService;
+
+	@ManagedProperty("#{tcReportesFirmasRepository}")
+	private TcReportesFirmasRepository reporteFirmasRepository;
+
+	@PostConstruct
+	public void init() {
+
+		jasperReporteName = "reporte55";
+		endFilename = jasperReporteName + ".pdf";
+
+		listMes = tcMesRepository.findAll();
+		if (!CollectionUtils.isEmpty(listMes)) {
+			mes = listMes.get(0).getMes();
+		}
+
+	}
+
+	public TcReportesFirmasRepository getReporteFirmasRepository() {
+		return reporteFirmasRepository;
+	}
+
+	public void setReporteFirmasRepository(TcReportesFirmasRepository reporteFirmasRepository) {
+		this.reporteFirmasRepository = reporteFirmasRepository;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.gem.sistema.web.bean.BaseDirectReport#getParametersReports()
+	 */
+	@Override
+	public Map<String, Object> getParametersReports() throws ReportValidationException {
+		Map<String, Object> parametrs = new HashMap<String, Object>();
+
+		Integer idSector = this.getUserDetails().getIdSector();
+		Conctb conctb = conctbRepository.findByIdsector(idSector);
+		TcPeriodo periodo = periodoRepositoy.findByTipoPeriodoAndPeriodo(1, Integer.valueOf(mes));
+		TcReportesFirma reporte = reporteFirmasRepository.findByIdSectorAndClave(idSector, CLAVE_REPORT);
+
+		endFilename = getNameFileReport(mes, conctb, reporte);
+
+		parametrs.put("sql", queryGeneratorService.queryAvancePresupuestalEgresosSecretaria(idSector,
+				Integer.valueOf(mes), secretaria));
+		parametrs.put("anio", conctb.getAnoemp());
+		parametrs.put("mesName", periodo.getDescripcion());
+		parametrs.put("imageLeft", conctb.getImagePathLeft());
+		parametrs.put("imageRigth", conctb.getImagePathRigth());
+		parametrs.put("nombreEntidad", conctb.getNomDep());
+		parametrs.put("lastDayOfMonth", getLastDayByAnoEmp(Integer.valueOf(mes), conctb.getAnoemp()));
+		parametrs.put("nameSecretaria", catdep.getNomdep());
+		parametrs.put("claveSecretaria", catdep.getClvdep());
+		parametrs.putAll(puestosFirmasService.getFirmasOfReport(idSector, CLAVE_REPORT));
+
+		return parametrs;
+
+	}
+
+	public void downloadXls() {
+		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null,
+				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
+
+			catdep = catdepRepository.getCatdepByFirstOrganismoAxiliar(this.getUserDetails().getIdSector(), secretaria);
+			if (null != catdep) {
+				RequestContext.getCurrentInstance().execute(DOWNLOAD_XLS);
+			} else {
+				generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Info!", "El Organismo Auxiliar es incorrecto");
+			}
+		}
+	}
+
+	public void viewPdf() {
+		if (this.validatePolicyService.isOpenMonth(Integer.valueOf(mes), null,
+				this.getUserDetails().getIdSector()) == Boolean.TRUE) {
+
+			catdep = catdepRepository.getCatdepByFirstOrganismoAxiliar(this.getUserDetails().getIdSector(), secretaria);
+			if (null != catdep) {
+				this.createFilePdfInline();
+			} else {
+				generateNotificationFront(FacesMessage.SEVERITY_ERROR, "Info!", "El Organismo Auxiliar es incorrecto");
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.gem.sistema.web.bean.BaseDirectReport#generaReporteSimple(int)
+	 */
+	@Override
+	public StreamedContent generaReporteSimple(int type) throws ReportValidationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getMes() {
+		return mes;
+	}
+
+	public void setMes(String mes) {
+		this.mes = mes;
+	}
+
+	public List<TcMes> getListMes() {
+		return listMes;
+	}
+
+	public void setListMes(List<TcMes> listMes) {
+		this.listMes = listMes;
+	}
+
+	public String getSecretaria() {
+		return secretaria;
+	}
+
+	public void setSecretaria(String secretaria) {
+		this.secretaria = secretaria;
+	}
+
+	public Catdep getCatdep() {
+		return catdep;
+	}
+
+	public void setCatdep(Catdep catdep) {
+		this.catdep = catdep;
+	}
+
+	public CatdepRepository getCatdepRepository() {
+		return catdepRepository;
+	}
+
+	public void setCatdepRepository(CatdepRepository catdepRepository) {
+		this.catdepRepository = catdepRepository;
+	}
+
+	public TcMesRepository getTcMesRepository() {
+		return tcMesRepository;
+	}
+
+	public void setTcMesRepository(TcMesRepository tcMesRepository) {
+		this.tcMesRepository = tcMesRepository;
+	}
+
+	public ValidatePolicyService getValidatePolicyService() {
+		return validatePolicyService;
+	}
+
+	public void setValidatePolicyService(ValidatePolicyService validatePolicyService) {
+		this.validatePolicyService = validatePolicyService;
+	}
+
+	public QueryGeneratorService getQueryGeneratorService() {
+		return queryGeneratorService;
+	}
+
+	public void setQueryGeneratorService(QueryGeneratorService queryGeneratorService) {
+		this.queryGeneratorService = queryGeneratorService;
+	}
+
+	public TcPeriodoRepositoy getPeriodoRepositoy() {
+		return periodoRepositoy;
+	}
+
+	public void setPeriodoRepositoy(TcPeriodoRepositoy periodoRepositoy) {
+		this.periodoRepositoy = periodoRepositoy;
+	}
+
+	public ConctbRepository getConctbRepository() {
+		return conctbRepository;
+	}
+
+	public void setConctbRepository(ConctbRepository conctbRepository) {
+		this.conctbRepository = conctbRepository;
+	}
+
+	public PuestosFirmasService getPuestosFirmasService() {
+		return puestosFirmasService;
+	}
+
+	public void setPuestosFirmasService(PuestosFirmasService puestosFirmasService) {
+		this.puestosFirmasService = puestosFirmasService;
+	}
+
+}

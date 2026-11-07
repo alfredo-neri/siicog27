@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel" header=" Indicador de índice de Casos Comprobados de Maltrato"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte133MB.listPm1511}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm0811Wdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+						<p:column>
+							<p:panelGrid id="idGrid1">
+								<p:row>
+									<p:column style="width : 28%; text-align: right;">
+										<h:outputText value="Semestre  " />
+									</p:column>
+									<p:column style="width: 30%; text-align: left;">
+										<p:outputLabel id="lblTrimestre" value="#{objects.semestral}"
+											rendered="#{reporte133MB.bLblsemestre}">
+											<f:convertNumber pattern="00" />
+										</p:outputLabel>
+										<p:selectOneMenu value="#{reporte133MB.semestre}"
+											id="comboTri" rendered="#{reporte133MB.bComboTri}">
+											<f:selectItems value="#{reporte133MB.listsemestre}" var="tri"
+												itemValue="#{tri}" itemLabel="#{tris}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Capturo:" />
+									</p:column>
+									<p:column>
+										<p:outputLabel id="txtCapturo" value="#{objects.capturo}" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Fecha Captura: " />
+									</p:column>
+									<p:column>
+										<p:calendar id="fecpol" value="#{objects.feccap}"
+											maxlength="8" locale="es" size="10" pattern="dd/MM/yyyy"
+											required="true" mask="true" disabled="true" />
+									</p:column>
+
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column />
+									<p:column>
+										<h:outputText value="Cantidad" />
+									</p:column>
+									<p:column colspan="4">
+										<h:outputText value="Observaciones" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText
+											value="Número de casos confirmados por maltrato a los que se les dio seguimiento : " />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.nccms}" id="lblAgua"
+											rendered="#{reporte133MB.bLbl}">
+
+											<f:convertNumber currencySymbol="" maxIntegerDigits="24"
+												maxFractionDigits="" locale="es_MX" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.nccms}" decimalPlaces="0"
+											thousandSeparator="," decimalSeparator="" id="txtAgua"
+											size="15" rendered="#{reporte133MB.bTxt}" />
+
+
+									</p:column>
+									<p:column style="text-align: left;" colspan="4">
+										<p:outputLabel id="lblObsAgua" value="#{objects.obsnccms}"
+											rendered="#{reporte133MB.bLbl}" />
+										<p:inputTextarea rows="1" cols="30" id="txtObsAgua"
+											value="#{objects.obsnccms}" rendered="#{reporte133MB.bTxt}" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel
+											value="Número de casos confirmados por maltrato" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.nccm}" id="lblPoblacion"
+											rendered="#{reporte133MB.bLbl}">
+											<f:convertNumber currencySymbol="" maxIntegerDigits="24"
+												maxFractionDigits="" locale="es_MX" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.nccm}" id="txtPoblacion"
+											decimalSeparator="" thousandSeparator="," decimalPlaces="0"
+											size="15" rendered="#{reporte133MB.bTxt}">
+											<pe:keyFilter mask="pint" />
+
+										</pe:inputNumber>
+									</p:column>
+
+									<p:column style="text-align: left;" colspan="4">
+										<p:outputLabel id="lblObsPoblacion" value="#{objects.obsnccm}"
+											rendered="#{reporte133MB.bLbl}" />
+										<p:inputTextarea id="txtObsPoblacion" rows="1" cols="30"
+											value="#{objects.obsnccm}" rendered="#{reporte133MB.bTxt}" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel
+											value="Total de casos presentados al DIF municipal por presunto maltrato:" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.tcpd}" id="lblMatrato"
+											rendered="#{reporte133MB.bLbl}">
+											<f:convertNumber currencySymbol="" maxIntegerDigits="24"
+												maxFractionDigits="" locale="es_MX" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.tcpd}" id="txtMaltrato"
+											decimalPlaces="0" decimalSeparator="" thousandSeparator=","
+											size="15" rendered="#{reporte133MB.bTxt}">
+
+										</pe:inputNumber>
+									</p:column>
+									<p:column style="text-align: left;" colspan="4">
+										<p:outputLabel id="lblObsDif" value="#{objects.obstcpd}"
+											rendered="#{reporte133MB.bLbl}" />
+										<p:inputTextarea id="txtObsDif" rows="1" cols="30"
+											value="#{objects.obstcpd}" rendered="#{reporte133MB.bTxt}" />
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+							<p:panelGrid id="buttons">
+								<p:commandButton value="Salvar"
+									actionListener="#{reporte133MB.save(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									rendered="#{reporte133MB.bVSave}" id="save" icon="ui-icon-disk" />
+								<p:commandButton value="Modificar" id="modificar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte133MB.modify(rowIndex)}"
+									icon="ui-icon-pencil" rendered="#{reporte133MB.bVModificar}"
+									disabled="#{reporte133MB.bBtnMoficar}" />
+								<p:commandButton value="Limpiar" id="reset"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte133MB.clean(rowIndex)}"
+									disabled="#{reporte133MB.bLbl}" icon="ui-icon-tag" />
+								<p:commandButton value="Adicionar" id="add"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte133MB.add(rowIndex)}"
+									icon="ui-icon-circle-plus" disabled="#{reporte133MB.bAdd}" />
+								<p:commandButton value="Borrar" id="borrar"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									disabled="#{reporte133MB.bBorrar}"
+									actionListener="#{reporte133MB.delete(rowIndex)}" />
+								<p:commandButton value="Cancelar" id="cancelar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte133MB.cancel(rowIndex)}"
+									icon="ui-icon-circle-close" disabled="#{reporte133MB.bLbl}" />
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="idGrid5">
+						<h:outputText value="Semestre a Consultar: " />
+						<p:selectOneMenu value="#{reporte133MB.conTrim}" id="ctri">
+							<f:selectItems var="tri" value="#{reporte133MB.comboTri}"
+								itemValue="#{tri.semestral}" itemLabel="#{tri.semestral}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Correcto" id="correcto"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							icon="ui-icon-circle-arrow-s"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							actionListener="#{reporte133MB.createFilePdfInline}" />
+
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte133MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte133MB.uuid}&amp;filename=#{reporte133MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

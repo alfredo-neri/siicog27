@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean" value="#{estadoCuentasDelMesGraficoMB}"></ui:param>
+		<ui:define name="content">
+			<script>
+				$(document).ready(()=>{
+					$(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align','center');
+				})
+			</script>
+			<style>
+th.header-pull-left {
+	text-align: left !important;
+}
+
+th.header-pull-left span {
+	margin-left: -10px;;
+}
+
+.headerBorder .ui-panel-titlebar {
+	margin-top: -26px;
+	background-color: transparent !important;
+	border: none;
+	text-align: center;
+	font-size: 15px;
+}
+
+.headerBorder .ui-panel-title {
+	background-color: white;
+}
+</style>
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto; ">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte" header="Estados de Cuenta del mes"
+					style="height: 26em; width: 80em;"
+					styleClass="green col-md-12 shadow-panel">
+					<div class="row">
+
+						<p:panel styleClass="col-md-12">
+							<div class="row">
+								<div class="col-md-2" />
+								<h:panelGrid columns="2" columnClasses="text-left"
+									class="col-md-4" style="margin-bottom: .5em;"
+									styleClass="col-md-3">
+									<h:outputText value="Mes" for="mesInputOri" />
+									<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+										value="#{bean.mes}"
+										style="width: 5em; margin-top: 1.5px; margin-left: 1.5px">
+										<f:selectItem itemValue="1" itemLabel="01" />
+										<f:selectItem itemValue="2" itemLabel="02" />
+										<f:selectItem itemValue="3" itemLabel="03" />
+										<f:selectItem itemValue="4" itemLabel="04" />
+										<f:selectItem itemValue="5" itemLabel="05" />
+										<f:selectItem itemValue="6" itemLabel="06" />
+										<f:selectItem itemValue="7" itemLabel="07" />
+										<f:selectItem itemValue="8" itemLabel="08" />
+										<f:selectItem itemValue="9" itemLabel="09" />
+										<f:selectItem itemValue="10" itemLabel="10" />
+										<f:selectItem itemValue="11" itemLabel="11" />
+										<f:selectItem itemValue="12" itemLabel="12" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+								<div class="col-md-4">
+									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="excel.png" width="24" />
+										<p:fileDownload value="#{bean.fileXls}" />
+									</h:commandLink>
+									<p:commandButton id="generateportepdf"
+										onstart="PF('blockUIWidget').block()"
+										action="#{bean.createFilePdfInlineValidate}" value="Correcto"
+										update="form1:inlinePdf, :form1:growlReportador"
+										styleClass="btn btn-default pull-right">
+									</p:commandButton>
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-2" />
+								<h:panelGrid columns="9" id="panel-filtros">
+									<h:panelGrid columns="1" columnClasses="text-left">
+										<h:outputText value="Cuenta" for="CuentaInput" />
+										<p:inputText id="CuentaInput" style="width: 4em;"
+											value="#{bean.cuenta.cuenta}" maxlength="4">
+											<p:ajax event="change" process="@this form1:CuentaInput" />
+										</p:inputText>
+									</h:panelGrid>
+
+									<h:panelGrid columns="1" columnClasses="text-left">
+										<h:outputText value="Scta" for="SctaInput" />
+										<p:inputText id="SctaInput" style="width: 9em;"
+											value="#{bean.cuenta.scuenta}" maxlength="10">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</h:panelGrid>
+
+									<h:panelGrid columns="1" columnClasses="text-left">
+										<h:outputText value="Sscta" for="SsctaInput" />
+										<p:inputText id="SsctaInput" style="width: 14em;"
+											value="#{bean.cuenta.sscuenta}" maxlength="15">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</h:panelGrid>
+
+
+									<h:panelGrid columns="1" columnClasses="text-left">
+										<h:outputText value="Ssscta" for="SssctaInput" />
+										<p:inputText id="SssctaInput" style="width: 5em;"
+											value="#{bean.cuenta.ssscuenta}" maxlength="4">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</h:panelGrid>
+
+									<h:panelGrid columns="1" columnClasses="text-left">
+										<h:outputText value="Sssscta" for="SsssctaInput" />
+										<p:inputText id="SsssctaInput" style="width: 5em;"
+											value="#{bean.cuenta.sssscuenta}" maxlength="3">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" columnClasses="borderless"
+										style="margin-left: 18px;">
+										<h:panelGrid columns="2" columnClasses="borderless">
+											<p:selectOneRadio layout="grid" columns="1"
+												value="#{bean.orderBy}" required="true">
+												<f:selectItem itemLabel="Por fecha" itemValue="FECPOL" />
+												<f:selectItem itemLabel="Por referencia" itemValue="REFPOL" />
+												<c:if test="#{estadoCuentasDelMesGraficoMB.banderaM}">
+												<f:selectItem itemLabel="Por mes" itemValue="MESPOL" />
+												</c:if>
+												<p:ajax event="change" update="filtroExtenso" />
+											</p:selectOneRadio>
+										</h:panelGrid>
+										<h:inputText id="filtroExtenso" disabled="true"
+											style="width: 7em; margin-left: .5em;"
+											value="#{bean.orderBy == 'FECPOL' ? 'FECHA' : (bean.orderBy == 'REFPOL' ? 'REFERENCIA' : 'MES')}" />
+									</h:panelGrid>
+								</h:panelGrid>
+							</div>
+						</p:panel>
+						<p:panel id="inlinePdf" style="border:0px"
+							visible="#{bean.uuid ne null}">
+
+							<object type="application/pdf" style="margin-top: 1em;"
+								data="#{request.contextPath}/GetFileInline?uuid=#{bean.uuid}&amp;filename=#{bean.endFilename}"
+								height="380px" width="100%"> Tu browser no puede
+								desplegar el PDF. </object>
+
+						</p:panel>
+					</div>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

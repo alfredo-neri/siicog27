@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<script>
+				$(document).ready(()=>{
+					$(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align','center');
+				})
+			</script>
+			<style>
+table.no-border td[class*=col-] {
+	border-width: 0 !important;
+}
+
+span.input-number-small input {
+	width: 90%;
+}
+
+span.input-number input {
+	width: 100%;
+}
+
+span.input-percent input {
+	width: 100%;
+}
+
+table.no-padding td[class*=col-] {
+	padding: 0px;
+	text-align: left;
+	padding-left: 5px;
+}
+</style>
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto;">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Canalización de Recursos a Servicios Personales DIF"
+					styleClass="green col-md-20 col-centered shadow-panel">
+					<div class="row">
+
+						<p:dataGrid id="dataGrid" var="entity"
+							value="#{canalizacionRecursosServiciosPersonalesDIFMB.masterList}"
+							styleClass="et_datatable no-border"
+							emptyMessage="Cargando información..." paginator="true" rows="1"
+							columns="1"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							widgetVar="dataGrid" paginatorPosition="bottom"
+							rowIndexVar="rowIndexCaptura">
+							<p:ajax event="page"
+								listener="#{canalizacionRecursosServiciosPersonalesDIFMB.cambiarPagina}"
+								process="dataGrid"
+								update="dataGrid form1:mesInputOri form1:pnlBotonesCRUD" />
+							<p:panelGrid>
+								<p:row>
+									<p:column />
+									<p:column styleClass="col-md-2">
+										<h:panelGrid columns="2"
+											style="height:47px; margin-left: 34px">
+											<h:outputText value="Trimestre:" />
+											<h:outputText value="#{entity.mensual}"
+												rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando or entity.id  > 0}" />
+											<p:selectOneMenu size="18" editable="false"
+												value="#{entity.mensual}"
+												style="width: 5em; margin-top: 1.5px;"
+												rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando and entity.id  == null}">
+												<f:selectItems
+													value="#{canalizacionRecursosServiciosPersonalesDIFMB.selectableMonth}"
+													var="mes" itemValue="#{mes}" itemLabel="#{mes}" />
+											</p:selectOneMenu>
+										</h:panelGrid>
+									</p:column>
+									<p:column styleClass="col-md-7" />
+								</p:row>
+
+								<p:row>
+									<p:column rowspan="2" style="vertical-align: bottom;">
+										<h:outputText value="Total de egresos" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Cantidad:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Observaciones:" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="height:47px;">
+										<h:outputText value="#{entity.te}"
+											rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}">
+											<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+										</h:outputText>
+										<pe:inputNumber value="#{entity.te}"
+											styleClass="input-number-small" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," minValue="0"
+											maxlength="15"
+											rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+											onkeypress="if (event.keyCode == 13) {return false;}"
+											/>
+									</p:column>
+									<p:column style="height:47px;">
+										<h:outputText value="#{entity.obste}"
+											rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" />
+										<p:inputText value="#{entity.obste}" size = "80"
+											rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+											onkeypress="if (event.keyCode == 13) {return false;}"
+											/>
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column>
+										<h:outputText value="100 Servicios Personales" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{entity.sp}"
+											rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}">
+											<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+										</h:outputText>
+										<pe:inputNumber value="#{entity.sp}"
+											styleClass="input-number-small" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," minValue="0"
+											maxlength="15"
+											rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+											onkeypress="if (event.keyCode == 13) {return false;}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{entity.obssp}"
+											rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" />
+										<p:inputText value="#{entity.obssp}" size = "80"
+											rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+											onkeypress="if (event.keyCode == 13) {return false;}"/>
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column>
+										<h:outputText
+											value="Servicios personales (Sin incluir personal administrativo)" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{entity.spspa}"
+											rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}">
+											<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+										</h:outputText>
+										<pe:inputNumber value="#{entity.spspa}"
+											styleClass="input-number-small" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," minValue="0"
+											maxlength="15"
+											rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+											onkeypress="if (event.keyCode == 13) {return false;}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{entity.obsspspa}" 
+											rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" />
+										<p:inputText value="#{entity.obsspspa}" size= "80"
+											rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+											onkeypress="if (event.keyCode == 13) {return false;}" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column />
+									<p:column />
+									<p:column />
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid columns="4"
+								columnClasses="ui-grid-col-4, ui-grid-col-2, ui-grid-col-4, ui-grid-col-2"
+								styleClass=" no-padding">
+								<h:outputText value="060401 Desarrollo Integral de la Familia" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.dif}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										 onkeypress="if (event.keyCode == 13) {return false;}"/>
+									<pe:inputNumber value="#{entity.pdif}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+								</p:panelGrid>
+
+								<h:outputText value="060417 Estancias Infantiles" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.ei}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+									<pe:inputNumber value="#{entity.pei}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+								</p:panelGrid>
+
+								<h:outputText value="060403 Serv. Jurid asist a la familia" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.sjaf}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+									<pe:inputNumber value="#{entity.psjaf}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060402 Atención a víctimas por maltrato" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.avma}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+									<pe:inputNumber value="#{entity.pavma}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060405 Orient y atención psicológica fam" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.oapf}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+										
+									<pe:inputNumber value="#{entity.poapf}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060404 Prev. Alcoholismo y fármaco dep." />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									
+									<pe:inputNumber value="#{entity.pafd}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" 
+									/>
+									
+									<pe:inputNumber value="#{entity.ppafd}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060407 Apoyo a la Salud" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.als}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.pals}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060406 Serv. Para el des. comunitario" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.spdc}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.pspdc}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060409 Alimentos para escolares" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.ape}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.pape}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+								</p:panelGrid>
+
+								<h:outputText value="060408 Atención a menores en sit. Ext." />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.amse}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.pamse}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060411 Apoyo para adultos mayores" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.aam}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+									<pe:inputNumber value="#{entity.paam}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060410 Atención personas con cap. dif." />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.apcd}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.papcd}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060413 Atención a la juventud" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.aj}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.paj}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText value="060412 Atención a la mujer y persp. de gen." />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.ampg}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.pampg}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText
+									value="060415 Infr. y eq. des. int. de la fam. y asis. Soc." />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.ied}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.pied}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+								<h:outputText
+									value="060414 Orien. y apoyo para la nut. Y allim." />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.oana}"
+										styleClass="input-number" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.poana}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" 
+										onkeypress="if (event.keyCode == 13) {return false;}"/>
+								</p:panelGrid>
+
+								<h:outputText value="060416 Apoyo a indigentes y damnificados" />
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-7, ui-grid-col-5"
+									styleClass="ui-noborder no-padding">
+									<pe:inputNumber value="#{entity.aid}" styleClass="input-number"
+										decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+									<pe:inputNumber value="#{entity.paid}"
+										styleClass="input-percent" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," symbol="%"
+										symbolPosition="right" maxValue="100"
+										disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+										onkeypress="if (event.keyCode == 13) {return false;}" />
+								</p:panelGrid>
+
+
+							</p:panelGrid>
+						</p:dataGrid>
+						<p:panelGrid styleClass="col-md-12">
+							<h:panelGroup id="pnlBotonesCRUD">
+								<p:commandButton value="Salvar" icon="ui-icon-disk"
+									style="padding: 5px; width:100px"
+									action="#{canalizacionRecursosServiciosPersonalesDIFMB.salvar}"
+									update="dataGrid pnlBotonesCRUD"
+									rendered="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}" />
+								<p:commandButton value="Modificar" icon="ui-icon-tag"
+									style="padding: 5px; width:100px"
+									action="#{canalizacionRecursosServiciosPersonalesDIFMB.modificar}"
+									update="dataGrid pnlBotonesCRUD"
+									disabled="#{canalizacionRecursosServiciosPersonalesDIFMB.selected.id == null}"
+									rendered="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}" />
+								<p:commandButton value="Limpiar"
+									actionListener="#{canalizacionRecursosServiciosPersonalesDIFMB.reset}"
+									style="padding: 5px; width:100px"
+									disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+									update="dataGrid pnlBotonesCRUD"
+									icon="ui-icon-arrowreturnthick-1-n" />
+								<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+									style="padding: 5px; width:100px"
+									action="#{canalizacionRecursosServiciosPersonalesDIFMB.adicionar}"
+									update="dataGrid pnlBotonesCRUD"
+									disabled="#{canalizacionRecursosServiciosPersonalesDIFMB.editando}" />
+								<p:commandButton value="Borrar" icon="ui-icon-trash"
+									style="padding: 5px; width:100px"
+									onclick="PF('confirmFileDeleteMeta').show();"
+									disabled="#{canalizacionRecursosServiciosPersonalesDIFMB.selected.id == null or canalizacionRecursosServiciosPersonalesDIFMB.editando}" />
+								<p:commandButton value="Cancelar " icon="ui-icon-circle-close"
+									style="padding: 5px; width:100px"
+									action="#{canalizacionRecursosServiciosPersonalesDIFMB.cancelar}"
+									disabled="#{!canalizacionRecursosServiciosPersonalesDIFMB.editando}"
+									update="dataGrid pnlBotonesCRUD" />
+							</h:panelGroup>
+						</p:panelGrid>
+						<div class="row">
+							<p:panel styleClass="col-md-12">
+								<h:panelGroup styleClass="pull-right"
+									style="margin-bottom: 0.5em;">
+									<h:panelGrid columns="4" style="margin-right:14px;">
+										<h:outputText value="Trimestre" for="mesInputOri" />
+										<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+											value="#{canalizacionRecursosServiciosPersonalesDIFMB.trimestre}"
+											style="width: 5em; margin-top: 1.5px;">
+											<f:selectItem itemValue="1" itemLabel="01" />
+											<f:selectItem itemValue="2" itemLabel="02" />
+											<f:selectItem itemValue="3" itemLabel="03" />
+											<f:selectItem itemValue="4" itemLabel="04" />
+										</p:selectOneMenu>
+										<p:spacer />
+										<p:commandButton id="generateportepdf"
+											onstart="PF('blockUIWidget').block()"
+											action="#{canalizacionRecursosServiciosPersonalesDIFMB.createFilePdfInline}"
+											value="Correcto"
+											oncomplete="PF('blockUIWidget').unblock(); $(PrimeFaces.escapeClientId('form1:panelReporte'));"
+											update="form1:inlinePdf :form1:growlReportador"
+											style="padding:2px;">
+										</p:commandButton>
+									</h:panelGrid>
+								</h:panelGroup>
+
+							</p:panel>
+						</div>
+						<p:panel id="inlinePdf" style="border:0px"
+							visible="#{canalizacionRecursosServiciosPersonalesDIFMB.uuid ne null}">
+
+							<object type="application/pdf" style="margin-top: 1em;"
+								data="#{request.contextPath}/GetFileInline?uuid=#{canalizacionRecursosServiciosPersonalesDIFMB.uuid}&amp;filename=#{canalizacionRecursosServiciosPersonalesDIFMB.endFilename}"
+								height="380px" width="100%"> Tu browser no puede
+								desplegar el PDF. </object>
+
+						</p:panel>
+					</div>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+					message="Desea eliminar el registro actual?" header="Confirmación"
+					severity="alert">
+					<p:commandButton value="SI" label="SI"
+						style="margin-top:10px;padding:5px;"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						actionListener="#{canalizacionRecursosServiciosPersonalesDIFMB.delete}"
+						oncomplete="PF('confirmFileDeleteMeta').hide();"
+						update="dataGrid pnlBotonesCRUD" />
+					<p:commandButton value="NO" label="NO"
+						style="margin-top:10px;padding:5px;"
+						onclick="PF('confirmFileDeleteMeta').hide();"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

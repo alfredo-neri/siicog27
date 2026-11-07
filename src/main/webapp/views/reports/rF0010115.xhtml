@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Conciliaci&oacute;n Entre los Egresos Presupuestales y Contables"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<p:panelGrid columns="6" styleClass="ui-noborder">
+							<h:outputText value="Mes Inicial: " for="idMesIni" />
+							<p:selectOneMenu id="idMesIni" value="#{rF0010115MB.mesInicial}">
+								<f:selectItems value="#{rF0010115MB.listMesIni}" var="meses"
+									itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+								<p:ajax listener="#{rF0010115MB.onChangeValidaMeses}"
+									update=":form1:growlReportador"></p:ajax>
+							</p:selectOneMenu>
+							<h:outputText value="Mes Final: " for="idMesFin" />
+							<p:selectOneMenu id="idMesFin" value="#{rF0010115MB.mesFinal}">
+								<f:selectItems value="#{rF0010115MB.listMesFin}" var="meses"
+									itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+								<p:ajax listener="#{rF0010115MB.onChangeValidaMeses}"
+									update=":form1:growlReportador"></p:ajax>
+							</p:selectOneMenu>
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF0010115MB.viewPdf}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{rF0010115MB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{rF0010115MB.uuid}&amp;filename=#{rF0010115MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

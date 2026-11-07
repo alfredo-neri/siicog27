@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-18T23:37:17 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte115_txt" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="07fd6345-0842-46de-9e0e-af93eca665b1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Gem"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="ANOEMP" class="java.lang.Integer"/>
+	<parameter name="TRIMESTRE" class="java.lang.Integer"/>
+	<parameter name="IDSECTOR" class="java.lang.Integer"/>
+	<parameter name="CLAVE" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+nvl(TO_CHAR(c.anoemp),'') anoemp,
+nvl(i.periodo,'') periodo,
+nvl(i.cveind,'') cveind,
+nvl(i.clvfun,'')clvfun,
+nvl(TO_CHAR(p.amb),'') amb,
+nvl(TO_CHAR(p.tamp),'') tamp,
+nvl(TO_CHAR(p.obsamb),'') obsamb,
+nvl(TO_CHAR(p.obstamp),'') obstamp
+FROM conctb c
+INNER JOIN indicadores i ON i.idsector = c.idsector
+INNER JOIN pm2011 p ON c.idsector = p.idsector
+WHERE  i.cveind = 35
+AND p.idsector = $P{IDSECTOR}
+AND p.trimestre = $P{TRIMESTRE}
+AND c.anoemp = $P{ANOEMP}]]>
+	</queryString>
+	<field name="ANOEMP" class="java.lang.String"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="CVEIND" class="java.math.BigDecimal"/>
+	<field name="CLVFUN" class="java.lang.String"/>
+	<field name="AMB" class="java.lang.String"/>
+	<field name="TAMP" class="java.lang.String"/>
+	<field name="OBSAMB" class="java.lang.String"/>
+	<field name="OBSTAMP" class="java.lang.String"/>
+	<variable name="xmes" class="java.util.List" resetType="None">
+		<variableExpression><![CDATA[java.util.Arrays.asList("03","06","09","12")]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.util.ArrayList()]]></initialValueExpression>
+	</variable>
+	<variable name="xdia" class="java.util.List" resetType="None">
+		<variableExpression><![CDATA[java.util.Arrays.asList("31","30","30","31")]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.util.ArrayList()]]></initialValueExpression>
+	</variable>
+	<variable name="xfecha" class="java.lang.String">
+		<variableExpression><![CDATA[$V{xmes}.get($P{TRIMESTRE})+"/"+$V{xdia}.get($P{TRIMESTRE})+"/"+$P{ANOEMP}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="15" uuid="881bb7f7-e3d7-498d-8ece-5b35ae38ab02">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["\""+$P{CLAVE}.substring(0,1)+"\"|"+
+"\""+$P{CLAVE}.substring(2,4)+"\"|"+
+$F{ANOEMP}+"|"+
+"\""+$F{PERIODO}+"\"|"+
+$P{TRIMESTRE}+"|"+
+"\""+$V{xfecha}+"\"|"+
+$F{CVEIND}+"|"+
+"\""+$F{CLVFUN}+"\"|"+
+$F{AMB}+"|"+
+$F{TAMP}+"|"+
+"\""+$F{OBSAMB}+"\"|"+
+"\""+$F{OBSTAMP}+"\""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

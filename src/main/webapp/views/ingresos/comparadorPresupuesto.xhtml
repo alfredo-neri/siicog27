@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:panel id="panel" header="Comparador de Presupuesto"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:messages id="messages" showDetail="true" closable="true" />
+					<p:panelGrid columns="2"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:outputLabel value="Mes:" />
+						<p:selectOneMenu id="idMes" value="#{comparadorMB.mes}">
+							<f:selectItems value="#{comparadorMB.listMes}" var="meses"
+								itemValue="#{meses}" itemLabel="#{meses}" />
+							<p:ajax event="change" update="idMes"></p:ajax>
+						</p:selectOneMenu>
+					</p:panelGrid>
+					<p:panelGrid columns="2"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:fileUpload
+							fileUploadListener="#{comparadorMB.handleFileUpload}"
+							mode="advanced" dragDropSupport="false"
+							update=":form1:messages, :form1:object" sizeLimit="1000000000000"
+							accept=".csv" allowTypes="/(\.|\/)(csv)$/"
+							invalidSizeMessage="Tamaño invalido de archivo."
+							invalidFileMessage="Tipo invalido de archivo."
+							cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+
+						</p:fileUpload>
+					</p:panelGrid>
+					<p:panel styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+
+						<p:dataTable id="object" var="table"
+							value="#{comparadorMB.listComparador}" rowKey="#{table.cuenta}"
+							selectionMode="single" paginator="true" lazy="true" rows="20"
+							paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+							<f:facet name="header">
+                Datos Cargados
+            </f:facet>
+
+							<p:column headerText="Cuenta" style="width: 5%">
+								<h:outputText value="#{table.cuenta}" />
+							</p:column>
+							<p:column headerText="Sub Cuenta" style="width: 10%">
+								<h:outputText value="#{table.sCta}" />
+							</p:column>
+							<p:column headerText="Ssub Cuenta" style="width: 15%">
+								<h:outputText value="#{table.ssCta}" />
+							</p:column>
+							<p:column headerText="Sssub Cuenta" style="width: 5%">
+								<h:outputText value="#{table.sssCta}" />
+							</p:column>
+							<p:column headerText="Ssssub Cuenta" style="width: 3%">
+								<h:outputText value="#{table.ssssCta}" />
+							</p:column>
+							<p:column headerText="Saldo" style="width: 15%">
+								<h:outputText value="#{table.saldo}">
+									<f:convertNumber pattern="#####,##0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Monto" style="width: 15%">
+								<h:outputText value="#{table.monto}">
+									<f:convertNumber pattern="#####,##0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Disponibilidad" style="width: 15%">
+								<h:outputText value="#{table.disponibilidad}">
+									<f:convertNumber pattern="#####,##0.00" />
+								</h:outputText>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+						<p:graphicImage value="../reports/excel.png" width="24" />
+						<p:fileDownload value="#{comparadorMB.fileXls}" />
+					</h:commandLink>
+					</p:panel>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

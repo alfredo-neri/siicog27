@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+
+				<p:panel id="panel"
+					header="Reportes de Indicadores Semestral Competencia Laboral Coordinador Municipal de Protección Civil"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:dataGrid id="dataGrid" var="entity"
+						value="#{proteccionCivilMB.listProteccion}"
+						styleClass="et_datatable col-md-12 no-border"
+						emptyMessage="Cargando información..." paginator="true" rows="1"
+						columns="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="dataGrid" paginatorPosition="bottom"
+						rowIndexVar="rowIndexCaptura">
+						<p:ajax event="page" listener="#{proteccionCivilMB.cambiarPagina}"
+							process="dataGrid" />
+
+						<p:panelGrid style="width: 100%;">
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText value="Semestre:" />
+								</p:column>
+								<p:column>
+									<h:inputHidden value="#{entity.capturo}" />
+									<h:inputHidden value="#{entity.idAnio}" />
+									<h:inputHidden value="#{entity.idSector}" />
+									<h:outputText value="#{entity.semestre}" id="lblSemestre"
+										style="margin-left: 18px;"
+										rendered="#{!proteccionCivilMB.bAdicionar}" />
+									<p:selectOneMenu size="18" editable="false" id="semestre"
+										value="#{entity.semestre}"
+										disabled="#{!proteccionCivilMB.bAdicionar}"
+										rendered="#{proteccionCivilMB.bAdicionar}">
+										<f:selectItems value="#{proteccionCivilMB.listSemestre}"
+											var="periodo" itemValue="#{periodo.periodo}"
+											itemLabel="#{periodo.periodo}" />
+									</p:selectOneMenu>
+
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText
+										value="Fecha de Ingreso como Coordinador Municipal de Protección Civil:" />
+								</p:column>
+								<p:column styleClass="col-md-2">
+									<h:outputText value="#{entity.fechaIng}" id="lblFechaIng"
+										style="margin-left: 18px;"
+										rendered="#{!proteccionCivilMB.bAdicionar}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+
+									<p:calendar value="#{entity.fechaIng}" id="fechaIng"
+										rendered="#{proteccionCivilMB.bAdicionar}"
+										pattern="dd/MM/yyyy" showOn="button" size="10" maxlength="10"
+										mask="true"
+										converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+										<f:convertDateTime pattern="dd/MM/yyyy" for="fechaInput" />
+									</p:calendar>
+
+								</p:column>
+
+							</p:row>
+							<p:row>
+								<p:column style="text-align: right;">
+									<p:outputLabel id="idTitulo"
+										value="Título profesional de educación superior:" />
+								</p:column>
+								<p:column>
+									<p:outputLabel value="#{entity.titulo == 1 ? 'Si': 'No'}"
+										id="lbltitulo" rendered="#{!proteccionCivilMB.bAdicionar}" />
+
+									<p:selectOneButton value="#{entity.titulo}" id="hasTitulo"
+										rendered="#{proteccionCivilMB.bAdicionar}">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneButton>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText
+										value="Experiencia mínima de un año en la materia:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{entity.experiencia == 1 ? 'Si': 'No'}"
+										id="lblExperiencia"
+										rendered="#{!proteccionCivilMB.bAdicionar}" />
+									<p:selectOneButton value="#{entity.experiencia}"
+										id="hasExperiencia" rendered="#{proteccionCivilMB.bAdicionar}">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneButton>
+								</p:column>
+
+							</p:row>
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText
+										value="Certificación de Técnico en Gestión Integral de Riesgos:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{entity.certificacion == 1 ? 'Si': 'No'}"
+										id="lblCertificado"
+										rendered="#{!proteccionCivilMB.bAdicionar}" />
+									<p:selectOneButton value="#{entity.certificacion}"
+										id="hasCertficacion"
+										rendered="#{proteccionCivilMB.bAdicionar}">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneButton>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText
+										value="Curso de Capacitación en Materia de Protección Civil impartidos por la Coordinación Estatal de Protección Civíl o Intitución reconocida por la misma (Ejemplo: Elaboración de Programas Internos de Protección Cívil, Manejo de Residuos Peligrosos, entre otros.):" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{entity.curso == 1 ? 'Si': 'No'}"
+										id="lblCurso"
+										rendered="#{!proteccionCivilMB.bAdicionar}" />
+									<p:selectOneButton value="#{entity.curso}" id="hasCurso"
+										rendered="#{proteccionCivilMB.bAdicionar}">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneButton>
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:dataGrid>
+					<p:panelGrid id="idForm"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:row>
+							<p:column colspan="3">
+
+								<h:panelGroup id="pnlBotonesCRUD">
+									<p:commandButton value="Modificar" icon="ui-icon-pencil"
+										id="modificar" actionListener="#{proteccionCivilMB.modificar}"
+										rendered="#{proteccionCivilMB.bModificar}"
+										disabled="#{proteccionCivilMB.bUpdate}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid" />
+									<p:commandButton value="Salvar" icon="ui-icon-disk" id="salvar"
+										actionListener="#{proteccionCivilMB.save}"
+										rendered="#{proteccionCivilMB.bAdicionar}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid" />
+
+									<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+										id="adicionar"
+										actionListener="#{proteccionCivilMB.addElement}"
+										rendered="#{proteccionCivilMB.bMostrarAdd}"
+										disabled="#{proteccionCivilMB.bEditar}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+									<p:commandButton value="Limpiar" icon="ui-icon-circle-plus"
+										id="limpiar" disabled="#{proteccionCivilMB.bLimpiar}"
+										actionListener="#{proteccionCivilMB.reset}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+									<p:commandButton value="Borrar" icon="ui-icon-trash"
+										actionListener="#{proteccionCivilMB.borrar}" id="Borrar"
+										disabled="#{!proteccionCivilMB.bBorrar}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+
+									<p:commandButton value="Cancelar" icon="ui-icon-closethick"
+										actionListener="#{proteccionCivilMB.reset}" id="cancelar"
+										disabled="#{proteccionCivilMB.bCancelar}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+
+								</h:panelGroup>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+
+
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+
+				</p:panel>
+				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+					message="¿Desea eliminar el registro actual?" header="Confirmación"
+					severity="alert">
+					<p:commandButton value="SI" label="SI"
+						style="margin-top:10px;padding:5px;"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						actionListener="#{proteccionCivilMB.borrar}"
+						oncomplete="PF('confirmFileDeleteMeta').hide();"
+						update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+					<p:commandButton value="NO" label="NO"
+						style="margin-top:10px;padding:5px;"
+						onclick="PF('confirmFileDeleteMeta').hide();"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

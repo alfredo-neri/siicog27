@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-03-31T13:01:12 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte76_Totales" pageWidth="1100" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1100" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="290b9d3c-b5fc-4fae-84ce-fe2e24f2de9a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="4"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="12"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="sector" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mes" class="java.lang.Integer"/>
+	<parameter name="direccion" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+ CASE $P{mes} 
+		 WHEN 1 THEN nvl(SUM(AUTO1_1),0)
+         WHEN 2 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2),0)
+         WHEN 3 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3),0)
+         WHEN 4 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4),0)
+         WHEN 5 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5),0)
+         WHEN 6 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5)+SUM(AUTO1_6),0)
+         WHEN 7 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5)+SUM(AUTO1_6)+SUM(AUTO1_7),0)
+         WHEN 8 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5)+SUM(AUTO1_6)+SUM(AUTO1_7)+SUM(AUTO1_8),0)
+         WHEN 9 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5)+SUM(AUTO1_6)+SUM(AUTO1_7)+SUM(AUTO1_8)+SUM(AUTO1_9),0)
+         WHEN 10 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5)+SUM(AUTO1_6)+SUM(AUTO1_7)+SUM(AUTO1_8)+SUM(AUTO1_9)+SUM(AUTO1_10),0)
+         WHEN 11 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5)+SUM(AUTO1_6)+SUM(AUTO1_7)+SUM(AUTO1_8)+SUM(AUTO1_9)+SUM(AUTO1_10)+SUM(AUTO1_11),0)
+         WHEN 12 THEN nvl(SUM(AUTO1_1)+SUM(AUTO1_2)+SUM(AUTO1_3)+SUM(AUTO1_4)+SUM(AUTO1_5)+SUM(AUTO1_6)+SUM(AUTO1_7)+SUM(AUTO1_8)+SUM(AUTO1_9)+SUM(AUTO1_10)+SUM(AUTO1_11)+SUM(AUTO1_12),0)
+    ELSE 0
+    END  as a1,  
+    nvl(SUM(EJPA1_$P!{mes}),0)       as b1, 
+  nvl(SUM(EJXPA1_$P!{mes}),0)     as c1,
+  nvl(SUM(TOEJE1_$P!{mes}),0)      as d1, 
+  nvl(SUM(AMPLI1_$P!{mes}),0)         as f1,
+  nvl(SUM(REDU1_$P!{mes}),0)        as g1,
+  nvl(SUM(COMPRO1_$P!{mes}),0) as ctm
+ FROM PASO P 
+INNER JOIN NATGAS N ON P.PARTIDA=N.CLVGAS 
+ WHERE    SUBSTR(P.CLAVE,1,5) =  $P{direccion} 
+ AND P.IDSECTOR=N.IDSECTOR
+ AND P.IDSECTOR= $P{sector} 
+  AND P.PARTIDA>=1000
+ AND P.PARTIDA<2000
+ AND SUBSTR(PARTIDA,2,3) ='000']]>
+	</queryString>
+	<field name="A1" class="java.math.BigDecimal"/>
+	<field name="B1" class="java.math.BigDecimal"/>
+	<field name="C1" class="java.math.BigDecimal"/>
+	<field name="D1" class="java.math.BigDecimal"/>
+	<field name="F1" class="java.math.BigDecimal"/>
+	<field name="G1" class="java.math.BigDecimal"/>
+	<field name="CTM" class="java.math.BigDecimal"/>
+	<variable name="e1" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{A1}.add($F{F1} ).subtract($F{G1}).subtract( $F{D1} )]]></variableExpression>
+	</variable>
+	<variable name="mod" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{A1}.add($F{F1} ).subtract( $F{G1} )]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="30" height="13" uuid="0fd578fe-b04b-4459-80a0-8fa40a1a2c21">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="13" uuid="08ee6f27-86ba-429c-99b0-b3f6f3455d40">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[ TOTALES]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="200" y="0" width="100" height="13" uuid="b25f4932-dd17-4133-aedf-447e970c62a7">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{A1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="800" y="0" width="100" height="13" uuid="570be8ad-f731-4bb3-a2c4-0cad7b0a6eb0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{B1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="700" y="0" width="100" height="13" uuid="82215a6f-6779-43bb-b31a-f345158441c8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{C1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="900" y="0" width="100" height="13" uuid="58211f37-ff5d-471f-9365-a9bde303c653">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{D1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="100" height="13" uuid="041ea089-d66b-4351-9331-8a93a92eeb6e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{F1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="100" height="13" uuid="d0bdc38f-79d3-4637-b174-ed433b9c2567">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{G1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="600" y="0" width="100" height="13" uuid="feac8e06-6ef9-4f88-bb17-72b5a17d3a7b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CTM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="1000" y="0" width="100" height="13" uuid="e6393c35-59b5-415f-9d60-9fe22fd35a8c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{e1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="500" y="0" width="100" height="13" uuid="2834e7a3-a528-455c-a5bf-568ff45bef92">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{mod}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

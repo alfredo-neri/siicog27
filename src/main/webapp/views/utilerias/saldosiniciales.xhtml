@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:outputScript library="js" name="saldos_iniciales.js" />
+
+
+			<h:form id="salIniForm" class="form-inline" widgetVar="salIniForm">
+				<p:panel id="main_panel" header="Saldos Iniciales"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+
+					<p:dialog modal="true" widgetVar="statusDialog" header="Cargando"
+						draggable="false" closable="false">
+						<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+					</p:dialog>
+
+					<p:panel id="panel_ctrl"
+						styleClass="green col-md-12 col-centered row-centered shadow-panel">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group" style="margin-bottom: 5px">
+									<h:outputText value="Clave de acceso: " />
+									<p:password value="#{saldosInicialesMB.cveAcceso}" size="20"
+										id="cve_acceso" class="cve_acceso"
+										onkeypress="if(event.keyCode == 13){ return false; }" />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group cuenta-grp header-show"
+									style="margin-bottom: 5px; display: none">
+									<h:outputText value="Cuenta: " />
+									<p:inputMask maxlength="4" size="4"
+										value="#{saldosInicialesMB.cuenta}" id="cuenta" class="cuenta">
+										<pe:keyFilter regEx="/[0-9_]/i" />
+									</p:inputMask>
+
+									<!-- onblur="validateAccount()" -->
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group scta-grp header-show"
+									style="margin-bottom: 5px; display: none">
+									<h:outputText value="Scta: " />
+									<p:inputText size="15" value="#{saldosInicialesMB.scta}"
+										maxlength="15" id="scta" class="scta" />
+									<!-- onblur="validateScta()" -->
+								</div>
+							</div>
+						</div>
+
+						<p:fieldset id="updatable_panel" style="margin-top:20px">
+
+							<div class="row" style="margin-top: 20px">
+								<div class="col-md-12 form-group" style="text-align: right">
+									<h:outputText value="Nombre cta: "
+										class="col-sm-2 control-label" />
+									<div class="col-sm-10">
+										<p:inputText class="form-control"
+											value="#{saldosInicialesMB.nomcta}" style="width:100%"
+											readonly="true" id="nom_cta" />
+									</div>
+								</div>
+							</div>
+
+							<div class="row" style="margin-top: 20px">
+								<div class="col-md-12">
+
+									<p:dataTable var="cuenta" value="#{saldosInicialesMB.cuentas}"
+										selectionMode="single"
+										selection="#{saldosInicialesMB.selectedAccount}"
+										widgetVar="resultTable" scrollable="true" scrollHeight="300"
+										rowKey="#{cuenta.id}">
+										<p:ajax event="rowDblselect"
+											listener="#{saldosInicialesMB.accountSelect}"
+											oncomplete="dblClickCallback(xhr, status, args)"
+											update="salIniForm:updatable_fields" />
+										<p:column headerText="Cta">
+											<h:outputText value="#{cuenta.cuenta}" />
+										</p:column>
+
+										<p:column headerText="Scta">
+											<h:outputText value="#{cuenta.scuenta}" />
+										</p:column>
+
+										<p:column headerText="Sscta" width="18%">
+											<h:outputText value="#{cuenta.sscuenta}" />
+										</p:column>
+
+										<p:column headerText="Ssscta">
+											<h:outputText value="#{cuenta.ssscuenta}" />
+										</p:column>
+
+										<p:column headerText="Sssscta">
+											<h:outputText value="#{cuenta.sssscuenta}" />
+										</p:column>
+
+										<p:column headerText="Titulo">
+											<h:outputText value="#{cuenta.nomcta}" />
+										</p:column>
+
+										<p:column headerText="Niv">
+											<h:outputText value="#{cuenta.nivcta}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+							<p:fieldset id="updatable_fields" style="margin-top:20px">
+								<div class="row" style="margin-top: 20px">
+									<div class="col-md-12 form-group">
+										<h:outputText value="Antecesor: "
+											class="col-sm-2 control-label" />
+										<div class="col-sm-10">
+											<p:inputText class="form-control" size="20"
+												value="#{saldosInicialesMB.antecesor}" id="antecesor"
+												readonly="true" style="width:100%" />
+										</div>
+									</div>
+								</div>
+								<!-- Aqui va el mensaje del doble click para editar -->
+								<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+								<div class="row" style="margin-top: 20px">
+									<div class="col-md-6">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Sdo. Inicial: " />
+											<pe:inputNumber size="20"
+												value="#{saldosInicialesMB.sdoInicial}" id="sdoInicial"
+												emptyValue="zero" decimalPlaces="2"
+												disabled="#{saldosInicialesMB.salIniBtnDisabled}"
+												minValue="-9999999999999.99" maxValue="9999999999999.99"
+												decimalSeparator="." thousandSeparator="," />
+										</div>
+									</div>
+									<div class="col-md-6 sal-show">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Suma: " />
+											<h:outputText size="20"
+												value="#{saldosInicialesMB.mentity.suma}" id="suma">
+												<f:convertNumber pattern="#0.00" locale="es_MX" />
+											</h:outputText>
+										</div>
+									</div>
+								</div>
+								<div class="row sal-show" style="margin-top: 20px">
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Ene: " />
+											<pe:inputNumber size="20" id="ene"
+												value="#{saldosInicialesMB.mentity.ene}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="May: " />
+											<pe:inputNumber size="20" id="may"
+												value="#{saldosInicialesMB.mentity.may}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Sep: " />
+											<pe:inputNumber size="20" id="sep"
+												value="#{saldosInicialesMB.mentity.sep}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+								</div>
+								<div class="row sal-show" style="margin-top: 20px">
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Feb: " />
+											<pe:inputNumber size="20" id="feb"
+												value="#{saldosInicialesMB.mentity.feb}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Jun: " />
+											<pe:inputNumber size="20" id="jun"
+												value="#{saldosInicialesMB.mentity.jun}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Oct: " />
+											<pe:inputNumber size="20" id="oct"
+												value="#{saldosInicialesMB.mentity.oct}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+								</div>
+								<div class="row sal-show" style="margin-top: 20px">
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Mar: " />
+											<pe:inputNumber size="20" id="mar"
+												value="#{saldosInicialesMB.mentity.mar}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Jul: " />
+											<pe:inputNumber size="20" id="jul"
+												value="#{saldosInicialesMB.mentity.jul}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Nov: " />
+											<pe:inputNumber size="20" id="nov"
+												value="#{saldosInicialesMB.mentity.nov}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+								</div>
+								<div class="row sal-show" style="margin-top: 20px">
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Abr: " />
+											<pe:inputNumber size="20" id="abr"
+												value="#{saldosInicialesMB.mentity.abr}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Ago: " />
+											<pe:inputNumber size="20" id="ago"
+												value="#{saldosInicialesMB.mentity.ago}" emptyValue="zero"
+												decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group" style="margin-bottom: 5px">
+											<h:outputText value="Dic: " />
+
+											<pe:inputNumber value="#{saldosInicialesMB.mentity.dic}"
+												size="20" id="dic" emptyValue="zero" decimalPlaces="2"
+												disabled="#{saldosInicialesMB.monthsDisabled}"
+												decimalSeparator="." thousandSeparator=",">
+												<p:ajax event="change" update="suma" />
+											</pe:inputNumber>
+										</div>
+									</div>
+								</div>
+							</p:fieldset>
+							<div class="row" style="margin: 20px 0">
+								<div class="col-md-12">
+									<p:commandButton id="corrButton" style="padding: 5px;"
+										value="Correcto"
+										oncomplete="dblClickCallback(xhr, status, args)"
+										disabled="#{saldosInicialesMB.salIniBtnDisabled}"
+										actionListener="#{saldosInicialesMB.save}"
+										update="updatable_panel" />
+								</div>
+							</div>
+						</p:fieldset>
+					</p:panel>
+				</p:panel>
+
+				<p:remoteCommand name="validatePass" update="updatable_panel"
+					actionListener="#{saldosInicialesMB.validatePass}"
+					onsuccess="correctPass()" onerror="invalidPass()"
+					onstart="showStatus()" oncomplete="hideStatus()" />
+
+				<p:remoteCommand name="validateAccount" update="updatable_panel"
+					actionListener="#{saldosInicialesMB.validateAccount}"
+					onsuccess="validAccount()" onstart="showStatus()"
+					oncomplete="hideStatus()" />
+
+				<p:remoteCommand name="validateScta" update="updatable_panel"
+					actionListener="#{saldosInicialesMB.validateScta}"
+					onsuccess="validAccount()" onstart="showStatus()"
+					oncomplete="hideStatus()" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

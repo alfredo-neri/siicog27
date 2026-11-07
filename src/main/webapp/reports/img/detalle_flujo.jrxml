@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2016-08-07T20:50:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="detalle_flujo" pageWidth="500" pageHeight="40" orientation="Landscape" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6f2ad6aa-a757-46ed-a829-276ec930f725">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="dt_gemdb"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="pMESPOL" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pCONPOL" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[4]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pTIPPOL" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("C")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pRENPOL" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[new BigDecimal(222222222)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pIDSECTOR" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	 GEMUSER.POLIEN.TIPPOL,
+	 GEMUSER.POLIEN.MESPOL,
+	 GEMUSER.POLIEN.CONPOL,
+	 GEMUSER.POLIDE.RENPOL,
+     GEMUSER.POLIFL.CLVFLU,
+     SUM(GEMUSER.POLIFL.CANFLU) AS  CANFLU
+FROM GEMUSER.POLIDE
+INNER JOIN GEMUSER.CATTPO ON  GEMUSER.POLIDE.TIPPOL=GEMUSER.CATTPO.TIPPOL
+	INNER JOIN GEMUSER.POLIEN ON 
+	     GEMUSER.POLIEN.MESPOL = GEMUSER.POLIDE.MESPOL 
+	 AND GEMUSER.POLIDE.TIPPOL = GEMUSER.POLIEN.TIPPOL 
+	 AND GEMUSER.POLIDE.CONPOL = GEMUSER.POLIEN.CONPOL
+	 AND  GEMUSER.POLIEN.IDSECTOR = GEMUSER.POLIDE.IDSECTOR
+	 LEFT JOIN GEMUSER.POLIFL 
+	 ON  GEMUSER.POLIDE.MESPOL   = GEMUSER.POLIFL.MESPOL 
+	 AND GEMUSER.POLIDE.TIPPOL   = GEMUSER.POLIFL.TIPPOL 
+	 AND GEMUSER.POLIDE.CONPOL   = GEMUSER.POLIFL.CONPOL
+	 AND GEMUSER.POLIDE.RENPOL   = GEMUSER.POLIFL.RENPOL
+	 AND GEMUSER.POLIDE.IDSECTOR = GEMUSER.POLIFL.IDSECTOR
+where 1=1 
+AND  GEMUSER.POLIEN.TIPPOL 	= $P{pTIPPOL} 
+AND GEMUSER.POLIEN.MESPOL 	=   $P{pMESPOL} 
+AND GEMUSER.POLIEN.CONPOL 	=    $P{pCONPOL} 
+AND GEMUSER.POLIFL.RENPOL 	=  $P{pRENPOL} 
+AND GEMUSER.POLIDE.IDSECTOR =  $P{pIDSECTOR} 
+AND  GEMUSER.POLIFL.CLVFLU IS NOT NULL
+GROUP BY 
+	GEMUSER.POLIEN.TIPPOL,
+	GEMUSER.POLIEN.MESPOL,
+	GEMUSER.POLIEN.CONPOL,
+	GEMUSER.POLIDE.RENPOL,
+    GEMUSER.POLIFL.CLVFLU]]>
+	</queryString>
+	<field name="TIPPOL" class="java.lang.String"/>
+	<field name="MESPOL" class="java.lang.Integer"/>
+	<field name="CONPOL" class="java.lang.Integer"/>
+	<field name="RENPOL" class="java.math.BigDecimal"/>
+	<field name="CLVFLU" class="java.math.BigDecimal"/>
+	<field name="CANFLU" class="java.math.BigDecimal"/>
+	<variable name="CANFLU1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANFLU}]]></variableExpression>
+	</variable>
+	<variable name="CANFLU2" class="java.math.BigDecimal" resetType="Group" resetGroup="RenglonGroup" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANFLU}]]></variableExpression>
+	</variable>
+	<group name="RenglonGroup">
+		<groupExpression><![CDATA[$F{CLVFLU}]]></groupExpression>
+		<groupFooter>
+			<band height="12">
+				<textField pattern="#,##0.00#">
+					<reportElement x="207" y="0" width="100" height="10" uuid="ecf74d57-b2f8-41b3-b059-1d9876576ef6"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CLVFLU}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="311" y="1" width="100" height="10" uuid="e8b49e85-2213-4547-b9c3-1e904ebd0aec"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{CANFLU2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="106" y="0" width="100" height="11" uuid="6f276328-fbb5-4f58-b265-5287d936c9eb"/>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Flujo de Efectivo:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+</jasperReport>

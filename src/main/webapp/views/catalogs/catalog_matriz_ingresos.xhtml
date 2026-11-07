@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.container {
+	max-width: 2000px;
+}
+
+.left-text {
+	text-align: left
+}
+
+.input-busqueda {
+	width: 89% !important;
+	margin-right: 5px;
+}
+
+.bordered {
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+}
+
+.afectacion>div {
+	min-height: 460px;
+}
+
+.afectacion>div>div.row {
+	min-height: 230px;
+}
+
+.padding-acordion {
+	padding: 3px;
+}
+</style>
+			<h:form id="form">
+				<p:panel id="panel" header="Matriz de ingresos"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel green container ">
+					<p:accordionPanel id="acordion" multiple="true" activeIndex="0,1"
+						styleClass="bordered padding-acordion">
+						<p:tab title="Matriz de ingresos">
+							<p:dataTable id="movimientos" var="object"
+								value="#{matrizIngresosMB.movimientos}"
+								styleClass="et_datatable col-md-12 no-border "
+								emptyMessage="No existen registros" rows="10"
+								widgetVar="dataGrid" paginatorPosition="bottom"
+								rowIndexVar="rowIndexCaptura">
+								<p:columnGroup type="header">
+									<p:row>
+										<p:column rowspan="2" headerText="STATUS" width="8%" />
+										<p:column rowspan="2" headerText="MOMENTOS" width="18%" />
+										<p:column colspan="2" headerText="NATURALEZA" width="18%" />
+										<p:column colspan="2" headerText="8120 LEY DE ING X EJECUAR	"
+											width="16%" />
+										<p:column colspan="2" headerText="8140 LEY DE ING DEVENGADA	"
+											width="16%" />
+										<p:column colspan="2" headerText="8150 LEY DE ING RECAUDADA"
+											width="16%" />
+									</p:row>
+									<p:row>
+										<p:column colspan="1" headerText="D" />
+										<p:column colspan="1" headerText="A" />
+										<p:column colspan="1" headerText="CARGO" />
+										<p:column colspan="1" headerText="ABONO" />
+										<p:column colspan="1" headerText="CARGO" />
+										<p:column colspan="1" headerText="ABONO" />
+										<p:column colspan="1" headerText="CARGO" />
+										<p:column colspan="1" headerText="ABONO" />
+									</p:row>
+								</p:columnGroup>
+
+								<p:column headerText="Status" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.status}" />
+								</p:column>
+
+								<p:column headerText="Nombre/Cuenta" exportable="false"
+									width="28%" style="text-align: left!important;">
+									<p:outputLabel value="#{object.nombre}" />
+								</p:column>
+								<p:column headerText="Cargo" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.cargo1}" />
+								</p:column>
+								<p:column headerText="Abono" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.abono1}" />
+								</p:column>
+								<p:column headerText="Cargo" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.cargo2}" />
+								</p:column>
+								<p:column headerText="Abono" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.abono2}" />
+								</p:column>
+								<p:column headerText="Cargo" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.cargo3}" />
+								</p:column>
+								<p:column headerText="Abono" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.abono3}" />
+								</p:column>
+								<p:column headerText="Cargo" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.cargo4}" />
+								</p:column>
+								<p:column headerText="Abono" exportable="false" width="8%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.abono4}" />
+								</p:column>
+							</p:dataTable>
+							<div class="left-text">
+								<div class="row">ST: ESTATUS DE APLICACIÓN</div>
+								<div class="row">N: NO APLICABLE</div>
+								<div class="row">A: APLICABLE</div>
+								<div class="row">
+									<div class="col-md-2"></div>
+									<div class="col-md-10">SIMULTANEOS: DEVENGADO/RECAUDADO</div>
+								</div>
+							</div>
+						</p:tab>
+						<p:tab
+							title="Afectación de cuentas en polizas con devengado y
+									recaudado">
+							<p:remoteCommand name="buscar"
+								actionListener="#{matrizIngresosMB.buscar}" update="cuentas" />
+							<div class="row afectacion ">
+								<div class="col-md-5">
+									<p:dataTable id="cuentas" var="object"
+										value="#{matrizIngresosMB.cuentas}"
+										styleClass="et_datatable col-md-12 no-border "
+										emptyMessage="No existen registros" paginator="true" rows="10"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink}   {LastPageLink} {RowsPerPageDropdown}"
+										currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
+										widgetVar="cuentas" paginatorPosition="bottom"
+										selectionMode="single" rowKey="#{object.id}"
+										selection="#{matrizIngresosMB.cuenta}"
+										rowIndexVar="rowIndexCaptura">
+										<f:facet name="header">
+											<p:outputPanel>
+												<p:inputText id="inputBusqueda" styleClass="input-busqueda"
+													value="#{matrizIngresosMB.busqueda}"
+													placeholder="Busqueda por cuenta" type="number"
+													onkeypress="if (event.keyCode == 13) {buscar() } if(event.keyCode == 27) { return false;}">
+												</p:inputText>
+												<p:commandButton icon="ui-icon-search"
+													actionListener="#{matrizIngresosMB.buscar}"
+													update="cuentas" />
+											</p:outputPanel>
+										</f:facet>
+										<p:ajax event="rowSelect"
+											listener="#{matrizIngresosMB.rowSelected}"
+											update=":form:acordion:detalles" />
+										<p:column headerText="Cuenta" exportable="false" width="15%"
+											style="text-align: left!important;">
+											<p:outputLabel value="#{object.cuenta}" />
+										</p:column>
+										<p:column headerText="Scta" exportable="false" width="30%"
+											style="text-align: left!important;">
+											<p:outputLabel value="#{object.scuenta}" />
+										</p:column>
+										<p:column headerText="Sscta" exportable="false" width="40%"
+											style="text-align: left!important;">
+											<p:outputLabel value="#{object.sscuenta}" />
+										</p:column>
+										<p:column headerText="Ssscta" exportable="false" width="15%"
+											style="text-align: left!important;">
+											<p:outputLabel value="#{object.ssscuenta}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+								<div class="col-md-7 ">
+
+									<p:panel id="detalles" styleClass="detalles left-text">
+
+										<p:outputLabel
+											value="Nombre cuenta: #{matrizIngresosMB.cuenta.nomcta}" />
+										<div class="row">
+											<p:outputPanel>Devengado/Recaudado</p:outputPanel>
+											<div class="cold-md-12">
+												<p:dataTable id="cuentasDevengado" var="object"
+													rowIndexVar="rowIndex"
+													value="#{matrizIngresosMB.cuentasDevengado}"
+													styleClass="et_datatable col-md-12 no-border ">
+													<p:column headerText="Cuenta" exportable="false"
+														width="15%" style="text-align: left!important;">
+														<p:outputLabel value="#{object.cuenta}" />
+													</p:column>
+													<p:column headerText="Scta" exportable="false" width="30%"
+														style="text-align: left!important;">
+														<p:outputLabel value="#{object.scuenta}" />
+													</p:column>
+													<p:column headerText="Sscta" exportable="false" width="40%"
+														style="text-align: left!important;">
+														<p:outputLabel value="#{object.sscuenta}" />
+													</p:column>
+													<p:column headerText="Ssscta" exportable="false"
+														width="15%" style="text-align: left!important;">
+														<p:outputLabel value="#{object.ssscuenta}" />
+													</p:column>
+													<p:column headerText="Sssscta" exportable="false"
+														width="15%" style="text-align: left!important;">
+														<p:outputLabel value="#{object.sssscuenta}" />
+													</p:column>
+													<p:column headerText="Movimiento" exportable="false"
+														width="15%" style="text-align: left!important;">
+														<p:outputLabel
+															value="#{rowIndex% 2 == 0 ?'Cargo':'Abono'}" />
+													</p:column>
+												</p:dataTable>
+											</div>
+										</div>
+									</p:panel>
+								</div>
+							</div>
+						</p:tab>
+					</p:accordionPanel>
+				</p:panel>
+			</h:form>
+			<p:confirmDialog widgetVar="confirmFileDelete"
+				message="Desea eliminar el registro actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					oncomplete="PF('confirmFileDelete').hide();" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('confirmFileDeleteMeta').hide();"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+			</p:confirmDialog>
+			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="../reports/indice.png"
+						style="margin-right: 12px; vertical-align: middle;" />
+					<h:outputText value="Por favor espere..."
+						style="white-space: nowrap;" />
+				</h:panelGrid>
+			</pe:blockUI>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

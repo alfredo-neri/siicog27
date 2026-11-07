@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2017-05-12T11:28:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Evaluar el Desempeño  Mensual del GEM, en la Transferencia de los Recursos a los Municipios" pageWidth="5000" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="5000" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="545c03b2-b019-4127-8016-4abb62b4e94a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMUSER"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="4"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="13.948"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="false"/>
+	<parameter name="MES" class="java.lang.Integer"/>
+	<parameter name="SECTOR" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ANO" class="java.lang.Integer"/>
+	<parameter name="CLAVE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT P.MES, P.NCBFISM, P.MMINFISM, 
+	P.FECDEP, P.OBSFISM, P.NCBFOR, 
+	P.MMINFOR, P.FECDEPFOR, P.OBSFOR
+FROM PM5611 P
+WHERE P.IDSECTOR =$P{SECTOR}
+	AND P.MENSUAL = $P{MES}
+ORDER BY P.MENSUAL ASC]]>
+	</queryString>
+	<field name="MES" class="java.lang.String"/>
+	<field name="NCBFISM" class="java.lang.Integer"/>
+	<field name="MMINFISM" class="java.math.BigDecimal"/>
+	<field name="FECDEP" class="java.lang.String"/>
+	<field name="OBSFISM" class="java.lang.String"/>
+	<field name="NCBFOR" class="java.lang.Integer"/>
+	<field name="MMINFOR" class="java.math.BigDecimal"/>
+	<field name="FECDEPFOR" class="java.lang.String"/>
+	<field name="OBSFOR" class="java.lang.String"/>
+	<variable name="REPORTE_TXT" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(0,1)+"\"":"\"\"")
++"|"+(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(1,4)+"\"":"\"\"")
++"|"+(($P{ANO}!= null)?$P{ANO}:"")
++"|\"M\"|"+
+(($P{MES} == 1) ? "31/01/"+$P{ANO}.toString().substring(2): (
+	($P{MES} == 2) ?  (($P{ANO} % 4==0)?"29/02/"+$P{ANO}.toString().substring(2): "28/02/ "+$P{ANO}.toString().substring(2)): (
+		($P{MES} == 3) ? "31/03/"+$P{ANO}.toString().substring(2)	: (
+			($P{MES} == 4) ? "30/04/"+$P{ANO}.toString().substring(2)	: (
+				($P{MES} == 5) ? "31/05/"+$P{ANO}.toString().substring(2) : (
+					($P{MES} == 6) ? "30/06/"+$P{ANO}.toString().substring(2) : (
+						($P{MES} == 7) ? "31/07/"+$P{ANO}.toString().substring(2) : (
+							($P{MES} == 8) ? "31/08/"+$P{ANO}.toString().substring(2) : (
+								($P{MES} == 9) ? "30/09/"+$P{ANO}.toString().substring(2) : (
+									($P{MES} == 10) ? "31/10/"+$P{ANO}.toString().substring(2) : (
+										($P{MES} == 11) ? "30/11/"+$P{ANO}.toString().substring(2) : (
+											($P{MES} == 12) ? "31/12/"+$P{ANO}.toString().substring(2) : ""
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+))
++"|\"110\"|\""
++(($F{MES}!= null)?$F{MES}:"")
++"\"|"+(($F{NCBFISM}!= null)?$F{NCBFISM}:"?")+"|"
++(($F{MMINFISM}!= null)?String.format("%.2f",$F{MMINFISM}):"?")+"|"
++(($F{FECDEP}!= null)?$F{FECDEP}.substring(5,7)+"/"+$F{FECDEP}.substring(8)+"/"+$F{FECDEP}.substring(2,4):"?")+"|"
++"\""+(($F{OBSFISM}!= null)?$F{OBSFISM}:"")+"\""
++"|"+(($F{NCBFOR}!= null)?$F{NCBFOR}:"")+"|"
++(($F{MMINFOR}!= null)?String.format("%.2f",$F{MMINFOR}):"")+"|"
++(($F{FECDEPFOR}!= null)?$F{FECDEPFOR}.substring(5,7)+"/"+$F{FECDEPFOR}.substring(8)+"/"+$F{FECDEPFOR}.substring(2,4):"?")+"|"
++"\""+(($F{OBSFOR}!= null)?$F{OBSFOR}:"")+"\""]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="5000" height="13" uuid="6e04cf5e-a3bf-422a-9277-19b099ae278a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORTE_TXT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

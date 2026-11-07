@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel" header="Pre Cierre Presupuestal"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<p:dialog id="modal" modal="true" widgetVar="statusDialog"
+						header="Status" draggable="false" closable="false"
+						resizable="false">
+						<p:graphicImage name="/images/ajaxloadingbar.gif" />
+					</p:dialog>
+					<center>
+						<p:panelGrid id="pgrid2" columns="2">
+							<h:inputSecret id="pass"
+								value="#{precierrePresupuestalMB.password}" />
+							<p:commandButton value="Validar Password" ajax="false"
+								id="vidalaPass" update=":form1:panel"
+								actionListener="#{precierrePresupuestalMB.isValidatePass}" />
+						</p:panelGrid>
+					</center>
+
+					<center>
+						<p:panelGrid id="pgrid" columns="3">
+							<p:selectOneMenu id="selectmes"
+								value="#{precierrePresupuestalMB.mes}"
+								disabled="#{precierrePresupuestalMB.activo}"
+								icon="ui-icon-person" required="true">
+								<f:selectItems value="#{precierrePresupuestalMB.listMes}"
+									var="m" itemValue="#{m.mes}" itemLabel="#{m.mes}" />
+							</p:selectOneMenu>
+							<p:commandButton value="Afectar Poliza" id="polizanumber"
+								actionListener="#{precierrePresupuestalMB.afectaPrecierre}"
+								icon="ui-icon-search" update=":form1:messagesEdit: form1:panel"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								ajax="true" disabled="#{precierrePresupuestalMB.activo}" />
+
+
+
+						</p:panelGrid>
+					</center>
+				</p:panel>
+			</h:form>
+			<script type="text/javascript">
+			    function start() {
+			        PF('statusDialog').show();
+			     }
+			 
+			     function stop() {
+			         PF('statusDialog').hide();
+			     }
+           </script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

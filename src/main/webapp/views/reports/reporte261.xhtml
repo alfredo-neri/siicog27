@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Presupuesto de Ingresos Por Rubro"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="9" styleClass="col-centered ui-noborder">
+
+					<h:outputText value="Mes del Reporte: " for="mesInputOri"
+						id="lblMesInputOri" />
+					<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+						value="#{reporte261MB.mes}">
+						<f:selectItem itemValue="1" itemLabel="01" />
+						<f:selectItem itemValue="2" itemLabel="02" />
+						<f:selectItem itemValue="3" itemLabel="03" />
+						<f:selectItem itemValue="4" itemLabel="04" />
+						<f:selectItem itemValue="5" itemLabel="05" />
+						<f:selectItem itemValue="6" itemLabel="06" />
+						<f:selectItem itemValue="7" itemLabel="07" />
+						<f:selectItem itemValue="8" itemLabel="08" />
+						<f:selectItem itemValue="9" itemLabel="09" />
+						<f:selectItem itemValue="10" itemLabel="10" />
+						<f:selectItem itemValue="11" itemLabel="11" />
+						<f:selectItem itemValue="12" itemLabel="12" />
+					</p:selectOneMenu>
+
+					<p:commandButton value="Vista Previa" id="preView"
+						actionListener="#{reporte261MB.preView}"
+						icon="ui-icon-zoomout" update=":form1:preViewTxt"
+						onclick="PF('preViewTxtWg').show();" />
+
+					<p:commandButton value="Generar Archivo TXT" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						actionListener="#{reporte261MB.downLoadFile}">
+						<p:fileDownload value="#{reporte261MB.fileTxt}" />
+					</p:commandButton>
+
+
+
+				</p:panelGrid>
+				<p:panelGrid>
+					<p:outputLabel rendered="#{reporte261MB.bPreView}"
+						style="height: 300px; width: 2000px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+						<p:inputTextarea cols="210" id="preViewTxt" style="font-family: monospace !important"
+							widgetVar="preViewTxtWg"
+							rendered="#{reporte261MB.bPreView}" autoResize="true"
+							readonly="true" value="#{reporte261MB.txtPreview}" />
+					</p:outputLabel>
+					<!-- <div id="divpreViewTxt"
+							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+
+						</div> -->
+				</p:panelGrid>
+
+
+				</p:panel>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+
+		<ui:define name="content">
+			<style>
+.columna {
+	width: 50%;
+}
+</style>
+			<h:form id="form1">
+				<p:focus context="idMes" />
+				<p:panel id="panel" header="Carga de ingresos propios"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel">
+				</p:panel>
+				<p:messages id="messages" showDetail="true" closable="true" />
+				<p:panelGrid columns="2" id="doscolumnas"
+					columnClasses="columna columna"
+					styleClass="col-centered row-centered ui-noborder">
+					<p:panelGrid columns="1" id="tabla" styleClass="ui-noborder">
+						<p:dataTable id="objects" binding="#{table}" var="object"
+							value="#{ingresoPropioCargaAutomaticaMB.polizas}"
+							styleClass="et_datatable green col-centered row-centered shadow-panel"
+							emptyMessage="No hay registros" editable="true" paginator="true"
+							rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
+							selectionMode="single" rowKey="#{object.conpol}"
+							paginatorPosition="bottom"
+							selection="#{ingresoPropioCargaAutomaticaMB.polideSelected}"
+							widgetVar="dependenciesWdg" style="font-size: 15px">
+							<f:facet name="header">Consulta de Pólizas de Ingreso con Cuenta 4223-1-4-1</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{ingresoPropioCargaAutomaticaMB.rowSelected}"
+								update=":form1:messages :form1:panelIzquierdo" />
+							<p:column headerText="
+									Tipo" exportable="false"
+								width="30" style="padding:0">
+								<h:outputText value="#{object.tippol}" />
+							</p:column>
+							<p:column headerText="Mes" exportable="false" width="30"
+								style="padding:0">
+								<h:outputText value="#{object.mespol}" />
+							</p:column>
+							<p:column headerText="Con" exportable="false" width="30"
+								style="padding:0">
+								<h:outputText value="#{object.conpol}" />
+							</p:column>
+							<p:column headerText="Ren" exportable="false" width="30"
+								style="padding:0">
+								<h:outputText value="#{object.renpol}">
+									<f:convertNumber pattern="###,###,##0.0" type="number" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Cuenta" exportable="false" width="40"
+								style="padding:0">
+								<h:outputText value="#{object.cuenta}" style="aling:center" />
+							</p:column>
+							<p:column headerText="Scta" exportable="false" width="70"
+								style="padding:0">
+								<h:outputText value="#{object.scta}" />
+							</p:column>
+							<p:column headerText="Sscta" exportable="false" width="100"
+								style="padding:0">
+								<h:outputText value="#{object.sscta}" />
+							</p:column>
+							<p:column headerText="Ssscta" exportable="false" width="35"
+								style="padding:0">
+								<h:outputText value="#{object.ssscta}" />
+							</p:column>
+							<p:column headerText="Abonos" exportable="false" width="90"
+								style="padding:0">
+								<h:outputText value="#{object.canpolh}" style="float:right;">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Total ingreso" exportable="false"
+								style="padding:0" width="90">
+								<h:outputText value="#{object.ingreso}" style="float:right;">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="ui-noborder"
+						id="panelIzquierdo">
+						<p:panelGrid columns="2"
+							styleClass="col-centered row-centered ui-noborder">
+							<p:outputLabel value="Mes" />
+							<p:outputLabel value="Numero" />
+							<p:selectOneMenu id="idMes"
+								value="#{ingresoPropioCargaAutomaticaMB.mes}">
+								<f:selectItems value="#{ingresoPropioCargaAutomaticaMB.listMes}"
+									var="meses" itemValue="#{meses}" itemLabel="#{meses}" />
+								<p:ajax event="change" update="idMes tabla"
+									listener="#{ingresoPropioCargaAutomaticaMB.cargarPolizas}" />>
+							</p:selectOneMenu>
+							<p:inputText id="numero" size="6" maxlength="6"
+								value="#{ingresoPropioCargaAutomaticaMB.numero}">
+								<p:ajax event="blur" update="numero" />
+							</p:inputText>
+
+						</p:panelGrid>
+						<p:panelGrid columns="2"
+							styleClass="col-centered row-centered ui-noborder">
+							<p:fileUpload
+								fileUploadListener="#{ingresoPropioCargaAutomaticaMB.handleFileUpload}"
+								mode="advanced" dragDropSupport="false" multiple="false"
+								update=":form1:messages, :form1:object totales errorsFile"
+								sizeLimit="1000000000000" accept=".csv"
+								allowTypes="/(\.|\/)(csv)$/"
+								invalidSizeMessage="Tamaño invalido de archivo."
+								invalidFileMessage="Tipo invalido de archivo."
+								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+
+							</p:fileUpload>
+						</p:panelGrid>
+						<p:panelGrid columns="4" id="errorsFile"
+							styleClass="col-centered row-centered ui-noborder">
+							<p:commandButton value="Descargar archivo de Errores"
+								ajax="false"
+								rendered="#{not empty ingresoPropioCargaAutomaticaMB.fileError}">
+								<p:fileDownload value="#{ingresoPropioCargaAutomaticaMB.file}"></p:fileDownload>
+							</p:commandButton>
+						</p:panelGrid>
+						<p:panelGrid columns="4" id="totales"
+							styleClass="col-centered row-centered ui-noborder">
+							<p:outputLabel value="Cargos" />
+							<p:outputLabel value="Abonos" />
+							<p:outputLabel value="Total Ingreso" />
+							<p:outputLabel value="Monto del Archivo" />
+							<p:outputLabel id="sumaa"
+								value="#{ingresoPropioCargaAutomaticaMB.cargos}">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</p:outputLabel>
+							<p:outputLabel id="sumac"
+								value="#{ingresoPropioCargaAutomaticaMB.abonos}">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</p:outputLabel>
+							<p:outputLabel id="sumat"
+								value="#{ingresoPropioCargaAutomaticaMB.totalIngreso}">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</p:outputLabel>
+							<p:outputLabel id="sumaM"
+								value="#{ingresoPropioCargaAutomaticaMB.montoArchivo}">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</p:outputLabel>
+						</p:panelGrid>
+						<p:panel
+							styleClass="green col-md-12 col-centered row-centered shadow-panel">
+
+
+							<p:dataTable id="object" var="detalle"
+								value="#{ingresoPropioCargaAutomaticaMB.cargados}"
+								rowKey="#{detalle.index}" selectionMode="single"
+								paginator="true" lazy="true" rows="20"
+								paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+								<f:facet name="header">
+                Datos Cargados
+            </f:facet>
+
+								<p:column headerText="Clave" style="width:5%">
+									<h:outputText value="#{detalle.idIngreso}" style="width:5%" />
+								</p:column>
+								<p:column headerText="Numero" style="width:5%">
+									<h:outputText value="#{detalle.polide.conpol}" style="width:5%" />
+								</p:column>
+								<p:column headerText="Mes" style="width:3%">
+									<h:outputText value="#{detalle.polide.mespol}" style="width:3%" />
+								</p:column>
+								<p:column headerText="Renglon" style="width:7%">
+									<h:outputText value="#{detalle.polide.renpol}" style="width:7%" />
+								</p:column>
+								<p:column headerText="Tipo" style="width:7%">
+									<h:outputText value="#{detalle.polide.tippol}" style="width:7%" />
+								</p:column>
+								<p:column headerText="Monto" style="width:12.5%">
+									<h:outputText value="#{detalle.monto}" style="width:20%">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:outputText>
+								</p:column>
+
+							</p:dataTable>
+						</p:panel>
+					</p:panelGrid>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

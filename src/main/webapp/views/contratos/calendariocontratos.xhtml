@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<link
+				href="#{facesContext.externalContext.requestContextPath}/views/contratos/solicitudes-adquisicion.css"
+				rel="stylesheet" type="text/css" />
+
+			<h:form id="formDetallesSolicitudes">
+				<p:panel id="panel" header="Calendario de contratos"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel green container">
+					<p:messages id="msnDetallesSolicitudes" showDetail="true"
+						closable="true" showSummary="false" />
+					<div class="principal">
+						<p:panel visible="#{calendarioContratosMB.canlendarVisible}"
+							styleClass="izquierda editor-detalles" id="panelObservaciones">
+							<p:outputLabel value="contenido izquierda" />
+						</p:panel>
+						<div class="derecha">
+							<p:outputLabel value="contenido derecha" />
+						</div>
+					</div>
+				</p:panel>
+			</h:form>
+			<!-- 
+			<h:form id="formDialogFR" styleClass="green">
+				<p:dialog header="Seleccione firma para solicitar revisión"
+					widgetVar="dialogFR" modal="true" height="300" width="600"
+					showEffect="fade" hideEffect="fade" resizable="true">
+					<p:dataTable id="firmas" var="sign" styleClass="et_datatable"
+						resizableColumns="true" widgetVar="tbFR"
+						value="#{calendarioContratosMB.firmasList}" lazy="true"
+						selectionMode="single" emptyMessage="No hay registros"
+						paginator="true" rows="10" rowKey="#{sign.id}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:ajax event="rowDblselect" update=":formFR :formFRS"
+							listener="#{calendarioContratosMB.guardarFirma}"
+							oncomplete="PF('dialogFR').hide();"></p:ajax>
+						<p:column headerText="Nombre">
+							<h:outputText value="#{sign.usuario.usuario}" />
+						</p:column>
+					</p:dataTable>
+				</p:dialog>
+			</h:form>
+ -->
+			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="../reports/indice.png"
+						style="margin-right: 12px; vertical-align: middle;" />
+					<h:outputText value="Por favor espere..."
+						style="white-space: nowrap;" />
+				</h:panelGrid>
+			</pe:blockUI>
+			<script type="text/javascript">
+				const guardarSolicitudOn =(event)=>{
+					console.log(event.keyCode)
+					if (event.which == 13) {
+						guardarSolicitud();
+						return false;
+					} 
+					if(event.keyCode == 27) {
+						return false;
+					}
+				}
+				const onMouseOverRegresar=()=>{
+					regresar();
+				}
+				const onMouseOverRegresarArticulo=()=>{
+					regresarADetalles();
+				}
+			
+		</script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

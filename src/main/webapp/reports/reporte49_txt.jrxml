@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2017-01-09T16:16:18 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DesempenioMensualFISMtxt" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0fd571e7-c5f0-4d6c-a1d5-e2196dc8cb51">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gemdb_linux"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="5.238"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="13.948"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="MES" class="java.lang.Integer"/>
+	<parameter name="SECTOR" class="java.lang.Integer"/>
+	<parameter name="CLAVE" class="java.lang.String"/>
+	<parameter name="ANO" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 	PM5411.MENSUAL, PM5411.MASIMUN, PM5411.MMINMES, PM5411.OBYACMES,
+		PM5411.MAUTOBYAC, PM5411.MEJEMES, PM5411.MAUTOB, PM5411.SESIONES,
+		PM5411.PARTCIU, PM5411.OBSERVA,
+		CONCTB.ANOEMP
+FROM PM5411 PM5411 INNER JOIN CONCTB CONCTB
+	ON PM5411.IDSECTOR = CONCTB.IDSECTOR
+WHERE PM5411.MENSUAL = $P{MES}
+AND PM5411.IDSECTOR = $P{SECTOR}]]>
+	</queryString>
+	<field name="MENSUAL" class="java.lang.Integer"/>
+	<field name="MASIMUN" class="java.math.BigDecimal"/>
+	<field name="MMINMES" class="java.math.BigDecimal"/>
+	<field name="OBYACMES" class="java.lang.Integer"/>
+	<field name="MAUTOBYAC" class="java.math.BigDecimal"/>
+	<field name="MEJEMES" class="java.math.BigDecimal"/>
+	<field name="MAUTOB" class="java.math.BigDecimal"/>
+	<field name="SESIONES" class="java.lang.Integer"/>
+	<field name="PARTCIU" class="java.lang.String"/>
+	<field name="OBSERVA" class="java.lang.String"/>
+	<field name="ANOEMP" class="java.lang.Integer"/>
+	<variable name="REPORTE_TXT" class="java.lang.String">
+		<variableExpression><![CDATA[(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(0,1)+"\"":"\"\"")
++"|"+(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(1,4)+"\"":"\"\"")
++"|"+(($P{ANO}!= null)?$P{ANO}:"")
++"|\"M\"|"+
+(($P{MES} == 1) ? "31/01/"+$P{ANO}.toString().substring(2): (
+	($P{MES} == 2) ?  (($P{ANO} % 4==0)?"29/02/"+$P{ANO}.toString().substring(2): "28/02/ "+$P{ANO}.toString().substring(2)): (
+		($P{MES} == 3) ? "31/03/"+$P{ANO}.toString().substring(2)	: (
+			($P{MES} == 4) ? "30/04/"+$P{ANO}.toString().substring(2)	: (
+				($P{MES} == 5) ? "31/05/"+$P{ANO}.toString().substring(2) : (
+					($P{MES} == 6) ? "30/06/"+$P{ANO}.toString().substring(2) : (
+						($P{MES} == 7) ? "31/07/"+$P{ANO}.toString().substring(2) : (
+							($P{MES} == 8) ? "31/08/"+$P{ANO}.toString().substring(2) : (
+								($P{MES} == 9) ? "30/09/"+$P{ANO}.toString().substring(2) : (
+									($P{MES} == 10) ? "31/10/"+$P{ANO}.toString().substring(2) : (
+										($P{MES} == 11) ? "30/11/"+$P{ANO}.toString().substring(2) : (
+											($P{MES} == 12) ? "31/12/"+$P{ANO}.toString().substring(2) : ""
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+))
++"|\"108\"|"
++(($F{MASIMUN}!= null)?$F{MASIMUN}.intValue():"")
++"|"+(($F{MMINMES}!= null)?$F{MMINMES}.intValue():"")+"|"
++(($F{OBYACMES}!= null)?$F{OBYACMES}.intValue():"")+"|"
++(($F{MAUTOBYAC}!= null)?$F{MAUTOBYAC}.intValue():"")+"|"
++(($F{MEJEMES}!= null)?$F{MEJEMES}.intValue():"")+"|"
++(($F{MAUTOB}!= null)?$F{MAUTOB}.intValue():"")+"|"
++(($F{SESIONES}!= null)?$F{SESIONES}.intValue():"")+"|"
++"\"\"|"
++"\""+(($F{OBSERVA}!= null)?$F{OBSERVA}:"")+"\""]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="800" height="30" uuid="4787fc18-cc10-4a52-a27a-28c346d2fa12"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORTE_TXT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

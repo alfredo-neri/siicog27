@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-16T13:05:02 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RecaudacionDerechosAguaPotable" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8c302435-2f9a-4bc6-b7e1-36f5e84473cc">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="SECTOR" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MES" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NoFIRMAS" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagen" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{imagen}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="N4" class="java.lang.String"/>
+	<parameter name="L4" class="java.lang.String"/>
+	<parameter name="N5" class="java.lang.String"/>
+	<parameter name="L5" class="java.lang.String"/>
+	<parameter name="N3" class="java.lang.String"/>
+	<parameter name="L3" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="CAMPO1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["JOCOTITLAN"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLAVE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0028"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ANO_EMP" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2016]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+p.mensual, p.tcc, p.tcr, p.acumtcc, p.obstcc, p.obstcr,
+f.campo1, f.n4, f.l4, f.n5, f.l5, f.l3, f.n3, c.clave, c.anoemp
+from pm5011 p
+JOIN firmas f ON p.idsector = f.idsector
+JOIN conctb C ON  p.idsector = c.idsector
+WHERE p.idsector =  $P{SECTOR}
+AND p.mensual = $P{MES}]]>
+	</queryString>
+	<field name="MENSUAL" class="java.lang.Integer"/>
+	<field name="TCC" class="java.lang.Integer"/>
+	<field name="TCR" class="java.lang.Integer"/>
+	<field name="ACUMTCC" class="java.lang.Integer"/>
+	<field name="OBSTCC" class="java.lang.String"/>
+	<field name="OBSTCR" class="java.lang.String"/>
+	<field name="CAMPO1" class="java.lang.String"/>
+	<field name="N4" class="java.lang.String"/>
+	<field name="L4" class="java.lang.String"/>
+	<field name="N5" class="java.lang.String"/>
+	<field name="L5" class="java.lang.String"/>
+	<field name="L3" class="java.lang.String"/>
+	<field name="N3" class="java.lang.String"/>
+	<field name="CLAVE" class="java.lang.String"/>
+	<field name="ANOEMP" class="java.lang.Integer"/>
+	<variable name="FECHA_HEADER" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[($P{MES} == 1) ? "DEL 1 DE ENERO AL 31 DE ENERO DE "+$P{ANO_EMP} : (
+	($P{MES} == 2) ?  (($P{ANO_EMP} % 4==0)?"DEL 1 DE FEBRERO AL 29 DE FEBRERO DE "+$P{ANO_EMP}: "DEL 1 DE FEBRERO AL 28 DE FEBRERO DE "+ $P{ANO_EMP}): (
+		($P{MES} == 3) ? "DEL 1 DE MARZO AL 31 DE MARZO DE "+$P{ANO_EMP}	: (
+			($P{MES} == 4) ? "DEL 1 DE ABRIL AL 30 DE ABRIL DE "+$P{ANO_EMP}	: (
+				($P{MES} == 5) ? "DEL 1 DE MAYO AL 31 DE MAYO DE "+$P{ANO_EMP} : (
+					($P{MES} == 6) ? "DEL 1 DE JUNIO AL 30 DE JUNIO DE "+$P{ANO_EMP} : (
+						($P{MES} == 7) ? "DEL 1 DE JULIO AL 31 DE JULIO DE "+$P{ANO_EMP} : (
+							($P{MES} == 8) ? "DEL 1 DE AGOSTO AL 31DE AGOSTO DE "+$P{ANO_EMP} : (
+								($P{MES} == 9) ? "DEL 1 DE SEPTIEMBRE AL 30 DE SEPTIEMBRE DE "+$P{ANO_EMP} : (
+									($P{MES} == 10) ? "DEL 1 DE OCTUBRE AL 31 DE OCTUBRE DE "+$P{ANO_EMP} : (
+										($P{MES} == 11) ? "DEL 1 DE NOVIEMBRE AL 30 DE NOVIEMBRE DE "+$P{ANO_EMP} : (
+											($P{MES} == 12) ? "DEL 1 DE DICIEMBRE AL 31 DE DICIEMBRE DE "+$P{ANO_EMP} : ""
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+)]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="2" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnFooter>
+		<band height="528" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="494" y="183" width="286" height="40" backcolor="#BDB9B9" uuid="eeadfab6-786c-4ae6-87e1-e6467f170cfe"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Opaque" x="244" y="203" width="125" height="20" backcolor="#BDB9B9" uuid="965431e6-fae2-40e6-80c8-9d955df04d59"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Opaque" x="244" y="183" width="250" height="20" backcolor="#BDB9B9" uuid="cd59fd4a-3239-402b-bcab-8d9b5d86a1c3"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Opaque" x="22" y="183" width="222" height="40" backcolor="#BDB9B9" uuid="360c755f-8a2d-4078-a554-dd8e0477a5a6"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="589" y="189" width="100" height="30" uuid="91b7a004-d33f-435e-9982-d4b6adbb6ced"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="190" width="100" height="30" uuid="5852ddea-5469-4e15-80b2-707c78f6b197"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="189" width="120" height="15" uuid="c0e0d8e0-b85b-4e51-a176-fa950c517c27"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESPUESTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="267" y="208" width="70" height="15" uuid="56b9c2e0-8977-42f6-81ec-df38ad3fd4e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEL MES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="68" width="801" height="30" uuid="d2556fba-51fb-4ee5-be3e-a6373af62b9d"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTO DE INFORMACIÓN QUE ALIMENTA EL INDICADOR DE
+TASA DE RECAUDACIÓN DE LOS DERECHOS DE AGUA POTABLE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="38" width="800" height="30" uuid="3a67b25d-0a66-48e8-9b7c-2bece5258794"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[_____________________________________________________________________________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="125" width="160" height="30" uuid="139b55b4-f70e-4048-a968-9ad0478272c1"/>
+				<text><![CDATA[___________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="125" width="160" height="30" uuid="db1a1333-8f36-482e-b91c-64a1577007db"/>
+				<text><![CDATA[___________________________]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="53" y="150" width="330" height="17" uuid="6f69e885-9e7c-485f-8fd9-8fbf6e900c6c"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{FECHA_HEADER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="53" y="120" width="60" height="30" uuid="15eb3b5f-26c8-4046-9624-072953b50b15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MUNICIPIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="120" width="30" height="30" uuid="25dfe338-05ad-476b-8945-4aef9047c470"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUM:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="126" y="120" width="100" height="20" uuid="a0f51bf0-f851-45b3-8751-32466cc5cef0"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CAMPO1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="120" width="100" height="20" uuid="c4a4a33b-181a-445c-95a7-e76fe4400446"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CLAVE}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Opaque" x="369" y="203" width="125" height="20" backcolor="#BDB9B9" uuid="5aa4f4fe-64ae-417f-92f5-f3e503216dee"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="390" y="208" width="70" height="15" uuid="2b9a3ede-4de3-4c78-ae10-f0133baef9a9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACUMULADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="34" y="245" width="182" height="42" uuid="aa4d2259-3e9c-4c77-8dfc-d1ed29c13ede"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Total de contribuyentes que han cumplido con el pago de los derechos de agua potable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="314" width="182" height="30" uuid="3709c4ba-b85c-4cd8-acdd-c3c59e6e73df"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Total de contribuyentes registrados en el padrón al cierre del ejercicio anterior]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="509" y="255" width="100" height="20" uuid="6ccec2bd-6d84-4fea-bb9e-093b26078419"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{OBSTCC} != null ) ? $F{OBSTCC} : " "]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="256" y="319" width="100" height="20" uuid="d172f3e9-1fe6-4d63-a068-022d055f70d4"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TCR} != null ) ? $F{TCR} : "0.00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="509" y="319" width="100" height="20" uuid="c81ea329-49fe-4f03-83bd-0a2b066abf01"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{OBSTCR} != null ) ? $F{OBSTCR} : " "]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="383" y="255" width="100" height="20" uuid="89df6d42-d455-48fd-906b-015bb3e90f13"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{ACUMTCC} != null ) ? $F{ACUMTCC} : "0.00"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="465" width="200" height="30" uuid="454af128-9d71-434a-bae7-38f0d220a827">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[_______________________________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="591" y="480" width="200" height="22" uuid="ea9e9a85-5eeb-461d-803c-decd6c22ea03">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 3]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{N3}==null?"":$P{N3})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="435" width="200" height="30" uuid="7db20e0c-6b1e-4619-962f-b26089b33bec">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{L4}==null?"":$P{L4})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="480" width="200" height="22" uuid="e1c20857-2f02-4b09-8254-f3eb4bdcb066">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{N4}==null?"":$P{N4})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="591" y="435" width="200" height="30" uuid="638feba1-13f2-4ca1-84fc-67ca2350d64b">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 3]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{L3}==null?"":$P{L3})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="591" y="466" width="200" height="30" uuid="a596e8f9-d97e-467e-8d22-11ad591db1f4">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 3]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[_______________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="400" width="749" height="14" uuid="81fc0a61-26bf-431c-a948-0fddf9a8a654"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[padrón de contribuyentes de los derechos de agua potable, con corte al 31 de diciembre del año inmediato anterior.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="380" width="749" height="20" uuid="7e6852a5-2344-4bbe-bc07-257ad432a372"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[NOTA: Este formato es de frecuencia mensual y deberá presentarse en archivo de texto .txt. Deberá anexar en el mes de enero de cada año copia digitalizada de]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="494" y="223" width="286" height="156" uuid="573f3c5e-8a3f-45fe-8cf5-a8b9bb63a63a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="22" y="223" width="222" height="156" uuid="90efed83-2dbb-4698-bab1-e7cb38d1df91"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="244" y="223" width="125" height="156" uuid="599e6d5a-fe4b-42ea-afea-bf01b206874e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="369" y="223" width="125" height="156" uuid="6cc6142a-2c9b-4cf7-91eb-5dc93f763e5f"/>
+			</rectangle>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="256" y="255" width="100" height="20" uuid="706206b7-80a3-48a9-9dab-916b225217e4"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TCC} != null ) ? $F{TCC} : "0.00"]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="34" y="26" width="60" height="56" uuid="7473c31f-081e-4f40-940a-5b30e2d7e1d0"/>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="662" y="516" width="36" height="10" uuid="5fea0b39-b1a7-4e33-8795-504e3712a311"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="578" y="516" width="83" height="10" uuid="74248268-43dd-4da7-b564-3c8bcdace49b"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[FECHA DE ELABORACIÓN:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="745" y="516" width="44" height="10" uuid="8638c312-e3c9-487e-baeb-5bb0088245b5"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="516" width="61" height="9" uuid="d15d96dd-72bf-4b2b-b6c8-9ffc5afe3604"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[OSFEPM/50/11]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="693" y="516" width="52" height="10" uuid="f12ebdf1-ac9b-49b2-b6ef-e87641d4c0ab"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

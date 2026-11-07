@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:panel id="panelButton" header="Eliminar polizas"
+					style="width:70%;"
+					styleClass="green col-md-8 col-lg-8 col-centered row-centered shadow-panel">
+					<p:messages id="messagesEdit" showDetail="true" closable="true" />
+					<h:outputText
+						value="Solo usuarios administradores pueden eliminar polizas"
+						rendered="#{!eliminarPolizaMB.admin}" />
+					<p:remoteCommand name="findAcc"
+						actionListener="#{eliminarPolizaMB.cargarPolizas}"
+						update=":form1:messagesEdit,  :form1:object "
+						onstart="PF('blockUIWidget').block();"
+						oncomplete="PF('blockUIWidget').unblock(); " />
+					<p:focus context="mesPanel" />
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/indice.png"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+					<p:panelGrid columns="1"
+						styleClass="col-centered row-centered noBorders">
+						<p:panelGrid columns="3" id="mesPanel"
+							styleClass="green col-centered row-centered  ui-noborder">
+							<h:outputText value="Mes: " for="mes" />
+							<h:outputText value="Tipo: " />
+							<h:outputText value="Consecutivo: " />
+							<p:selectOneMenu id="mes" value="#{eliminarPolizaMB.mes}">
+								<f:selectItems value="#{eliminarPolizaMB.listMes}" var="item"
+									itemValue="#{item}" itemLabel="#{item}" />
+								<p:ajax event="change"
+									update=":form1:object,:form1:messagesEdit "
+									listener="#{eliminarPolizaMB.cargarPolizas}" />
+							</p:selectOneMenu>
+
+							<p:selectOneMenu id="tipos" value="#{eliminarPolizaMB.tipo}">
+								<f:selectItems value="#{eliminarPolizaMB.listCattpo}" var="item"
+									itemValue="#{item.tippol}" itemLabel="#{item.tippol}" />
+								<p:ajax event="change"
+									update=":form1:object,:form1:messagesEdit "
+									listener="#{eliminarPolizaMB.cargarPolizas}" />
+							</p:selectOneMenu>
+							<p:inputText id="numero" size="5" maxlength="5"
+								value="#{eliminarPolizaMB.numero}">
+								<p:ajax event="change"
+									update=":form1:object,:form1:messagesEdit "
+									listener="#{eliminarPolizaMB.cargarPolizas}" />
+							</p:inputText>
+						</p:panelGrid>
+						<p:panelGrid columns="2"
+							styleClass="col-centered row-centered  ui-noborder">
+							<p:commandButton value="Buscar" id="search"
+								onmousedown="jQuery('.ui-paginator-first').click();"
+								oncomplete="findAcc();" />
+							<p:commandButton value="Limpiar" id="clean"
+								style=" margin-left: 15px; "
+								update=":form1:messagesEdit :form1:object :form1:numero"
+								immediate="true" ajax="true"
+								actionListener="#{eliminarPolizaMB.limpiar}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()">
+								<p:resetInput target="mesPanel" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:dataTable id="object" var="detalle"
+						value="#{eliminarPolizaMB.polizas}" rowKey="#{detalle.id}"
+						selectionMode="single" paginator="true" lazy="true" rows="10"
+						paginatorPosition="top" scrollable="true"
+						styleClass="et_datatable"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selection="#{eliminarPolizaMB.rowSelected}">
+						<p:ajax event="rowSelect"
+							listener="#{eliminarPolizaMB.onRowSelect}"
+							update=":formConfirm:msnEliminar"></p:ajax>
+						<p:column style="text-align: left !important; "
+							headerText="Concesutivo" width="20">
+							<h:outputText value="#{detalle.conpol}" />
+						</p:column>
+						<p:column style="text-align: left !important; "
+							headerText="Usuario" width="55">
+							<h:outputText value="#{detalle.cappol}" />
+						</p:column>
+						<p:column style="text-align: left !important; " headerText="Fecha"
+							width="45">
+							<h:outputText value="#{detalle.fecpol}" />
+						</p:column>
+						<p:column style="text-align: left !important; "
+							headerText="Status" width="35">
+							<h:outputText value="#{detalle.staafe}" />
+						</p:column>
+						<p:column style="text-align: left !important; " headerText="Año"
+							width="55">
+							<h:outputText value="#{detalle.anopol}" />
+						</p:column>
+						<p:column style="text-align: left !important; "
+							headerText="Eliminar" width="55">
+							<p:commandButton id="accion2"
+								disabled="#{!eliminarPolizaMB.canDelete}"
+								onclick="PF('confirmDelete').show();" value="Eliminar"
+								icon="ui-icon-trash" styleClass="btn btn-default "
+								style="padding:0">
+								<f:setPropertyActionListener value="#{detalle}"
+									target="#{eliminarPolizaMB.rowSelected}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+			<h:form id="formConfirm" styleClass="green">
+
+				<p:dialog id="saveConfirm" widgetVar="confirmDelete" width="460"
+					header="Confirma" modal="true" styleClass="green">
+					<p:hotkey bind="esc" handler="PF('confirmDelete').hide();"></p:hotkey>
+					<h:outputText id="msnEliminar"
+						value="#{eliminarPolizaMB.deleteMsn}" />
+					<p:panelGrid id="pgridSaveUpdateDateButtons" columns="2"
+						styleClass="col-centered row-centered noBorders">
+						<p:commandButton value="Si"
+							update=":form1:messagesEdit, form1:object"
+							onstart="PF('confirmDelete').hide(); PF('blockUIWidget').block(); "
+							oncomplete="PF('blockUIWidget').unblock(); "
+							actionListener="#{eliminarPolizaMB.deletePolien}"
+							icon="ui-icon-check" />
+						<p:commandButton value="Cancelar" icon="ui-icon-cancel"
+							oncomplete="PF('confirmDelete').hide();" />
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

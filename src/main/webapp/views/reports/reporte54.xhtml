@@ -1,0 +1,1504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				
+
+				<p:panel id="idPanel"
+					header="Información para Evaluar el Desempeño Mensual del FORTAMUNDF"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte54MB.listPm5511}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1" selection="#{reporte54MB.pm5511Buffer}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm5511Wdg" rowIndexVar="rowIndex">
+
+						<p:column>
+							<p:panelGrid id="idGrid1" styleClass="col-centered">
+								<p:row>
+									<p:column style="text-align: right; width:40%">
+										<h:outputText value="Mensual: " />
+										<p:outputLabel id="lblMensual" size="2" maxlength="2"
+											value="#{objects.mensual}" rendered="#{reporte54MB.bMensual}">
+											<f:convertNumber pattern="00" for="lblMensual" />
+										</p:outputLabel>
+										<p:selectOneMenu value="#{reporte54MB.mes}" id="cMensual"
+											rendered="#{reporte54MB.bCombo}">
+											<f:selectItems value="#{reporte54MB.lisMes}" var="mensual"
+												itemLabel="#{mensual.mes}" itemValue="#{mensual.mes}" />
+										</p:selectOneMenu>
+
+									</p:column>
+									<p:column style="width:20%">
+										<h:outputText value="Monto $" />
+									</p:column>
+									<p:column style="width:40%">
+										<h:outputText value="Observaciones" />
+									</p:column>
+
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText value="Monto Total asignado al municipio:" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel id="lblMta" value="#{objects.mtam}"
+											rendered="#{reporte54MB.bLbl}">
+											<f:convertNumber pattern="#0.00" for="lblMta" />
+										</p:outputLabel>
+										<!-- 
+										<p:inputText id="txtMta" value="#{objects.mtam}"
+											rendered="#{reporte54MB.bTxt}"
+											onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;} convertDecimal('txtMta', #{objects.index})">
+											<f:convertNumber maxFractionDigits="2" pattern="#,##0.00"
+												for="txtMta" />
+											<pe:keyFilter for="txtMta" mask="pnum" />
+
+											<p:ajax />
+										</p:inputText> -->
+										<pe:inputNumber id="txtMta" value="#{objects.mtam}"
+											rendered="#{reporte54MB.bTxt}"
+											onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+											emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+											thousandSeparator="," maxlength="17">
+
+										</pe:inputNumber>
+									</p:column>
+									<p:column rowspan="3">
+										<p:outputLabel value="#{objects.obsgral}" id="lblObsgral"
+											rendered="#{reporte54MB.bLbl}"></p:outputLabel>
+										<p:inputTextarea rows="5" cols="50" value="#{objects.obsgral}"
+											onkeypress="if (event.keyCode == 13) {return false;}"
+											id="txtObsgral" rendered="#{reporte54MB.bTxt}">
+											<p:ajax event="blur" update="txtObsgral" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText
+											value="Monto administrado al  mes de evaluaci&oacute;n" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel id="lblMmme" value="#{objects.mmme}"
+											rendered="#{reporte54MB.bLbl}">
+											<f:convertNumber pattern="#,##0.00" for="lblMmme" />
+
+										</p:outputLabel>
+
+										<!-- <p:inputText id="txtMmme" value="#{objects.mmme}"
+											onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+											rendered="#{reporte54MB.bTxt}">
+											<pe:keyFilter for="txtMmme" mask="pnum" />
+											<f:convertNumber pattern="#,##0.00" for="txtMmme" />
+										</p:inputText> -->
+										<pe:inputNumber id="txtMmme" value="#{objects.mmme}"
+											rendered="#{reporte54MB.bTxt}"
+											onkeypress="if(event.keyCode == 27 || event.keyCoide == 9 || event.keyCoide == 93 ) {return false;} if (event.keyCode == 13) {return false;}"
+											emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+											thousandSeparator="," maxlength="17">
+											<p:ajax event="blur" update="txtMmme" />
+										</pe:inputNumber>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText
+											value="Monto autorizado en  obras y acciones al mes de evaluación [Indicador: Tr&aacute;mite en la Validaci&oacute;n de  los Recursos]" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel id="lblMaoa" value="#{objects.maoa}"
+											rendered="#{reporte54MB.bLbl}">
+											<f:convertNumber pattern="#,##0.00" for="lblMaoa" />
+										</p:outputLabel>
+
+										<!-- <p:inputText id="txtMaoa" value="#{objects.maoa}"
+											onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+											rendered="#{reporte54MB.bTxt}">
+											<pe:keyFilter for="txtMaoa" mask="pnum" />
+											<f:convertNumber pattern="#,##0.00" for="txtMaoa" />
+										</p:inputText> -->
+										<pe:inputNumber id="txtMaoa" value="#{objects.maoa}"
+											rendered="#{reporte54MB.bTxt}"
+											onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+											emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+											thousandSeparator="," maxlength="17">
+
+										</pe:inputNumber>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid id="idGrid6">
+								<p:commandButton value="Salvar" id="salvar1" icon="ui-icon-disk"
+									actionListener="#{reporte54MB.save(rowIndex)}"
+									rendered="#{reporte54MB.bVSalvar}"
+									update=":form1:object,  :form1:messagesEdit, :form1:combo" />
+								<p:commandButton value="Modificar" id="modificar1"
+									icon="ui-icon-disk"
+									actionListener="#{reporte54MB.modify(rowIndex)}"
+									rendered="#{reporte54MB.bVModificar}"
+									disabled="#{reporte54MB.bBtnModificar}"
+									update=":form1:object,  :form1:messagesEdit" />
+								<p:commandButton value="Limpiar"
+									actionListener="#{reporte54MB.clean(rowIndex)}"
+									icon="ui-icon-arrowreturnthick-1-n" id="reset1"
+									disabled="#{reporte54MB.bOtros}"
+									update=":form1:object,  :form1:messagesEdit" />
+								<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+									update=":form1:object,  :form1:messagesEdit" id="add1"
+									disabled="#{reporte54MB.bAdd}"
+									actionListener="#{reporte54MB.add(rowIndex)}" />
+								<p:commandButton value="Borrar" icon="ui-icon-trash"
+									disabled="#{reporte54MB.bBorrar}" id="borrar1"
+									update=":form1:object,  :form1:messagesEdit, :form1:combo"
+									actionListener="#{reporte54MB.delete(rowIndex)}">
+									<p:confirm header="Confirmacion"
+										message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton value="Cancelar" icon="ui-icon-circle-close"
+									id="cancelar1" disabled="#{reporte54MB.bOtros}"
+									update=":form1:object,  :form1:messagesEdit"
+									actionListener="#{reporte54MB.cancel(rowIndex)}" />
+							</p:panelGrid>
+							<p:panel header="AL MES DE EVALUACI&Oacute;N" id="panelMes">
+								<p:panel header="DESTINO" id="panelDestino">
+									<p:panelGrid styleClass="col-centered" id="idGridDestino">
+										<p:row>
+											<p:column style="width:5%" />
+											<p:column style="text-align: right; width:31%" />
+											<p:column style="width:32%">
+												<h:outputText value="MONTO EJERCIDO ACUMULADO" />
+											</p:column>
+											<p:column>
+												<h:outputText value="%" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column rowspan="9" style="width:5%">
+												<h:outputText value="1" />
+											</p:column>
+										</p:row>
+										<!--  -->
+										<p:row>
+											<p:column style="text-align: right; width:31%">
+												<h:outputText value="Obligaciones Financieras" />
+											</p:column>
+											<p:column style="text-align: left; width:32%">
+												<p:outputLabel id="lblObf" value="#{objects.obf}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblObf" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtObf" value="#{objects.obf}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeyup="calcularPorcentaje(#{objects.index}, 'txtObf', 'txtPobf')">
+													<pe:keyFilter for="txtObf" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtObf" />
+													<p:ajax event="keyup"
+														listener="#{reporte54MB.calcularObligacionesFinancieras(rowIndex)}"
+														update=":form1:object:txtPobf"></p:ajax>
+												</p:inputText> -->
+												<pe:inputNumber id="txtObf" value="#{objects.obf}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtObf')}"
+														update="txtObf, txtPobf, txtSubof, txtPsubof, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; width:32%">
+												<p:outputLabel id="lblPobf" value="#{objects.pobf}"
+													rendered="#{reporte54MB.bLbl}">
+
+													<f:convertNumber pattern="#,##0.00" for="lblPobf" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPobf" value="#{objects.pobf}" size="20"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtPobf" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtPobf"
+														maxFractionDigits="2" />
+
+												</p:inputText>
+
+											</p:column>
+										</p:row>
+
+										<!--  -->
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Pago de pasivos de ejercicios anteriores" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblPpea" value="#{objects.ppea}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPpea" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtPpea" value="#{objects.ppea}" size="20"
+													onkeyup="calcularPorcentaje(#{objects.index}, 'txtPpea', 'txtPppea')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtPpea" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtPpea"
+														maxFractionDigits="2" />
+												</p:inputText> -->
+												<pe:inputNumber id="txtPpea" value="#{objects.ppea}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtPpea')}"
+														update="txtPpea, txtPppea, txtSubof, txtPsubof, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblPppea" value="#{objects.pppea}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPppea" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPppea" value="#{objects.pppea}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPppea" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Agua en Bloque" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblAeb" value="#{objects.aeb}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblAeb" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtAeb" value="#{objects.aeb}"
+													onkeyup="calcularPorcentaje(#{objects.index}, 'txtAeb', 'txtPaeb')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtAeb" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtAeb" />
+												</p:inputText> -->
+												<pe:inputNumber id="txtAeb" value="#{objects.aeb}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtAeb')}"
+														update="txtAeb, txtPaeb, txtSubof, txtPsubof, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblPaeb" value="#{objects.paeb}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPaeb" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPaeb" value="#{objects.paeb}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPaeb" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Energía electrica" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblEl" value="#{objects.el}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblEl" />
+												</p:outputLabel>
+
+												<!-- <pe:inputText id="txtEl" value="#{objects.el}"
+													onkeyup="calcularPorcentaje(#{objects.index}, 'txtEl', 'txtPel')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtEl" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtEl" />
+												</pe:inputText> -->
+												<pe:inputNumber id="txtEl" value="#{objects.el}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtEl')}"
+														update="txtEl, txtPel, txtSubof, txtPsubof, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblPel" value="#{objects.pel}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPel" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPel" value="#{objects.pel}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPel" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+
+										<p:row>
+											<p:column style="text-align: right; ">
+												<h:outputText value="* Aportaciones de ISSEMYM" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblApis" value="#{objects.apis}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblApis" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtApis" value="#{objects.apis}"
+													onkeyup="calcularPorcentaje(#{objects.index}, 'txtApis', 'txtPapis')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtApis" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtApis" />
+												</p:inputText> -->
+												<pe:inputNumber id="txtApis" value="#{objects.apis}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtApis')}"
+														update="txtApis, txtPapis, txtSubof, txtPsubof, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblPapis" value="#{objects.papis}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPapis" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPapis" value="#{objects.papis}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPapis" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Pago o amortización de créditos, emprésitos" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblPac" value="#{objects.pac}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPac" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtPac" value="#{objects.pac}"
+													onkeyup="calcularPorcentaje(#{objects.index}, 'txtPac', 'txtPpac')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtPac" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtPac" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtPac" value="#{objects.pac}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtPac')}"
+														update="txtPac, txtPpac, txtSubof, txtPsubof, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblPpac" value="#{objects.ppac}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPpac" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPpac" value="#{objects.ppac}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPpac" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+										<p:row>
+											<p:column style="text-align: right; ">
+												<h:outputText
+													value="* Derivados de actos jurídicos (excepto laudos)" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblDag" value="#{objects.daj}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblDag" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtDag" value="#{objects.daj}"
+													onkeyup="calcularPorcentaje(#{objects.index}, 'txtDag', 'txtPdaj')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtDag" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtDag" />
+												</p:inputText> -->
+												<pe:inputNumber id="txtDag" value="#{objects.daj}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtDag')}"
+														update="txtDag, txtPdaj, txtSubof, txtPsubof, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPdaj" value="#{objects.pdaj}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPdaj" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPdaj" value="#{objects.pdaj}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPdaj" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column
+												style="text-align: right;background-color: #BFBFBF; ">
+												<h:outputText value="Subtotal" />
+											</p:column>
+											<p:column
+												style="text-align: left;background-color: #BFBFBF; ">
+												<p:outputLabel id="lblSubof" value="#{objects.subof}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblSubof" />
+												</p:outputLabel>
+
+												<p:inputText id="txtSubof" value="#{objects.subof}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtSubof" />
+												</p:inputText>
+											</p:column>
+											<p:column style="text-align: left;background-color: #BFBFBF;">
+												<p:outputLabel id="lblPsubof" value="#{objects.psubof}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPsubof" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPsubof" value="#{objects.psubof}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPsubof" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid id="idGrid2">
+										<p:row>
+											<p:column rowspan="14" style="width:5%">
+												<h:outputText value="2" />
+											</p:column>
+										</p:row>
+										<!--  -->
+										<p:row>
+											<p:column style="text-align: right; width:31%">
+												<h:outputText
+													value="Seguridad Pública, protección civil y bomberos" />
+											</p:column>
+											<p:column style="text-align: left; width:32%">
+												<p:outputLabel id="lblSppc" value="#{objects.sppc}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblSppc" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtSppc" value="#{objects.sppc}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtSppc','txtPsppc')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtSppc" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtSppc" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtSppc" value="#{objects.sppc}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtSppc')}"
+														update="txtSppc, txtPsppc, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; width:32%">
+												<p:outputLabel id="lblPsppc" value="#{objects.psppc}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPsppc" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPsppc" value="#{objects.psppc}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPsppc" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Monto de la Nóm, personal Operativo de la Seg. Pública" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblMnpos" value="#{objects.mnpos}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblMnpos" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtMnpos" value="#{objects.mnpos}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtMnpos','txtPmnpos')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtMnpos" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtMnpos" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtMnpos" value="#{objects.mnpos}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtMnpos')}"
+														update="txtMnpos, txtPmnpos, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPmnpos" value="#{objects.pmnpos}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPmnpos" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPmnpos" value="#{objects.pmnpos}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPmnpos" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Monto de la Nóm, personal Operativo de Bomberos" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblMnpob" value="#{objects.mnpob}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblMnpob" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtMnpob" value="#{objects.mnpob}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtMnpob','txtPmnpob')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtMnpob" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtMnpob" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtMnpob" value="#{objects.mnpob}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtMnpob')}"
+														update="txtMnpob, txtPmnpob, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPmnpob" value="#{objects.pmnpob}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPmnpob" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPmnpob" value="#{objects.pmnpob}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPmnpob" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Monto de la Nóm, personal Op. de Protección civil" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblMnpop" value="#{objects.mnpop}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblMnpop" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtMnpop" value="#{objects.mnpop}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtMnpop','txtPmnpop')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtMnpop" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtMnpop" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtMnpop" value="#{objects.mnpop}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtMnpop')}"
+														update="txtMnpob, txtPmnpop, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPmnpop" value="#{objects.pmnpop}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPmnpop" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPmnpop" value="#{objects.pmnpop}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPmnpop" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+
+
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Capacitación Personal" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblCap" value="#{objects.cap}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblCap" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtCap" value="#{objects.cap}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtCap','txtPcap')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtCap" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtCap" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtCap" value="#{objects.cap}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtCap')}"
+														update="txtCap, txtPcap, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPcap" value="#{objects.pcap}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPcap" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPcap" value="#{objects.pcap}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPcap" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Adquisición de Uniformes" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblAdu" value="#{objects.adu}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblAdu" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtAdu" value="#{objects.adu}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtAdu','txtPadu')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtAdu" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtAdu" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtAdu" value="#{objects.adu}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtAdu')}"
+														update="txtAdu, txtPadu, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPadu" value="#{objects.padu}"
+													rendered="#{reporte54MB.bLbl}">
+
+													<f:convertNumber pattern="#,##0.00" for="lblPadu" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPadu" value="#{objects.padu}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPadu" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Exámenes antidoping" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblEan" value="#{objects.ean}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblEan" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtEan" value="#{objects.ean}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtEan','txtPean')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtEan" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="lblEan" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtEan" value="#{objects.ean}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtEan')}"
+														update="txtEan, txtPean, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPean" value="#{objects.pean}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPean" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPean" value="#{objects.pean}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPean" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Adquisición de mantenimiento de equipo de radio" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblAmer" value="#{objects.amer}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblAmer" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtAmer" value="#{objects.amer}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtAmer','txtPamer')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtAmer" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtAmer" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtAmer" value="#{objects.amer}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtAmer')}"
+														update="txtAmer, txtPamer, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPamer" value="#{objects.pamer}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPamer" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPamer" value="#{objects.pamer}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPamer" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Adquisición de equipo de seguridad" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblAes" value="#{objects.aes}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblAes" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtAes" value="#{objects.aes}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtAes','txtPaes')"
+													rendered="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtAes" />
+													<pe:keyFilter for="txtAes" mask="pnum" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtAes" value="#{objects.aes}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtAes')}"
+														update="txtAes, txtPaes, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPaes" value="#{objects.paes}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPaes" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPaes" value="#{objects.paes}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPaes" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Adquisición de equipo de protección civil y bomberos" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblAep" value="#{objects.aep}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblAep" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtAep" value="#{objects.aep}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtAep','txtPaep')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtAep" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtAep" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtAep" value="#{objects.aep}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtAep')}"
+														update="txtAep, txtPaep, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPaep" value="#{objects.paep}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPaep" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPaep" value="#{objects.paep}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPaep" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Adquisición de vehículos (Patrullas, etc)" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblAdv" value="#{objects.adv}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblAdv" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtAdv" value="#{objects.adv}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtAdv','txtPadv')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtAdv" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtAdv" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtAdv" value="#{objects.adv}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtAdv')}"
+														update="txtAdv,txtPadv, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPadv" value="#{objects.padv}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPadv" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPadv" value="#{objects.padv}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPadv" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Mantenimiento de parque vehicular operativo" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblMpv" value="#{objects.mpv}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblMpv" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtMpv" value="#{objects.mpv}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtMpv','txtPmpv')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtMpv" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtMpv" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtMpv" value="#{objects.mpv}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtMpv')}"
+														update="txtMpv, txtPmpv, txtsubsp, txtPsubsp, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPmpv" value="#{objects.pmpv}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPmpv" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPmpv" value="#{objects.pmpv}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPmpv" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+
+										<!--  -->
+
+										<p:row>
+											<p:column
+												style="text-align: right;background-color: #BFBFBF;">
+												<h:outputText value="Subtotal" />
+											</p:column>
+											<p:column style="text-align: left;background-color: #BFBFBF;">
+												<p:outputLabel id="lblsubsp" value="#{objects.subsp}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblsubsp" />
+												</p:outputLabel>
+
+												<p:inputText id="txtsubsp" value="#{objects.subsp}"
+													onkeyup="calcularPorcentaje2(#{objects.index}, 'txtsubsp','txtPsubsp')"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtsubsp" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtsubsp" />
+												</p:inputText>
+											</p:column>
+											<p:column style="text-align: left;background-color: #BFBFBF;">
+												<p:outputLabel id="lblPsubsp" value="#{objects.psubsp}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPsubsp" />
+												</p:outputLabel>
+												<p:inputText id="txtPsubsp" value="#{objects.psubsp}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPsubsp" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid id="idGrid4">
+										<p:row>
+											<p:column rowspan="4" style="width:5%">
+												<h:outputText value="3" />
+											</p:column>
+										</p:row>
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right; width:31%">
+												<h:outputText value="Infraestructura" />
+											</p:column>
+											<p:column style="text-align: left; width:32%">
+												<p:outputLabel id="lblInfr" value="#{objects.aocr}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblInfr" />
+												</p:outputLabel>
+
+												<!-- <p:inputText id="txtInfr" value="#{objects.aocr}"
+													onkeyup="calcularPorcentaje3(#{objects.index}, 'txtInfr', 'txtPinfr')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtInfr" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtInfr" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtInfr" value="#{objects.aocr}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtInfr')}"
+														update="txtInfr, txtPinfr, txtSubot, txtPsubot, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left; width:32%">
+												<p:outputLabel id="lblPinfr" value="#{objects.paocr}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPinfr" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPinfr" value="#{objects.paocr}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPinfr" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Aportaciones de obras de carácter regional" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblaocr" value="#{objects.podc}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblaocr" />
+												</p:outputLabel>
+												<!-- <p:inputText id="txtaocr" value="#{objects.podc}"
+													onkeyup="calcularPorcentaje3(#{objects.index}, 'txtaocr', 'txtPaocr')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtaocr" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtaocr" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtaocr" value="#{objects.podc}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtaocr')}"
+														update="txtaocr, txtPaocr, txtSubot, txtPsubot, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPaocr" value="#{objects.ppodc}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPaocr" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPaocr" value="#{objects.ppodc}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPaocr" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+										<!--  -->
+
+										<p:row>
+											<p:column style="text-align: right;">
+												<h:outputText
+													value="* Pago de oblig. Derivados de cont. De obras" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblpodc" value="#{objects.subinf}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblpodc" />
+												</p:outputLabel>
+												<!-- <p:inputText id="txtpodc" value="#{objects.subinf}"
+													onkeyup="calcularPorcentaje3(#{objects.index}, 'txtpodc', 'txtPpodc')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtpodc" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtpodc" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtpodc" value="#{objects.subinf}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtpodc')}"
+														update="txtpodc, txtPpodc, txtSubot, txtPsubot, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPpodc" value="#{objects.psubinf}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPpodc" />
+												</p:outputLabel>
+												<p:inputText id="txtPpodc" value="#{objects.psubinf}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPpodc" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+
+										<p:row>
+											<p:column style="width:5%" rowspan="2">
+												<h:outputText value="4" />
+											</p:column>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Bienes" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblBienes" value="#{objects.podcs}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblBienes" />
+												</p:outputLabel>
+												<!-- <p:inputText id="txtBienes" value="#{objects.podcs}"
+													onkeyup="calcularPorcentaje3(#{objects.index}, 'txtBienes', 'txtPbienes')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtBienes" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtBienes" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtBienes" value="#{objects.podcs}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtBienes')}"
+														update="txtBienes, txtPbienes, txtSubot, txtPsubot, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPbienes" value="#{objects.ppodcs}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPbienes" />
+
+												</p:outputLabel>
+												<p:inputText id="txtPbienes" value="#{objects.ppodcs}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPbienes" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+
+										<!--  -->
+
+										<p:row>
+
+											<p:column style="text-align: right;">
+												<p:outputLabel
+													value="* Pago de Oblig. Derivados de Cont. del Sum." />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel value="#{objects.subb}" id="lblSubb"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblSubb" />
+												</p:outputLabel>
+												<!-- <p:inputText id="txtSubb" value="#{objects.subb}"
+													onkeyup="calcularPorcentaje3(#{objects.index}, 'txtSubb', 'txtPsubb')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtSubb" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtSubb" />
+												</p:inputText>
+												 -->
+												<pe:inputNumber id="txtSubb" value="#{objects.subb}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtSubb')}"
+														update="txtSubb, txtPsubb, txtSubot, txtPsubot, txtMt, txtPmt" />
+												</pe:inputNumber>
+
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel value="#{objects.psubb}" id="lblPsubb"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPsubb" />
+												</p:outputLabel>
+												<p:inputText value="#{objects.psubb}" id="txtPsubb"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPsubb" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<!--  -->
+										<p:row>
+											<p:column style="width:5%">
+												<h:outputText value="5" />
+											</p:column>
+											<p:column style="text-align: right;">
+												<h:outputText value="* Otros (Especificar)" />
+											</p:column>
+											<p:column style="text-align: left; ">
+												<p:outputLabel id="lblotros" value="#{objects.otros}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblotros" />
+												</p:outputLabel>
+												<!-- <p:inputText id="txtotros" value="#{objects.otros}"
+													onkeyup="calcularPorcentaje3(#{objects.index}, 'txtotros', 'txtPotros')"
+													rendered="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtotros" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtotros" />
+												</p:inputText> -->
+
+												<pe:inputNumber id="txtotros" value="#{objects.otros}"
+													rendered="#{reporte54MB.bTxt}"
+													onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+													emptyValue="0.00" decimalPlaces="2" decimalSeparator="."
+													thousandSeparator="," maxlength="17">
+													<p:ajax
+														listener="#{reporte54MB.calcularPorcentaje(rowIndex, 'txtotros')}"
+														update="txtotros, txtPotros, txtSubot, txtPsubot, txtMt, txtPmt" />
+												</pe:inputNumber>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPotros" value="#{objects.potros}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPotros" />
+												</p:outputLabel>
+												<p:inputText id="txtPotros" value="#{objects.potros}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPotros" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column />
+											<p:column style="text-align: right;">
+												<h:outputText value="Subtotal" />
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblSubot" value="#{objects.subot}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblSubot" />
+												</p:outputLabel>
+
+												<p:inputText value="#{objects.subot}" id="txtSubot"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtSubot" mask="pnum" />
+													<f:convertNumber pattern="#,##0.00" for="txtSubot" />
+												</p:inputText>
+											</p:column>
+											<p:column style="text-align: left;">
+												<p:outputLabel id="lblPsubot" value="#{objects.psubot}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPsubot" />
+												</p:outputLabel>
+
+												<p:inputText id="txtPsubot" value="#{objects.psubot}"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPsubot" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+								</p:panel>
+								<p:panel>
+									<p:panelGrid id="idGrid8">
+										<p:row>
+											<p:column style="width:5%;background-color: #BFBFBF;" />
+											<p:column
+												style="text-align:right;  width:31%;background-color: #BFBFBF;">
+												<h:outputText value="Monto Total /Porcentaje Total (10)" />
+											</p:column>
+											<p:column
+												style="text-align: left; width:32%;background-color: #BFBFBF;">
+												<p:outputLabel value="#{objects.mt}" id="lblMt"
+													rendered="#{reporte54MB.bLbl}">
+
+													<f:convertNumber pattern="#,##0.00" for="lblMt" />
+												</p:outputLabel>
+
+												<p:inputText value="#{objects.mt}" id="txtMt"
+													rendered="#{reporte54MB.bTxt}"
+													disabled="#{reporte54MB.bTxt}">
+													<pe:keyFilter for="txtMt" mask="pnum"></pe:keyFilter>
+													<f:convertNumber pattern="#,##0.00" for="txtMt" />
+												</p:inputText>
+											</p:column>
+											<p:column
+												style="text-align: left; width:32%;background-color: #BFBFBF;">
+												<p:outputLabel id="lblPmt" value="#{objects.pmt}"
+													rendered="#{reporte54MB.bLbl}">
+													<f:convertNumber pattern="#,##0.00" for="lblPmt" />
+												</p:outputLabel>
+												<p:inputText id="txtPmt" value="#{objects.pmt}"
+													disabled="#{reporte54MB.bTxt}"
+													rendered="#{reporte54MB.bTxt}">
+													<f:convertNumber pattern="#,##0.00" for="txtPmt" />
+												</p:inputText>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:panel>
+							</p:panel>
+
+							<p:panelGrid id="idGrid5">
+								<p:commandButton value="Salvar" id="salvar" icon="ui-icon-disk"
+									actionListener="#{reporte54MB.save(rowIndex)}"
+									rendered="#{reporte54MB.bVSalvar}"
+									update=":form1:object,  :form1:messagesEdit, :form1:combo" />
+								<p:commandButton value="Modificar" id="modificar"
+									icon="ui-icon-disk"
+									actionListener="#{reporte54MB.modify(rowIndex)}"
+									rendered="#{reporte54MB.bVModificar}"
+									disabled="#{reporte54MB.bBtnModificar}"
+									update=":form1:object,  :form1:messagesEdit" />
+								<p:commandButton value="Limpiar"
+									actionListener="#{reporte54MB.clean(rowIndex)}"
+									icon="ui-icon-arrowreturnthick-1-n" id="reset"
+									disabled="#{reporte54MB.bOtros}"
+									update=":form1:object,  :form1:messagesEdit" />
+								<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+									update=":form1:object,  :form1:messagesEdit" id="add"
+									disabled="#{reporte54MB.bAdd}"
+									actionListener="#{reporte54MB.add(rowIndex)}" />
+								<p:commandButton value="Borrar" icon="ui-icon-trash"
+									disabled="#{reporte54MB.bBorrar}" id="borrar"
+									update=":form1:object,  :form1:messagesEdit, :form1:combo"
+									actionListener="#{reporte54MB.delete(rowIndex)}">
+									<p:confirm header="Confirmacion"
+										message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton value="Cancelar" icon="ui-icon-circle-close"
+									id="cancelar" disabled="#{reporte54MB.bOtros}"
+									update=":form1:object,  :form1:messagesEdit"
+									actionListener="#{reporte54MB.cancel(rowIndex)}" />
+							</p:panelGrid>
+						</p:column>
+
+					</p:dataTable>
+
+					<p:panelGrid id="descarga">
+						<p:outputLabel value="Mes a consultar" />
+						<p:selectOneMenu value="#{reporte54MB.mensual}" id="combo">
+							<f:selectItems value="#{reporte54MB.comboPm511}" var="combo"
+								itemLabel="#{combo.mensual}" itemValue="#{combo.mensual}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Correcto" id="generateportepdf"
+							actionListener="#{reporte54MB.createPdf}"
+							update="form1:inlinePdf, :form1:messagesEdit" />
+						<p:commandButton value="Generar Txt" ajax="false"
+							actionListener="#{reporte54MB.createTxt}"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							icon="ui-icon-arrowthick-1-s">
+							<p:fileDownload value="#{reporte54MB.txt}" />
+						</p:commandButton>
+					</p:panelGrid>
+
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte54MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte54MB.uuid}&amp;filename=#{reporte54MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

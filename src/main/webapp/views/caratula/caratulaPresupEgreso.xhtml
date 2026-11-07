@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+			<h:form id="form1">
+				<p:remoteCommand id="updateObjects" name="updateObjects"
+					actionListener="#{caratulaPresupuestoEgresoMB.onPageLoad}"
+					update="@form" />
+				<p:focus context="objects" id="focusTable" />
+				<p:panel id="panel" header="Caratula del Presupuesto de Egresos"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<p:dataTable id="objects" var="object"
+						value="#{caratulaPresupuestoEgresoMB.egresosDataModel}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						editable="true" rows="10" lazy="true" widgetVar="programsWdg"
+						selectionMode="single"
+						selection="#{caratulaPresupuestoEgresoMB.selectedPasot}"
+						rowKey="#{object.id}">
+
+						<p:ajax event="rowEditInit"
+							listener="#{caratulaPresupuestoEgresoMB.onInitRowEdit}" />
+						<p:ajax event="rowEdit"
+							listener="#{caratulaPresupuestoEgresoMB.onRowEdit}"
+							update="messagesEdit" oncomplete="updateObjects();" />
+						<p:ajax event="rowEditCancel"
+							listener="#{caratulaPresupuestoEgresoMB.onRowCancel}"
+							update="messagesEdit" oncomplete="updateObjects();" />
+
+						<p:column headerText="Partida" exportable="true">
+							<center>
+								<h:outputText value="#{object.partida}" />
+							</center>
+						</p:column>
+
+						<p:column headerText="Autorizado (A&#241;o anterior)"
+							exportable="true">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.auto12}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<pe:inputNumber value="#{object.auto12}"
+										style="width:100%; text-align:right;" thousandSeparator=","
+										decimalSeparator="." decimalPlaces="2">
+									</pe:inputNumber>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Ejercido (A&#241;o anterior)"
+							exportable="false">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.auto13}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<pe:inputNumber value="#{object.auto13}"
+										style="width:100%; text-align:right;" thousandSeparator=","
+										decimalSeparator="." decimalPlaces="2">
+									</pe:inputNumber>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Presupuestado" exportable="false">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.auto11}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<pe:inputNumber value="#{object.auto11}"
+										style="width:100%; text-align:right;" thousandSeparator=","
+										decimalSeparator="." decimalPlaces="2">
+									</pe:inputNumber>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Editar" style="width:5%">
+							<p:rowEditor />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="formTable">
+				<p:remoteCommand name="resetall"
+					actionListener="#{programamunMB.cancelar}"
+					update=":formTable:populationTable" />
+				<p:growl id="mensajes" showDetail="true" sticky="true" />
+				<p:panel id="panel"
+					header="Captura Poblaci&oacute;n y Localidad Beneficiada"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<p:dataTable id="populationTable" var="population"
+						value="#{programamunMB.programamunList}" styleClass="et_datatable"
+						emptyMessage="No hay registros" paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="programsWdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+						<p:column>
+							<center>
+								<p:panelGrid columns="4"
+									columnClasses="text-alignR,text-alignL,text-alignR,text-alignL">
+									<h:outputText value="Dependencia General:" />
+									<h:inputText value="#{population.cvedepg}" maxlength="3"
+										disabled="true" size="6" required="true"
+										requiredMessage="Campo Dependencia General: *Obligatorio" />
+
+									<h:outputText value="Población Beneficiada:" />
+									<h:panelGroup>
+										<pe:inputNumber id="number" value="#{population.pobben}"
+											decimalPlaces="0" decimalSeparator="" thousandSeparator=""
+											maxValue="100" maxlength="3"
+											disabled="#{programamunMB.deshabilitado}" size="6"
+											required="true"
+											requiredMessage="Campo Población Beneficiada: *Obligatorio">
+										</pe:inputNumber>%
+							</h:panelGroup>
+									<h:outputText value="Dependencia Auxiliar:" />
+									<h:inputText value="#{population.cvedepa}" maxlength="5"
+										disabled="true" size="6" required="true"
+										requiredMessage="Campo Dependencia Auxiliar: *Obligatorio" />
+
+									<h:outputText value="Fecha de Inicio:" />
+									<p:calendar value="#{population.fecini}"
+										disabled="#{programamunMB.deshabilitado}" pattern="dd/MM/yyyy"
+										locale="es" mask="false" required="false"
+										requiredMessage="Campo Fecha de Inicio: *Obligatorio" />
+
+									<h:outputText value="Programa:" />
+									<h:inputText value="#{population.programa}" maxlength="12"
+										disabled="true" size="12" required="true"
+										requiredMessage="Campo Programa: *Obligatorio" />
+
+									<h:outputText value="Fecha de Terminación:" />
+									<p:calendar value="#{population.fecter}"
+										disabled="#{programamunMB.deshabilitado}" pattern="dd/MM/yyyy"
+										locale="es" mask="false" required="false"
+										requiredMessage="Campo Fecha de Terminación: *Obligatorio" />
+								</p:panelGrid>
+								<br />
+								<p:panelGrid columns="1">
+									<h:panelGroup>
+										<h:outputText value="Localidades Beneficiadas:" />
+
+										<p:commandLink id="searchclvfuen"
+											styleClass="glyphicon glyphicon-search"
+											oncomplete="PF('catalogLocalidadesDlg').show(), PF('localidaesSourcesWdg').clearFilters();"
+											style="width:18px;height:18px;"
+											actionListener="#{programamunMB.consultLocalidades(rowIndex)}"
+											update=":formTable:populationTable,:formTable:mensajes,:formTable:financialProgram"
+											disabled="#{programamunMB.deshabilitado}">
+										</p:commandLink>
+
+										<p:inputTextarea rows="5" cols="110"
+											value="#{population.locben}"
+											disabled="#{programamunMB.deshabilitado}" counter="display"
+											maxlength="150" counterTemplate="{0} caracteres restantes."
+											autoResize="false"
+											validatorMessage="El campo de Localidades beneficiadas debe tener solo numericos separados por coma, ni puede terminar con una coma">
+											<f:validateRegex pattern="((\s)*(\,)?(\s)*([0-9])+)*" />
+										</p:inputTextarea>
+										<h:outputText id="display" />
+									</h:panelGroup>
+									<h:panelGroup>
+										<h:outputText value="Descripción:" />
+										<p:inputTextarea rows="5" cols="110"
+											value="#{population.descrip}"
+											disabled="#{programamunMB.deshabilitado}" counter="display2"
+											maxlength="300" counterTemplate="{0} caracteres restantes."
+											autoResize="false" />
+										<h:outputText id="display2" />
+									</h:panelGroup>
+								</p:panelGrid>
+								<br />
+								<p:panelGrid id="buttons">
+									<p:commandButton id="salvarButtom"
+										onclick="PF('confirmFileObra').show();" value="Salvar"
+										disabled="#{programamunMB.verBotonSalvar}" />
+									<p:confirmDialog widgetVar="confirmFileObra"
+										message="Desea guardar registro?" header="Confirmacion"
+										severity="alert">
+										<p:commandButton value="Aceptar" label="Aceptar"
+											style="margin-top:10px;padding:5px;"
+											action="#{programamunMB.salvar(rowIndex)}"
+											update=":formTable:populationTable,:formTable:mensajes"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									</p:confirmDialog>	
+									
+								&nbsp;														
+								<p:commandButton id="modificarButtom"
+										action="#{programamunMB.modificar}" value="Modificar"
+										ajax="true" styleClass="btn btn-default"
+										update="populationTable"
+										disabled="#{programamunMB.verBotonModificar}">
+									</p:commandButton>
+								&nbsp;
+								<p:commandButton action="#{programamunMB.reset(rowIndex)}"
+										value="Limpiar" ajax="true" styleClass="btn btn-default"
+										update="populationTable"
+										disabled="#{programamunMB.verBotonLimpiar}" />
+								&nbsp;				
+								<p:commandButton action="#{programamunMB.cancelar(rowIndex)}"
+										value="Cancelar" ajax="true" styleClass="btn btn-default"
+										update="populationTable"
+										disabled="#{programamunMB.verBotonCancelar}" />
+								</p:panelGrid>
+								<br />
+							</center>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<p:dialog header="Consulta al Cat&aacute;logo de Localidades"
+					widgetVar="catalogLocalidadesDlg" resizable="false" width="720"
+					height="460" showEffect="clip" hideEffect="clip" modal="true">
+					<p:outputPanel id="panelCatalogFinancialSources" layout="block"
+						style="text-align:left">
+						<p:dataTable id="financialProgram" var="source"
+							value="#{programamunMB.listaLocalidades}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="multiple"
+							selection="#{programamunMB.listaLocalidadesSelected}"
+							rowKey="#{source.id}" emptyMessage="No hay registros"
+							filteredValue="#{programamunMB.listaLocalidadesFiltered}"
+							rowIndexVar="rowIndex" widgetVar="localidaesSourcesWdg">
+							<p:column headerText="Clave Localidad" width="20%"
+								exportable="true" filterMatchMode="contains"
+								filterBy="#{source.cveLoc}">
+								<h:outputText value="#{source.cveLoc}" />
+							</p:column>
+							<p:column headerText="Nombre Localidad" style="width:30%"
+								filterMatchMode="contains" filterBy="#{source.nomLoc}">
+								<h:outputText value="#{source.nomLoc}" />
+							</p:column>
+							<p:column headerText="Clave Municipio" width="20%"
+								exportable="true" filterMatchMode="contains"
+								filterBy="#{source.cveMun}">
+								<h:outputText value="#{source.cveMun}" />
+							</p:column>
+							<p:column headerText="Nombre Municipio" style="width:30%"
+								filterMatchMode="contains" filterBy="#{source.nomMun}">
+								<h:outputText value="#{source.nomMun}" />
+							</p:column>
+						</p:dataTable>
+						<center>
+							<p:panelGrid columns="3" layout="grid">
+								<p:column></p:column>
+								<p:column>
+									<p:row style="align:center">
+										<p:column>
+											<p:commandButton value="Aceptar"
+												actionListener="#{programamunMB.changeLocalidades}"
+												oncomplete="PF('catalogLocalidadesDlg').hide();"
+												style="padding: 5px; position: absolute; right: 50%;"
+												update=":formTable:populationTable,:formTable:mensajes" />
+										</p:column>
+										<p:column>
+											<p:commandButton value="Cancelar"
+												oncomplete="PF('catalogLocalidadesDlg').hide();"
+												style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+										</p:column>
+									</p:row>
+								</p:column>
+								<p:column></p:column>
+							</p:panelGrid>
+						</center>
+					</p:outputPanel>
+				</p:dialog>
+			</h:form>
+			<h:outputScript library="js" name="gemLocBen.js" />
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

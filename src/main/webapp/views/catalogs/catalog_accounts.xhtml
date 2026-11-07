@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogTypeAccountsMB.onPageLoad}" 
+					update=":form1:objects" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogTypeAccountsMB.list}" styleClass="et_datatable green"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}">
+
+					<f:facet name="header">Tipo de Cuentas</f:facet>
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogTypeAccountsMB.onRowEdit}"
+						update=":form1:messagesEdit" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogTypeAccountsMB.onRowCancel}"
+						update=":form1:messagesEdit" />
+
+                   
+					<p:column headerText="Tipo" visible="false" width="0"
+						exportable="true" style="align:center;">
+						<h:outputText value="#{object.clvtip}" />
+					</p:column>
+
+					<p:column headerText="Tipo" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvtip}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="clvtip" value="#{object.clvtip}"
+									style="width:100%; aling:center;" maxlength="2" required="true"
+									requiredMessage="El campo Tipo es requerido"
+									validatorMessage="Tipo solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+										for="clvtip" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="STipo" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.clvsti}" />
+					</p:column>
+
+					<p:column headerText="STipo" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvsti}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="clvsti" value="#{object.clvsti}"
+									style="width:100%" maxlength="2"
+									validatorMessage="STipo solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+										for="clvsti" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nomtip}" />
+					</p:column>
+
+					<p:column headerText="Nombre" exportable="false" style="width:90%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nomtip}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nomtip" value="#{object.nomtip}"
+									style="width:100%" maxlength="80"
+									validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+										for="nomtip" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" title="Excel">
+							<p:graphicImage value="excel.png" width="24"
+								 />
+							<p:fileDownload value="#{catalogTypeAccountsMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogTypeAccountsMB.filePdf}" />
+						</h:commandLink>
+
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+							<p:graphicImage value="csv.png" width="24" />
+							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="CatalogAccounts" pageOnly="false" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" title="Texto">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogTypeAccountsMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<br />
+				<br />
+
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{catalogTypeAccountsMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

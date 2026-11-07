@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Reportes de Indicadores Mensual de Tasa de Recaudación de los Derechos de Agua Potable"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:dataTable id="object" var="objects"
+						value="#{reporte48MB.listPm50}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm5011Wdg" rowIndexVar="rowIndex">
+
+						<p:column>
+							<p:panelGrid>
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText value="Mensual:" />
+									</p:column>
+									<p:column colspan="2" style="text-align: left;">
+										<p:outputLabel value="#{objects.mensual}"
+											rendered="#{reporte48MB.bLblmes}" />
+										<p:selectOneMenu id="idMenu" value="#{reporte48MB.tcMes.mes}"
+											rendered="#{reporte48MB.bComboMes}">
+											<f:selectItems value="#{reporte48MB.lisMes}" var="meses"
+												itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+										</p:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column />
+									<p:column>
+										<p:outputLabel value="Cantidad Mensual" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Observaciones" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: left;">
+										<h:outputText
+											value="Número de contribuyentes que han cumplido con los derechos de agua potable" />
+									</p:column>
+									<p:column>
+										<p:inputText value="#{objects.tcc}" id="tcc" size="15"
+											disabled="#{reporte48MB.btxts}">
+											<pe:keyFilter mask="pint" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:inputText value="#{objects.obstcc}" id="obstcc" size="35"
+											disabled="#{reporte48MB.btxts}" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: left;">
+										<h:outputText
+											value="Total de contribuyentes registrados en el padrón al cierre del ejercicio anterior" />
+									</p:column>
+									<p:column>
+										<p:inputText value="#{objects.tcr}" id="tcr" size="15"
+											disabled="#{reporte48MB.btxts}">
+											<pe:keyFilter mask="pint" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:inputText value="#{objects.obstcr}" id="obstcr" size="35"
+											disabled="#{reporte48MB.btxts}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid id="idGrid2">
+								<p:commandButton value="Modificar" id="modificar"
+									icon="ui-icon-tag"
+									actionListener="#{reporte48MB.modify(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit"
+									rendered="#{reporte48MB.btxts}"
+									disabled="#{reporte48MB.bBtnModificar}" />
+								<p:commandButton value="Salvar" id="salvar" icon="ui-icon-disk"
+									rendered="#{reporte48MB.bVisible}"
+									actionListener="#{reporte48MB.save(rowIndex)}"
+									update=":form1:object, :form1:idMesPdf, :form1:messagesEdit" />
+								<p:commandButton value="Limpiar" id="reset"
+									icon="ui-icon-arrowreturnthick-1-n"
+									disabled="#{reporte48MB.bHabilita}"
+									actionListener="#{reporte48MB.clean(rowIndex)}"
+									update=":form1:object" />
+								<p:commandButton value="Adicionar" id="adicionar"
+									icon="ui-icon-circle-plus"
+									actionListener="#{reporte48MB.add(rowIndex)}"
+									disabled="#{reporte48MB.bDesabilita}" update=":form1:object" />
+								<p:commandButton value="Borrar" id="borrar" icon="ui-icon-trash"
+									disabled="#{reporte48MB.bBorrar}"
+									actionListener="#{reporte48MB.delete(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:idMesPdf">
+									<p:confirm header="Confirmación"
+										message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton value="Cancelar" id="cancelar"
+									icon="ui-icon-circle-close"
+									actionListener="#{reporte48MB.cancel(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:idGrid2"
+									disabled="#{reporte48MB.bHabilita}" />
+
+							</p:panelGrid>
+						</p:column>
+
+					</p:dataTable>
+					<p:panelGrid id="idGrid2" columns="3" styleClass="col-centered">
+						<h:outputText value="Mes a Consultar:" />
+						<p:inputText id="idMesPdf" value="#{reporte48MB.mes}" size="2" 
+							maxlength="2">
+							<pe:keyFilter for="idMesPdf" mask="pint"></pe:keyFilter>
+							<f:convertNumber pattern="00" />
+						</p:inputText>
+
+
+
+						<!-- <p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{reporte48MB.createFilePdfInline}" value="Correcto"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							styleClass="btn btn-default">
+						</p:commandButton> -->
+						<p:commandButton value="Correcto" id="generateportepdf"
+							action="#{reporte48MB.viewPdf}"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit" />
+
+					</p:panelGrid>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte48MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte48MB.uuid}&amp;filename=#{reporte48MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

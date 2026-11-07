@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogLocalitiesMunicipalityMB.onPageLoad}"
+					update=":form1:display_1, :form1:objects" />
+				<p:remoteCommand name="consultLocalities"
+					actionListener="#{catalogLocalitiesMunicipalityMB.consultLocalities}"
+					onstart="PF('localitiesDT').clearFilters();"
+					oncomplete="PF('catalogLocalityDlg').show()"
+					update=":form1:localities" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel"
+					header="Cat&aacute;logo de Localidades por Ayuntamiento"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<br />
+					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+
+						<h:outputText value="Municipio: " for="municipalityInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px;" />
+						<p:inputText id="municipalityInput" styleClass="form-control"
+							value="#{catalogLocalitiesMunicipalityMB.beanFind.cveMun}"
+							maxlength="3"
+							converterMessage="El campo Municipio debe ser num&eacute;rico">
+							<pe:keyFilter for="municipalityInput" mask="pint"></pe:keyFilter>
+							<f:convertNumber type="number" for="municipalityInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogLocalitiesMunicipalityMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Localidad: " for="descInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="descInput" styleClass="form-control"
+							value="#{catalogLocalitiesMunicipalityMB.beanFind.cveLoc}"
+							style="margin-top: 10px;" maxlength="3"
+							converterMessage="El campo Localidad debe ser num&eacute;rico">
+							<pe:keyFilter for="descInput" mask="pint"></pe:keyFilter>
+							<f:convertNumber type="number" for="descInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogLocalitiesMunicipalityMB.findValuesCatalog}" />
+						</p:inputText>
+
+
+						<p:outputPanel layout="block" style="text-align:center">
+							<br />
+
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								update=":form1:messagesEdit, :form1:objects"
+								actionListener="#{catalogLocalitiesMunicipalityMB.findValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+							<p:commandButton value="Limpiar"
+								style="padding: 5px; margin-left: 15px;"
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+								actionListener="#{catalogLocalitiesMunicipalityMB.findAllValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:panel>
+
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;">
+					<center>
+						<p:commandButton value="Nuevo Registro"
+							update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+							actionListener="#{catalogLocalitiesMunicipalityMB.insertRow}"
+							onclick="PF('localitiesWdg').clearFilters();"
+							oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+					</center>
+				</p:panel>
+
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogLocalitiesMunicipalityMB.list}"
+					styleClass="et_datatable" emptyMessage="No hay registros"
+					editable="true" paginator="true" rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}"
+					filteredValue="#{catalogLocalitiesMunicipalityMB.filteredList}"
+					selection="#{catalogLocalitiesMunicipalityMB.rowSelected}"
+					widgetVar="localitiesWdg">
+
+					<f:facet name="header">Cat&aacute;logo de Localidades por Ayuntamiento</f:facet>
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogLocalitiesMunicipalityMB.onRowEdit}"
+						update=":form1:messagesEdit" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogLocalitiesMunicipalityMB.onRowCancel}"
+						update=":form1:messagesEdit" 
+						oncomplete="document.getElementById('form1:hideButton2').click();"/>
+
+					<p:column headerText="Municipio" visible="false" width="0"
+						exportable="true" >
+						<h:outputText value="#{object.cveMun}"  />
+					</p:column>
+
+					<p:column headerText="Municipio" exportable="false"
+						style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.cveMun}" />
+							</f:facet>
+							<f:facet name="input">
+								<div class="ui-grid ui-grid-responsive">
+									<div class="ui-grid-row">
+										<div class="ui-grid-col-9">
+											<p:inputText id="cveMun" value="#{object.cveMun}"
+												style="width:100%" maxlength="3" required="true"
+												requiredMessage="El campo Municipio es requerido" 
+												converterMessage="El campo Municipio debe ser num&eacute;rico y mayor a cero">
+
+												<f:validateDoubleRange minimum="1" for="cveMun" />
+
+											</p:inputText>
+										</div>
+										<div class="ui-grid-col-3" align="center">
+											<p:commandLink id="searchcveMun"
+												styleClass="glyphicon glyphicon-search"
+												onclick="consultLocalities(); return false;"
+												style="width:18px;height:18px;" />
+										</div>
+									</div>
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Localidad" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.cveLoc}" />
+					</p:column>
+
+					<p:column headerText="Localidad" exportable="false"
+						style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.cveLoc}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="cveLoc" value="#{object.cveLoc}"
+									style="width:100%" maxlength="3" required="true"
+									requiredMessage="El campo Localidad es requerido"
+									converterMessage="El campo Localidad debe ser num&eacute;rico y mayor a cero"
+									validatorMessage="El campo Localidad debe ser num&eacute;rico y mayor a cero">
+
+									<f:validateDoubleRange minimum="1" for="cveLoc" />
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Nombre de la localidad" visible="false"
+						width="0" exportable="true">
+						<h:outputText value="#{object.nomLoc}" />
+					</p:column>
+
+					<p:column headerText="Nombre de la localidad" exportable="false"
+						style="width:70%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nomLoc}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nomLoc" value="#{object.nomLoc}"
+									style="width:100%" maxlength="300" required="true"
+									requiredMessage="El campo Nombre de la localidad es requerido"
+									validatorMessage="Nombre de la localidad solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+										for="nomLoc" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Borrar" style="width:5%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogLocalitiesMunicipalityMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:5%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{empty catalogLocalitiesMunicipalityMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload
+								value="#{catalogLocalitiesMunicipalityMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{empty catalogLocalitiesMunicipalityMB.list}">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload
+								value="#{catalogLocalitiesMunicipalityMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{empty catalogLocalitiesMunicipalityMB.list}">
+							<p:graphicImage value="csv.png" width="24" />
+							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="LocalidadesAyuntamiento" pageOnly="false" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{empty catalogLocalitiesMunicipalityMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogLocalitiesMunicipalityMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+				<p:commandButton id="hideButton3"
+					update=":form1:messagesEdit, :form1:objects"
+					actionListener="#{catalogLocalitiesMunicipalityMB.showSuccesMessage()}"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" 
+					style="visibility: hidden;" />
+					
+				<p:commandButton id="hideButton2"
+					actionListener="#{catalogLocalitiesMunicipalityMB.showCanceledMessage}"
+					update=":form1:messagesEdit, :form1:objects"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" 
+					style="visibility: hidden;" />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{catalogLocalitiesMunicipalityMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+
+				<p:dialog header="Consulta al Cat&aacute;logo de Municipios"
+					widgetVar="catalogLocalityDlg" resizable="false" width="550"
+					height="460" showEffect="clip" hideEffect="clip" modal="true">
+					<p:outputPanel id="panelCatalogLocalities" layout="block"
+						style="text-align:left">
+						<p:dataTable id="localities" var="locality"
+							value="#{catalogLocalitiesMunicipalityMB.localities}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogLocalitiesMunicipalityMB.localitySelected}"
+							rowKey="#{locality.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogLocalitiesMunicipalityMB.filteredLocalitiesMunicipality}"
+							widgetVar="localitiesDT">
+							<p:ajax event="rowDblselect"	
+							update=":form1:objects, :form1:focusTable"							
+								listener="#{catalogLocalitiesMunicipalityMB.onClvmunRowDblClckSelect}"
+								oncomplete="PF('catalogLocalityDlg').hide();"></p:ajax>
+
+							<p:column headerText="Clave municipio" width="30%" filterMaxLength="3"
+								filterMatchMode="contains" filterBy="#{locality.clvmun}">
+								<h:outputText value="#{locality.clvmun}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width:70%"
+								filterMatchMode="contains" filterBy="#{locality.nommun}">
+								<h:outputText value="#{locality.nommun}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:commandButton value="Aceptar"
+							update=":form1:objects, :form1:focusTable"
+							actionListener="#{catalogLocalitiesMunicipalityMB.changeLocality}"
+							oncomplete="PF('catalogLocalityDlg').hide();"
+							style="padding: 5px; position: absolute; right: 50%;" />
+
+						<p:commandButton value="Cancelar"
+							update=":form1:objects, :form1:focusTable"
+							actionListener="#{catalogLocalitiesMunicipalityMB.activateRowEdit}"
+							oncomplete="PF('catalogLocalityDlg').hide();"
+							style="padding: 5px; margin-left: 15px; position: absolute; right: 30%;" />
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

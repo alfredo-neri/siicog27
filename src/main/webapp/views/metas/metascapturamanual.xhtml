@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<p:growl id="growlMetas" showDetail="false" sticky="true"></p:growl>
+			<h:form id="formMetCaptura">
+				<p:remoteCommand name="onload"
+					action="#{metasCapturaManualMB.inicializarPantalla}" autoRun="true"
+					update="panelMetas" />
+
+				<p:panel id="panelMetas" header="Seguimiento de Metas Fisicas"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+
+					<p:panel id="panel" header="B&uacute;squeda"
+						styleClass="green col-md-6 col-centered row-centered shadow-panel">
+
+						<p:panelGrid style="text-align: center;" styleClass="noBorders">
+							<p:row>
+								<p:column>
+									<h:outputText value="Dependencia Ejecutora:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Programa:" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Buscar" style="padding: 5px;"
+										actionListener="#{metasCapturaManualMB.search}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:inputText id="codigoSearch" styleClass="form-control"
+										value="#{metasCapturaManualMB.claveSearch}" maxlength="10">
+										<p:ajax event="blur" update=":formMetCaptura:codigoSearch"
+											listener="#{metasCapturaManualMB.convertUpper}" />
+									</p:inputText>
+								</p:column>
+								<p:column>
+									<p:inputText id="programaSearch" styleClass="form-control"
+										value="#{metasCapturaManualMB.programaSearch}" maxlength="12">
+										<p:ajax event="blur" update=":formMetCaptura:programaSearch"
+											listener="#{metasCapturaManualMB.convertUpper}" />
+									</p:inputText>
+								</p:column>
+								<p:column>
+									<p:commandButton value="Limpiar" style="padding: 5px; "
+										update=":formMetCaptura:panelMetas, :formMetCaptura:metTable, :formMetCaptura:codigoSearch, :formMetCaptura:programaSearch"
+										actionListener="#{metasCapturaManualMB.cleanSearch()}" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</p:panel>
+					<br />
+
+					<p:dataGrid id="metTable" var="ind"
+						value="#{metasCapturaManualMB.masterList}"
+						styleClass="et_datatable" emptyMessage="Cargando información..."
+						paginator="true" rows="1" columns="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="hdrWdg" paginatorPosition="top"
+						rowIndexVar="rowIndexCaptura">
+
+						<p:ajax event="page"
+							listener="#{metasCapturaManualMB.cambiarPaginaCaptura}"
+							process="metTable" update="metTable,growlMetas" />
+						<p:column>
+							<center>
+								<p:panelGrid columns="2" columnClasses="col-md-8,col-md-2"
+									styleClass="noBorders">
+
+									<p:panelGrid id="gridContent" columns="1"
+										styleClass="col-centered row-centered">
+
+										<p:panelGrid columns="3" layout="tabular"
+											columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+											contentStyleClass="ui-fluid">
+
+											<h:outputText value="Dependencia Ejecutora:"
+												style="text-align:rigth;"></h:outputText>
+											<p:selectOneMenu value="#{ind.clvDep}"
+												disabled="#{metasCapturaManualMB.capturaDeshabilitado}">
+												<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+												<f:selectItems
+													value="#{metasCapturaManualMB.clvDependenciasList}" />
+												<p:ajax update="nompro,oneMenuProgr" event="change"
+													listener="#{metasCapturaManualMB.filtraPrograma(rowIndexCaptura)}" />
+											</p:selectOneMenu>
+											<p:inputText size="50" id="nompro" value="#{ind.nompro}"
+												disabled="true" />
+
+											<h:outputText value="FN/Fun/SubF/Prog/SubProg/Proy:"
+												style="text-align:rigth;"></h:outputText>
+											<p:selectOneMenu id="oneMenuProgr" value="#{ind.clvnep}"
+												disabled="#{metasCapturaManualMB.capturaDeshabilitado}">
+												<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+												<f:selectItems
+													value="#{metasCapturaManualMB.clvProgramaList}" />
+												<p:ajax update="desProgram,oneMenuFuen" event="change"
+													listener="#{metasCapturaManualMB.filtraFuente(rowIndexCaptura)}" />
+											</p:selectOneMenu>
+
+											<p:inputText size="50" id="desProgram"
+												value="#{ind.desProyecto}" disabled="true" />
+
+											<h:outputText value="Fuente de financiamiento:"
+												style="text-align:rigth;"></h:outputText>
+											<p:selectOneMenu id="oneMenuFuen" value="#{ind.clvfuen}"
+												disabled="#{metasCapturaManualMB.capturaDeshabilitado}">
+												<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+												<f:selectItems value="#{metasCapturaManualMB.clvFuenteList}" />
+												<p:ajax update="nompro,desfuen" event="change"
+													listener="#{metasCapturaManualMB.filtraFuenteDesc(rowIndexCaptura)}" />
+											</p:selectOneMenu>
+
+											<p:inputText id="desfuen" size="50" value="#{ind.desfuen}"
+												disabled="true" />
+
+										</p:panelGrid>
+
+										<p:panelGrid columns="2" layout="tabular"
+											columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+											contentStyleClass="ui-fluid">
+
+											<h:outputText style="text-align:rigth;"
+												value="Descripción del Proyecto:"></h:outputText>
+											<h:inputTextarea value="#{ind.objetivos}" cols="80" rows="2"
+												style="width:90%" id="observacioesCap"
+												disabled="#{metasCapturaManualMB.capturaVisibleModificar}"
+												onkeypress="if (event.keyCode == 13) return false;"></h:inputTextarea>
+
+										</p:panelGrid>
+
+									</p:panelGrid>
+
+									<p:panelGrid id="pnlBotones" columns="1">
+										<p:commandButton value="Salvar   "
+											style="padding: 5px; width:100px"
+											action="#{metasCapturaManualMB.salvarCaptura(rowIndexCaptura)}"
+											rendered="#{metasCapturaManualMB.capturaVisibleSalvar}"
+											update="metTable,growlMetas"></p:commandButton>
+										<p:commandButton value="Modificar"
+											style="padding: 5px; width:100px"
+											action="#{metasCapturaManualMB.modificarCaptura(rowIndexCaptura)}"
+											rendered="#{metasCapturaManualMB.capturaVisibleModificar}"
+											update="metTable,growlMetas"></p:commandButton>
+										<p:commandButton value="Limpiar  "
+											style="padding: 5px; width:100px"
+											action="#{metasCapturaManualMB.resetCaptura(rowIndexCaptura)}"
+											disabled="#{metasCapturaManualMB.capturaDesabilitadoReset}"
+											update="metTable,growlMetas"></p:commandButton>
+										<p:commandButton value="Adicionar"
+											style="padding: 5px; width:100px"
+											action="#{metasCapturaManualMB.adicionarCaptura(rowIndexCaptura)}"
+											disabled="#{metasCapturaManualMB.capturaDesabilitadoAdicionar}"
+											update="metTable,growlMetas"
+											oncomplete="PF('hdrWdg').getPaginator().setPage(PF('hdrWdg').paginator.cfg.pageCount-1);"></p:commandButton>
+										<p:commandButton value="Borrar   "
+											style="padding: 5px; width:100px"
+											onclick="PF('confirmFileDeleteCaptura').show();"
+											disabled="#{metasCapturaManualMB.capturaDesabilitadoBorrar}">
+											<p:confirmDialog widgetVar="confirmFileDeleteCaptura"
+												message="Desea Eliminar el Registro Actual?"
+												header="Confirmacion" severity="alert">
+												<p:commandButton value="SI" label="NO"
+													style="margin-top:10px;padding:5px;"
+													actionListener="#{metasCapturaManualMB.borrarCaptura(rowIndexCaptura)}"
+													styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+													update="formMetCaptura formMetCaptura:panelMetas growlMetas"
+													oncomplete="PF('hdrWdg').getPaginator().setPage(PF('hdrWdg').paginator.cfg.pageCount-1);jQuery('.ui-widget-overlay').hide();" />
+												<p:commandButton value="NO" label="NO"
+													style="margin-top:10px;padding:5px;"
+													onclick="PF('confirmFileDeleteCaptura').hide();"
+													styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+													update="metTable,growlMetas" />
+											</p:confirmDialog>
+										</p:commandButton>
+										<p:commandButton value="Cancelar "
+											style="padding: 5px; width:100px"
+											action="#{metasCapturaManualMB.cancelarCaptura(rowIndexCaptura)}"
+											disabled="#{metasCapturaManualMB.capturaDesabilitadoCancelar}"
+											update="metTable,growlMetas"></p:commandButton>
+									</p:panelGrid>
+								</p:panelGrid>
+								<p:dataTable id="detailTable" var="meta" value="#{ind.detalle}"
+									styleClass="et_datatable" emptyMessage="No hay registros"
+									paginator="true" rows="1"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+									widgetVar="metWdg" paginatorPosition="bottom"
+									rowIndexVar="rowIndexMeta">
+
+									<p:ajax event="page"
+										listener="#{metasCapturaManualMB.cambiarPaginaMeta}"
+										process="detailTable" update="detailTable,growlMetas" />
+									<p:column>
+										<center>
+											<p:tabView id="tabviewDetails" dynamic="true"
+												style="color: yellow;">
+												<p:tab id="tabCodigos" title="Códigos">
+													<p:panel id="panelPrincipal"
+														styleClass="green col-md-14 col-centered row-centered shadow-panel">
+														<p:panelGrid>
+															<h:panelGroup>
+																<h:outputText value="Código:"></h:outputText>
+																<pe:inputNumber value="#{meta.clvmet}" maxValue="999"
+																	size="4"
+																	disabled="#{not metasCapturaManualMB.metaAdicionar}"
+																	decimalPlaces="0" decimalSeparator="."
+																	thousandSeparator="," maxlength="3"></pe:inputNumber>
+											&nbsp;
+											<h:outputText value="Unidad de Medida:"></h:outputText>
+																<h:inputText value="#{meta.uniMed}" size="9"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	maxlength="50"></h:inputText>
+											&nbsp;
+										</h:panelGroup>
+														</p:panelGrid>
+														<br />
+														<p:panelGrid>
+															<h:panelGroup>
+																<h:outputText value="Cant. Programada (Año Anterior):"></h:outputText>
+																<pe:inputNumber value="#{meta.progante}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="5" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15">
+																</pe:inputNumber>
+											&nbsp;
+											<h:outputText value="Cant. Realizada (Año Anterior):"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetia}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="5" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15">
+																</pe:inputNumber>
+											&nbsp;
+											<h:outputText value="Cant. Programada:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMeti}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="5" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15">
+																</pe:inputNumber>
+															</h:panelGroup>
+														</p:panelGrid>
+														<br />
+														<p:panelGrid columns="2"
+															columnClasses="col-md-2, col-md-7" styleClass="noBorders">
+															<h:outputText
+																value="Descripcion Acciones Sustantivas Relevantes:"></h:outputText>
+															<h:inputTextarea value="#{meta.nomInd}" cols="100"
+																rows="4"
+																onkeypress="if (event.keyCode == 13) return false;"
+																disabled="#{metasCapturaManualMB.metaDeshabilitado}"></h:inputTextarea>
+														</p:panelGrid>
+													</p:panel>
+												</p:tab>
+												<p:tab id="tabCalendarizacion"
+													title="Calendarizacion Metas Fisicas">
+													<p:panel id="panelcalendarizacion"
+														header="Calendarizacion de Metas Fisicas"
+														styleClass="green col-md-14 col-centered row-centered shadow-panel">
+														<h:panelGrid columns="2"
+															columnClasses="col-md-2,col-md-4,col-md-4"
+															styleClass="noBorders">
+															<h:panelGroup>
+																<h:outputText value="Código:"></h:outputText>
+																<h:inputText value="#{meta.clvmet}" size="4"
+																	disabled="true"></h:inputText>
+															</h:panelGroup>
+															<h:panelGrid columns="2"
+																columnClasses="column-right,column-left">
+																<h:outputText value="Cantidad Programada:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMeti}" disabled="true"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Primer Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic1}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Segundo Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic2}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Tercer Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic3}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Cuarto Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic4}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+															</h:panelGrid>
+														</h:panelGrid>
+													</p:panel>
+												</p:tab>
+												<p:tab id="tab1" title="Avance Primer Trimestre"
+													titleStyleClass="yellow">
+													<p:panel id="paneltrimestre1" header="PRIMER TRIMESTRE"
+														styleClass="green col-md-14 col-centered row-centered shadow-panel">
+														<h:panelGrid columns="3"
+															columnClasses="col-md-2,col-md-4,col-md-4"
+															styleClass="noBorders">
+															<h:panelGroup>
+																<h:outputText value="Código:"></h:outputText>
+																<h:inputText value="#{meta.clvmet}" size="4"
+																	disabled="true"></h:inputText>
+															</h:panelGroup>
+															<h:panelGrid columns="2"
+																columnClasses="column-right,column-left">
+																<h:outputText value="Cantidad Programada:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMeti}" disabled="true"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Programada 1er. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic1}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado or not metasCapturaManualMB.metaAdicionar}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Ampliacion:"></h:outputText>
+																<pe:inputNumber value="#{meta.ampli1}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Reduccion:"></h:outputText>
+																<pe:inputNumber value="#{meta.redu1}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Avance 1er. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.cantAvan1}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+															</h:panelGrid>
+															<h:panelGroup>
+																<h:outputText value="Observaciones:"></h:outputText>
+																<h:inputTextarea value="#{meta.varfin1}" cols="35"
+																	rows="4"
+																	onkeypress="if (event.keyCode == 13) return false;"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"></h:inputTextarea>
+															</h:panelGroup>
+														</h:panelGrid>
+													</p:panel>
+												</p:tab>
+												<p:tab id="tab2" title="Avance Segundo Trimestre"
+													titleStyleClass="yellow">
+													<p:panel id="paneltrimestre2" header="SEGUNDO TRIMESTRE"
+														styleClass="green col-md-14 col-centered row-centered shadow-panel">
+														<h:panelGrid columns="3"
+															columnClasses="col-md-2,col-md-4,col-md-4"
+															styleClass="noBorders">
+															<h:panelGroup>
+																<h:outputText value="Código:"></h:outputText>
+																<h:inputText value="#{meta.clvmet}" size="4"
+																	disabled="true"></h:inputText>
+															</h:panelGroup>
+															<h:panelGrid columns="2"
+																columnClasses="column-right,column-left">
+																<h:outputText value="Cantidad Programada:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMeti}" disabled="true"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Programada 2do. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic2}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado or not metasCapturaManualMB.metaAdicionar}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Ampliacion:"></h:outputText>
+																<pe:inputNumber value="#{meta.ampli2}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Reduccion:"></h:outputText>
+																<pe:inputNumber value="#{meta.redu2}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Avance 2do. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.cantAvan2}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+															</h:panelGrid>
+															<h:panelGroup>
+																<h:outputText value="Observaciones:"></h:outputText>
+																<h:inputTextarea value="#{meta.varfin2}" cols="35"
+																	rows="4"
+																	onkeypress="if (event.keyCode == 13) return false;"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"></h:inputTextarea>
+															</h:panelGroup>
+														</h:panelGrid>
+													</p:panel>
+												</p:tab>
+												<p:tab id="tab3" title="Avance Tercer Trimestre"
+													titleStyleClass="yellow">
+													<p:panel id="paneltrimestre3" header="TERCER TRIMESTRE"
+														styleClass="green col-md-14 col-centered row-centered shadow-panel">
+														<h:panelGrid columns="3"
+															columnClasses="col-md-2,col-md-4,col-md-4"
+															styleClass="noBorders">
+															<h:panelGroup>
+																<h:outputText value="Código:"></h:outputText>
+																<h:inputText value="#{meta.clvmet}" size="4"
+																	disabled="true"></h:inputText>
+															</h:panelGroup>
+															<h:panelGrid columns="2"
+																columnClasses="column-right,column-left">
+																<h:outputText value="Cantidad Programada:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMeti}" disabled="true"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Programada 3er. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic3}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado or not metasCapturaManualMB.metaAdicionar}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Ampliacion:"></h:outputText>
+																<pe:inputNumber value="#{meta.ampli3}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Reduccion:"></h:outputText>
+																<pe:inputNumber value="#{meta.redu3}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Avance 3er. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.cantAvan3}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+															</h:panelGrid>
+															<h:panelGroup>
+																<h:outputText value="Observaciones:"></h:outputText>
+																<h:inputTextarea value="#{meta.varfin3}" cols="35"
+																	rows="4"
+																	onkeypress="if (event.keyCode == 13) return false;"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"></h:inputTextarea>
+															</h:panelGroup>
+														</h:panelGrid>
+													</p:panel>
+												</p:tab>
+												<p:tab id="tab4" title="Avance Cuarto Trimestre"
+													titleStyleClass="yellow">
+													<p:panel id="paneltrimestre4" header="CUARTO TRIMESTRE"
+														styleClass="green col-md-14 col-centered row-centered shadow-panel">
+														<h:panelGrid columns="3"
+															columnClasses="col-md-2,col-md-4,col-md-4"
+															styleClass="noBorders">
+															<h:panelGroup>
+																<h:outputText value="Código:"></h:outputText>
+																<h:inputText value="#{meta.clvmet}" size="4"
+																	disabled="true"></h:inputText>
+															</h:panelGroup>
+															<h:panelGrid columns="2"
+																columnClasses="column-right,column-left">
+																<h:outputText value="Cantidad Programada:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMeti}" disabled="true"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Programada 4to. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.canMetic4}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado or not metasCapturaManualMB.metaAdicionar}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Ampliacion:"></h:outputText>
+																<pe:inputNumber value="#{meta.ampli4}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Reduccion:"></h:outputText>
+																<pe:inputNumber value="#{meta.redu4}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+																<h:outputText value="Avance 4to. Trimestre:"></h:outputText>
+																<pe:inputNumber value="#{meta.cantAvan4}"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"
+																	size="12" emptyValue="0.00" decimalPlaces="2"
+																	decimalSeparator="." thousandSeparator=","
+																	maxlength="15"></pe:inputNumber>
+															</h:panelGrid>
+															<h:panelGroup>
+																<h:outputText value="Observaciones:"></h:outputText>
+																<h:inputTextarea value="#{meta.varfin4}" cols="35"
+																	rows="4"
+																	onkeypress="if (event.keyCode == 13) return false;"
+																	disabled="#{metasCapturaManualMB.metaDeshabilitado}"></h:inputTextarea>
+															</h:panelGroup>
+														</h:panelGrid>
+													</p:panel>
+												</p:tab>
+
+											</p:tabView>
+
+											<p:panelGrid id="pnlBotonesMeta">
+												<h:panelGroup>
+													<p:commandButton value="Salvar   "
+														style="padding: 5px; width:100px"
+														action="#{metasCapturaManualMB.salvarMeta(rowIndexCaptura,rowIndexMeta)}"
+														rendered="#{metasCapturaManualMB.metaVisibleSalvar}"
+														update="detailTable,growlMetas" />
+													<p:commandButton value="Modificar"
+														style="padding: 5px; width:100px"
+														action="#{metasCapturaManualMB.modificarMeta}"
+														rendered="#{metasCapturaManualMB.metaVisibleModificar}"
+														update="detailTable,growlMetas" />
+													<p:commandButton value="Limpiar  "
+														style="padding: 5px; width:100px"
+														action="#{metasCapturaManualMB.resetMeta(rowIndexCaptura,rowIndexMeta)}"
+														disabled="#{metasCapturaManualMB.metaDesabilitadoReset}"
+														update="detailTable,growlMetas" />
+													<p:commandButton value="Adicionar"
+														style="padding: 5px; width:100px"
+														action="#{metasCapturaManualMB.adicionarMeta(rowIndexCaptura)}"
+														disabled="#{metasCapturaManualMB.metaDesabilitadoAdicionar}"
+														update="detailTable,growlMetas"
+														oncomplete="PF('metWdg').getPaginator().setPage(PF('metWdg').paginator.cfg.pageCount-1);" />
+													<p:commandButton value="Borrar   "
+														style="padding: 5px; width:100px"
+														onclick="PF('confirmFileDeleteMeta').show();"
+														disabled="#{metasCapturaManualMB.metaDesabilitadoBorrar}">
+														<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+															message="Desea Eliminar el Registro Actual?"
+															header="Confirmacion" severity="alert">
+															<p:commandButton value="SI" label="SI"
+																style="margin-top:10px;padding:5px;"
+																actionListener="#{metasCapturaManualMB.borrarMeta(rowIndexCaptura,rowIndexMeta)}"
+																ajax="true"
+																onclick="PF('confirmFileDeleteMeta').hide();"
+																styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+																update="detailTable,growlMetas" />
+															<p:commandButton value="NO" label="NO"
+																style="margin-top:10px;padding:5px;"
+																onclick="PF('confirmFileDeleteMeta').hide();"
+																styleClass="ui-confirmdialog-no" icon="ui-icon-check"
+																update="detailTable,growlMetas" />
+														</p:confirmDialog>
+													</p:commandButton>
+													<p:commandButton value="Cancelar "
+														style="padding: 5px; width:100px"
+														action="#{metasCapturaManualMB.cancelarMeta(rowIndexCaptura,rowIndexMeta)}"
+														disabled="#{metasCapturaManualMB.metaDesabilitadoCancelar}"
+														update="detailTable,growlMetas" />
+												</h:panelGroup>
+											</p:panelGrid>
+
+										</center>
+									</p:column>
+								</p:dataTable>
+							</center>
+						</p:column>
+					</p:dataGrid>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

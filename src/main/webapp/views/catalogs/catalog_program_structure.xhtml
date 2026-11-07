@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogProgramStructureMB.onPageLoad}"
+					update=":form1:objects" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+
+				<p:panel id="panel" header="Estructura Program&aacute;tica"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+
+					<h:panelGrid id="display_1" columns="6" cellpadding="1">
+
+						<h:outputText value="FN" for="fnSearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<!-- 							validatorMessage="El campo FN solo permite valores alfanum&eacute;ricos" -->
+						<p:inputText id="fnSearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo0}"
+							maxlength="2">
+							<!-- 							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="fnSearchInput" /> -->
+							<pe:keyFilter for="fnSearchInput" mask="pint"></pe:keyFilter>
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Fun" for="funSearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<!-- 							validatorMessage="El campo Fun solo permite valores alfanum&eacute;ricos" -->
+						<p:inputText id="funSearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo1}"
+							maxlength="2">
+							<!-- 							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="funSearchInput" /> -->
+							<pe:keyFilter for="funSearchInput" mask="pint"></pe:keyFilter>
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="SF" for="sfSearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<!-- 							validatorMessage="El campo SF solo permite valores alfanum&eacute;ricos" -->
+						<p:inputText id="sfSearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo2}"
+							maxlength="2">
+							<!-- 							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="sfSearchInput" /> -->
+							<pe:keyFilter for="sfSearchInput" mask="pint"></pe:keyFilter>
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+						<h:outputText value="Prog" for="progSearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<!-- 							validatorMessage="El campo Prog solo permite valores alfanum&eacute;ricos" -->
+						<p:inputText id="progSearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo3}"
+							maxlength="2">
+							<!-- 							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="progSearchInput" /> -->
+							<pe:keyFilter for="progSearchInput" mask="pint"></pe:keyFilter>
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Proy" for="spSearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<!-- 							validatorMessage="El campo SP solo permite valores alfanum&eacute;ricos" -->
+						<p:inputText id="spSearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo4}"
+							maxlength="2">
+							<!-- 							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="spSearchInput" /> -->
+							<pe:keyFilter for="spSearchInput" mask="pint"></pe:keyFilter>
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+						<h:outputText value=""  />
+						<h:outputText value=""  />
+						<!--
+						<h:outputText value="Proya" for="proySearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+
+						<p:inputText id="proySearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo5}"
+							maxlength="2">
+							<pe:keyFilter for="spSearchInput" mask="pint"></pe:keyFilter>
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+						-->
+					</h:panelGrid>
+					<br />
+					<h:panelGrid id="display_2" columns="4" cellpadding="1">
+						<h:outputText value="Nombre" for="nombreSearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<!-- 							validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos" -->
+						<p:inputText id="nombreSearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo6}"
+							maxlength="250">
+							<!-- 							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="nombreSearchInput" /> -->
+							<pe:keyFilter regEx="/[a-zñA-ZÑ0-9 ,.áéíóúüÁÉÍÓÚÜÑ]/" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="EstProg" for="estProgSearchInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<p:inputText id="estProgSearchInput" name="estProgSearchInput" styleClass="form-control"
+							value="#{catalogProgramStructureMB.beanFind.campo7}"
+							maxlength="12"
+							validatorMessage="El campo EstProg solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$"
+								for="estProgSearchInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogProgramStructureMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<br />
+						<br />
+
+						<p:commandButton value="Buscar" style="padding: 5px;"
+							update=":form1:messagesEdit, :form1:objects"
+							actionListener="#{catalogProgramStructureMB.findValuesCatalog}"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()" />
+
+						<p:commandButton value="Limpiar"
+							style="padding: 5px; margin-left: 15px;"
+							update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+							actionListener="#{catalogProgramStructureMB.findAllValuesCatalog}"
+							onstart="PF('blockUIWidget').block();document.getElementById('form1:fnSearchInput').value='';document.getElementById('form1:funSearchInput').value='';
+							document.getElementById('form1:progSearchInput').value='';document.getElementById('form1:spSearchInput').value='';document.getElementById('form1:proySearchInput').value='';
+							document.getElementById('form1:nombreSearchInput').value='';document.getElementById('form1:estProgSearchInput').value='';document.getElementById('form1:sfSearchInput').value='';"
+							oncomplete="PF('blockUIWidget').unblock()" />
+
+						<!-- 						</p:outputPanel> -->
+					</h:panelGrid>
+				</p:panel>
+
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;"
+					styleClass="col-centered row-centered">
+
+					<p:commandButton value="Nuevo Registro"
+						onclick="PF('wingetPasswor').show(); resetPass();" />
+				</p:panel>
+				<!-- onclick="PF('dependenciesWdg').clearFilters();" -->
+				<!-- END ALM -->
+
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogProgramStructureMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}"
+					filteredValue="#{catalogProgramStructureMB.filteredList}"
+					widgetVar="programStructureWdg">
+
+					<f:facet name="header">Estructura Program&aacute;tica</f:facet>
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogProgramStructureMB.onRowEdit}"
+						update=":form1:messagesEdit, :form1:objects"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogProgramStructureMB.onRowCancel}"
+						update=":form1:messagesEdit"
+						oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:hideButton2').click();" />
+
+					<p:column headerText="FN" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo0}" />
+					</p:column>
+					<!-- validatorMessage="FN solo permite valores alfanum&eacute;ricos" -->
+					<p:column headerText="FN" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo0}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="campo0" value="#{object.campo0}"
+									disabled="#{object.id > 0}" style="width:100%" maxlength="2"
+									required="true" requiredMessage="El campo FN es requerido">
+									<!-- 									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" -->
+									<!-- 										for="campo0" /> -->
+									<pe:keyFilter for="campo0" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Fun" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo1}" />
+					</p:column>
+
+					<p:column headerText="Fun" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo1}" />
+							</f:facet>
+							<f:facet name="input">
+								<!-- 							validatorMessage="Fun solo permite valores alfanum&eacute;ricos" -->
+								<p:inputText id="campo1" value="#{object.campo1}"
+									disabled="#{object.id > 0}" style="width:100%" maxlength="2">
+									<!-- 									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" for="campo1" /> -->
+									<pe:keyFilter for="campo1" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="SF" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo2}" />
+					</p:column>
+
+					<p:column headerText="SF" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo2}" />
+							</f:facet>
+							<f:facet name="input">
+								<!-- 							validatorMessage="SF solo permite valores alfanum&eacute;ricos" -->
+								<p:inputText id="campo2" value="#{object.campo2}"
+									disabled="#{object.id > 0}" style="width:100%" maxlength="2">
+									<!-- 									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" for="campo2" /> -->
+									<pe:keyFilter for="campo2" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Prog" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo3}" />
+					</p:column>
+
+					<p:column headerText="Prog" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo3}" />
+							</f:facet>
+							<f:facet name="input">
+								<!-- 							validatorMessage="Prog solo permite valores alfanum&eacute;ricos" -->
+								<p:inputText id="campo3" value="#{object.campo3}"
+									disabled="#{object.id > 0}" style="width:100%" maxlength="2">
+									<!-- 									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" for="campo3" /> -->
+									<pe:keyFilter for="campo3" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Proy" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo4}" />
+					</p:column>
+
+					<p:column headerText="Proy" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo4}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="campo4" value="#{object.campo4}"
+									disabled="#{object.id > 0}" style="width:100%" maxlength="2">
+									<pe:keyFilter for="campo4" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<!--
+					<p:column headerText="Proy" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo5}" />
+					</p:column>
+
+					<p:column headerText="Proy" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo5}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="campo5" value="#{object.campo5}"
+									disabled="#{object.id > 0}" style="width:100%" maxlength="2">
+									<pe:keyFilter for="campo5" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					-->
+					<p:column headerText="Nombre" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo6}" />
+					</p:column>
+
+					<p:column headerText="Nombre" exportable="false"
+						style="#{catalogProgramStructureMB.columnWidth}">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo6}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{object.campo6}" style="width:100%"
+									maxlength="250" required="true"
+									disabled="#{object.id > 0 and object.idsector == 1}"
+									requiredMessage="El campo Nombre es requerido"
+									validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ áÁéÉíÍóÓúÚüÜ_-]*)\s*$" for="campo6" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="EstProg" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.campo7}" />
+					</p:column>
+
+					<p:column headerText="EstProg" exportable="false" style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo7}" />
+							</f:facet>
+							<f:facet name="input">
+								<h:outputText value="#{object.campo7}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Descripci&oacute;n" visible="false" width="0"
+						exportable="true"
+						rendered="#{catalogProgramStructureMB.gemUser.idSector == 1}">
+						<h:outputText value="#{object.campo8}" />
+					</p:column>
+
+					<p:column headerText="Descripci&oacute;n" exportable="false"
+						style="width:40%"
+						rendered="#{catalogProgramStructureMB.gemUser.idSector == 1}">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.campo8}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{object.campo8}" style="width:100%"
+									maxlength="200" required="true"
+									requiredMessage="El campo Objetivo es requerido"
+									validatorMessage="Objetivo solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ áÁéÉíÍóÓúÚüÜ_-]*)\s*$" for="campo8" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column style="width:35px" exportable="false">
+						<p:rowEditor
+							rendered="#{catalogProgramStructureMB.gemUser.idSector == 1 || object.editable}" />
+					</p:column>
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramStructureMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogProgramStructureMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramStructureMB.list}">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogProgramStructureMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramStructureMB.list}"
+							actionListener="#{catalogProgramStructureMB.getFileCsvPl}">
+							<p:graphicImage value="csv.png" width="24" />
+							<!-- <p:dataExporter encoding="UTF-8" type="csv" target="objects"
+								fileName="EstructuraProgramatica" pageOnly="false" /> -->
+							<p:fileDownload value="#{catalogProgramStructureMB.csvByPl}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogProgramStructureMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogProgramStructureMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+
+				<p:commandButton id="hideButton"
+					update=":form1:messagesEdit, :form1:objects"
+					actionListener="#{catalogProgramStructureMB.showSuccesMessage()}"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+					style="visibility: hidden;" />
+
+				<p:commandButton id="hideButton2" update=":form1:objects"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+					style="visibility: hidden;" />
+				<br />
+				<br />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{catalogProgramStructureMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+				<p:dialog id="panelValida" widgetVar="wingetPasswor"
+					header="Valida Password" modal="true" styleClass="green">
+					<p:panelGrid id="pgridpass" columns="2"
+						styleClass="green col-md-4 col-centered row-centered ">
+						<h:outputText value="Password Administrador" />
+						<h:inputSecret id="validatePass"
+							value="#{catalogProgramStructureMB.validatePass}"
+							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;} if(event.keyCode == 13){ validatePass(); return false;}" />
+
+						<h:outputText value="" />
+						<p:commandButton value="Validar"
+							update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+							actionListener="#{catalogProgramStructureMB.insertRow}"
+							oncomplete="PF('wingetPasswor').hide();document.getElementById('form1:validatePass').value=''; resetPass();" />
+					</p:panelGrid>
+
+				</p:dialog>
+
+			</h:form>
+			<script type="text/javascript">
+			    function start() {
+			        PF('statusDialog').show();
+			     }
+			 
+			     function stop() {
+			         PF('statusDialog').hide();
+			     }
+           </script>
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

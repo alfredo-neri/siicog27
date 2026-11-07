@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<p:panel id="panel"
+					header="Exportar Información para la Integración del Presupuesto de Ingresos "
+					styleClass="green col-md-6 col-centered row-centered shadow-panel">
+					<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+					<p:panelGrid id="pgrid" styleClass="col-centered row-centered">
+						<p:row>
+							<!-- <p:column>
+								<h:outputText value="Seleccione una Opción" />
+							</p:column> -->
+							<p:column colspan="2">
+								<h:outputText
+									value="Seleccione el Mes y presione el botón correcto" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<!-- <p:column rowspan="5">
+								<p:selectOneRadio id="customRadio"
+									value="#{presupuestoIngresoIntegradoMB.cveRef}" layout="custom">
+									<f:selectItem itemLabel="Ayuntamiento" itemValue="0" />
+									<f:selectItem itemLabel="Organismo de Agua" itemValue="2" />
+									<f:selectItem itemLabel="DIF Municipal" itemValue="3" />
+									<f:selectItem itemLabel="Organismo del Deporte" itemValue="4" />
+								</p:selectOneRadio>
+
+								<h:panelGrid columns="2" cellpadding="5">
+									<p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+									<h:outputLabel for="opt1" value="Ayuntamiento" />
+
+
+									<p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+									<h:outputLabel for="opt2" value="Organismo de Agua" />
+
+
+									<p:radioButton id="opt3" for="customRadio" itemIndex="2" />
+									<h:outputLabel for="opt3" value="Dif Municipal" />
+
+									<p:radioButton id="opt4" for="customRadio" itemIndex="3" />
+									<h:outputLabel for="opt4" value="Organismo del Deporte" />
+
+								</h:panelGrid>
+							</p:column> -->
+							<p:inputText type="hidden" value="#{presupuestoIngresoIntegradoMB.cveRef}" >
+							</p:inputText>
+							<p:column>
+								<p:row>
+									<p:column>
+										<h:outputText value="Mes a Exportar" />
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="selectmes"
+											value="#{presupuestoIngresoIntegradoMB.mes}"
+											icon="ui-icon-person" required="true">
+											<f:selectItems
+												value="#{presupuestoIngresoIntegradoMB.listMes}" var="m"
+												itemValue="#{m.mes}" itemLabel="#{m.mes}" />
+										</p:selectOneMenu>
+									</p:column>
+								</p:row>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<center>
+						<p:panelGrid>
+
+
+							<p:commandButton value="Correcto" ajax="false" id="download"
+								icon="ui-icon-arrowthick-1-s" update=":form1:panel"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								actionListener="#{presupuestoIngresoIntegradoMB.genetareFile}" />
+
+
+						</p:panelGrid>
+					</center>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

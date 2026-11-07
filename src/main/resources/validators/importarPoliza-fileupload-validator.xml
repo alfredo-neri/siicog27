@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<description>
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Validaciones al archivo de importar poliza
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	</description>
+
+
+	<bean id="importarPolizaCsvValidator"
+		class="com.gem.sistema.load.fileupload.validators.impl.CsvFileValidatorImpl">
+		<property name="noTokensByLine" value="4"></property>
+		<property name="lineToStart" value="1"></property>
+		<property name="skipFail" value="true"></property>
+		<property name="separator" value=","></property>
+		<property name="errorSeparator" value=","></property>
+		<property name="validators">
+			<util:list
+				value-type="com.gem.sistema.load.fileupload.validators.FieldValidator">
+
+
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: CONSECUTIVO Invalida" />
+					<property name="index" value="0" />
+					<property name="fieldName" value="CONSECUTIVO" />
+					<property name="pattern" value="^[0-9]{1,20}$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: EMERGENCIA invalida" />
+					<property name="index" value="1" />
+					<property name="fieldName" value="EMERGENCIA" />
+					<property name="pattern"
+						value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ0-9;._ \s]+$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: Observaciones no valido" />
+					<property name="index" value="2" />
+					<property name="fieldName" value="OBSERVACION" />
+					<property name="pattern"
+						value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ0-9;._ \s]+$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: TIEMPO no valido" />
+					<property name="index" value="3" />
+					<property name="fieldName" value="TIEMPO" />
+					<property name="pattern" value="^[0-9]+"></property>
+				</bean>
+			</util:list>
+		</property>
+	</bean>
+</beans>

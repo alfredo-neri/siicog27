@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Reportes de Indicadores Semestral de Profesionalización de la Administración Pública Municipal"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte136MB.listPm3411}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm0811Wdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+						<p:column>
+							<p:panelGrid id="idGrid1">
+								<p:row>
+									<p:column style="width : 28%; text-align: right;">
+										<h:outputText value="Semestre  " />
+									</p:column>
+									<p:column style="width: 30%; text-align: left;">
+										<p:outputLabel id="lblTrimestre" value="#{objects.semestral}"
+											rendered="#{reporte136MB.bLblsemestre}">
+											<f:convertNumber pattern="00" />
+										</p:outputLabel>
+										<p:selectOneMenu value="#{reporte136MB.semestre}"
+											id="comboTri" rendered="#{reporte136MB.bComboTri}">
+											<f:selectItems value="#{reporte136MB.listsemestre}" var="tri"
+												itemValue="#{tri}" itemLabel="#{tris}" />
+										</p:selectOneMenu>
+									</p:column>
+
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column />
+									<p:column>
+										<h:outputText value="Cantidad" />
+									</p:column>
+									<p:column colspan="2">
+										<h:outputText value="Observaciones" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText
+											value="Servidores públicos certificados en temas de administración municipal : " />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.spcam}" id="lblAgua"
+											rendered="#{reporte136MB.bLbl}">
+											<f:convertNumber currencySymbol="" maxIntegerDigits="24"
+												maxFractionDigits="" locale="es_MX" />
+										</p:outputLabel>
+
+										<pe:inputNumber value="#{objects.spcam}" id="txtAgua"
+											size="15" decimalPlaces="0" decimalSeparator=""
+											thousandSeparator="," rendered="#{reporte136MB.bTxt}">
+
+										</pe:inputNumber>
+									</p:column>
+									<p:column style="text-align: left;" colspan="2">
+										<p:outputLabel id="lblObsAgua" value="#{objects.obsspcam}"
+											rendered="#{reporte136MB.bLbl}" />
+										<p:inputTextarea rows="1" cols="40" id="txtObsAgua"
+											value="#{objects.obsspcam}" rendered="#{reporte136MB.bTxt}" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel
+											value="Total de Servidores públicos  programados a certificar por la entidad municipal :" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.tspaem}" id="lblMatrato"
+											rendered="#{reporte136MB.bLbl}">
+											<f:convertNumber currencySymbol="" maxIntegerDigits="24"
+												maxFractionDigits="" locale="es_MX" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.tspaem}" id="txtMaltrato"
+											decimalPlaces="0" decimalSeparator="" thousandSeparator=","
+											size="15" rendered="#{reporte136MB.bTxt}" />
+									</p:column>
+									<p:column style="text-align: left;" colspan="2">
+										<p:outputLabel id="lblObstloc" value="#{objects.obstspaem}"
+											rendered="#{reporte136MB.bLbl}" />
+										<p:inputTextarea rows="1" cols="40" id="txtObstloc"
+											value="#{objects.obstspaem}" rendered="#{reporte136MB.bTxt}" />
+									</p:column>
+								</p:row>
+
+
+
+
+
+							</p:panelGrid>
+							<p:panelGrid id="buttons">
+								<p:commandButton value="Salvar"
+									actionListener="#{reporte136MB.save(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									rendered="#{reporte136MB.bVSave}" id="save" icon="ui-icon-disk" />
+								<p:commandButton value="Modificar" id="modificar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte136MB.modify(rowIndex)}"
+									icon="ui-icon-pencil" rendered="#{reporte136MB.bVModificar}"
+									disabled="#{reporte136MB.bBtnMoficar}" />
+								<p:commandButton value="Limpiar" id="reset"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte136MB.clean(rowIndex)}"
+									disabled="#{reporte136MB.bLbl}" icon="ui-icon-tag" />
+								<p:commandButton value="Adicionar" id="add"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte136MB.add(rowIndex)}"
+									icon="ui-icon-circle-plus" disabled="#{reporte136MB.bAdd}" />
+								<p:commandButton value="Borrar" id="borrar"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									disabled="#{reporte136MB.bBorrar}"
+									actionListener="#{reporte136MB.delete(rowIndex)}">
+									<p:confirm header="Confirmación"
+										message="¿Desea borrar el registro actual?"
+										icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton value="Cancelar" id="cancelar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte136MB.cancel(rowIndex)}"
+									icon="ui-icon-circle-close" disabled="#{reporte136MB.bLbl}" />
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="idGrid5">
+						<h:outputText value="Semestre a Consultar: " />
+						<p:selectOneMenu value="#{reporte136MB.conTrim}" id="ctri">
+							<f:selectItems var="tri" value="#{reporte136MB.comboTri}"
+								itemValue="#{tri.semestral}" itemLabel="#{tri.semestral}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Correcto" id="correcto"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							icon="ui-icon-circle-arrow-s"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							actionListener="#{reporte136MB.createFilePdfInline}" />
+
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte136MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte136MB.uuid}&amp;filename=#{reporte136MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

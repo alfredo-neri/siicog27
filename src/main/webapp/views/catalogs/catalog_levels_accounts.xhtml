@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogLevelsAccountsMB.onPageLoad}" autoRun="true"
+					update=":form1:display_1, :form1:objects" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+
+				<div class="row">
+					<p:panel id="panel" header="Niveles de Cuentas de Mayor"
+						styleClass="green col-md-6 row-centered shadow-panel"
+						style="margin-left:5%;">
+						<br />
+						<h:panelGrid id="display_1" columns="2" cellpadding="4">
+
+							<h:outputText value="Cuenta" for="accountInput"
+								styleClass="control-label"
+								style="padding-left: 30px; padding-right: 30px;" />
+							<p:inputText id="accountInput" styleClass="form-control"
+								value="#{catalogLevelsAccountsMB.beanFind.cuenta}" maxlength="4"
+								validatorMessage="Cuenta solo permite valores alfanum&eacute;ricos">
+								<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ, _-]*)\s*$"
+									for="accountInput" />
+								<p:ajax event="keyup"
+									update=":form1:messagesEdit, :form1:objects"
+									listener="#{catalogLevelsAccountsMB.findValuesCatalog}" />
+							</p:inputText>
+
+							<h:outputText value="Nombre" for="nameInput"
+								styleClass="control-label"
+								style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+							<p:inputText id="nameInput" styleClass="form-control"
+								value="#{catalogLevelsAccountsMB.beanFind.nommay}"
+								style="margin-top: 10px;" maxlength="150"
+								validatorMessage="nommay solo permite valores alfanum&eacute;ricos">
+								<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ,_-]*)\s*$"
+									for="nameInput" />
+								<p:ajax event="keyup"
+									update=":form1:messagesEdit, :form1:objects"
+									listener="#{catalogLevelsAccountsMB.findValuesCatalog}" />
+							</p:inputText>
+
+							<p:outputPanel layout="block" style="text-align:center">
+								<br />
+
+
+								<p:commandButton value="Buscar" style="padding: 5px;"
+									update=":form1:messagesEdit, :form1:objects"
+									actionListener="#{catalogLevelsAccountsMB.findValuesCatalog}"
+									onstart="PF('blockUIWidget').block()"
+									oncomplete="PF('blockUIWidget').unblock()" />
+
+								<p:commandButton value="Limpiar"
+									style="padding: 5px; margin-left: 15px;"
+									update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+									actionListener="#{catalogLevelsAccountsMB.findAllValuesCatalog}"
+									onstart="PF('blockUIWidget').block()" immediate="true"
+									oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:accountInput').value='';document.getElementById('form1:nameInput').value='';" />
+							</p:outputPanel>
+						</h:panelGrid>
+					</p:panel>
+
+
+					<p:panel id="panelLabels" styleClass="green col-md-4  shadow-panel"
+						style="margin-right:5%; float:right;">
+						<h:outputText value="Naturaleza:"
+							style="padding-left: 30px;  color:red;" />
+						<br />
+						<h:outputText value="A=Acredora" style="padding-left: 30px; " />
+						<br />
+						<h:outputText value="D=Deudora" style="padding-left: 30px; " />
+					</p:panel>
+
+
+				</div>
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogLevelsAccountsMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.index}">
+
+					<f:facet name="header">Niveles de Cuentas de Mayor</f:facet>
+
+					<p:column headerText="CTA" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.cuenta}" />
+					</p:column>
+
+					<p:column headerText="CTA" exportable="false" style="width:3%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.cuenta}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="cuenta" value="#{object.cuenta}"
+									style="width:100%" maxlength="8"
+									requiredMessage="El campo CTA es requerido" required="true"
+									validatorMessage="CTA solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+										for="cuenta" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nommay}" />
+					</p:column>
+
+					<p:column headerText="Nombre" exportable="false" style="width:80%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nommay}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nommay" value="#{object.nommay}"
+									style="width:100%" maxlength="8"
+									validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ,_-]*)\s*$"
+										for="nommay" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="No. Niveles" visible="false" width="5%"
+						exportable="true">
+						<h:outputText value="#{object.nivcta}" />
+					</p:column>
+
+					<p:column headerText="No. Niveles" exportable="false"
+						style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nivcta}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nivcta" value="#{object.nivcta}"
+									style="width:100%" maxlength="10"
+									converterMessage="El campo No. Niveles debe ser num&eacute;rico, mayor a cero y menor o igual a 5"
+									validatorMessage="El campo No. Niveles debe ser num&eacute;rico, mayor a cero y menor o igual a 5">
+
+									<f:validateDoubleRange minimum="1" maximum="5" for="nivcta" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Naturaleza" visible="false" width="5%"
+						exportable="true">
+						<h:outputText value="#{object.natcta}" />
+					</p:column>
+
+					<p:column headerText="Naturaleza" exportable="false"
+						style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.natcta}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="natcta" value="#{object.natcta}"
+									style="width:100%" maxlength="2"
+									validatorMessage="Naturaleza solo permite D o A">
+									<f:validateRegex pattern="^\s*([D]|[A]*)\s*$" for="natcta" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogLevelsAccountsMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogLevelsAccountsMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogLevelsAccountsMB.list}">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogLevelsAccountsMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogLevelsAccountsMB.list}">
+							<p:graphicImage value="csv.png" width="24" />
+							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="NivelesCuentasMayor" pageOnly="false" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogLevelsAccountsMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogLevelsAccountsMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<br />
+				<br />
+
+
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{catalogLevelsAccountsMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

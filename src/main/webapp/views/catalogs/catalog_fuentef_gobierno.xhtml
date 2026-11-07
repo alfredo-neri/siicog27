@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<f:metadata>
+	<f:viewParam name="editable" value="#{fuenteFGobiernoMB.editable}" />
+</f:metadata>
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form">
+				<p:panel id="panel"
+					header="Clasificador por fuentes de financiamiento"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel green container ">
+					<p:messages id="msn" showDetail="true" closable="true"
+						showSummary="false" />
+					<p:dataTable var="object" value="#{fuenteFGobiernoMB.fuentes}"
+						id="cuentas" styleClass="et_datatable col-md-12 no-border "
+						emptyMessage="No existen registros" paginator="true" rows="10"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink}   {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="{currentPage} of {totalPages} ({totalRecords})"
+						widgetVar="cuentas" paginatorPosition="bottom">
+						<p:column headerText="Cuenta" exportable="false" width="4%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.cuenta}" />
+						</p:column>
+						<p:column headerText="scta" exportable="false" width="4%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.scta}" />
+						</p:column>
+						<p:column headerText="Sscta" exportable="false" width="4%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.sscta}" />
+						</p:column>
+						<p:column headerText="Ssscta" exportable="false" width="4%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.ssscta}" />
+						</p:column>
+						<p:column headerText="Descripción" exportable="false" width="84%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.nombre}" />
+						</p:column>
+						<p:column headerText="En uso" exportable="false" width="5%"
+							rendered="#{fuenteFGobiernoMB.editable}"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.used?'si':'no'}" />
+						</p:column>
+						<p:column headerText="Activar" exportable="false" width="5%"
+							rendered="#{fuenteFGobiernoMB.editable and (object.ssscta ne '')}"
+							styleClass="row-centered">
+							<p:commandLink update=":form:msn :form:cuentas"
+								image="ui-icon ui-icon-close" action="#{fuenteFGobiernoMB.use}"
+								title="Delete">
+								<f:setPropertyActionListener value="#{object}"
+									target="#{fuenteFGobiernoMB.selected}" />
+								<h:outputText styleClass="ui-icon  ui-icon-check" />
+							</p:commandLink>
+						</p:column>
+						<f:facet name="footer">
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								disabled="#{empty fuenteFGobiernoMB.fuentes}">
+								<p:graphicImage value="pdf.png" width="24" />
+								<p:fileDownload value="#{fuenteFGobiernoMB.filePdf}" />
+							</h:commandLink>
+						</f:facet>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="createRow"
+					actionListener="#{catalogMaintenanceFlowMB.createRow}"
+					update=":form1:objects, :form1:messagesEdit" />
+				<p:remoteCommand name="cancelRow"
+					actionListener="#{catalogMaintenanceFlowMB.onRowCancel}"
+					update="form1:objects, :form1:messagesEdit" />
+				<p:remoteCommand name="onload"
+					action="#{catalogMaintenanceFlowMB.onPageLoad}"
+					update=":form1:display_1, :form1:objects" />
+				<p:remoteCommand name="validatePass"
+					action="#{catalogMaintenanceFlowMB.insertRow}"
+					update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+					oncomplete="PF('wingetPasswor').hide();"></p:remoteCommand>
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel" header="Cat&aacute;logo de Flujo"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<br />
+					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+
+						<!-- 						<p:outputLabel value="Clave del Flujo" for="groupInput" style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+							
+       					<p:autoComplete id="groupInput"  value="#{catalogMaintenanceFlowMB.catFluAut}"  
+       					 	completeMethod="#{catalogMaintenanceFlowMB.completeCatfluClv}" var="catFlow" itemLabel="#{catFlow.gruflu}"  
+       					 	itemValue="#{catFlow}" converter="catFlowConverter" forceSelection="true" 
+       					 	style="margin-top: 10px;" maxlength="5"
+							converterMessage="Grupo solo permite valores num&eacute;ricos">
+							<f:convertNumber type="number" for="groupInput" />
+							
+       					 </p:autoComplete> -->
+
+						<h:outputText value="Clave del Flujo" for="groupInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="groupInput" styleClass="form-control"
+							value="#{catalogMaintenanceFlowMB.beanFind.clvflu}"
+							style="margin-top: 10px;" maxlength="5"
+							converterMessage="El campo Clave del Flujo solo permite valores num&eacute;ricos">
+							<f:convertNumber type="number" for="groupInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogMaintenanceFlowMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Nombre" for="nameInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="nameInput" styleClass="form-control"
+							value="#{catalogMaintenanceFlowMB.beanFind.nomflu}"
+							style="margin-top: 10px;" maxlength="160"
+							validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex
+								pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+								for="nameInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogMaintenanceFlowMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<p:outputPanel layout="block"
+							style="text-align:center; margin-left:2px">
+							<br />
+
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								update=":form1:messagesEdit, :form1:objects"
+								actionListener="#{catalogMaintenanceFlowMB.findValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+							<p:commandButton value="Limpiar"
+								style="padding: 5px; margin-left: 15px;"
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+								actionListener="#{catalogMaintenanceFlowMB.findAllValuesCatalog}"
+								immediate="true" onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:groupInput').value=''; document.getElementById('form1:nameInput').value='';" />
+
+						</p:outputPanel>
+
+					</h:panelGrid>
+				</p:panel>
+
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;"
+					styleClass="col-centered row-centered">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:objects, :form1:messagesEdit, :form1:focusTable"
+						onclick="PF('wingetPasswor').show(); resetPass();"
+						onmousedown="jQuery('.ui-paginator-first').click();" />
+				</p:panel>
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" var="object"
+					value="#{catalogMaintenanceFlowMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.index}"
+					selection="#{catalogMaintenanceFlowMB.beanSelected}"
+					widgetVar="objectsWdt">
+
+					<f:facet name="header">Cat&aacute;logo de Flujo</f:facet>
+
+					<p:ajax event="rowEditInit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+					<p:ajax event="rowEdit"
+						listener="#{catalogMaintenanceFlowMB.onRowEdit}"
+						update=":form1:messagesEdit, :form1:objects"
+						oncomplete="executeClickHideButton();"
+						onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogMaintenanceFlowMB.onRowCancel}"
+						update=":form1:messagesEdit, :form1:objects"
+						oncomplete="document.getElementById('form1:hideButton4').click();"
+						onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+
+
+					<p:column headerText="Clave del Flujo de Efectivo" visible="false"
+						width="0" exportable="true">
+						<h:outputText value="#{object.clvflu}" />
+					</p:column>
+
+					<p:column headerText="Clave del Flujo de Efectivo"
+						exportable="false" style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvflu}">
+									<f:convertNumber pattern="00.00" />
+								</h:outputText>
+
+							</f:facet>
+							<f:facet name="input">
+								<p:inputMask id="clvflu" value="#{object.clvflu}"
+									style="width:100%" maxlength="5" required="true"
+									requiredMessage="El campo Clave del Flujo de Efectivo es requerido"
+									converterMessage="El campo Clave del Flujo de Efectivo debe ser num&eacute;rico y mayor a cero"
+									validatorMessage="El campo Clave del Flujo de Efectivo debe ser num&eacute;rico y mayor a cero"
+									mask="99.99"
+									onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false; } ">
+									<f:convertNumber for="clvflu" pattern="00.00" />
+									<p:ajax event="blur" update="clvflu"></p:ajax>
+
+								</p:inputMask>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre del Flujo de Efectivo "
+						visible="false" width="0" exportable="true">
+						<h:outputText value="#{object.nomflu}" />
+					</p:column>
+
+					<p:column headerText="Nombre del Flujo de Efectivo "
+						exportable="false" style="width:70%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nomflu}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nomflu" value="#{object.nomflu}"
+									style="width:100%" maxlength="160" required="true"
+									requiredMessage="El campo Nombre del Flujo de Efectivo es requerido"
+									validatorMessage="El campo Nombre del Flujo de Efectivo solo permite valores alfanum&eacute;ricos"
+									onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').first().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('div span.ui-icon-check').first().click(); return false; }">
+
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+										for="nomflu" />
+									<p:ajax event="blur" update="nomflu"></p:ajax>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Grupo" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.gruflu}" />
+					</p:column>
+
+					<p:column headerText="Grupo" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.gruflu}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="gruflu" value="#{object.gruflu}"
+									style="width:100%" maxlength="4" disabled="true"
+									validatorMessage="El campo Grupo solo permite valores alfanum&eacute;ricos"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z_-]*)\s*$"
+										for="gruflu" />
+									<p:ajax event="blur" update="gruflu"></p:ajax>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Subgrupo" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.sguflu}" />
+					</p:column>
+
+					<p:column headerText="Subgrupo" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.sguflu}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="sguflu" value="#{object.sguflu}"
+									style="width:100%" maxlength="4" disabled="true"
+									validatorMessage="El campo Subgrupo solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z_-]*)\s*$"
+										for="sguflu" />
+									<p:ajax event="blur" update="sguflu"></p:ajax>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+
+					<p:column style="width:5%; display: none" exportable="false">
+						<p:rowEditor style="" />
+					</p:column>
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMaintenanceFlowMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogMaintenanceFlowMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMaintenanceFlowMB.list}" >
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogMaintenanceFlowMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMaintenanceFlowMB.list}" actionListener="#{catalogMaintenanceFlowMB.getFileCsvPl}">
+							<p:graphicImage value="csv.png" width="24" />
+							<!-- <p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="MantenimientoCatalogoFlujo" pageOnly="false" /> -->
+								<p:fileDownload value="#{catalogMaintenanceFlowMB.csvByPl}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMaintenanceFlowMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogMaintenanceFlowMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<p:commandButton id="hideButton"
+					update=":form1:messagesEdit, :form1:objects"
+					actionListener="#{catalogMaintenanceFlowMB.updateViewRowsAutoGenerated}"
+					style="visibility: hidden;" />
+
+				<p:commandButton id="hideButton2"
+					update=":form1:messagesEdit, :form1:objects"
+					actionListener="#{catalogMaintenanceFlowMB.showSuccesMessage()}"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+					style="visibility: hidden;" />
+
+
+
+				<p:commandButton id="hideButton4"
+					update=":form1:messagesEdit, :form1:objects"
+					actionListener="#{catalogMaintenanceFlowMB.showCancelEdition()}"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+					style="visibility: hidden;" />
+
+				<br />
+				<br />
+
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{catalogMaintenanceFlowMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5%;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+				<p:dialog id="panelValida" widgetVar="wingetPasswor"
+					closeOnEscape="true" header="Valida Password" modal="true"
+					styleClass="green">
+					<p:panelGrid id="pgridpass" columns="2"
+						styleClass="green col-md-4 col-centered row-centered ">
+						<h:outputText value="Password Administrador" />
+						<h:inputSecret id="validatePass" 
+							value="#{catalogMaintenanceFlowMB.validatePass}"
+							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;} if(event.keyCode == 13){ validatePass(); return false;}" />
+						<h:outputText value="" />
+						<p:commandButton value="Validar"
+							update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+							actionListener="#{catalogMaintenanceFlowMB.insertRow}"
+							oncomplete="PF('wingetPasswor').hide(); resetPass();" />
+					</p:panelGrid>
+
+				</p:dialog>
+
+			</h:form>
+			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.ui-icon-circle-triangle-e {
+	background-position: -32px 0;
+}
+
+.ui-icon-circle-triangle-s {
+	background-position: -65px 0;
+}
+
+.rojo {
+	background: red;
+}
+</style>
+			<h:form id="form1">
+				<p:panel id="panelButton"
+					header="Registro de reportes para sector central"
+					style="width:100%; background-color: #E8ECED;"
+					styleClass="green col-centered row-centered shadow-panel">
+				</p:panel>
+				<p:messages id="messagesEdit" showDetail="true" closable="true" />
+				<p:remoteCommand name="findAcc"
+					actionListener="#{registroReportesMB.upList}"
+					update=":form1:messagesEdit,  :form1:object"
+					onstart="PF('blockUIWidget').block();"
+					oncomplete="PF('blockUIWidget').unblock(); " />
+				<p:focus context="mesPanel" />
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+				<p:panelGrid columns="1" styleClass="ui-noborder">
+					<p:panelGrid columns="2" id="mesPanel"
+						styleClass="green col-centered row-centered  ui-noborder">
+						<h:outputText value="Fecha: " />
+						<h:outputText value="" />
+						<p:calendar id="fecha" value="#{registroReportesMB.fecha}"
+							maxlength="10" locale="es" size="10" pattern="dd/MM/yyyy"
+							required="true" mask="true"
+							requiredMessage="El campo de Fecha es requerido" timeZone=""
+							maxdate="#{registrReportesMB.maxDate}"
+							converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+							onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
+							<p:ajax event="dateSelect"
+								listener="#{registroReportesMB.upList}"
+								update=":form1:object,:form1:messagesEdit" />
+							<f:ajax event="change" update=":form1:object,:form1:messagesEdit"
+								listener="#{registroReportesMB.upList}" />
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:calendar>
+						<p:commandButton value="Actualizar" id="update"
+							onmousedown="jQuery('.ui-paginator-first').click();"
+							oncomplete="findAcc();" />
+					</p:panelGrid>
+					<p:dataTable id="object" var="detalle" expandedRow="#{true}"
+						value="#{registroReportesMB.listMaster}" rowKey="#{detalle.id}"
+						selectionMode="single" paginator="true" lazy="true" rows="10"
+						paginatorPosition="bottom" scrollable="true"
+						styleClass="green col-centered row-centered shadow-panel"
+						style="margin-bottom:60px"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<f:facet name="header">Registro de reporte</f:facet>
+						<p:column style="text-align: left !important; width:2%; ">
+							<p:rowToggler />
+						</p:column>
+						<p:column style="text-align: left !important; width:15%; "
+							headerText="Nombre">
+							<h:outputText value="#{detalle.nombreProceso}" />
+						</p:column>
+						<p:column style="text-align: left !important; width:7%; "
+							headerText="usuario">
+							<h:outputText value="#{detalle.nombreUsuario}" />
+						</p:column>
+						<p:column style="text-align: left !important; width:34%; "
+							headerText="URL">
+							<h:outputText value="#{detalle.ruta}" />
+						</p:column>
+						<p:column style="text-align: left !important; width:12%; "
+							headerText="Inicio ">
+							<h:outputText value="#{detalle.fechaInicio}" />
+						</p:column>
+						<p:column style="text-align: left !important; width:12%; "
+							headerText="Fin">
+							<h:outputText value="#{detalle.fechaFin}" />
+						</p:column>
+						<p:column style="text-align: left !important; width:12%; "
+							headerText="Tiempo ">
+							<h:outputText value="#{detalle.tiempoEjecucion}" />
+						</p:column>
+						<p:rowExpansion>
+							<p:panel styleClass="rojo"
+								rendered="#{detalle.detalle !='Sin detalle'}">
+								<h:outputText value="#{detalle.detalle}" />
+							</p:panel>
+							<p:panel rendered="#{detalle.detalle =='Sin detalle'}">
+								<h:outputText value="#{detalle.detalle}" />
+							</p:panel>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

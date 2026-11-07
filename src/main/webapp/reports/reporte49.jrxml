@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-04T12:57:23 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DesempenioMensualFISM" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1fa6e160-5a09-4d8f-b357-8f7b42c3b778">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ServerLinux"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="5.238"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="13.948"/>
+	<parameter name="MES" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomMes" class="java.lang.String"/>
+	<parameter name="lastDayOfMonth" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SECTOR" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagen" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{imagen}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomMunicipio" class="java.lang.String"/>
+	<parameter name="ANO" class="java.lang.Integer"/>
+	<parameter name="L4" class="java.lang.String"/>
+	<parameter name="N4" class="java.lang.String"/>
+	<parameter name="N5" class="java.lang.String"/>
+	<parameter name="L5" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 	PM5411.MENSUAL, PM5411.MASIMUN, PM5411.MMINMES, PM5411.OBYACMES,
+		PM5411.MAUTOBYAC, PM5411.MEJEMES, PM5411.MAUTOB, PM5411.SESIONES,
+		PM5411.PARTCIU, PM5411.OBSERVA
+FROM PM5411 PM5411 
+WHERE PM5411.MENSUAL = $P{MES}
+AND PM5411.IDSECTOR = $P{SECTOR}]]>
+	</queryString>
+	<field name="MENSUAL" class="java.lang.Integer"/>
+	<field name="MASIMUN" class="java.math.BigDecimal"/>
+	<field name="MMINMES" class="java.math.BigDecimal"/>
+	<field name="OBYACMES" class="java.lang.Integer"/>
+	<field name="MAUTOBYAC" class="java.math.BigDecimal"/>
+	<field name="MEJEMES" class="java.math.BigDecimal"/>
+	<field name="MAUTOB" class="java.math.BigDecimal"/>
+	<field name="SESIONES" class="java.lang.Integer"/>
+	<field name="PARTCIU" class="java.lang.String"/>
+	<field name="OBSERVA" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<image onErrorType="Blank">
+				<reportElement x="30" y="0" width="50" height="50" uuid="13248787-304e-49c1-81f5-86bfad6049f2"/>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="200" y="30" width="350" height="20" uuid="3157cf0f-a214-4fe8-ba56-87585ea1e1dd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORMACIÓN PARA EVALUAR EL DESEMPEÑO MENSUAL DEL FISM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="70" width="58" height="16" uuid="2ed2e7cb-27f9-417e-a319-78fa2fa85fb3"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MUNICIPIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="88" y="70" width="191" height="16" uuid="401f7e0e-ba1b-4ebb-a8c5-9aece1b2795b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{nomMunicipio}==null?"":$P{nomMunicipio})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="550" y="30" width="70" height="20" uuid="8252f026-13a8-4825-a492-028650b043cf"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{ANO}==null?"":$P{ANO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="379" y="70" width="400" height="16" uuid="5f09e081-7d67-4023-ad86-53c064b88029"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DEL 01 AL " + $P{lastDayOfMonth} + " DE " + $P{nomMes} + " DEL " + $P{ANO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="19" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="280" height="19" backcolor="#D6D6D6" uuid="46cbf9d1-013a-483e-94c1-0abd6e91cf2e"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONCEPTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="280" y="0" width="250" height="19" backcolor="#D6D6D6" uuid="0d0dc147-37fc-4092-9c68-d54c67dc820a"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="530" y="0" width="250" height="19" backcolor="#D6D6D6" uuid="bfcac0ef-ce96-4dcf-a748-0bc4e5362728"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="241" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="0" width="279" height="20" uuid="6335e1fc-6442-4160-8309-ecf13fb146c0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Monto total asignado al municipio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="20" width="279" height="20" uuid="798a956b-cf16-4626-b9b4-a9c588886eae"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Monto ministrado al mes de evaluación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="40" width="279" height="20" uuid="2df55a4a-63b3-4703-86ee-012fe6139bc5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Número de Obras y/o acciones autorizadas al mes de evaluación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="60" width="279" height="30" uuid="51840105-7b95-4a57-945e-59486122f348"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Monto Autorizado en obras y acciones al mes de evaluación
+(Indicador: Trámite en la Validación de los Recursos)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="90" width="279" height="30" uuid="b2822f07-1d68-4bf6-93d6-c37f6afe1154"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Monto Ejercido al mes de evaluación
+(Indicador: Ejercicio de los recursos)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="120" width="279" height="50" uuid="36764f50-d81b-49bd-854f-2dc25c53b1c5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Monto Autorizado en obras al mes de evaluación
+(Indicador: Destino de los Recursos en Infraestructura)
+Total = Trámite en la validación de los Recursos - (Gastos
+Indirectos + Programa de Desarrollo Institucional)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="170" width="279" height="30" uuid="43c05da0-08c2-475e-b436-57d3bf88bbe9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Número de sesiones de COPACI, CODEMUN o Equivalente
+realizadas en el ejercicio fiscal (Indicador:Participación Social)]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="1" height="240" uuid="74785af9-f127-4379-9a84-adf9cc0f0e38"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="200" width="279" height="20" uuid="470babf8-4de3-4f1c-8e2d-4a7d3b1e535b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Participación Ciudadana]]></text>
+			</staticText>
+			<line>
+				<reportElement x="280" y="0" width="1" height="240" uuid="7713a40d-70af-472d-bc27-0bf2f2b26ccc"/>
+			</line>
+			<line>
+				<reportElement x="530" y="-5" width="1" height="245" uuid="b8fa89cb-0f13-4d3d-83ad-8c7fb5a9c416"/>
+			</line>
+			<line>
+				<reportElement x="780" y="0" width="1" height="240" uuid="afedc960-5630-4f92-8cf4-e33cdb5b19ba"/>
+			</line>
+			<line>
+				<reportElement x="279" y="240" width="501" height="1" uuid="fb1d0cd9-3560-4213-a865-f17f4ca5a82e"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="0" width="249" height="20" uuid="8a09a391-7878-4dd6-baa0-8c2ba5601fe2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MASIMUN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="20" width="249" height="20" uuid="68e42b6e-65f4-45a4-a1e1-202735f1033f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MMINMES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="40" width="249" height="20" uuid="486daaed-35db-417b-9739-82dfdcbe0e82"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OBYACMES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="60" width="249" height="30" uuid="1224f556-2a28-4356-bbc8-98c31b1162ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MAUTOBYAC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="90" width="249" height="30" uuid="71f41556-c01d-4cfd-95d5-5406f34a1d46"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEJEMES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="120" width="249" height="50" uuid="2764515b-2a8e-4501-a7e5-1e31bd3fc6cc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MAUTOB}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="170" width="249" height="30" uuid="3ca8bf5b-5b3d-4481-ba3d-afebf5e071fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SESIONES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="531" y="0" width="249" height="230" uuid="7b4c74c7-6d8b-469f-8835-3c65e65b2ca5"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OBSERVA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="220" width="278" height="20" uuid="4eb2b222-a130-4e4d-865d-0b63e532eaca"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PARTCIU}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="10" width="29" height="20" uuid="2d5fa71f-6f67-4b3d-8183-c63d400d9dbe"/>
+				<textElement>
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="10" width="750" height="30" uuid="ca42b8b9-e5e7-4f4d-9886-e920323c5596"/>
+				<text><![CDATA[Anexar copia digitalizada del Avance Físico Financiero del SIAVAMEN validado y registrado al mes que se informa.
+Anexar copia digitalizada de las actas de las sesiones celebradas de COPACI, CODEMUN ó Equivalente al mes de evaluación.]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="153" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="70" width="199" height="20" uuid="b750b271-1b32-408e-8d43-860de963b295"/>
+				<text><![CDATA[______________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="71" width="199" height="20" uuid="59cbc1eb-381d-46ea-a06f-34d01c72c138"/>
+				<text><![CDATA[______________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="100" height="22" uuid="84524d6e-fa4c-4b8a-a261-68a7d059fadf"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OSFEPM/54/11]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="379" y="138" width="110" height="14" uuid="b1dcb3cc-8f16-403a-b32a-1b7af1885eea"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Elaboración:]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="490" y="137" width="130" height="16" uuid="c7794857-e2ba-4b18-b1c6-b95d8b29e51d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[DATEFORMAT( new java.util.Date(),"dd/MM/yyyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="630" y="123" width="100" height="30" uuid="774449f2-eafb-4435-ac25-f2cdc7725ade"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="730" y="123" width="100" height="30" uuid="2f3f9f42-45fa-4cd8-9db0-1faca89d3ddc"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="90" width="199" height="17" uuid="debe6932-8c11-4d82-9eca-41f408bb36a1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{N4}==null?"":$P{N4})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="21" width="199" height="17" uuid="ef7f0665-371c-43a8-95d0-ea98ff821258"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{L4}==null?"":$P{L4})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="22" width="199" height="17" uuid="f7de7e92-377e-4570-ac34-d95338b39941"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{L5}==null?"":$P{L5})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="91" width="199" height="16" uuid="014448ae-2559-4195-bcc2-114f991958c8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{N5}==null?"":$P{N5})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

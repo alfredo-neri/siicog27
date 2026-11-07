@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:commandButton style="display: none" id="downTxt" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload
+						value="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.fileTxt}" />
+				</p:commandButton>
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Estado de Avance Presupuestal de Egresos por Finalidad/Funcion/Subfuncion"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Mes: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.mes}">
+							<f:selectItems
+								value="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.listMes}"
+								var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+							<p:ajax event="change"
+								listener="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.validateMonth}"
+								update=":form1:growlReportador" />
+						</p:selectOneMenu>
+
+						<h:outputText value="Finalidad/Funcion/Subfuncion:"
+							for="idFinFunSf" />
+						<p:selectOneMenu id="idFinFunSf" size="18" editable="false"
+							value="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.finfunsub}">
+							<f:selectItems
+								value="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.listConcatMuninep}"
+								var="FinFunSf" itemValue="#{FinFunSf.campo7}"
+								itemLabel="#{FinFunSf.campo7}" />
+							<p:ajax event="change"
+								listener="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.updateName()}"
+								update=":form1:namefnfunsubfn" />
+						</p:selectOneMenu>
+
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+							<p:commandButton value="Vista Previa" id="preView"
+								actionListener="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.viewTxt}"
+								icon="ui-icon-zoomout"
+								update=":form1:preViewTxt,:form1:growlReportador"
+								onclick="PF('preViewTxtWg').show();" />
+
+							<p:commandButton id="correcto" value="Correcto"
+								actionListener="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.downloadTxt}"
+								update=":form1:growlReportador, :form1:downTxt">
+							</p:commandButton>
+						</p:panelGrid>
+
+					</p:panelGrid>
+					<p:panelGrid columns="1"
+						styleClass="ui-noborder col-centered row-centered">
+						<p:inputText id="namefnfunsubfn" size="100"
+							value="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.nameMuninep}"
+							disabled="true" />
+					</p:panelGrid>
+
+					<p:panelGrid>
+						<p:outputLabel
+							rendered="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.bPreView}"
+							style="max-height: 400px; width: 900px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="325" id="preViewTxt"
+								style="font-family: monospace; font-size: 8pt;" readonly="true"
+								widgetVar="preViewTxtWg"
+								rendered="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.bPreView}"
+								autoResize="true"
+								value="#{estadoAvancePresupuestalEgresosFinalidadFuncionSubFuncion.txtPreview}" />
+
+						</p:outputLabel>
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="reporte" header="Cuenta Publica"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<div class="card">
+
+						<p:accordionPanel widgetVar="basic" id="acordionPresupuestal"
+							scrollIntoView="center">
+							<p:tab title="a) Estado de Situación Financiera - CONAC"
+								styleClass="ui-noborder">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfSitFin"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{estadoSituacionFinancieraCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfsitFin, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="sitFinXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{estadoSituacionFinancieraCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink id="sitFinPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{estadoSituacionFinancieraCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="sitFinTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{estadoSituacionFinancieraCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfsitFin" style="border:0px"
+									visible="#{estadoSituacionFinancieraCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{estadoSituacionFinancieraCuentaPublicaMB.uuid}&amp;filename=#{estadoSituacionFinancieraCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="b) Estado de Actividades - CONAC"
+								styleClass="ui-noborder">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfEdoActividades"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{estadoActividadesCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfedoActividades, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="edoActividadesXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{estadoActividadesCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink id="edoActividadesPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{estadoActividadesCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="edoActividadesTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{estadoActividadesCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfedoActividades" style="border:0px"
+									visible="#{estadoActividadesCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{estadoActividadesCuentaPublicaMB.uuid}&amp;filename=#{estadoActividadesCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab
+								title="c) Estado de Variación en la Hacienda Pública - CONAC"
+								styleClass="ui-noborder">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfEdoVariHac"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{estadoVariacionHaciendaPublicaCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfEdoVariHac, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="EdoVariHacXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{estadoVariacionHaciendaPublicaCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink id="EdoVariHacPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{estadoVariacionHaciendaPublicaCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="EdoVariHacTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{estadoVariacionHaciendaPublicaCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfEdoVariHac" style="border:0px"
+									visible="#{estadoVariacionHaciendaPublicaCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{estadoVariacionHaciendaPublicaCuentaPublicaMB.uuid}&amp;filename=#{estadoVariacionHaciendaPublicaCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab
+								title="d) Estado de Cambios en la Situación Financiera - CONAC"
+								styleClass="ui-noborder">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfEdoCamSitFin"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{estadoCambiosSituacionFinancieraCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfEdoEdoCamSitFin, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="EdoCamSitFinHacXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{estadoCambiosSituacionFinancieraCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink id="EdoCamSitFinPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{estadoCambiosSituacionFinancieraCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="EdoCamSitFinTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{estadoCambiosSituacionFinancieraCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfEdoEdoCamSitFin" style="border:0px"
+									visible="#{estadoCambiosSituacionFinancieraCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{estadoCambiosSituacionFinancieraCuentaPublicaMB.uuid}&amp;filename=#{estadoCambiosSituacionFinancieraCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="e) Estado de Flujos de efectivo - CONAC"
+								styleClass="ui-noborder">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfEdoFlujoEfe"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{estadoFlujoEfectivoCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfEdoFlujoEfe, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="EdoFlujoEfeXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{estadoFlujoEfectivoCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink id="EdoFlujoEfePdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{estadoFlujoEfectivoCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="EdoFlujoEfeTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{estadoFlujoEfectivoCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfEdoFlujoEfe" style="border:0px"
+									visible="#{estadoFlujoEfectivoCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{estadoFlujoEfectivoCuentaPublicaMB.uuid}&amp;filename=#{estadoFlujoEfectivoCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="f) Estado Analítico del activo - CONAC"
+								styleClass="ui-noborder">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfEdoAnliActiv"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{estadoAnaliticoActivoCtaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfedoAnliActiv, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="anliActivXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{estadoAnaliticoActivoCtaPublicaMB.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink id="anliActivPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{estadoAnaliticoActivoCtaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="anliActivTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{estadoAnaliticoActivoCtaPublicaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfedoAnliActiv" style="border:0px"
+									visible="#{estadoAnaliticoActivoCtaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{estadoAnaliticoActivoCtaPublicaMB.uuid}&amp;filename=#{estadoAnaliticoActivoCtaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="a) Ingresos y Egresos" styleClass="ui-noborder">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.ingresoEgreso.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="ingresoEgreso"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.ingresoEgreso.fileXls}" />
+									</h:commandLink>
+
+									<h:commandLink id="ingresoEgresoPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.ingresoEgreso.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="ingresoEgresoTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.ingresoEgreso.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf" style="border:0px"
+									visible="#{cuentaPublicaMB.ingresoEgreso.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.ingresoEgreso.uuid}&amp;filename=#{cuentaPublicaMB.ingresoEgreso.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="b) Indicadores de Postura Fiscal - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf11"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cPIndicadoresPosturaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf11, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="posturaFiscalXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cPIndicadoresPosturaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="posturaFiscalPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cPIndicadoresPosturaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="posturaFiscalTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cPIndicadoresPosturaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="inlinePdf11" style="border:0px"
+									visible="#{cuentaPublicaMB.cPIndicadoresPosturaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cPIndicadoresPosturaMB.uuid}&amp;filename=#{cuentaPublicaMB.cPIndicadoresPosturaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+							<p:tab title="c) Estado Analítico de Ingresos">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfEdoAnliIng"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{estadoAnaliticoIngresosCtaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfedoAnliIng, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="edoAnliIngXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{estadoAnaliticoIngresosCtaPublicaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="edoAnliIngPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{estadoAnaliticoIngresosCtaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="edoAnliIngTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{estadoAnaliticoIngresosCtaPublicaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="inlinePdfedoAnliIng" style="border:0px"
+									visible="#{estadoAnaliticoIngresosCtaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{estadoAnaliticoIngresosCtaPublicaMB.uuid}&amp;filename=#{estadoAnaliticoIngresosCtaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+							<p:tab title="d) Ingresos">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf10"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpIngresosMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf10, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="ingresosXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpIngresosMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="ingresosPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpIngresosMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="ingresosTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpIngresosMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="inlinePdf10" style="border:0px"
+									visible="#{cuentaPublicaMB.cpIngresosMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpIngresosMB.uuid}&amp;filename=#{cuentaPublicaMB.cpIngresosMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab
+								title="e) 2. Clasificacion Económica (por Tipo de Gasto) - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf12"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.clasificEcoTipoGastoCeuntaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:clasEcoTipoGastoPdf12, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="clasEcoTipoGastoXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.clasificEcoTipoGastoCeuntaPublicaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="clasEcoTipoGastoPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.clasificEcoTipoGastoCeuntaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="clasEcoTipoGastoTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.clasificEcoTipoGastoCeuntaPublicaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="clasEcoTipoGastoPdf12" style="border:0px"
+									visible="#{cuentaPublicaMB.clasificEcoTipoGastoCeuntaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.clasificEcoTipoGastoCeuntaPublicaMB.uuid}&amp;filename=#{cuentaPublicaMB.clasificEcoTipoGastoCeuntaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+
+							<p:tab
+								title="e) 3. Clasificación Administrativa (Entidades) - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf7"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpClasAdminEntidadesMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf7, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="cladAdminEntXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminEntidadesMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="cladAdminEntPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminEntidadesMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="cladAdminEntTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminEntidadesMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf7" style="border:0px"
+									visible="#{cuentaPublicaMB.cpClasAdminEntidadesMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpClasAdminEntidadesMB.uuid}&amp;filename=#{cuentaPublicaMB.cpClasAdminEntidadesMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab
+								title="e) 3. Clasificación Administrativa (por Dependencia) - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf8"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpClasAdminDependenciaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf8, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="claAdminDepXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminDependenciaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="claAdminDepPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminDependenciaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="claAdminDepTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminDependenciaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf8" style="border:0px"
+									visible="#{cuentaPublicaMB.cpClasAdminDependenciaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpClasAdminDependenciaMB.uuid}&amp;filename=#{cuentaPublicaMB.cpClasAdminDependenciaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab
+								title="e) 3. Clasificación Administrativa (por Poder y Org.) - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf9"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpClasAdminPoderOrgMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf9, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="claAdminPOXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminPoderOrgMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="claAdminPOPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminPoderOrgMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="claAdminPOTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpClasAdminPoderOrgMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="inlinePdf9" style="border:0px"
+									visible="#{cuentaPublicaMB.cpClasAdminPoderOrgMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpClasAdminPoderOrgMB.uuid}&amp;filename=#{cuentaPublicaMB.cpClasAdminPoderOrgMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab
+								title="e) 3. Clasificación Administrativa (por Poder) - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfPoder"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{clasificacionAdministrativaPoderCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfPoder, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="PoderXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{clasificacionAdministrativaPoderCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="PoderPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{clasificacionAdministrativaPoderCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="PoderTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{clasificacionAdministrativaPoderCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="inlinePdfPoder" style="border:0px"
+									visible="#{clasificacionAdministrativaPoderCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{clasificacionAdministrativaPoderCuentaPublicaMB.uuid}&amp;filename=#{clasificacionAdministrativaPoderCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="e) 5. Endeudamiento Neto - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="enduedamientoNetopdfLine"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.endeudamientoNetoCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:endudamientoNetoPdf, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="endudamientoNetoXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.endeudamientoNetoCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="endudamientoNetooPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.endeudamientoNetoCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="endudamientoNetoTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.endeudamientoNetoCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="endudamientoNetoPdf" style="border:0px"
+									visible="#{cuentaPublicaMB.endeudamientoNetoCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.endeudamientoNetoCuentaPublicaMB.uuid}&amp;filename=#{cuentaPublicaMB.endeudamientoNetoCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+
+							<p:tab title="e) 6. Intereses de la Deuda- CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="interesDeudapdfLine2"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.interesDeudaCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:interesDeudaPdfLine, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="interesDeudaXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.interesDeudaCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="interesDeudaPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.interesDeudaCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="interesDeudaTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.interesDeudaCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="interesDeudaPdfLine" style="border:0px"
+									visible="#{cuentaPublicaMB.interesDeudaCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.interesDeudaCuentaPublicaMB.uuid}&amp;filename=#{cuentaPublicaMB.interesDeudaCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+
+							<p:tab title="f) Egresos por Capítulo">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf5"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpEgresoCapituloMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf5, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="egresoCapitouloXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoCapituloMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="egresoCapitouloPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoCapituloMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="egresoCapitouloTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoCapituloMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf5" style="border:0px"
+									visible="#{cuentaPublicaMB.cpEgresoCapituloMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpEgresoCapituloMB.uuid}&amp;filename=#{cuentaPublicaMB.cpEgresoCapituloMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="c) Obligaciones Diferentes de Financiamiento">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfObFisDif"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cpObligacionesDiferentesFinanciamientoMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfObFisDif, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="obFisDifXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cpObligacionesDiferentesFinanciamientoMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="obFisDiPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cpObligacionesDiferentesFinanciamientoMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="obFisDiTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cpObligacionesDiferentesFinanciamientoMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfObFisDif" style="border:0px"
+									visible="#{cpObligacionesDiferentesFinanciamientoMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cpObligacionesDiferentesFinanciamientoMB.uuid}&amp;filename=#{cpObligacionesDiferentesFinanciamientoMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+
+							<p:tab title="d) Balance Presupuestario">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfBalance"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cpBalancePresupuestarioMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfBalnce, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="balacePreXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload value="#{cpBalancePresupuestarioMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="balacePrePdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload value="#{cpBalancePresupuestarioMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="balacePreTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload value="#{cpBalancePresupuestarioMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfBalnce" style="border:0px"
+									visible="#{cpBalancePresupuestarioMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cpBalancePresupuestarioMB.uuid}&amp;filename=#{cpBalancePresupuestarioMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+
+							<p:tab title="e) Estado Analítico de Ingresos Detallado">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfIngDet"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cpEstadoAnaliticoIngresosDetalladoMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfIngDet, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="ingDetPreXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cpEstadoAnaliticoIngresosDetalladoMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="ingDetPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cpEstadoAnaliticoIngresosDetalladoMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="ingDetTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="Pdf">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cpEstadoAnaliticoIngresosDetalladoMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfIngDet" style="border:0px"
+									visible="#{cpEstadoAnaliticoIngresosDetalladoMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cpEstadoAnaliticoIngresosDetalladoMB.uuid}&amp;filename=#{cpEstadoAnaliticoIngresosDetalladoMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="f) 3. Funcional (Finalidad y Función)">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfClaFun"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cpClasificacionFuncionalMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfclaFun, :form1:msgs">
+									</p:commandButton>
+									<h:commandLink id="claFunXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload value="#{cpClasificacionFuncionalMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="canFluPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload value="#{cpClasificacionFuncionalMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="canFluTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload value="#{cpClasificacionFuncionalMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfclaFun" style="border:0px"
+									visible="#{cpClasificacionFuncionalMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cpClasificacionFuncionalMB.uuid}&amp;filename=#{cpClasificacionFuncionalMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+
+
+							<p:tab title="f) 4. Servicios personales por categoria">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdfPerCate"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cpServiciosPersonalesCategoriaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdfPerCate, :form1:msgs">
+									</p:commandButton>
+									<h:commandLink id="perCateXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cpServiciosPersonalesCategoriaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="perCatePdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cpServiciosPersonalesCategoriaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="perCateTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cpServiciosPersonalesCategoriaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdfPerCate" style="border:0px"
+									visible="#{cpServiciosPersonalesCategoriaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cpServiciosPersonalesCategoriaMB.uuid}&amp;filename=#{cpServiciosPersonalesCategoriaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="h) Egresos por Objeto del Gasto">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf6"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpEgresoObjetoGastoMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf6, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="egreObjetoXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoObjetoGastoMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="egreObjetoPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoObjetoGastoMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="egreObjetoTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoObjetoGastoMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf6" style="border:0px"
+									visible="#{cuentaPublicaMB.cpEgresoObjetoGastoMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpEgresoObjetoGastoMB.uuid}&amp;filename=#{cuentaPublicaMB.cpEgresoObjetoGastoMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="d) Avance Operativo Programático y Presupuestal">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="acordionPresupuestalpdf"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpAvanceOperativoMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:acordionPresupuestalinlinePdf, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="acordionPresupuestalXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpAvanceOperativoMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="acordionPresupuestalPDF"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpAvanceOperativoMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="acordionPresupuestalTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpAvanceOperativoMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="acordionPresupuestalinlinePdf" style="border:0px"
+									visible="#{cuentaPublicaMB.cpAvanceOperativoMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpAvanceOperativoMB.uuid}&amp;filename=#{cuentaPublicaMB.cpAvanceOperativoMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+							<p:tab title="a) Gasto por Categoria Programática - CONAC">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf2"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpCategoriaProgamaticaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf2, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="categoriaPorgaExcel"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpCategoriaProgamaticaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="categoriaPorgaPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpCategoriaProgamaticaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="categoriaPorgaTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpCategoriaProgamaticaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf2" style="border:0px"
+									visible="#{cuentaPublicaMB.cpCategoriaProgamaticaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpCategoriaProgamaticaMB.uuid}&amp;filename=#{cuentaPublicaMB.cpCategoriaProgamaticaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="b) Egresos por  Pilar y Eje Transversal">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf3"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpEgresoPilarEjeTransversalMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf3, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="egresoPilarXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoPilarEjeTransversalMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="egresoPilarPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoPilarEjeTransversalMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="egresoPilarTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoPilarEjeTransversalMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf3" style="border:0px"
+									visible="#{cuentaPublicaMB.cpEgresoPilarEjeTransversalMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpEgresoPilarEjeTransversalMB.uuid}&amp;filename=#{cuentaPublicaMB.cpEgresoPilarEjeTransversalMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="c) Egreso por Programa">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generateportepdf4"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.cpEgresoProgramaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:inlinePdf4, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="egresoPrpgramaXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoProgramaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="egresoPrpgramaPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoProgramaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="egresoPrpgramaTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.cpEgresoProgramaMB.fileTxt}" />
+									</h:commandLink>
+								</p:panelGrid>
+								<p:panel id="inlinePdf4" style="border:0px"
+									visible="#{cuentaPublicaMB.cpEgresoProgramaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.cpEgresoProgramaMB.uuid}&amp;filename=#{cuentaPublicaMB.cpEgresoProgramaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+							</p:tab>
+							<p:tab title="a) Estado de Situación Financiera Detallado">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generatedetalladopdf"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.estadoSituacionFinancieraDetalladoCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:finaDetalladoPdfLine, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="finaDetalladoXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.estadoSituacionFinancieraDetalladoCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="finaDetalladoPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.estadoSituacionFinancieraDetalladoCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="finaDetalladoTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.estadoSituacionFinancieraDetalladoCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="finaDetalladoPdfLine" style="border:0px"
+									visible="#{cuentaPublicaMB.estadoSituacionFinancieraDetalladoCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.estadoSituacionFinancieraDetalladoCuentaPublicaMB.uuid}&amp;filename=#{cuentaPublicaMB.estadoSituacionFinancieraDetalladoCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+							<p:tab title="b) A. Deuda Pública y Otros Pasivos">
+								<p:panelGrid columns="5" styleClass="ui-noborder">
+									<p:commandButton id="generatedeudapasivospdf"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										actionListener="#{cuentaPublicaMB.informeAnaliticoDeudaPublicaCuentaPublicaMB.createFilePdfInline}"
+										value="Correcto"
+										update="form1:acordionPresupuestal:generatedeudapasivosPdfLine, :form1:msgs">
+									</p:commandButton>
+
+									<h:commandLink id="generatedeudapasivosXls"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="../excel.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.informeAnaliticoDeudaPublicaCuentaPublicaMB.fileXls}" />
+									</h:commandLink>
+									<h:commandLink id="generatedeudapasivosPdf"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="PDF">
+										<p:graphicImage value="../pdf.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.informeAnaliticoDeudaPublicaCuentaPublicaMB.filePdf}" />
+									</h:commandLink>
+									<h:commandLink id="generatedeudapasivosTxt"
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT">
+										<p:graphicImage value="../txt.png" width="24" />
+										<p:fileDownload
+											value="#{cuentaPublicaMB.informeAnaliticoDeudaPublicaCuentaPublicaMB.fileTxt}" />
+									</h:commandLink>
+
+								</p:panelGrid>
+								<p:panel id="generatedeudapasivosPdfLine" style="border:0px"
+									visible="#{cuentaPublicaMB.informeAnaliticoDeudaPublicaCuentaPublicaMB.uuid ne null}">
+									<object type="application/pdf"
+										data="#{request.contextPath}/GetFileInline?uuid=#{cuentaPublicaMB.informeAnaliticoDeudaPublicaCuentaPublicaMB.uuid}&amp;filename=#{cuentaPublicaMB.informeAnaliticoDeudaPublicaCuentaPublicaMB.endFilename}"
+										height="380px" width="100%"> Tu browser no puede
+										desplegar el PDF. </object>
+								</p:panel>
+
+							</p:tab>
+						</p:accordionPanel>
+
+					</div>
+				</p:panel>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

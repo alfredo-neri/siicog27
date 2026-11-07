@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Resumen de Quincenas"
+					styleClass="green col-md-5 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<p:outputLabel id="lblNum" value="N&uacute;mero:" />
+						<pe:inputNumber id="num" decimalPlaces="0"
+							value="#{reporte70MB.numero}" thousandSeparator=""
+							maxValue="999999" maxlength="6" size="6" />
+						<p:outputLabel id="lblMes" value="Mes:" />
+						<p:selectOneMenu id="idMes" value="#{reporte70MB.mes}">
+							<f:selectItems value="#{reporte70MB.listMes}" var="meses"
+								itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+						</p:selectOneMenu>
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+							<p:commandButton id="correcto" ajax="false" value="Correcto"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								actionListener="#{reporte70MB.downLoadFile}"
+								update=":form1:growlReportador">
+								<p:fileDownload value="#{reporte70MB.fileTxt}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

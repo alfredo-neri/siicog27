@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<script>
+
+				function actualizarValor() {
+					var numero = jQuery("[id$='clvfteMun_hinput']").val(); 
+				    jQuery("[id$='clvfteMun2']").val(numero);
+				    jQuery("[id$='clvfteMun_hinput']").val(numero);
+				    jQuery("[id$='clvfteMun_input']").val(numero);
+				  };
+				
+    		</script>
+			<h:form id="form1">
+				<p:remoteCommand name="createRow"
+					actionListener="#{catalogFinancialSourcesMB.saveRows}"
+					update="form1:objects, :form1:messagesEdit" />
+				<p:remoteCommand name="cancelRow"
+					actionListener="#{catalogFinancialSourcesMB.onRowCancel}"
+					update="form1:objects, :form1:messagesEdit" />
+				<p:remoteCommand name="onload"
+					action="#{catalogFinancialSourcesMB.onPageLoad}"
+					update=":form1:objects" />
+				<p:remoteCommand
+					actionListener="#{catalogFinancialSourcesMB.findAllValuesCatalog}"
+					immediate="true"
+					oncomplete=";document.getElementById(':form1:nameInput').value = '';document.getElementById(':form1:ligaInput').value = '';document.getElementById(':form1:clvgasInput').value = '';"
+					update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:nameInput"
+					name="actualizar" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="panel" header="Fuentes de Financiamiento"
+					styleClass="green col-md-6 col-centered row-centered shadow-panell">
+					<h:panelGrid id="display_1" columns="6" cellpadding="2">
+
+						<h:outputText value="Liga" for="ligaInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px;" />
+						<p:inputText id="ligaInput" styleClass="form-control"
+							value="#{catalogFinancialSourcesMB.beanFind.liga}" maxlength="3"
+							converterMessage="El campo Liga debe ser num&eacute;rico">
+							<pe:keyFilter for="ligaInput" mask="pint"></pe:keyFilter>
+							<f:convertNumber type="number" for="ligaInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogFinancialSourcesMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Clave" for="clvgasInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px;" />
+						<p:inputText id="clvgasInput" styleClass="form-control"
+							value="#{catalogFinancialSourcesMB.beanFind.clvfte}"
+							maxlength="#{catalogFinancialSourcesMB.maxLength}"
+							converterMessage="El campo Clave debe ser num&eacute;rico">
+							<pe:keyFilter for="clvgasInput" mask="num"></pe:keyFilter>
+							<f:convertNumber type="number" for="clvgasInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogFinancialSourcesMB.findValuesCatalog}" />
+						</p:inputText>
+
+
+						<h:outputText value="Nombre" for="nameInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; " />
+						<p:inputText id="nameInput" styleClass="form-control"
+							value="#{catalogFinancialSourcesMB.beanFind.nombref}"
+							maxlength="30"
+							validatorMessage="Nombre  solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex
+								pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+								for="nameInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogFinancialSourcesMB.findValuesCatalog}" />
+						</p:inputText>
+					</h:panelGrid>
+					<p:outputPanel layout="block">
+						<br />
+						<p:commandButton value="Buscar" style="padding: 5px;"
+							update=":form1:messagesEdit, :form1:objects"
+							actionListener="#{catalogFinancialSourcesMB.findValuesCatalog}" />
+
+						<p:commandButton value="Limpiar"
+							style="padding: 5px; margin-left: 15px; "
+							actionListener="#{catalogFinancialSourcesMB.findAllValuesCatalog}"
+							update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:nameInput"
+							immediate="true"
+							oncomplete="
+							document.getElementById('form1:ligaInput').value=''; 
+							document.getElementById('form1:clvgasInput').value=''; 
+							document.getElementById('form1:nameInput').value='';">
+
+						</p:commandButton>
+
+					</p:outputPanel>
+				</p:panel>
+
+
+
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;"
+					styleClass="col-centered row-centered">
+
+					<p:commandButton value="Nuevo Registro"
+						onclick="PF('wingetPasswor').show(); resetPass();" />
+				</p:panel>
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogFinancialSourcesMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}"
+					filteredValue="#{catalogFinancialSourcesMB.filteredList}"
+					widgetVar="financialSourcesWdg">
+
+					<f:facet name="header">Fuentes de Financiamiento</f:facet>
+
+					<p:ajax event="rowEditInit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});" />
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogFinancialSourcesMB.onRowEdit}"
+						update=":form1:messagesEdit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogFinancialSourcesMB.onRowCancel}"
+						update=":form1:messagesEdit"
+						onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});"
+						oncomplete="document.getElementById('form1:hideButton2').click();" />
+
+
+					<p:column headerText="Liga" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.liga}" />
+					</p:column>
+
+					<p:column headerText="Liga" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.liga}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="Liga" value="#{object.liga}" style="width:100%"
+									maxlength="3" required="true"
+									requiredMessage="El campo Liga es requerido"
+									validatorMessage="liga solo permite valores num&eacute;ricos"
+									disabled="#{catalogFinancialSourcesMB.activeLiga}">
+									<!--
+									<p:ajax event="blur" update="Liga"></p:ajax>
+									-->
+									<f:validateRegex pattern="([0-9]+)" for="Liga" />
+									<pe:keyFilter for="Liga" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Clave" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.clvfte}" />
+					</p:column>
+
+					<p:column headerText="Clave" exportable="false" style="width:7%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvfte}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputMask id="clvfte" value="#{object.clvfte}"
+									disabled="#{catalogFinancialSourcesMB.activeLiga}"
+									rendered="#{!catalogFinancialSourcesMB.municipal}"
+									style="width:100%" maxlength="8"
+									required="#{!catalogFinancialSourcesMB.municipal}"
+									requiredMessage="El campo Clave es requerido"
+									validatorMessage="El campo Clave debe ser de 8 digitos y mayor a cero"
+									converterMessage="El campo Clave debe ser de 8 digitos y mayor a cero"
+									onkeypress="if(event.keyCode == 27) {cancelRow(); return false;}"
+									mask="#{catalogFinancialSourcesMB.mask}">
+									<p:ajax event="blur" update="clvfte"></p:ajax>
+									<f:validateDoubleRange minimum="1" for="clvfte" />
+									<f:validateLength minimum="4" maximum="8" />
+								</p:inputMask>
+
+								<!-- -->
+								<p:inputText id="clvfteMun" value="#{object.clvfte}"
+									disabled="#{catalogFinancialSourcesMB.activeLiga}"
+									rendered="#{catalogFinancialSourcesMB.municipal}"
+									style="width:100%" maxlength="6" required="false"
+									requiredMessage="El campo Clave es requerido"
+									onkeypress="if(event.keyCode == 27) {cancelRow(); return false;}"
+									onchange="actualizarValor();">
+									<p:ajax event="blur" update="clvfteMun2"></p:ajax>
+								</p:inputText>
+
+								<p:inputText id="clvfteMun2" value="#{object.clvfte}"
+									rendered="#{catalogFinancialSourcesMB.municipal}"
+									maxlength="6"
+									style="width:100%;display:none;" required="true"
+									requiredMessage="El campo Clave es requerido">
+									
+								</p:inputText>
+
+								<!-- 
+								<p:inputText id="clvfteMun" value="#{object.clvfte}"
+  									disabled="#{catalogFinancialSourcesMB.activeLiga}"
+  									rendered="#{catalogFinancialSourcesMB.municipal}"
+ 									style="width:100%" maxlength="5" required="true"
+  									requiredMessage="El campo Clave es requerido"
+  									validatorMessage="El campo Clave debe ser de 1 o 2 digitos y 1 o 2 decimales"
+  									converterMessage="El campo Clave debe ser de 1 o 2 digitos y 1 o 2 decimales"
+  									onkeypress="if(event.keyCode == 27) {cancelRow(); return false;}" >
+									<f:validateRegex pattern="\d{1,2}(\.\d{1,2})" for="clvfteMun" />
+  									<pe:keyFilter for="clvfteMun" mask="num"></pe:keyFilter>
+  								</p:inputText>
+  								 -->
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nombref}" />
+					</p:column>
+
+					<p:column headerText="Nombre" exportable="false" style="width:70%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nombref}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nombref" value="#{object.nombref}"
+									style="width:100%" maxlength="140" required="true"
+									requiredMessage="El campo Nombre es requerido"
+									validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos"
+									onkeypress="if(event.keyCode == 27) {cancelRow(); return false;}">
+									<!-- 
+									<p:ajax event="blur" update="nombref"></p:ajax>
+									-->
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+										for="nombref" />
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Ultimo Nivel" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nivfte}" />
+					</p:column>
+
+					<p:column headerText="Ultimo Nivel" exportable="false"
+						visible="#{!catalogFinancialSourcesMB.municipal}" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nivfte}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nivfte" value="#{object.nivfte}"
+									style="width:100%" maxlength="4"
+									converterMessage="El campo UltimoNivel debe ser num&eacute;rico"
+									disabled="true"
+									onkeypress="if (event.keyCode == 13) {createRow(); return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+									<!-- 
+									<p:ajax event="blur" update="nombref"></p:ajax>
+									 -->
+									<f:convertNumber type="number" for="nivfte" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<!-- p:column headerText="Borrar" style="width:5%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogFinancialSourcesMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+					 -->
+					<p:column style="width:5%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogFinancialSourcesMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogFinancialSourcesMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogFinancialSourcesMB.list}">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogFinancialSourcesMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogFinancialSourcesMB.list}"
+							actionListener="#{catalogFinancialSourcesMB.getFileCsvPl}">
+							<p:graphicImage value="csv.png" width="24" />
+							<p:fileDownload value="#{catalogFinancialSourcesMB.csvByPl}" />
+							<!-- <p:dataExporter type="csv" target="objects"
+								fileName="FuentesFinanciamiento" pageOnly="false"
+								encoding="ISO-8859-1" /> -->
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogFinancialSourcesMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogFinancialSourcesMB.file}" />
+						</h:commandLink>
+
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<p:commandButton id="hideButton"
+					update=":form1:messagesEdit, :form1:objects"
+					actionListener="#{catalogFinancialSourcesMB.showSuccesMessage()}"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+					style="visibility: hidden;" />
+
+				<p:commandButton id="hideButton2"
+					update=":form1:messagesEdit, :form1:objects" ajax="false"
+					style="visibility: hidden;" />
+
+				<br />
+				<br />
+
+
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{catalogFinancialSourcesMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+				<p:dialog id="panelValida" widgetVar="wingetPasswor"
+					header="Valida Password" modal="true" styleClass="green">
+					<p:panelGrid id="pgridpass" columns="2"
+						styleClass="green col-md-8 col-centered row-centered ui-noborder">
+						<h:outputText value="Password Administrador" />
+						<h:inputSecret id="validatePass"
+							value="#{catalogFinancialSourcesMB.validatePass}"
+							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;} if(event.keyCode == 13){return false;}" />
+						<h:outputText value="" />
+						<p:commandButton value="Validar"
+							update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+							actionListener="#{catalogFinancialSourcesMB.insertRow}"
+							oncomplete="PF('wingetPasswor').hide();document.getElementById('form1:validatePass').value=''; resetPass();" />
+					</p:panelGrid>
+
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

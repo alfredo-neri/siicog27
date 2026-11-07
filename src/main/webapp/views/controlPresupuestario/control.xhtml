@@ -1,0 +1,1267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<style>
+.ui-accordion .ui-accordion-header.ui-state-default {
+	margin-bottom: 2px;
+	border: 1px solid #E5E5E5;
+	background-color: ##b99056;
+	font-weight: bold;
+	color: #000;
+}
+
+.ui-tabs.ui-tabs-left>.ui-tabs-nav li a, .ui-tabs.ui-tabs-right>.ui-tabs-nav li a
+	{
+	width: 100%;
+}
+
+.ui-tabs-left>.ui-tabs-nav {
+	float: left;
+	width: 23%;
+	height: auto;
+	background-image: none;
+	padding-top: 5px;
+}
+
+.ui-datatable .ui-row-toggler {
+	cursor: pointer;
+	margin-left: -9px;
+}
+
+.ui-widget-header .ui-inputfield, .ui-widget-content .ui-inputfield {
+	font-weight: normal;
+	width: 100%;
+}
+
+label {
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 0px;
+	font-weight: 700;
+}
+
+.ui-tabs.ui-widget-content {
+	background: transparent none;
+	border: 0 !important;
+}
+</style>
+			<h:form id="form">
+
+				<p:growl id="messages" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Control Presupuestario"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+
+					<p:panel id="fam" header="#{controlPresupuestalMB.fam.concepto}"
+						collapsed="#{controlPresupuestalMB.toggleFAM}" toggleSpeed="500"
+						widgetVar="panelFAM" toggleable="true">
+
+						<p:ajax event="toggle" update="form"
+							listener="#{controlPresupuestalMB.onToggleFAM}" />
+
+						<p:toolbar>
+							<f:facet name="left">
+								<h:outputText
+									value="#{controlPresupuestalMB.fam.autorizadoAnual}">
+									<f:convertNumber pattern="Autorizado: ###,##0.00"
+										locale="es_MX" />
+								</h:outputText>
+							</f:facet>
+							<f:facet name="right">
+								<p:menuButton value="Opciones">
+									<!-- Eliminar opcion si se mantiene la configuracion del catalogo de acciones -->
+									<!-- <p:menuitem value="Agregar Area"
+										action="#{controlPresupuestalMB.openDialogAreas()}"
+										icon="ui-icon-plusthick" /> -->
+									<p:menuitem value="Configurar Acciones"
+										action="#{controlPresupuestalMB.openDialogAcciones()}"
+										icon="ui-icon-gear" />
+									<p:menuitem value="Configurar Presupuestos"
+										action="#{controlPresupuestalMB.openDialogPresupuestosFam()}"
+										icon="ui-icon-gear" />
+								</p:menuButton>
+							</f:facet>
+
+						</p:toolbar>
+
+						<p:accordionPanel
+							value="#{controlPresupuestalMB.listPresupuestoAreas}" id="areas"
+							var="area">
+
+							<p:tab title="#{area.area.descripcion}"
+								titleStyleClass="ui-border">
+								<!-- <p:toolbar>
+									<f:facet name="left">
+										<h:outputText value="#{area.presupuestoAutorizado}">
+											<f:convertNumber pattern="Autorizado: ###,##0.00"
+												locale="es_MX" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="right">
+										<p:outputLabel value="Disponible: " />
+									</f:facet>
+								</p:toolbar> -->
+
+								<p:tabView value="#{area.accions}" dynamic="true"
+									orientation="left" id="acciones" var="accion">
+
+									<p:ajax event="tabChange"
+										listener="#{controlPresupuestalMB.onTabChange}" />
+									<!-- update=":form:messages, :contratoForm:detailsAccion" -->
+
+									<p:tab title="#{accion.accion.nombre}" id="accions">
+
+										<!-- <p:toolbar id="toolbarDisponibles">
+											<f:facet name="left">
+												<h:outputText value="#{accion.autorizadoInicial}">
+													<f:convertNumber pattern="Autorizado Inicial: ###,##0.00"
+														locale="es_MX" />
+												</h:outputText>
+											</f:facet>
+											<f:facet name="right">
+												<p:outputLabel value="Disponible: " />
+											</f:facet>
+										</p:toolbar> -->
+										<p:outputPanel deferred="true" style="border:5px;">
+
+											<p:dataTable var="contrato" id="contratos"
+												emptyMessage="Sin Contratos para mostrar"
+												value="#{accion.listAccionesContrato}">
+
+												<f:facet name="header">
+												Lista de Contratos &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												<p:commandButton value="Agregar Contrato"
+														action="#{controlPresupuestalMB.openDialogContratosFam()}"
+														id="btnAddsContrato" iconPos="left" icon="ui-icon-plus" />
+												</f:facet>
+
+												<p:ajax event="rowToggle"
+													listener="#{controlPresupuestalMB.onRowToggle}" />
+
+												<p:column style="width:16px">
+													<p:rowToggler />
+												</p:column>
+												<p:column headerText="# Contrato">
+													<h:outputText value="#{contrato.contrato.numeroContrato}" />
+												</p:column>
+												<p:column headerText="Proveedor">
+													<h:outputText
+														value="#{contrato.contrato.proveedor.nombreProveedor}" />
+												</p:column>
+												<p:column headerText="Importe Contrato">
+													<h:outputText
+														value="#{contrato.contrato.importeAdquisicion}">
+														<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+													</h:outputText>
+												</p:column>
+												<p:rowExpansion>
+
+													<p:dataTable id="facturas" var="factura" paginator="true"
+														paginatorPosition="bottom" rows="5"
+														value="#{contrato.facturas}">
+														<f:facet name="header">
+														Lista de Facturas &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														<p:commandButton value="Agregar Factura"
+																actionListener="#{controlPresupuestalMB.openDialogFacturasFam()}"
+																id="btnAddsFactura" iconPos="left" icon="ui-icon-plus" />
+															<!-- actionListener="#{controlPresupuestalMB.editFactura(accion)}" -->
+														</f:facet>
+														<p:column headerText="No. Factura">
+															<h:outputText value="#{factura.noFactura}" />
+														</p:column>
+
+														<p:column headerText="Fecha Recepción">
+															<h:outputText value="#{factura.fechaRecepcion}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+
+														<p:column headerText="Importe">
+															<h:outputText value="#{factura.importeFactura}">
+																<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+															</h:outputText>
+														</p:column>
+
+														<p:column headerText="No. Póliza">
+															<h:outputText
+																value="#{factura.poliza.tippol} - #{factura.poliza.conpol}" />
+														</p:column>
+
+														<p:column headerText="Fecha Póliza">
+															<h:outputText value="#{factura.poliza.fecpol}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+
+														<p:column headerText="Status">
+															<h:outputText value="#{factura.statusPago.descripcion}" />
+														</p:column>
+
+														<p:column headerText="Fecha de Pago">
+															<h:outputText value="#{factura.fechaPago}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+
+														<p:column width="8%" style="text-align: center">
+
+															<p:commandButton id="btnEditPasgo"
+																action="#{controlPresupuestalMB.openDialogFacturasFam()}"
+																iconPos="left" icon="ui-icon-pencil">
+
+																<f:setPropertyActionListener value="#{factura}"
+																	target="#{controlPresupuestalMB.facturaSelected}" />
+															</p:commandButton>
+
+														</p:column>
+													</p:dataTable>
+												</p:rowExpansion>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:tab>
+								</p:tabView>
+							</p:tab>
+						</p:accordionPanel>
+
+					</p:panel>
+
+					<p:panel id="pad" header="#{controlPresupuestalMB.pad.concepto}"
+						toggleable="true" collapsed="#{controlPresupuestalMB.togglePAD}"
+						toggleSpeed="500" widgetVar="panelPAD">
+
+						<p:ajax event="toggle"
+							listener="#{controlPresupuestalMB.onTogglePAD}" update="form" />
+
+						<p:toolbar>
+
+							<f:facet name="right">
+								<p:menuButton value="Opciones">
+									<p:menuitem value="Registrar Contrato"
+										action="#{controlPresupuestalMB.openDialogContratosPad()}"
+										icon="ui-icon-plusthick" />
+									<p:menuitem value="Registrar Dependencia"
+										action="#{controlPresupuestalMB.openDialogDependencias()}"
+										icon="ui-icon-plusthick" />
+									<p:menuitem value="Registrar Obra"
+										action="#{controlPresupuestalMB.openDialogObras()}"
+										icon="ui-icon-plusthick" />
+									<p:menuitem value="Configurar Presupuestos"
+										action="#{controlPresupuestalMB.openDialogPresupuestosPad()}"
+										icon="ui-icon-gear" />
+
+								</p:menuButton>
+							</f:facet>
+
+						</p:toolbar>
+
+						<p:accordionPanel id="dependencias"
+							value="#{controlPresupuestalMB.listPresupuestoDependencias}"
+							var="dependencia">
+
+							<p:ajax event="tabClose"
+								listener="#{controlPresupuestalMB.onTabCloseDependenciaPad}" />
+							<!-- update=":form:messages, :contratoForm:detailsAccion"  -->
+							<p:ajax event="tabChange"
+								listener="#{controlPresupuestalMB.onTabChangeDependenciaPad}" />
+							<!-- update=":form:messages, :contratoForm:detailsAccion" -->
+
+							<p:tab title="#{dependencia.dependencia.nomdep}">
+
+								<p:tabView value="#{dependencia.obras}" dynamic="true"
+									orientation="left" id="obras" var="obra">
+
+									<p:ajax event="tabChange"
+										listener="#{controlPresupuestalMB.onTabChangeObra}" />
+
+									<p:tab title="#{obra.contrato.nombreObra}" id="accions">
+
+										<p:panelGrid style="width:100%;">
+											<f:facet name="header">
+												<p:row>
+													<p:column rowspan="3">No. de Contrato</p:column>
+													<p:column colspan="4">Proveedor</p:column>
+												</p:row>
+											</f:facet>
+
+											<p:row>
+												<p:column>
+													<h:outputText value="#{obra.contrato.numeroContrato}" />
+												</p:column>
+												<p:column colspan="4">
+													<h:outputText value="#{obra.contrato.proveedor}" />
+												</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column styleClass="ui-widget-header">Fecha de Contrato:</p:column>
+												<p:column styleClass="ui-widget-header">Importe del Contrato</p:column>
+												<p:column styleClass="ui-widget-header">Importe Asignado</p:column>
+												<p:column styleClass="ui-widget-header">Importe Autorizado</p:column>
+											</p:row>
+
+											<p:row>
+												<p:column>
+													<h:outputText value="#{obra.contrato.fechaContrato}">
+														<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+													</h:outputText>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{obra.contrato.importe}">
+														<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+													</h:outputText>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{obra.asignado}">
+														<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+													</h:outputText>
+												</p:column>
+
+												<p:column>
+													<h:outputText value="#{obra.autorizado}">
+														<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+													</h:outputText>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+
+										<p:dataTable var="pago" id="pagos"
+											emptyMessage="Sin Pagos para mostrar" value="#{obra.pagos}">
+
+											<f:facet name="header">
+												Lista de Pagos &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												<p:commandButton value="Agregar Pago" id="btnAddPago"
+													action="#{controlPresupuestalMB.openDialogPagosObras()}"
+													iconPos="left" icon="ui-icon-plus" />
+											</f:facet>
+
+											<p:column width="3%">
+												<p:rowToggler />
+											</p:column>
+											<p:column width="20%"
+												headerText="Autorizaci&oacute;n de Pago">
+												<h:outputText value="#{pago.autorizacionPago}" />
+											</p:column>
+											<p:column width="15%" headerText="No. Factura">
+												<h:outputText value="#{pago.noFactura}" />
+											</p:column>
+											<p:column width="25%" headerText="Importe Factura">
+												<h:outputText value="#{pago.importeFactura}">
+													<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+												</h:outputText>
+											</p:column>
+											<p:column width="25%"
+												headerText="Importe Afectaci&oacute;n Presupuestal">
+												<h:outputText value="#{pago.importeAfectacionPresupuestal}">
+													<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+												</h:outputText>
+											</p:column>
+											<p:column width="12%" headerText="Estatus">
+												<h:outputText value="#{pago.statusPago.descripcion}" />
+											</p:column>
+											<p:column width="10%" style="text-align: center">
+
+												<p:commandButton id="btnEditPago"
+													action="#{controlPresupuestalMB.openDialogPagosObras()}"
+													iconPos="left" icon="ui-icon-pencil">
+
+													<f:setPropertyActionListener value="#{pago}"
+														target="#{controlPresupuestalMB.obraPagoSelected}" />
+												</p:commandButton>
+
+											</p:column>
+											<p:rowExpansion>
+												<p:panelGrid style="width:100%;">
+													<f:facet name="header">
+														<p:row>
+															<p:column style="width:20%">Estimaci&oacute;n</p:column>
+															<p:column style="width:20%">Fecha del Pago</p:column>
+															<p:column style="width:60%">Observaciones</p:column>
+														</p:row>
+													</f:facet>
+
+													<p:row>
+														<p:column>
+															<h:outputText value="#{pago.estimacion}" />
+														</p:column>
+														<p:column>
+															<h:outputText value="#{pago.fechaPago}">
+																<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</p:column>
+														<p:column>
+															<h:outputText value="#{pago.observaciones}" />
+														</p:column>
+													</p:row>
+												</p:panelGrid>
+											</p:rowExpansion>
+										</p:dataTable>
+									</p:tab>
+								</p:tabView>
+
+							</p:tab>
+						</p:accordionPanel>
+					</p:panel>
+				</p:panel>
+			</h:form>
+
+			<h:form id="secondForm">
+				<!-- Eliminar Este bloque si se mantiene la configuracion del catalogo de acciones  -->
+				<!-- <p:dialog id="AreasId" header="Registro de Areas" styleClass="green"
+					widgetVar="areasDlg" resizable="false" width="500" height="180"
+					showEffect="clip" hideEffect="clip" modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogAreas}">
+
+					<p:messages id="messagesAreas" showDetail="false" closable="true" />
+
+					<p:panelGrid columns="1" layout="grid" id="inputsAreas"
+						styleClass="showcase-text-align-center ui-noborder">
+
+						<p:outputLabel for="@next" value="Area: " />
+						<p:selectOneMenu requiredMessage="Favor de Seleccionar un Area"
+							required="true" converter="genericConverter" id="areas"
+							value="#{controlPresupuestalMB.areaSelected}" style="width:100%;">
+							<f:selectItem itemLabel="Seleccione Area" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{controlPresupuestalMB.listAreas}"
+								var="area" itemLabel="#{area.descripcion}" itemValue="#{area}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+					<p:panel styleClass="col-centered row-centered" style="border:0em;">
+						<p:commandButton value="Registrar"
+							update=":secondForm:messagesAreas :form:fam"
+							actionListener="#{controlPresupuestalMB.saveArea()}"
+							style="color: #000; padding: .5em; background: #b99056; font-weight: bolder;" />
+					</p:panel>
+					update="areasForm:messages, form:fam"
+				</p:dialog> -->
+				<p:dialog id="AccionesId"
+					header="Configuraci&oacute;n de Areas y Acciones"
+					styleClass="green" widgetVar="accionesDlg" resizable="false"
+					width="700" height="300" showEffect="clip" hideEffect="clip"
+					modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogAcciones}">
+
+					<p:messages id="messagesAcciones" showDetail="false"
+						closable="true" />
+
+					<p:panelGrid columns="1" layout="grid" id="inputsAcciones"
+						styleClass="showcase-text-align-center ui-noborder">
+
+						<p:outputLabel for="@next" value="Area: " />
+						<p:selectOneMenu requiredMessage="Favor de Seleccionar un Area"
+							required="true" converter="genericConverter" id="aresa"
+							value="#{controlPresupuestalMB.presupuestoSelected}"
+							style="width:100%;">
+							<f:selectItem itemLabel="Seleccione Area" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems
+								value="#{controlPresupuestalMB.listPresupuestoAreas}"
+								var="presupuesto" itemLabel="#{presupuesto.area.descripcion}"
+								itemValue="#{presupuesto}" />
+							<p:ajax event="change"
+								listener="#{controlPresupuestalMB.onSelectedArea()}"
+								update=":secondForm:checkboxDT" />
+						</p:selectOneMenu>
+
+						<!-- <p:outputLabel for="@next" value="Acci&oacute;n: " />
+						<p:selectOneMenu requiredMessage="Favor de Seleccionar una Acción"
+							required="true" converter="genericConverter" id="accion"
+							value="#{controlPresupuestalMB.accionSelected}"
+							style="width:100%;">
+							<f:selectItem itemLabel="Seleccione Acción" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{controlPresupuestalMB.listAccions}"
+								var="accion" itemLabel="#{accion.nombre}" itemValue="#{accion}" />
+						</p:selectOneMenu> -->
+
+						<p:dataTable id="checkboxDT" var="car"
+							value="#{controlPresupuestalMB.listAccions}"
+							selection="#{controlPresupuestalMB.selectedAccions}"
+							rowKey="#{car.id}" style="margin-bottom:0"
+							emptyMessage="El Area seleccionada no cuenta con Acciones registradas.">
+							<f:facet name="header"> Acciones </f:facet>
+							<p:column selectionMode="multiple"
+								style="width:8%;text-align:center" />
+							<p:column headerText="Clave" style="width:10%;text-align:center">
+								<h:outputText value="#{car.clave}" />
+							</p:column>
+							<p:column headerText="Acci&oacute;n"
+								style="width:82%;text-align:center">
+								<h:outputText value="#{car.nombre}" />
+							</p:column>
+							<!--  <f:facet name="footer">
+            <p:commandButton process="checkboxDT"  icon="pi pi-search" value="View" oncomplete="PF('multiCarDialog').show()" />
+        </f:facet> -->
+						</p:dataTable>
+
+					</p:panelGrid>
+
+					<p:panel styleClass="col-centered row-centered" style="border:0em;">
+						<p:commandButton
+							style="color: #000; padding: .5em; background: #b99056; font-weight: bolder;"
+							value="Registrar"
+							update=":secondForm:messagesAcciones, :form:fam"
+							actionListener="#{controlPresupuestalMB.saveAccion()}" />
+					</p:panel>
+				</p:dialog>
+				<p:dialog id="dialogPresupuestoId"
+					header="Configuraci&oacute;n de Presupuesto" styleClass="green"
+					widgetVar="configuracionPresupuestoFamDlg" resizable="false"
+					width="800" height="320" showEffect="clip" hideEffect="clip"
+					modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogPresupuestosFAM}">
+
+					<p:messages id="messagesPresupuestoFAM" showDetail="true"
+						closable="true" />
+
+					<p:dataTable id="table" var="presupuesto"
+						value="#{controlPresupuestalMB.listPresupuestoAreas}">
+						<f:facet name="header">
+							<p:row>
+								<p:column>
+									<p:outputLabel style="margin-right: 10px;"
+										value="Presupuesto Total Asignado #{controlPresupuestalMB.fam.concepto}:" />
+								</p:column>
+								<p:column style="margin-left: 10px;">
+									<p:inplace editor="true">
+										<p:outputLabel
+											value="#{controlPresupuestalMB.fam.autorizadoAnual}">
+											<f:convertNumber type="currency" pattern="###,##0.00" />
+										</p:outputLabel>
+										<pe:inputNumber id="input1"
+											value="#{controlPresupuestalMB.fam.autorizadoAnual}"
+											decimalPlaces="2" decimalSeparator="." thousandSeparator="," />
+										<p:ajax event="save"
+											update=":secondForm:table, :secondForm:messagesPresupuestoFAM, :form:fam"
+											listener="#{controlPresupuestalMB.updateFAM()}" />
+									</p:inplace>
+								</p:column>
+							</p:row>
+						</f:facet>
+						<p:column style="width:20px">
+							<p:rowToggler />
+						</p:column>
+						<p:column headerText="Area" width="60%">
+							<p:outputLabel value="#{presupuesto.area.descripcion}" />
+						</p:column>
+						<p:column headerText="Presupuesto Asignado">
+							<p:inplace editor="true">
+								<!-- label="#{presupuesto.presupuestoAutorizado}" -->
+								<p:outputLabel value="#{presupuesto.presupuestoAutorizado}">
+									<f:convertNumber pattern="###,##0.00" />
+								</p:outputLabel>
+								<pe:inputNumber value="#{presupuesto.presupuestoAutorizado}"
+									decimalPlaces="2" thousandSeparator="," decimalSeparator="." />
+								<p:ajax event="save"
+									update=":secondForm:table, :secondForm:messagesPresupuestoFAM, :form:fam"
+									listener="#{controlPresupuestalMB.updateFAM()}" />
+							</p:inplace>
+						</p:column>
+
+						<p:rowExpansion>
+							<p:panelGrid>
+								<p:dataTable var="accion" value="#{presupuesto.accions}">
+
+									<p:column headerText="Acción" width="70%">
+										<h:outputText value="#{accion.accion.nombre}" />
+									</p:column>
+									<p:column headerText="Presupuesto Asignado" width="30%">
+										<p:inplace editor="true">
+											<!--  label="#{accion.autorizadoInicial}" -->
+											<p:outputLabel value="#{accion.autorizadoInicial}">
+												<f:convertNumber pattern="###,##0.00" />
+											</p:outputLabel>
+											<pe:inputNumber value="#{accion.autorizadoInicial}"
+												decimalPlaces="2" thousandSeparator="," decimalSeparator="." />
+											<p:ajax event="save"
+												listener="#{controlPresupuestalMB.updateFAM()}"
+												update=":secondForm:table, :secondForm:messagesPresupuestoFAM, :form:fam" />
+										</p:inplace>
+									</p:column>
+								</p:dataTable>
+								<f:facet name="header">
+									<p:row>
+										<p:column>
+											<p:outputLabel style="margin-right: 10px;"
+												value="Presupuesto Disponible: " />
+											<p:outputLabel value="#{presupuesto.disponible}">
+												<f:convertNumber type="currency" pattern="###,##0.00" />
+											</p:outputLabel>
+										</p:column>
+									</p:row>
+								</f:facet>
+							</p:panelGrid>
+						</p:rowExpansion>
+
+						<f:facet name="footer">
+							<p:row>
+								<p:column>
+									<p:outputLabel style="margin-right: 10px;"
+										value="Presupuesto Disponible #{controlPresupuestalMB.fam.concepto}: " />
+									<p:outputLabel value="#{controlPresupuestalMB.fam.disponible}">
+										<f:convertNumber type="currency" pattern="###,##0.00" />
+									</p:outputLabel>
+								</p:column>
+							</p:row>
+						</f:facet>
+					</p:dataTable>
+				</p:dialog>
+				<p:dialog id="dialogContratosId" header="Registro de Contratos"
+					styleClass="green" widgetVar="contratosDlg" resizable="false"
+					width="800" height="300" showEffect="clip" hideEffect="clip"
+					modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogContratosFAM}">
+
+					<p:messages id="messagesContratosFam" showDetail="false"
+						closable="true" />
+
+					<p:panelGrid columns="3" layout="grid"
+						styleClass="showcase-text-align-center ui-noborder">
+						<p:outputLabel value="Número de Contrato:" />
+						<p:outputLabel value="Proveedor:" />
+						<p:outputLabel value="Importe:" />
+
+						<p:inputText id="float-input1" autocomplete="off" required="true"
+							requiredMessage="Favor de Ingresar el Número de Contrato"
+							value="#{controlPresupuestalMB.tcContrato.numeroContrato}">
+							<p:ajax event="blur"
+								listener="#{controlPresupuestalMB.changeContrato()}"
+								update=":secondForm:float-input2, :secondForm:float-input3" />
+						</p:inputText>
+						<p:inputText id="float-input2" disabled="true"
+							value="#{controlPresupuestalMB.tcContrato.proveedor.nombreProveedor}" />
+						<pe:inputNumber id="float-input3" disabled="true"
+							decimalPlaces="2" thousandSeparator="," decimalSeparator="."
+							value="#{controlPresupuestalMB.tcContrato.importeAdquisicion}" />
+					</p:panelGrid>
+					<p:panelGrid columns="1" layout="grid" id="inputsAreaAccion"
+						styleClass="showcase-text-align-center ui-noborder">
+						<p:outputLabel value="Area:" />
+						<p:inputText id="float-input4" disabled="true"
+							value="#{controlPresupuestalMB.areaAccionSelected.presupuestoArea.area.descripcion}" />
+						<p:outputLabel value="Acción:" />
+						<p:inputText id="float-input5" disabled="true"
+							value="#{controlPresupuestalMB.areaAccionSelected.accion.nombre}" />
+					</p:panelGrid>
+					<p:panel styleClass="col-centered row-centered" style="border:0em;">
+						<p:commandButton value="Aceptar"
+							update=":secondForm:messagesContratosFam, :form:fam"
+							style="color: #000; padding: .5em; background: #b99056; font-weight: bold;"
+							actionListener="#{controlPresupuestalMB.saveContrato()}" />
+					</p:panel>
+				</p:dialog>
+				<p:dialog id="dialogFacturasId" header="Registro de Facturas"
+					styleClass="green" widgetVar="facturasDlg" resizable="false"
+					width="800" height="300" showEffect="clip" hideEffect="clip"
+					modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogFacturasFAM}">
+
+					<p:messages id="messagesFacturasFam" showDetail="false"
+						closable="true" />
+
+					<p:panelGrid columns="3" layout="grid"
+						styleClass="showcase-text-align-center ui-noborder">
+						<p:outputLabel value="Número de Factura:" />
+						<p:outputLabel value="Fecha de Recepción:" />
+						<p:outputLabel value="Importe Factura:" />
+						<p:inputText id="float-input21" autocomplete="off" required="true"
+							requiredMessage="Favor de Ingresar el Número de Factura"
+							value="#{controlPresupuestalMB.contratoFactura.noFactura}" />
+
+						<p:calendar id="fechaRecepcion" mode="popup" locale="es" size="10"
+							style="width:70%" pattern="dd/MM/yyyy" mask="true" maxlength="10"
+							requiredMessage="Favor de Ingresar una Fecha de Recepción"
+							required="true"
+							value="#{controlPresupuestalMB.contratoFactura.fechaRecepcion}"
+							converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:calendar>
+						<pe:inputNumber id="float-input23" required="true"
+							decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+							requiredMessage="Favor de Ingresar el Importe de la Factura"
+							value="#{controlPresupuestalMB.contratoFactura.importeFactura}"
+							autocomplete="off" />
+					</p:panelGrid>
+					<p:panelGrid columns="4" layout="grid"
+						styleClass="showcase-text-align-center ui-noborder">
+						<p:outputLabel value="Tipo:" />
+						<p:outputLabel value="Mes:" />
+						<p:outputLabel value="Número:" />
+						<p:outputLabel value="Fecha Póliza:" />
+						<p:selectOneMenu id="tipoPoliza"
+							value="#{controlPresupuestalMB.polizaSelected.tippol}"
+							required="true" style="width:100%"
+							requiredMessage="Favor de Seleccionar un Tipo de Póliza">
+							<f:selectItem itemLabel="Seleccione un Tipo de Póliza"
+								itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{controlPresupuestalMB.listTipos}"
+								var="tipo" itemValue="#{tipo.tippol}" itemLabel="#{tipo.tipnom}"
+								itemDescription="#{tipo.tipnom}" />
+							<p:ajax event="change"
+								listener="#{controlPresupuestalMB.changePoliza()}"
+								update="@this" />
+						</p:selectOneMenu>
+						<p:selectOneMenu id="mesPoliza"
+							value="#{controlPresupuestalMB.polizaSelected.mespol}"
+							style="width:100%" required="true"
+							requiredMessage="Favor de Seleccionar un Mes">
+							<f:selectItem itemLabel="Seleccione un Mes de Póliza"
+								itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{controlPresupuestalMB.listMeses}"
+								var="mes" itemValue="#{mes.periodo}"
+								itemLabel="#{mes.descripcion}"
+								itemDescription="#{mes.descripcion}" />
+							<p:ajax event="change"
+								listener="#{controlPresupuestalMB.changePoliza()}"
+								update="@this" />
+						</p:selectOneMenu>
+						<pe:inputNumber id="float-input26" required="true"
+							decimalPlaces="0" thousandSeparator="" maxlength="6"
+							requiredMessage="Favor de Ingresar un Número de Póliza"
+							value="#{controlPresupuestalMB.polizaSelected.conpol}"
+							autocomplete="off">
+							<p:ajax event="blur" update=":secondForm:fechaPoliza"
+								listener="#{controlPresupuestalMB.changePoliza()}" />
+						</pe:inputNumber>
+						<p:calendar id="fechaPoliza" locale="es" size="10" disabled="true"
+							style="width:70%" pattern="dd/MM/yyyy" mask="true" maxlength="10"
+							requiredMessage="Seleccione una fecha"
+							value="#{controlPresupuestalMB.contratoFactura.poliza.fecpol}"
+							converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:calendar>
+
+					</p:panelGrid>
+					<p:panelGrid columns="4" layout="grid"
+						styleClass="showcase-text-align-center ui-noborder">
+						<p:outputLabel value="Estatus Pago:" />
+						<p:outputLabel value="Fecha de Pago:" />
+						<p:outputLabel value="" />
+						<p:outputLabel value="" />
+						<p:selectOneMenu id="console22" converter="genericConverter"
+							value="#{controlPresupuestalMB.contratoFactura.statusPago}"
+							style="width:100%" required="true"
+							requiredMessage="Favor de Seleccionar el Estatus del Pago">
+							<f:selectItem itemLabel="Seleccione un Estatus" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{controlPresupuestalMB.liStatusPagos}"
+								var="obj" itemLabel="#{obj.descripcion}" itemValue="#{obj}" />
+						</p:selectOneMenu>
+						<p:calendar id="fechaPago" mode="popup" locale="es" size="10"
+							style="width:70%" pattern="dd/MM/yyyy" mask="true" maxlength="10"
+							requiredMessage="Seleccione una fecha"
+							value="#{controlPresupuestalMB.contratoFactura.fechaPago}"
+							converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:calendar>
+					</p:panelGrid>
+
+					<p:panel styleClass="col-centered row-centered" style="border:0em;">
+						<p:commandButton value="Aceptar"
+							update=":secondForm:messagesFacturasFam, :form:fam"
+							style="color: #000; padding: .5em; background: #b99056; font-weight: bolder;"
+							actionListener="#{controlPresupuestalMB.saveFactura()}" />
+					</p:panel>
+				</p:dialog>
+			</h:form>
+			<h:form id="thirdForm">
+				<p:dialog id="dialogPresupuestoPAD"
+					header="Configuraci&oacute;n de Presupuesto" styleClass="green"
+					widgetVar="configuracionPresupuestoPadDlg" resizable="false"
+					width="800" height="320" showEffect="clip" hideEffect="clip"
+					modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogPresupuestosPAD}">
+
+					<p:messages id="messagesPresupuestoPAD" showDetail="true"
+						closable="true" />
+
+					<p:dataTable id="table" var="presupuesto"
+						value="#{controlPresupuestalMB.listPresupuestoDependencias}">
+						<f:facet name="header">
+							<p:row>
+								<p:column>
+									<p:outputLabel style="margin-right: 10px;"
+										value="#{controlPresupuestalMB.pad.concepto}" />
+								</p:column>
+								<p:column style="margin-left: 10px;">
+									<p:inplace editor="true">
+										<p:outputLabel
+											value="#{controlPresupuestalMB.pad.autorizadoAnual}">
+											<f:convertNumber type="currency" pattern="###,##0.00" />
+										</p:outputLabel>
+										<pe:inputNumber id="input1"
+											value="#{controlPresupuestalMB.pad.autorizadoAnual}"
+											decimalPlaces="2" decimalSeparator="." thousandSeparator="," />
+										<p:ajax event="save"
+											update=":thirdForm:table, :thirdForm:messagesPresupuestoPAD, :form:pad"
+											listener="#{controlPresupuestalMB.updatePAD()}" />
+									</p:inplace>
+								</p:column>
+							</p:row>
+						</f:facet>
+						<p:column headerText="Dependencia" width="60%">
+							<p:outputLabel value="#{presupuesto.dependencia.nomdep}" />
+						</p:column>
+						<p:column headerText="Presupuesto Asignado">
+							<p:inplace editor="true">
+								<p:outputLabel value="#{presupuesto.presupuestoAsignado}">
+									<f:convertNumber type="currency" pattern="###,##0.00" />
+								</p:outputLabel>
+								<pe:inputNumber value="#{presupuesto.presupuestoAsignado}"
+									decimalPlaces="2" thousandSeparator="," decimalSeparator="." />
+								<p:ajax event="save"
+									update=":thirdForm:table, :thirdForm:messagesPresupuestoPAD, :form:pad"
+									listener="#{controlPresupuestalMB.updatePAD()}" />
+							</p:inplace>
+						</p:column>
+					</p:dataTable>
+				</p:dialog>
+				<p:dialog id="dialogId" header="Registro de Dependencias"
+					styleClass="green" widgetVar="dependenciaDlg" resizable="false"
+					width="500" height="180" showEffect="clip" hideEffect="clip"
+					modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogDependencias}">
+
+					<p:messages id="messagesDependencias" showDetail="false"
+						closable="true" />
+
+					<p:panelGrid columns="1" layout="grid" id="detailssAccion"
+						styleClass="showcase-text-align-center">
+
+						<p:outputLabel for="@next" value="Dependencia: " />
+						<p:selectOneMenu
+							requiredMessage="Favor de Seleccionar una Dependencia"
+							required="true" converter="genericConverter" id="area"
+							value="#{controlPresupuestalMB.dependenciaSelected}"
+							style="width:100%;">
+							<f:selectItem itemLabel="Seleccione una Dependencia" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{controlPresupuestalMB.listCatdeps}"
+								var="dep" itemLabel="#{dep.nomdep}" itemValue="#{dep}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+					<p:commandButton value="Aceptar"
+						update=":thirdForm:messagesDependencias, :form:pad"
+						actionListener="#{controlPresupuestalMB.saveDependencia()}"
+						style="padding: 5px; position: absolute; right: 50%;" />
+				</p:dialog>
+				<p:dialog id="dialogObras" header="Registro de Obras"
+					styleClass="green" widgetVar="obrasDlg" resizable="false"
+					width="800" height="320" showEffect="clip" hideEffect="clip"
+					modal="true" rendered="#{controlPresupuestalMB.renderDialogObras}">
+
+					<p:messages id="messagesObras" showDetail="false" closable="true" />
+
+					<p:panelGrid columns="2" layout="grid"
+						styleClass="showcase-text-align-center">
+
+						<p:column>
+							<p:outputLabel value="Número de Acci&oacute;n:" />
+							<pe:inputNumber id="float-input2s6" required="true"
+								decimalPlaces="0" thousandSeparator="" maxlength="6"
+								requiredMessage="Error! Favor de Ingresar un Número de Acción."
+								value="#{controlPresupuestalMB.twObra.noAccion}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Dependencia:" />
+							<div>
+								<p:selectOneMenu id="consosle32" converter="genericConverter"
+									value="#{controlPresupuestalMB.twObra.presupuestoDependencia}"
+									style="width:100% !important" required="true"
+									requiredMessage="Error! Favor de Seleccionar la Dependencia">
+									<f:selectItem itemLabel="Seleccione una Dependencia"
+										itemValue="" noSelectionOption="true" />
+									<f:selectItems
+										value="#{controlPresupuestalMB.listPresupuestoDependencias}"
+										var="obj" itemLabel="#{obj.dependencia.nomdep}"
+										itemValue="#{obj}" />
+								</p:selectOneMenu>
+							</div>
+						</p:column>
+						<p:column>
+							<p:outputLabel value="N&uacute;mero de Contrato:" />
+							<p:inputText id="float-indwpust31" autocomplete="off"
+								required="true"
+								requiredMessage="Error! Favor de Ingresar el N&uacute;mero de Contrato."
+								value="#{controlPresupuestalMB.twObra.contrato.numeroContrato}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Monto Asignado:" />
+							<pe:inputNumber id="float-inputx23" required="true"
+								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+								requiredMessage="Error! Favor de Ingresar el Monto Asignado."
+								value="#{controlPresupuestalMB.twObra.asignado}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Monto Autorizado:" />
+							<pe:inputNumber id="float-cinput23" required="true"
+								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+								requiredMessage="Error! Favor de Ingresar el Monto Autorizado."
+								value="#{controlPresupuestalMB.twObra.autorizado}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="N&uacute;mero de Oficio de Asignaci&oacute;n:" />
+							<p:inputText id="float-isnputx23" required="true"
+								requiredMessage="Error! Favor de Ingresar el N&uacute;mero de Oficio de Asignaci&oacute;n."
+								value="#{controlPresupuestalMB.twObra.oficioAsignacion}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="N&uacute;mero de Oficio de Autorizaci&oacute;n:" />
+							<p:inputText id="float-cinputa23" required="true"
+								requiredMessage="Error! Favor de Ingresar el N&uacute;mero de Oficio de Autorizaci&oacute;n."
+								value="#{controlPresupuestalMB.twObra.oficioAutorizacion}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Fecha de Asignaci&oacute;n:" />
+							<p:calendar id="fechaAsignacion" mode="popup" locale="es"
+								size="10" style="width:70%" pattern="dd/MM/yyyy" mask="true"
+								maxlength="10" required="true"
+								requiredMessage="Error! Favor de Ingresar una Fecha de Asignaci&oacute;n"
+								value="#{controlPresupuestalMB.twObra.fechaAsignacion}"
+								converterMessage="Error! La Fecha de Asignaci&oacute;n debe ser en fomato de dd/MM/aaaa">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:calendar>
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Fecha de Autorizaci&oacute;n:" />
+							<p:calendar id="fechaAutorizacion" mode="popup" locale="es"
+								size="10" style="width:70%" pattern="dd/MM/yyyy" mask="true"
+								maxlength="10" required="true"
+								requiredMessage="Error! Favor de Ingresar una Fecha de Autorizaci&oacute;n"
+								value="#{controlPresupuestalMB.twObra.fechaAutorizacion}"
+								converterMessage="Error! La Fecha de Autorizaci&oacute;n debe ser en fomato de dd/MM/aaaa">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:calendar>
+						</p:column>
+					</p:panelGrid>
+					<p:commandButton value="Registrar"
+						update=":thirdForm:messagesObras, :form:pad"
+						actionListener="#{controlPresupuestalMB.saveObra()}"
+						style="color: #000; position: absolute; right: 50%; padding: .5em; background: #b99056; font-weight: bold;" />
+
+				</p:dialog>
+
+				<p:dialog id="dialogPagosObras" header="Registro de Pagos"
+					styleClass="green" widgetVar="pagosObrasDlg" resizable="false"
+					width="850" height="380" showEffect="clip" hideEffect="clip"
+					modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogPagosObras}">
+
+					<p:messages id="messagesPagoObras" showDetail="false"
+						closable="true" />
+
+					<p:panelGrid columns="3" layout="grid"
+						styleClass="showcase-text-align-center ui-noborder">
+
+						<p:column>
+							<p:outputLabel value="Autorizaci&oacute;n de Pago:" />
+							<pe:inputNumber id="float-isnput2s6" required="true"
+								decimalPlaces="0" thousandSeparator="" maxlength="6"
+								requiredMessage="Error! Favor de Ingresar la Autorización del Pago."
+								value="#{controlPresupuestalMB.twObraPago.autorizacionPago}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="No. de Factura:" />
+							<p:inputText id="float-isndpust31" autocomplete="off"
+								required="true"
+								requiredMessage="Error! Favor de Ingresar el No de Factura."
+								value="#{controlPresupuestalMB.twObraPago.noFactura}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Importe Factura:" />
+							<pe:inputNumber id="flosat-inputx23" required="true"
+								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+								requiredMessage="Error! Favor de Ingresar el Importe de la Factura."
+								value="#{controlPresupuestalMB.twObraPago.importeFactura}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Estimaci&oacute;n:" />
+							<p:inputText id="float-indswpust31" autocomplete="off"
+								required="true"
+								requiredMessage="Error! Favor de Ingresar la Estimaci&oacute;n."
+								value="#{controlPresupuestalMB.twObraPago.estimacion}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Importe Afectaci&oacute;n Presupuestal:" />
+							<pe:inputNumber id="flosast-inputx23" required="true"
+								decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+								requiredMessage="Error! Favor de Ingresar el Importe de la Afectaci&oacute;n Presupuestal."
+								value="#{controlPresupuestalMB.twObraPago.importeAfectacionPresupuestal}"
+								autocomplete="off" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Estatus:" />
+							<div>
+								<p:selectOneMenu id="csonsosle32" converter="genericConverter"
+									value="#{controlPresupuestalMB.twObraPago.statusPago}"
+									style="width:100% !important" required="true"
+									requiredMessage="Error! Favor de Seleccionar un Estatus">
+
+									<f:selectItem itemLabel="Seleccione un Estatus" itemValue=""
+										noSelectionOption="true" />
+									<f:selectItems value="#{controlPresupuestalMB.liStatusPagos}"
+										var="obj" itemLabel="#{obj.descripcion}" itemValue="#{obj}" />
+									<p:ajax event="change" update="@this" />
+								</p:selectOneMenu>
+							</div>
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Fecha de Pago:" />
+							<p:calendar id="fechaRsecepcion" mode="popup" locale="es"
+								size="10" style="width:70%" pattern="dd/MM/yyyy" mask="true"
+								maxlength="10"
+								requiredMessage="Favor de Ingresar una Fecha de Pago"
+								value="#{controlPresupuestalMB.twObraPago.fechaPago}"
+								converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</p:calendar>
+						</p:column>
+					</p:panelGrid>
+					<p:panelGrid columns="1" layout="grid"
+						styleClass="showcase-text-align-center ui-noborder">
+						<p:row>
+							<p:column styleClass="ui-panelgrid-cell ui-grid-col-8">
+								<p:outputLabel value="Observaciones:" />
+								<p:inputTextarea rows="3" cols="140"
+									value="#{controlPresupuestalMB.twObraPago.observaciones}"
+									counter="display" maxlength="500"
+									counterTemplate="{0} caracteres restantes." autoResize="true" />
+								<h:outputText value="" />
+								<h:outputText id="display" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:commandButton value="Registrar"
+						update=":thirdForm:messagesPagoObras, :form:pad"
+						actionListener="#{controlPresupuestalMB.savePagoObra()}"
+						style="color: #000; position: absolute; right: 50%; padding: .5em; background: #b99056; font-weight: bold;" />
+				</p:dialog>
+
+				<p:dialog id="dialogContratosPad" header="Contratos"
+					styleClass="green ui-noborder" widgetVar="contratosPadDlg"
+					resizable="false" width="850" height="400" showEffect="clip"
+					hideEffect="clip" modal="true"
+					rendered="#{controlPresupuestalMB.renderDialogContratosPAD}">
+
+					<p:messages id="messagesContratosPad" showDetail="false"
+						closable="true" />
+
+					<p:tabView styleClass="ui-noborder">
+						<!-- <p:ajax event="tabChange" listener="#{tabbedView.onTabChange}"
+							update=":thirdForm:messagesContratosPad" />
+						 -->
+
+						<p:tab title="Lista de Contratos">
+							<h:panelGrid columns="1" cellpadding="10"
+								styleClass="ui-noborder">
+								<p:dataTable id="contratosTable" var="contrato"
+									paginatorPosition="bottom"
+									value="#{controlPresupuestalMB.listContratoPads}" rows="10"
+									paginator="true" rowsPerPageTemplate="10,20,50"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} contratos"
+									selection="#{controlPresupuestalMB.contratoPadSelected}"
+									selectionMode="single" rowKey="#{contrato.id}"
+									emptyMessage="No se encontraron Contratos para mostrar.">
+									<f:facet name="header">Lista de Contratos</f:facet>
+									<p:column headerText="N&uacute;mero"
+										filterBy="#{contrato.numeroContrato}"
+										filterMatchMode="contains" sortBy="#{contrato.numeroContrato}">
+										<h:outputText value="#{contrato.numeroContrato}" />
+									</p:column>
+									<p:column headerText="Fecha" sortBy="#{contrato.fechaContrato}"
+										filterBy="#{contrato.fechaContrato}"
+										filterMatchMode="contains">
+										<h:outputText value="#{contrato.fechaContrato}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Importe" sortBy="#{contrato.importe}"
+										filterBy="#{contrato.importe}" filterMatchMode="contains">
+										<h:outputText value="#{contrato.importe}">
+											<f:convertNumber pattern="#,##0.00" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Obra" sortBy="#{contrato.nombreObra}"
+										filterBy="#{contrato.nombreObra}" filterMatchMode="contains">
+										<h:outputText value="#{contrato.nombreObra}" />
+									</p:column>
+									<p:column headerText="Proveedor" sortBy="#{contrato.proveedor}"
+										filterBy="#{contrato.proveedor}" filterMatchMode="contains">
+										<h:outputText value="#{contrato.proveedor}" />
+									</p:column>
+								</p:dataTable>
+
+								<p:contextMenu for="contratosTable">
+									<p:menuitem value="Editar" icon="ui-icon-pencil"
+										actionListener="#{accionesMB.editRows}"
+										oncomplete="PF('carDialog').show()" />
+									<!--  update="formModal" -->
+									<p:menuitem value="Eliminar"
+										oncomplete="PF('confirmFileDelete').show()"
+										icon="ui-icon-trash" />
+									<!-- update="dataGrid" -->
+								</p:contextMenu>
+							</h:panelGrid>
+						</p:tab>
+						<p:tab title="Nuevo Contrato" titleStyleClass="ui-noborder">
+							<h:panelGrid columns="1" cellpadding="10"
+								styleClass="ui-noborder">
+								<p:panelGrid columns="3" layout="grid"
+									styleClass="showcase-text-align-center ui-noborder">
+
+									<p:column>
+										<p:outputLabel value="N&uacute;mero de Contrato:" />
+										<p:inputText id="float-input2s6"
+											requiredMessage="Error! Favor de Ingresar un Número de Contrato."
+											value="#{controlPresupuestalMB.tcContratoPad.numeroContrato}"
+											autocomplete="off" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Fecha del Contrato:" />
+										<p:calendar id="fechaContrato" mode="popup" locale="es"
+											size="10" style="width:70%" pattern="dd/MM/yyyy" mask="true"
+											maxlength="10" required="true"
+											requiredMessage="Error! Favor de Ingresar una Fecha de Contrato"
+											value="#{controlPresupuestalMB.tcContratoPad.fechaContrato}"
+											converterMessage="Error! La Fecha de Conytrato debe ser en fomato de dd/MM/aaaa">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:calendar>
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Importe:" />
+										<pe:inputNumber id="float-inputx23" required="true"
+											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+											requiredMessage="Error! Favor de Ingresar el Importe."
+											value="#{controlPresupuestalMB.tcContratoPad.importe}"
+											autocomplete="off" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Nombre de la Obra:" />
+										<p:inputText id="float-indpust3h1" autocomplete="off"
+											required="true"
+											requiredMessage="Error! Favor de Ingresar el Nombre de la Obra."
+											value="#{controlPresupuestalMB.tcContratoPad.nombreObra}" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Municipio:" />
+										<p:inputText id="float-indpust3f1" autocomplete="off"
+											requiredMessage="Error! Favor de Ingresar el Municipio."
+											value="#{controlPresupuestalMB.tcContratoPad.municipio}" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Localidad:" />
+										<p:inputText id="float-indpust3aw1" autocomplete="off"
+											requiredMessage="Error! Favor de Ingresar el Localidad."
+											value="#{controlPresupuestalMB.tcContratoPad.localidad}" />
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Clave Presupuestal:" />
+										<p:inputText id="float-indpust322s221" autocomplete="off"
+											requiredMessage="Error! Favor de Ingresar la Clave Presupuestal."
+											value="#{controlPresupuestalMB.tcContratoPad.clavePresupuestal}" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Fecha de Inicio:" />
+										<p:calendar id="fechaAsignacion" mode="popup" locale="es"
+											size="10" style="width:70%" pattern="dd/MM/yyyy" mask="true"
+											maxlength="10" required="true"
+											requiredMessage="Error! Favor de Ingresar una Fecha de Inicio"
+											value="#{controlPresupuestalMB.tcContratoPad.fechaInicioObra}"
+											converterMessage="Error! La Fecha de Inicio debe ser en fomato de dd/MM/aaaa">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:calendar>
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Fecha de Termino:" />
+										<p:calendar id="fechaAutorizacion" mode="popup" locale="es"
+											size="10" style="width:70%" pattern="dd/MM/yyyy" mask="true"
+											maxlength="10" required="true"
+											requiredMessage="Error! Favor de Ingresar una Fecha de Termino"
+											value="#{controlPresupuestalMB.tcContratoPad.fechaTerminoObra}"
+											converterMessage="Error! La Fecha de Termino debe ser en fomato de dd/MM/aaaa">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:calendar>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel value="Proveedor:" />
+										<p:inputText id="float-indpust3221" autocomplete="off"
+											required="true"
+											requiredMessage="Error! Favor de Ingresar el Proveedor."
+											value="#{controlPresupuestalMB.tcContratoPad.proveedor}" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="RFC:" />
+										<p:inputText id="float-indpust322221" autocomplete="off"
+											requiredMessage="Error! Favor de Ingresar el RFC."
+											value="#{controlPresupuestalMB.tcContratoPad.rfc}" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Representante Legal:" />
+										<p:inputText id="float-indpust222s13221" autocomplete="off"
+											requiredMessage="Error! Favor de Ingresar El Representate Legal."
+											value="#{controlPresupuestalMB.tcContratoPad.representanteLegal}" />
+									</p:column>
+
+
+								</p:panelGrid>
+
+							</h:panelGrid>
+							<p:panelGrid columns="2" layout="grid" id="inputsContratoPad"
+								styleClass="showcase-text-align-center ui-noborder">
+								<p:column>
+									<p:column>
+										<p:outputLabel value="Domicilio:" />
+										<p:inputText id="float-indpust22213221" autocomplete="off"
+											requiredMessage="Error! Favor de Ingresar El Domicilio."
+											value="#{controlPresupuestalMB.tcContratoPad.domicilio}" />
+									</p:column>
+								</p:column>
+								<p:column>
+									<p:outputLabel value="Convenios:" />
+									<p:inputText id="float-input4" autocomplete="off"
+										value="#{controlPresupuestalMB.tcContratoPad.convenios}" />
+								</p:column>
+							</p:panelGrid>
+							<p:commandButton value="Registrar"
+								update=":thirdForm:messagesContratosPad, :form:pad"
+								actionListener="#{controlPresupuestalMB.saveContratoPad()}"
+								style="color: #000; position: absolute; right: 50%; padding: .5em; background: #b99056; font-weight: bold;" />
+
+						</p:tab>
+					</p:tabView>
+				</p:dialog>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

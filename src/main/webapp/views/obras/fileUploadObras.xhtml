@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<script type="text/javascript">
+        function descargar(){  
+        	document.getElementById('uploadForm:hideButton').click();
+        } 
+        
+				function showStatus() {
+					PF('statusDialog').show();
+				}
+				function hideStatus() {
+					PF('statusDialog').hide();
+				}
+			</script>
+
+			<p:growl id="growl" showDetail="true" sticky="false" />
+
+			<h:form id="uploadForm" enctype="multipart/form-data">
+				<p:panel id="pObrasAutomatic"
+					header="Captura del programa Anual de Obra"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel"
+					widgetVar="pObrasAu">
+
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+
+					<p:panelGrid id="grid" columns="3" cellpadding="5"
+						styleClass="col-centered row-centered">
+						<p:fileUpload id="archivo" value="#{obrasMB.file}" required="true"
+							mode="simple" sizeLimit="10240" allowTypes="/(\.|\/)(csv)$/"
+							label="..." accept=".csv" update="growl"
+							invalidFileMessage="La Extensión del archivo no es válida" />
+					</p:panelGrid>
+					<p:commandButton type="button" value="Procesar"
+						icon="ui-icon-circle-arrow-n" onclick="PF('confirmFile').show();" />
+
+					<p:confirmDialog widgetVar="confirmFile"
+						message="Este proceso puede tardar algunos minutos. Por favor oprima Aceptar y espere."
+						header="Confirmacion" severity="alert">
+						<p:commandButton value="Aceptar" ajax="false" label="Aceptar"
+							style="margin-top:10px;padding:5px;"
+							action="#{obrasMB.procesarArchivo}"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+							onclick="PF('confirmFile').hide();"
+							onstart="PF('blockUIWidget').block();" update="growl"
+							oncomplete="document.getElementById('hideButton').click();PF('blockUIWidget').unblock();">
+
+						</p:commandButton>
+					</p:confirmDialog>
+
+					<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+						draggable="false" closable="false">
+						<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+					</p:dialog>
+
+					<p:commandButton id="hideButton" value="Download" ajax="false"
+						style="visibility: hidden;">
+						<p:fileDownload value="#{obrasMB.file2}" />
+					</p:commandButton>
+
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+			<h:form id="form1">
+				<p:remoteCommand id="updateObjects" name="updateObjects"
+					actionListener="#{caratulaMB.onPageLoad}" update="@form" />
+				<p:focus context="objects" id="focusTable" />
+				<p:panel id="panel" header="Caratula del Presupuesto de Ingresos"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel">
+					<p:dataTable id="objects" var="object"
+						value="#{caratulaMB.caratulaDataModel}" styleClass="et_datatable"
+						emptyMessage="No hay registros" editable="true" paginator="true"
+						rows="10" lazy="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="programsWdg" selectionMode="single"
+						selection="#{caratulaMB.selectedCaratula}" rowKey="#{object.id}">
+
+						<f:facet name="header">
+							<p:commandButton id="add" value="Agregar"
+								actionListener="#{caratulaMB.addRow}" update=":form1:objects" />
+						</f:facet>
+
+						<p:ajax event="rowEditInit" listener="#{caratulaMB.onInitRowEdit}" />
+						<p:ajax event="rowEdit" listener="#{caratulaMB.onRowEdit}"
+							update="messagesEdit" oncomplete="updateObjects();" />
+						<p:ajax event="rowEditCancel" oncomplete="updateObjects();" />
+
+						<p:column headerText="CTA" width="6%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText style="text-align: center;"
+										value="#{object.cuenta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{object.cuenta}" maxlength="4" id="cuenta"
+										style="width:100%;">
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="SCTA" width="6%">
+							<p:cellEditor>
+								<f:facet name="output">  
+									<h:outputText style="text-align: center;"
+										value="#{object.scta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{object.scta}" maxlength="4"
+										style="width:100%;">
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Descripcion" style="text-align: left;"
+							exportable="true" width="38%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.nombre}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{object.nombre}" style="width:100%;">
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Estimado Año(Anterior)" exportable="true"
+							width="15%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.autoi2}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<pe:inputNumber value="#{object.autoi2}"
+										style="width:100%; text-align:right;" thousandSeparator=","
+										decimalSeparator="." decimalPlaces="2">
+									</pe:inputNumber>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Recaudado Año(Anterior)" exportable="true"
+							width="15%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.autoi3}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<pe:inputNumber value="#{object.autoi3}"
+										style="width:100%; text-align:right;" thousandSeparator=","
+										decimalSeparator="." decimalPlaces="2">
+									</pe:inputNumber>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Presupuestado Año(Actual)" exportable="true"
+							width="15%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.autoi1}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<pe:inputNumber value="#{object.autoi1}"
+										style="width:100%; text-align:right;" thousandSeparator=","
+										decimalSeparator="." decimalPlaces="2">
+									</pe:inputNumber>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Editar" style="width:5%">
+							<p:rowEditor />
+						</p:column>
+
+						<p:column headerText="Borrar" style="width:5%" exportable="false">
+							<p:commandLink image="ui-icon ui-icon-close"
+								action="#{caratulaMB.delete}" update="messagesEdit"
+								oncomplete="updateObjects();">
+								<p:confirm header="Confirmaci&oacute;n"
+									message="¿Estas Seguro de Elimar el Registro?"
+									icon="ui-icon ui-icon-alert" />
+								<h:outputText styleClass="ui-icon ui-icon-close" />
+								<f:setPropertyActionListener value="#{object}"
+									target="#{caratulaMB.selectedCaratula}" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+								hideEffect="fade">
+								<p:commandButton value="Si, Eliminar" type="button"
+									styleClass="ui-confirmdialog-yes" />
+								<p:commandButton value="No, Cancelar" type="button"
+									styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

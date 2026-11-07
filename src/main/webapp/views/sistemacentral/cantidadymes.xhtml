@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="frmcantidadymes">
+				<p:growl id="growlReportador" showDetail="true" sticky="true" />
+				<p:panel id="panel" header="Cantidad y Mes"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="5"
+						styleClass="col-centered row-centered noBorders">
+
+						<h:outputText value="Cantidad:" styleClass="backgroudHeader" />
+						<pe:inputNumber id="cantidad"
+							value="#{consultaCantPolizaCantMB.cantidad}" decimalPlaces="2"
+							decimalSeparator="" thousandSeparator="" maxlength="9">
+							<p:ajax event="change"
+								update=":frmcantidadymes:canttable, :frmcantidadymes:conceptoGrid"
+								listener="#{consultaCantPolizaCantMB.consultList}" />
+						</pe:inputNumber>
+						<h:outputText value="Mes:" styleClass="backgroudHeader" />
+						<p:selectOneMenu value="#{consultaCantPolizaCantMB.mes}">
+							<f:selectItem itemValue="1" itemLabel="01" />
+							<f:selectItem itemValue="2" itemLabel="02" />
+							<f:selectItem itemValue="3" itemLabel="03" />
+							<f:selectItem itemValue="4" itemLabel="04" />
+							<f:selectItem itemValue="5" itemLabel="05" />
+							<f:selectItem itemValue="6" itemLabel="06" />
+							<f:selectItem itemValue="7" itemLabel="07" />
+							<f:selectItem itemValue="8" itemLabel="08" />
+							<f:selectItem itemValue="9" itemLabel="09" />
+							<f:selectItem itemValue="10" itemLabel="10" />
+							<f:selectItem itemValue="11" itemLabel="11" />
+							<f:selectItem itemValue="12" itemLabel="12" />
+							<p:ajax event="change"
+								update=":frmcantidadymes:canttable, :frmcantidadymes:growlReportador"
+								listener="#{consultaCantPolizaCantMB.consultList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="Despues de seleccionar la cantidad y el mes se mostraran los resultados cuando se cumplan las condiciones"
+							styleClass="backgroudHeader" />
+					</p:panelGrid>
+
+					<p:dataTable id="canttable" var="var"
+						value="#{consultaCantPolizaCantMB.resultados}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="10"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="widget" paginatorPosition="top" rowIndexVar="rowIndex"
+						selectionMode="single"
+						selection="#{consultaCantPolizaCantMB.rowSelected}"
+						rowKey="#{var.id}" scrollable="true" scrollWidth="98%">
+
+						<p:ajax event="rowSelect"
+							listener="#{consultaCantPolizaCantMB.onRowSelect}"
+							update="frmcantidadymes"></p:ajax>
+
+						<p:column headerText="Cuenta">
+							<h:outputText value="#{var.cuenta}" />
+						</p:column>
+						<p:column headerText="Scta" width="125">
+							<h:outputText value="#{var.scta}" />
+						</p:column>
+						<p:column headerText="Sscta" width="165">
+							<h:outputText value="#{var.sscta}" />
+						</p:column>
+						<p:column headerText="Ssscta">
+							<h:outputText value="#{var.ssscta}" />
+						</p:column>
+						<p:column headerText="Sssscta">
+							<h:outputText value="#{var.sssscta}" />
+						</p:column>
+						<p:column headerText="Cargos">
+							<h:outputText value="#{var.canpol}">
+								<f:convertNumber type="currency" currencySymbol=" " />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Abonos">
+							<h:outputText value="#{var.canpolh}">
+								<f:convertNumber type="currency" currencySymbol=" " />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="No" width="30">
+							<h:outputText value="#{var.conpol}" />
+						</p:column>
+						<p:column headerText="Tipo">
+							<h:outputText value="#{var.tippol}" />
+						</p:column>
+						<p:column headerText="Mes" width="40">
+							<h:outputText value="#{var.mespol}" />
+						</p:column>
+						<p:column headerText="Renglón">
+							<h:outputText value="#{var.renpol}" />
+						</p:column>
+						<p:column headerText="Ref" width="40">
+							<h:outputText value="#{var.refpol}">
+								<f:convertNumber maxFractionDigits="0" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Cap">
+							<h:outputText value="#{var.userid}" />
+						</p:column>
+						<p:column headerText="Fecha" width="80">
+							<h:outputText value="#{var.fecpol}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+
+					<p:panelGrid id="conceptoGrid" columns="2" styleClass="noBorders"
+						columnClasses="column20,column80">
+						<h:outputText value="Concepto:" />
+						<h:outputText
+							value="#{consultaCantPolizaCantMB.rowSelected.concep}" />
+					</p:panelGrid>
+					<br />
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="panelReporte" header="Eficacia en Juicios Municipales"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+					<p:panelGrid id="grid1" styleClass="col-centered">
+						<p:row>
+							<p:column colspan="2" style="text-align: right;">
+								<p:outputLabel value="Anual" />
+							</p:column>
+							<p:column colspan="5" style="text-align: left;">
+								<p:outputLabel id="anual" value="#{reporte158MB.anual}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style=" width: 30%; text-align: right;" />
+							<p:column style=" width: 10%; text-align: center;">
+								<p:outputLabel value="Laborales"></p:outputLabel>
+							</p:column>
+							<p:column style=" width: 10%; text-align: center;">
+								<p:outputLabel value="Civiles"></p:outputLabel>
+							</p:column>
+							<p:column style=" width: 10%; text-align: center;">
+								<p:outputLabel value="Administrativos"></p:outputLabel>
+							</p:column>
+							<p:column style=" width: 10%; text-align: center;">
+								<p:outputLabel value="de Amparo"></p:outputLabel>
+							</p:column>
+							<p:column style=" width: 10%; text-align: center;">
+								<p:outputLabel value="Total"></p:outputLabel>
+							</p:column>
+							<p:column style=" width: 20%; text-align: center;">
+								<p:outputLabel value="Observaciones"></p:outputLabel>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="text-align: left;">
+								<p:outputLabel
+									value="N&uacute;mero de juicios municipales ganados por la entidad municipal" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblNumlaboral"
+									value="#{reporte158MB.pm0111.njml}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numlaboral" decimalPlaces="0"
+									value="#{reporte158MB.pm0111.njml}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="numtotal" />
+								</pe:inputNumber>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblNumciviles"
+									value="#{reporte158MB.pm0111.njmc}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numciviles" decimalPlaces="0"
+									value="#{reporte158MB.pm0111.njmc}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="numtotal" />
+								</pe:inputNumber>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblNumadmin"
+									value="#{reporte158MB.pm0111.njma}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numadmin" decimalPlaces="0"
+									value="#{reporte158MB.pm0111.njma}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="numtotal" />
+								</pe:inputNumber>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblNumamparo"
+									value="#{reporte158MB.pm0111.njmd}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numamparo" decimalPlaces="0"
+									value="#{reporte158MB.pm0111.njmd}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="numtotal" />
+								</pe:inputNumber>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblNumtotal"
+									value="#{reporte158MB.pm0111.totjuga}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="#,##0" />
+								</p:outputLabel>
+								<p:inputText id="numtotal"
+									value="#{reporte158MB.pm0111.totjuga}"
+									rendered="#{reporte158MB.bTxt}" emptyValue="0" disabled="true"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									size="10" placeholder="0">
+									<f:convertNumber pattern="#,##0" />
+								</p:inputText>
+							</p:column>
+							<p:column style="text-align: left;">
+								<p:outputLabel id="lblObspolarm"
+									value="#{reporte158MB.pm0111.obsnjm}"
+									rendered="#{reporte158MB.bLbl}" />
+								<p:inputTextarea id="obspolarm" rows="2" cols="30" maxlength="350"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte158MB.pm0111.obsnjm}"
+									rendered="#{reporte158MB.bTxt}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="text-align: left;">
+								<p:outputLabel
+									value="Total de juicios interpuestos en contra de la entidad municipal"></p:outputLabel>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblTotLaboral"
+									value="#{reporte158MB.pm0111.tjil}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="totlaboral" decimalPlaces="0"
+									value="#{reporte158MB.pm0111.tjil}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="tottotal" />
+								</pe:inputNumber>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblTotciviles"
+									value="#{reporte158MB.pm0111.tjic}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="totciviles" decimalPlaces="0"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte158MB.pm0111.tjic}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="tottotal" />
+								</pe:inputNumber>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblTotadmin"
+									value="#{reporte158MB.pm0111.tjia}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="totadmin" decimalPlaces="0"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte158MB.pm0111.tjia}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="tottotal" />
+								</pe:inputNumber>
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lblTotamparo"
+									value="#{reporte158MB.pm0111.tjid}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="totamparo" decimalPlaces="0"
+									value="#{reporte158MB.pm0111.tjid}"
+									rendered="#{reporte158MB.bTxt}" maxValue="999999999" size="9"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									emptyValue="zero">
+									<p:ajax event="change"
+										listener="#{reporte158MB.calculaSumas()}" update="tottotal" />
+								</pe:inputNumber>
+
+							</p:column>
+							<p:column style="text-align: center;">
+								<p:outputLabel id="lbltotTotal"
+									value="#{reporte158MB.pm0111.totjucon}"
+									rendered="#{reporte158MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<p:inputText id="tottotal"
+									value="#{reporte158MB.pm0111.totjucon}"
+									rendered="#{reporte158MB.bTxt}" emptyValue="0" disabled="true"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									size="10" placeholder="0">
+									<f:convertNumber pattern="###,##0" />
+								</p:inputText>
+							</p:column>
+							<p:column style="text-align: left;">
+								<p:outputLabel id="lblObstotpol"
+									value="#{reporte158MB.pm0111.obstji}"
+									rendered="#{reporte158MB.bLbl}" />
+								<p:inputTextarea id="Obstotpol" rows="2" cols="30" maxlength="350"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte158MB.pm0111.obstji}"
+									rendered="#{reporte158MB.bTxt}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid id="buttons">
+						<p:commandButton value="Salvar"
+							actionListener="#{reporte158MB.save}"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							rendered="#{reporte158MB.bVSave}" id="save" icon="ui-icon-disk" />
+						<p:commandButton value="Modificar" id="modificar"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte158MB.modify}" icon="ui-icon-pencil"
+							rendered="#{reporte158MB.bVModificar}"
+							disabled="#{reporte158MB.bBtnMoficar}" />
+						<p:commandButton value="Limpiar" id="reset"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte158MB.clean}"
+							disabled="#{reporte158MB.bLbl}" icon="ui-icon-tag" />
+						<p:commandButton value="Adicionar" id="add"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte158MB.add}" icon="ui-icon-circle-plus"
+							disabled="#{reporte158MB.bAdd}" />
+						<p:commandButton value="Borrar" id="borrar" icon="ui-icon-trash"
+							update=":form1:panelReporte, :form1:messagesEdit, :form1:inlinePdf"
+							disabled="#{reporte158MB.bBorrar}"
+							actionListener="#{reporte158MB.delete}" >
+							<p:confirm header="Confirmación"
+								message="¿Desea Eliminar este Registro?" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:commandButton value="Cancelar" id="cancelar"
+							update=":form1:panelReporte, :form1:messagesEdit, :form1:grid1"
+							actionListener="#{reporte158MB.cancel}"
+							icon="ui-icon-circle-close" disabled="#{reporte158MB.bLbl}" />
+					</p:panelGrid>
+					<p:panelGrid id="gridreport">
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()" icon="ui-icon-circle-check"
+							action="#{reporte158MB.createFilePdfInline}" value="Correcto"
+							oncomplete="PF('blockUIWidget').unblock(); $(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '64em');"
+							update="form1:inlinePdf :form1:messagesEdit" style="padding:2px;">
+						</p:commandButton>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte158MB.uuid ne null}">
+						<object type="application/pdf" style="margin-top: 1em;"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte158MB.uuid}&amp;filename=#{reporte158MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

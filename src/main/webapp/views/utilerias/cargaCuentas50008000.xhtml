@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<f:ajax event="load" listener="#{polizaMantenimientoMB3.init}" />
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<h:form id="form1">
+				<p:commandButton style="display: none" id="downTxt" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);txt2();">
+					<p:fileDownload value="#{argacuenta58MB.downloadFile}" />
+
+
+				</p:commandButton>
+
+				<p:growl id="growl" showDetail="true" sticky="true" />
+				<p:panel id="panelPrincipal" header="Genera Cuentas 5000 y 8000"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+
+					<p:tabView id="petanaPrincipal">
+						<p:tab title="Carga Manual">
+							<p:panelGrid columns="4"
+								styleClass="col-centered row-centered ui-noborder"
+								id="panelGrid1">
+								<p:outputLabel value="CUENTA" />
+								<p:outputLabel value="SCTA" />
+								<p:outputLabel value="SSCTA" />
+								<p:outputLabel value="SSSCTA" />
+								<p:inputMask value="#{cargacuenta58MB.cta}" size="16" id="cta"
+									mask="9999" />
+								<p:inputText value="#{cargacuenta58MB.scta}" size="16" id="scta"
+									maxlength="15" onkeyup="this.value=this.value.toUpperCase();" />
+								<p:inputMask value="#{cargacuenta58MB.sscta}" size="20"
+									id="sscta" mask="99999999999999999999" />
+								<p:inputMask value="#{cargacuenta58MB.ssscta}" size="16"
+									id="ssscta" mask="9999" />
+							</p:panelGrid>
+							<p:panelGrid columns="5"
+								styleClass="col-centered row-centered ui-noborder">
+								<p:commandButton value="Correcto"
+									actionListener="#{cargacuenta58MB.load}"
+									update=":form1:growl, form1:petanaPrincipal:cta, :form1:petanaPrincipal:scta, :form1:petanaPrincipal:sscta, :form1:petanaPrincipal:ssscta" />
+							</p:panelGrid>
+						</p:tab>
+						<p:tab title="Carga Automatica" id="cAuto">
+							<p:fileUpload
+								fileUploadListener="#{cargacuenta58MB.handleFileUpload}"
+								mode="advanced" dragDropSupport="false"
+								update=":form1:growl, :form1:petanaPrincipal:downTxt"
+								sizeLimit="1000000000000" accept=".txt"
+								allowTypes="/(\.|\/)(txt)$/"
+								invalidSizeMessage="Tamaño invalido de archivo."
+								invalidFileMessage="Tipo invalido de archivo."
+								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar" />
+							<!-- <p:commandButton value="Descargar Archivo" ajax="false"
+								id="download" icon="ui-icon-arrowthick-1-s"
+								disabled="#{cargacuenta58MB.active}"
+								update=":form1:growl, :form1:downTxt"
+								actionListener="#{cargacuenta58MB.downloadCuentaTxt}" /> -->
+							<p:commandButton id="downTxt" ajax="false"
+								value="Descargar Archivo" disabled="#{cargacuenta58MB.active}"
+								onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:fileDownload value="#{cargacuenta58MB.downloadFile}" />
+
+
+							</p:commandButton>
+						</p:tab>
+					</p:tabView>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

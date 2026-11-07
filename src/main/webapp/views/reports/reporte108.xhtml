@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+				<p:commandButton style="display: none;" id="hiddenUpdate"
+					name="hiddenUpdate" actionListener="#{reporte108MB.updateData}"
+					update=":form1:object" />
+				<p:inputText id="banderaEdit" type="hidden"
+					value="#{reporte108MB.bEdition}" />
+				<p:remoteCommand id="lasPage" name="lastPage"
+					oncomplete="activeRow(#{reporte108MB.listPm0511.size()})"
+					update=":form1:object" />
+				<p:panel id="panel" header="Emergencias en Seguridad Pública"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:fieldset legend="Busqueda" style="margin-bottom:20px">
+						<p:panelGrid id="idForm" styleClass="col-centered row-centered">
+							<p:row>
+								<p:column style="text-align: right;">
+									<p:outputLabel value="Trimestre: " />
+								</p:column>
+								<p:column style="text-align: left;">
+									<p:selectOneMenu id="trimestre"
+										value="#{reporte108MB.trimestre}">
+										<f:selectItems value="#{reporte108MB.lTrimestres}" var="t"
+											itemLabel="#{t}" itemValue="#{t}" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:selectOneMenu id="operador1" value="#{reporte108MB.filter1}">
+										<f:selectItem itemValue="mayor_que" itemLabel="Mayor que" />
+										<f:selectItem itemValue="mayor_igual"
+											itemLabel="Mayor o igual que" />
+										<f:selectItem itemValue="igual_que" itemLabel="Igual que" />
+										<f:selectItem itemValue="inicie_con" itemLabel="Inicie con" />
+										<f:selectItem itemValue="menor_que" itemLabel="Menor que" />
+										<f:selectItem itemValue="menor_igual"
+											itemLabel="Menor o igual que" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:commandButton value="Buscar" id="buscar"
+										update=":form1:object, :form1:msgs"
+										actionListener="#{reporte108MB.findData}"
+										icon="ui-icon-search" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="text-align: right;">
+									<p:outputLabel value="Emergencias: " />
+								</p:column>
+								<p:column>
+									<p:inputText id="emerg" size="40" maxlength="40"
+										onkeyup="this.value=this.value.toUpperCase();"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										value="#{reporte108MB.emergencia}" />
+								</p:column>
+								<p:column>
+									<p:selectOneMenu id="operador2" value="#{reporte108MB.filter2}">
+										<f:selectItem itemValue="mayor_que" itemLabel="Mayor que" />
+										<f:selectItem itemValue="mayor_igual"
+											itemLabel="Mayor o igual que" />
+										<f:selectItem itemValue="igual_que" itemLabel="Igual que" />
+										<f:selectItem itemValue="inicie_con" itemLabel="Inicie con" />
+										<f:selectItem itemValue="menor_que" itemLabel="Menor que" />
+										<f:selectItem itemValue="menor_igual"
+											itemLabel="Menor o igual que" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:commandButton value="Limpiar" id="limpiar"
+										update=":form1:emerg, :form1:trimestre" ajax="false"
+										icon="ui-icon-tag" />
+								</p:column>
+							</p:row>
+							<!-- <p:row style="text-align: right;">
+								<p:column colspan="4">
+									<p:commandButton value="Regresar"
+										icon="ui-icon-arrowreturnthick-1-s" />
+								</p:column>
+							</p:row> -->
+						</p:panelGrid>
+						<p:fieldset>
+							<p:panelGrid id="gridButtons">
+								<p:commandButton value="Adicionar" id="add" icon="ui-icon-tag"
+									onclick="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});"
+									actionListener="#{reporte108MB.addElement}"
+									update=":form1:object, :form1:banderaEdit" />
+							</p:panelGrid>
+						</p:fieldset>
+
+						<p:dataTable id="object" var="objects"
+							value="#{reporte108MB.listPm0511}" binding="#{table}"
+							emptyMessage="No hay registros" paginator="true" rows="20"
+							selection="#{reporte108MB.selectPm0511}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							widgetVar="pm0511Wdg" rowKey="#{objects.id}" editable="true"
+							rowIndexVar="rowIndex">
+
+							<p:ajax event="rowEdit" listener="#{reporte108MB.onRowEdit}"
+								update=":form1:msgs, :form1:ctri, :form1:correcto, :form1:object, :form1:banderaEdit" />
+							<p:ajax event="rowEditInit"
+								listener="#{reporte108MB.onInitRowEdit}"
+								oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});" />
+							<p:ajax event="rowEditCancel"
+								listener="#{reporte108MB.onRowCancel}" update=":form1:msgs" />
+							<p:ajax event="page" onstart="PF('blockUIWidget').block();"
+								update=":form1:object"
+								oncomplete="PF('blockUIWidget').unblock();lastPage();"
+								listener="#{reporte108MB.changePage}" />
+							<p:column headerText="Trimestre" style="width:5%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.trimestre}" />
+									</f:facet>
+									<f:facet name="input">
+										<pe:inputNumber id="trim" value="#{objects.trimestre}"
+											converterMessage="Solo permite numeros del 1 al 4"
+											maxlength="2" size="2" decimalPlaces="0">
+										</pe:inputNumber>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Conse" style="width:5%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.conse}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText maxlength="6" size="6" id="conse"
+											value="#{objects.conse}" style="width:100%">
+											<pe:keyFilter mask="pint" for="conse" />
+											<p:ajax event="blur" update="conse" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Emergencia" style="width:40%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.emergencia}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="emergency" value="#{objects.emergencia}"
+											onkeyup="this.value=this.value.toUpperCase();"
+											style="width:100%">
+											<p:ajax event="blur" update="emergency" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Tiempo" style="width:5%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.tiempo}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="tiempo" value="#{objects.tiempo}"
+											style="width:100%">
+											<pe:keyFilter mask="pnum" for="tiempo" />
+											<p:ajax event="blur" update="tiempo" />
+										</p:inputText>
+
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Observaciones" style="width:40%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.observaciones}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="observaciones"
+											onkeyup="this.value=this.value.toUpperCase();"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:object span.ui-icon-check').last().click(); return false; } "
+											value="#{objects.observaciones}" style="width:100%">
+											<p:ajax event="blur" update="observaciones" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column style="width:5%">
+								<p:rowEditor />
+							</p:column>
+							<p:column headerText="Borrar" exportable="false" width="5%">
+								<p:commandLink id="deleteRow"
+									actionListener="#{reporte108MB.delete(rowIndex)}"
+									oncomplete="jQuery('#form1\\\\:hiddenUpdate').click();"
+									update=":form1:object, :form1:msgs, :form1:ctri"
+									image="ui-icon ui-icon-close" title="Delete">
+									<p:confirm header="Confirmación"
+										message="¿Desea eliminar éste registro?" icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{object}"
+										target="#{reporte108MB.selectPm0511}" />
+									<h:outputText styleClass="ui-icon ui-icon-close" />
+
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+
+					</p:fieldset>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+					<p:panelGrid id="idGrid5">
+						<h:outputText value="Trimestre a Consultar: " />
+						<p:selectOneMenu value="#{reporte108MB.tPm0511}" id="ctri"
+							disabled="#{empty reporte108MB.lis}">
+							<f:selectItems var="tri" value="#{reporte108MB.lis}"
+								itemValue="#{tri}" itemLabel="#{tri}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Correcto" id="correcto"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							icon="ui-icon-circle-arrow-s"
+							update="form1:inlinePdf,:form1:msgs"
+							actionListener="#{reporte108MB.createFilePdfInline}"
+							disabled="#{empty reporte108MB.lis}" />
+
+					</p:panelGrid>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte108MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte108MB.uuid}&amp;filename=#{reporte108MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+			</h:form>
+			<script type="text/javascript">
+			      $('#form1\\:limpiar').click(function(){
+				    
+			    	 $('#form1\\:emerg').val(' ');
+
+			    	  $('#form1\\:trimestre option:first-child').attr("selected", "selected");
+
+			    	 $('#form1\\:trimestre')[0].selectedIndex = '00'; 
+			    	
+			    	 
+				 }); 
+
+					 function activeRow(index) {
+						 var bEdition =  $('#form1\\:banderaEdit').val();
+						 
+						 if(bEdition == "true") {
+							 var rows = 20;
+							 var size = index;
+							 var indexOf = (size % rows);
+							
+						      jQuery('#form1\\:object span.ui-icon-pencil').eq(indexOf).each(function(){jQuery(this).click()});
+						 }
+					 }
+			    
+			</script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

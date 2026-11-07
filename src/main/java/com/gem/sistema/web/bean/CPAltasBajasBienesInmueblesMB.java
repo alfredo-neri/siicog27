@@ -1,0 +1,103 @@
+package com.gem.sistema.web.bean;
+
+import static com.gem.sistema.util.UtilReport.getNameFileReport;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.model.StreamedContent;
+
+import com.gem.sistema.business.domain.Conctb;
+import com.gem.sistema.business.domain.TcReportesFirma;
+import com.gem.sistema.business.repository.catalogs.ConctbRepository;
+import com.gem.sistema.business.repository.catalogs.TcReportesFirmasRepository;
+import com.gem.sistema.business.service.catalogos.PuestosFirmasService;
+import com.gem.sistema.business.service.reportador.ReportValidationException;
+
+/**
+ * The Class CPAltasBajasBienesInmueblesMB.
+ * 
+ * @author Alfredo
+ * @Timeline <strong>Date:</strong> 01/10/2021 <strong>Changes:</strong> Se crea
+ *           reporte y componentes
+ * @Sector Municipal
+ */
+@ManagedBean(name = "cpAltasBajasBienesInmueblesMB")
+@ViewScoped
+public class CPAltasBajasBienesInmueblesMB extends BaseDirectReport {
+
+	private static final String CLAVE_REPORT = "RPT_CP_ALTAS_BAJAS_BIENES_INMUEBLES";
+
+	@ManagedProperty("#{conctbRepository}")
+	private ConctbRepository conctbRepository;
+
+	@ManagedProperty("#{puestosFirmasService}")
+	private PuestosFirmasService puestosFirmasService;
+
+	@ManagedProperty("#{tcReportesFirmasRepository}")
+	private TcReportesFirmasRepository reporteFirmasRepository;
+
+	@PostConstruct
+	public void init() {
+		jasperReporteName = "CPAltasBajasBienesInmuebles";
+		endFilename = jasperReporteName + ".pdf";
+
+	}
+
+	@Override
+	public Map<String, Object> getParametersReports() throws ReportValidationException {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		Integer sector = this.getUserDetails().getIdSector();
+		Conctb conctb = conctbRepository.findByIdsector(sector);
+		TcReportesFirma reporte = reporteFirmasRepository.findByIdSectorAndClave(sector, CLAVE_REPORT);
+
+		endFilename = getNameFileReport(conctb, reporte);
+
+		parameters.put("imagenPathLeft", conctb.getImagePathLeft());
+		parameters.put("imagenPathRigth", StringUtils.EMPTY);
+		parameters.put("nombreEntidad", conctb.getNomDep());
+		parameters.put("claveEntidad", conctb.getClave());
+		parameters.put("year", conctb.getAnoemp());
+		parameters.put("sector", sector);
+		parameters.putAll(puestosFirmasService.getFirmasOfReport(sector, CLAVE_REPORT));
+
+		return parameters;
+	}
+
+	@Override
+	public StreamedContent generaReporteSimple(int type) throws ReportValidationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ConctbRepository getConctbRepository() {
+		return conctbRepository;
+	}
+
+	public void setConctbRepository(ConctbRepository conctbRepository) {
+		this.conctbRepository = conctbRepository;
+	}
+
+	public PuestosFirmasService getPuestosFirmasService() {
+		return puestosFirmasService;
+	}
+
+	public void setPuestosFirmasService(PuestosFirmasService puestosFirmasService) {
+		this.puestosFirmasService = puestosFirmasService;
+	}
+
+	public TcReportesFirmasRepository getReporteFirmasRepository() {
+		return reporteFirmasRepository;
+	}
+
+	public void setReporteFirmasRepository(TcReportesFirmasRepository reporteFirmasRepository) {
+		this.reporteFirmasRepository = reporteFirmasRepository;
+	}
+
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:messages id="messagesEdit" showDetail="true" closable="true" />
+				<p:panel id="pLogin" header="Afectación ingreso propio"
+					styleClass="green col-md-7 col-centered row-centered shadow-panel"
+					widgetVar="pLogin">
+					<p:dataTable var="detalle" rowKey="#{detalle.id}"
+						selection="#{afectacionIngresoMB.selected}"
+						styleClass="green col-centered row-centered shadow-panel"
+						value="#{afectacionIngresoMB.afectacionList}"
+						stickyTopAt=".layout-topbar" emptyMessage="No hay registros"
+						id="t">
+						<p:column headerText="Mes" style="padding:0">
+							<h:outputText value="#{detalle.mes}" style="width:15%" />
+						</p:column>
+						<p:column headerText="Estado" style="padding:0">
+							<h:outputText value="#{detalle.status}" />
+						</p:column>
+						<p:column headerText="Fecha de afectacion" style="padding:0">
+							<h:outputText value="#{detalle.fecha}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+
+						</p:column>
+						<p:column headerText="Fecha de afectacion" style="padding:0">
+							<p:commandButton id="accion2"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{afectacionIngresoMB.afectarMes}"
+								value="#{detalle.getFullStatus()}"
+								update=":form1:messagesEdit :form1:pLogin"
+								styleClass="btn btn-default " style="padding:0">
+								<f:setPropertyActionListener value="#{detalle}"
+									target="#{afectacionIngresoMB.selected}" />
+							</p:commandButton>
+
+						</p:column>
+
+					</p:dataTable>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../reports/indice.png"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

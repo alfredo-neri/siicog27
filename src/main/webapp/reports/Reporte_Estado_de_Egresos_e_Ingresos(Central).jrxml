@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-08-16T16:32:04 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte_Estado_de_Egresos_e_Ingresos(Central)" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="542bc565-2035-45cd-bf26-2c114b0532a7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB-SERVER"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="DETALLE_INGRESOS" uuid="a170ed4a-c9dc-4adb-8fdc-8a7fd60d1e34">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB-SERVER"/>
+		<parameter name="MES2" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+A.CUENTA, A.SCTA, NOMCTA, COALESCE(DECIMAL(SUM(AUTORIZADO),15,2),0.00) AUTORIZADO, COALESCE(DECIMAL(SUM(EJERCIDO),15,2),0.00) EJERCIDO, COALESCE(DECIMAL(SUM(ACUMULADO),15,2),0.00) 
+ACUMULADO
+FROM
+(
+SELECT 
+CUENTA.CUENTA,CUENTA.SCTA,CUENTA.SSCTA,CUENTA.SSSCTA,
+CASE 0 + $P{MES2}
+	WHEN 1 THEN  (CUENTA.CARGOS_1 + CUENTA.ABONOS_1 +CUENTA.SALINI)					
+ 	WHEN 2 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2) +CUENTA.SALINI)							
+ 	WHEN 3 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3) +CUENTA.SALINI)					
+	WHEN 4 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4) +CUENTA.SALINI) 	
+	WHEN 5 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5) +CUENTA.SALINI) 	
+	WHEN 6 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 + CUENTA.CARGOS_6 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5+CUENTA.ABONOS_6 ) +CUENTA.SALINI)	
+	WHEN 7 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 + CUENTA.CARGOS_6 + CUENTA.CARGOS_7 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5+CUENTA.ABONOS_6+CUENTA.ABONOS_7  ) +CUENTA.SALINI) 	
+	WHEN 8 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 + CUENTA.CARGOS_6 + CUENTA.CARGOS_7 + CUENTA.CARGOS_8 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5+CUENTA.ABONOS_6+CUENTA.ABONOS_7+CUENTA.ABONOS_8  ) +CUENTA.SALINI) 	
+	WHEN 9 THEN  ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 + CUENTA.CARGOS_6 + CUENTA.CARGOS_7 + CUENTA.CARGOS_8  + CUENTA.CARGOS_9 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5+CUENTA.ABONOS_6+CUENTA.ABONOS_7 +CUENTA.ABONOS_8+CUENTA.ABONOS_9  ) +CUENTA.SALINI) 		
+	WHEN 10 THEN ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 + CUENTA.CARGOS_6 + CUENTA.CARGOS_7 + CUENTA.CARGOS_8  + CUENTA.CARGOS_9 + CUENTA.CARGOS_10)+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5+CUENTA.ABONOS_6+CUENTA.ABONOS_7+CUENTA.ABONOS_8+CUENTA.ABONOS_9+CUENTA.ABONOS_10 ) +CUENTA.SALINI) 	
+	WHEN 11 THEN ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 + CUENTA.CARGOS_6 + CUENTA.CARGOS_7 + CUENTA.CARGOS_8  + CUENTA.CARGOS_9 + + CUENTA.CARGOS_10 + CUENTA.CARGOS_11 )+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5+CUENTA.ABONOS_6+CUENTA.ABONOS_7+CUENTA.ABONOS_8+CUENTA.ABONOS_9+CUENTA.ABONOS_10+CUENTA.ABONOS_11  ) +CUENTA.SALINI) 	
+	WHEN 12 THEN ((CUENTA.CARGOS_1 + CUENTA.CARGOS_2+ CUENTA.CARGOS_3+ CUENTA.CARGOS_4 + CUENTA.CARGOS_5 + CUENTA.CARGOS_6 + CUENTA.CARGOS_7 + CUENTA.CARGOS_8  + CUENTA.CARGOS_9 + + CUENTA.CARGOS_10 + CUENTA.CARGOS_11 + CUENTA.CARGOS_12)+ (CUENTA.ABONOS_1+CUENTA.ABONOS_2+CUENTA.ABONOS_3+CUENTA.ABONOS_4+CUENTA.ABONOS_5+CUENTA.ABONOS_6+CUENTA.ABONOS_7+CUENTA.ABONOS_8+CUENTA.ABONOS_9+CUENTA.ABONOS_10+CUENTA.ABONOS_11+CUENTA.ABONOS_12) +CUENTA.SALINI) 	
+	ELSE COALESCE(NULL,0.00)  								
+END AS AUTORIZADO,
+
+CASE 0 + $P{MES2}
+	WHEN 1 THEN   C2.ABONOS_1-C2.CARGOS_1 
+	WHEN 2 THEN  (C2.ABONOS_1+C2.ABONOS_2)-(C2.CARGOS_1+C2.CARGOS_2)
+	WHEN 3 THEN  (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3)
+	WHEN 4 THEN  (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4)
+	WHEN 5 THEN  (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5)
+	WHEN 6 THEN  (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6)
+	WHEN 7 THEN  (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7)
+	WHEN 8 THEN  (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8)
+	WHEN 9 THEN  (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9)
+	WHEN 10 THEN (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9+C2.ABONOS_10)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9+C2.ABONOS_10)
+	WHEN 11 THEN (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9+C2.ABONOS_10+C2.ABONOS_11)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9+C2.ABONOS_10+C2.ABONOS_11)
+	WHEN 12 THEN (C2.ABONOS_1+C2.ABONOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9+C2.ABONOS_10+C2.ABONOS_11+C2.ABONOS_12)-(C2.CARGOS_1+C2.CARGOS_2+C2.ABONOS_3+C2.ABONOS_4+C2.ABONOS_5+C2.ABONOS_6+C2.ABONOS_7+C2.ABONOS_8+C2.ABONOS_9+C2.ABONOS_10+C2.ABONOS_11+C2.ABONOS_12)
+	ELSE COALESCE(NULL,0.00) 
+END AS ACUMULADO,
+
+CASE 0 + $P{MES2}
+	WHEN 1 THEN C2.ABONOS_1-C2.CARGOS_1   
+	WHEN 2 THEN C2.ABONOS_2-C2.CARGOS_2 
+	WHEN 3 THEN C2.ABONOS_3-C2.CARGOS_3
+	WHEN 4 THEN C2.ABONOS_4-C2.CARGOS_4 
+	WHEN 5 THEN C2.ABONOS_5-C2.CARGOS_5 
+	WHEN 6 THEN C2.ABONOS_6-C2.CARGOS_6
+	WHEN 7 THEN C2.ABONOS_7-C2.CARGOS_7 
+	WHEN 8 THEN C2.ABONOS_8-C2.CARGOS_8 
+	WHEN 9 THEN C2.ABONOS_9-C2.CARGOS_9 
+	WHEN 10 THEN C2.ABONOS_10-C2.CARGOS_10
+	WHEN 11 THEN C2.ABONOS_11-C2.CARGOS_11
+	WHEN 12 THEN C2.ABONOS_12-C2.CARGOS_12
+	ELSE COALESCE(NULL,0.00) 
+END AS EJERCIDO
+FROM CUENTA 
+INNER JOIN CUENTA C2 ON CUENTA.SCTA=C2.SCTA AND CUENTA.SSCTA=C2.SSCTA AND C2.IDSECTOR=2 
+AND  CUENTA.SSSCTA=C2.SSSCTA AND CUENTA.SSSSCTA=C2.SSSSCTA AND C2.CUENTA='8150'
+WHERE CUENTA.CUENTA = '8110' 
+AND CUENTA.IDSECTOR=2
+AND CUENTA.SCTA<>'' AND CUENTA.SSCTA<>'' AND CUENTA.SSSCTA<>'' AND CUENTA.SSSSCTA<>''
+ORDER BY CUENTA.CUENTA,CUENTA.SCTA, CUENTA.SSCTA
+) A
+INNER JOIN CUENTA ON CUENTA.CUENTA=A.CUENTA AND CUENTA.SCTA=A.SCTA  AND CUENTA.SSCTA=A.SSCTA AND UPPER(NIVCTA)='N' AND CUENTA.SSSCTA=''
+GROUP BY A.CUENTA, A.SCTA, NOMCTA
+ORDER BY A.CUENTA, A.SCTA]]>
+		</queryString>
+		<field name="CUENTA" class="java.lang.String"/>
+		<field name="SCTA" class="java.lang.String"/>
+		<field name="NOMCTA" class="java.lang.String"/>
+		<field name="AUTORIZADO" class="java.math.BigDecimal"/>
+		<field name="EJERCIDO" class="java.math.BigDecimal"/>
+		<field name="ACUMULADO" class="java.math.BigDecimal"/>
+		<variable name="V_TOTAL_AUTORIZADO" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{AUTORIZADO}]]></variableExpression>
+		</variable>
+		<variable name="V_TOTAL_EJERCIDIO" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{EJERCIDO}]]></variableExpression>
+		</variable>
+		<variable name="V_TOTAL_ACUMULADO" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{ACUMULADO}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="DETALLE_EGRESOS" uuid="d50f9f81-1a27-479a-a0f0-245081a8d602">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMDB-SERVER"/>
+		<queryString>
+			<![CDATA[SELECT CLVGAS, NOMGAS, SUM(ABONOS_1)-SUM(CARGOS_1),
+ SUM(SALINI) as Autorizado, 
+CASE 0+9
+	WHEN 1  THEN SUM(C2_1)-SUM(A2_1)
+	WHEN 2  THEN ( SUM(C2_1) + SUM(C2_2) )-( SUM(A2_1)+ SUM(A2_2) )
+	WHEN 3  THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) )	
+	WHEN 4  THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4))
+	WHEN 5  THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5))
+	WHEN 6  THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) + SUM(C2_6) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5) + SUM(A2_6))
+	WHEN 7  THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) + SUM(C2_6) + SUM(C2_7) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5) + SUM(A2_6) + SUM(A2_7))
+	WHEN 8  THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) + SUM(C2_6) + SUM(C2_7) + SUM(C2_8) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5) + SUM(A2_6) + SUM(A2_7) + SUM(A2_8))
+	WHEN 9  THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) + SUM(C2_6) + SUM(C2_7) + SUM(C2_8) + SUM(C2_9) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5) + SUM(A2_6) + SUM(A2_7) + SUM(A2_8)+ SUM(A2_9))
+	WHEN 10 THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) + SUM(C2_6) + SUM(C2_7) + SUM(C2_8) + SUM(C2_9) + SUM(C2_10) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5) + SUM(A2_6) + SUM(A2_7) + SUM(A2_8)+ SUM(A2_9) + SUM(A2_10))
+	WHEN 11 THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) + SUM(C2_6) + SUM(C2_7) + SUM(C2_8) + SUM(C2_9) + SUM(C2_10) + SUM(C2_11) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5) + SUM(A2_6) + SUM(A2_7) + SUM(A2_8)+ SUM(A2_9) + SUM(A2_10) + SUM(A2_11) )
+	WHEN 12 THEN ( SUM(C2_1) + SUM(C2_2) + SUM(C2_3) + SUM(C2_4) + SUM(C2_5) + SUM(C2_6) + SUM(C2_7) + SUM(C2_8) + SUM(C2_9) + SUM(C2_10) + SUM(C2_11) + SUM(C2_11) )-( SUM(A2_1) + SUM(A2_2) + SUM(A2_3) + SUM(A2_3) + SUM(A2_4) + SUM(A2_5) + SUM(A2_6) + SUM(A2_7) + SUM(A2_8)+ SUM(A2_9) + SUM(A2_10) + SUM(A2_11) + SUM(A2_12))
+	ELSE COALESCE(NULL,0.00)
+END AS ACUMULADO,
+CASE 0+9
+	WHEN 1 THEN SUM(C2_1)-SUM(A2_1)
+	WHEN 2 THEN SUM(C2_2)-SUM(A2_2)	
+	WHEN 3 THEN SUM(C2_3)-SUM(A2_3)	
+	WHEN 4 THEN SUM(C2_4)-SUM(A2_4)	
+	WHEN 5 THEN SUM(C2_5)-SUM(A2_5)	
+	WHEN 6 THEN SUM(C2_6)-SUM(A2_6)	
+	WHEN 7 THEN SUM(C2_7)-SUM(A2_7)	
+	WHEN 8 THEN SUM(C2_8)-SUM(A2_8)	
+	WHEN 9 THEN SUM(C2_9)-SUM(A2_9)	
+	WHEN 10 THEN SUM(C2_10)-SUM(A2_10)	
+	WHEN 11 THEN SUM(C2_11)-SUM(A2_11)	
+	WHEN 12 THEN SUM(C2_12)-SUM(A2_12)	
+END AS Ejercido
+FROM
+(
+select CLVGAS, NOMGAS,
+cuenta.CARGOS_1,cuenta.CARGOS_2,cuenta.CARGOS_3,cuenta.CARGOS_4,cuenta.CARGOS_5,cuenta.CARGOS_6,cuenta.CARGOS_7,cuenta.CARGOS_8,
+cuenta.CARGOS_9, cuenta.CARGOS_10, cuenta.CARGOS_11, cuenta.CARGOS_12,
+cuenta.ABONOS_1,cuenta.ABONOS_2,cuenta.ABONOS_3,cuenta.ABONOS_4,cuenta.ABONOS_5,cuenta.ABONOS_6,cuenta.ABONOS_7,cuenta.ABONOS_8,
+cuenta.ABONOS_9, cuenta.ABONOS_10, cuenta.ABONOS_11, cuenta.ABONOS_12,
+CUENTA.SALINI, 0 C2_1,0 C2_2,0 C2_3 ,0 C2_4 ,0 C2_5 ,0 C2_6,0 C2_7,0 C2_8,0 C2_9,0 C2_10,0 C2_11,0 C2_12,
+0 A2_1,0 A2_2,0 A2_3,0 A2_4,0 A2_5,0 A2_6,0 A2_7,0 A2_8,0 A2_9,0 A2_10,0 A2_11,0 A2_12
+from  NATGAS
+LEFT join cuenta on SUBSTR(NATGAS.CLVGAS,1,1)=SUBSTR(CUENTA.SSSCTA,1,1) AND 
+(  (NATGAS.CLVGAS='1000' AND CUENTA.cuenta = '8211' and cuenta.SSSCTA  BETWEEN '1000' and '2000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='2000' AND CUENTA.cuenta	= '8211' and cuenta.SSSCTA BETWEEN '2000' and '3000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='3000' AND CUENTA.cuenta	= '8211' and cuenta.SSSCTA BETWEEN '3000' and '4000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='4000' AND CUENTA.cuenta	= '8212' and cuenta.SSSCTA BETWEEN '4000' AND '5000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='5000' AND CUENTA.cuenta	= '8215' and cuenta.SSSCTA BETWEEN '5000' AND '6000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='6000' AND CUENTA.cuenta	= '8216' and cuenta.SSSCTA BETWEEN '6000' and '7000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='7000' AND CUENTA.cuenta	= '8217' and cuenta.SSSCTA BETWEEN '7000' and '8000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='8000' AND CUENTA.cuenta	= '8213' and cuenta.SSSCTA BETWEEN '8000' AND '9000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='9000' AND CUENTA.cuenta	= '8214' and cuenta.SSSCTA BETWEEN '9000' and '9999' AND CUENTA.IDSECTOR=2))
+WHERE NATGAS.IDSECTOR=2  AND NATGAS.CLVGAS IN ('1000','2000', '3000', '4000', '5000', '6000', '7000', '8000', '9000')
+UNION ALL
+select 
+CLVGAS, NOMGAS, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+cuenta.CARGOS_1 C2_1,cuenta.CARGOS_2 C2_2,cuenta.CARGOS_3 C2_3,cuenta.CARGOS_4 C2_4,cuenta.CARGOS_5 C2_5,cuenta.CARGOS_6 C2_6,cuenta.CARGOS_7 C2_7,
+cuenta.CARGOS_8 C2_8, cuenta.CARGOS_9 C2_9, cuenta.CARGOS_10 C2_10, cuenta.CARGOS_11 C2_11, cuenta.CARGOS_12 C2_12,
+cuenta.ABONOS_1 A2_1,cuenta.ABONOS_2 A2_2,cuenta.ABONOS_3 A2_3,cuenta.ABONOS_4 A2_4,cuenta.ABONOS_5 A2_5,cuenta.ABONOS_6 A2_6,cuenta.ABONOS_7 A2_7
+,cuenta.ABONOS_8 A2_8, cuenta.ABONOS_9 A2_9, cuenta.ABONOS_10 A2_10, cuenta.ABONOS_11 A2_11, cuenta.ABONOS_12 A2_12
+from  NATGAS
+left join cuenta on SUBSTR(NATGAS.CLVGAS,1,1)=SUBSTR(CUENTA.SSSCTA,1,1) AND 
+(  (NATGAS.CLVGAS='1000' AND CUENTA.CUENTA in ('8251','8241','8271') and cuenta.SSSCTA BETWEEN '1000' and '2000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='2000' AND CUENTA.CUENTA in ('8251','8241','8271') and cuenta.SSSCTA BETWEEN '2000' and '3000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='3000' AND CUENTA.CUENTA in ('8251','8241','8271') and cuenta.SSSCTA BETWEEN '3000' and '4000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='4000' AND CUENTA.CUENTA in ('8252','8242','8272') and cuenta.SSSCTA BETWEEN '4000' AND '5000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='5000' AND CUENTA.CUENTA in ('8255','8245','8275') and cuenta.SSSCTA BETWEEN '5000' AND '6000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='6000' AND CUENTA.CUENTA in ('8256','8246','8276') and cuenta.SSSCTA BETWEEN '6000' and '7000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='7000' AND CUENTA.CUENTA in ('8257','8247','8277') and cuenta.SSSCTA BETWEEN '7000' and '8000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='8000' AND CUENTA.CUENTA in ('8253','8243','8273') and cuenta.SSSCTA BETWEEN '8000' AND '9000' AND CUENTA.IDSECTOR=2)
+OR (NATGAS.CLVGAS='9000' AND CUENTA.CUENTA in ('8254','8244','8274') and cuenta.SSSCTA BETWEEN '9000' and '9999' AND CUENTA.IDSECTOR=2))
+WHERE NATGAS.IDSECTOR=2  AND NATGAS.CLVGAS IN ('1000','2000', '3000', '4000', '5000', '6000', '7000', '8000', '9000')
+) C
+WHERE CLVGAS NOT BETWEEN '5000' AND '8000'
+GROUP BY CLVGAS, NOMGAS
+ORDER BY CLVGAS]]>
+		</queryString>
+		<field name="CLVGAS" class="java.lang.String"/>
+		<field name="NOMGAS" class="java.lang.String"/>
+		<field name="3" class="java.math.BigDecimal"/>
+		<field name="AUTORIZADO" class="java.math.BigDecimal"/>
+		<field name="ACUMULADO" class="java.math.BigDecimal"/>
+		<field name="EJERCIDO" class="java.math.BigDecimal"/>
+		<variable name="V_TOTAL_AUTORIZADO" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{AUTORIZADO}]]></variableExpression>
+		</variable>
+		<variable name="V_TOTAL_EJERCIDO" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{EJERCIDO}]]></variableExpression>
+		</variable>
+		<variable name="V_TOTAL_ACUMULADO" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{ACUMULADO}]]></variableExpression>
+		</variable>
+		<group name="CLVGAS">
+			<groupExpression><![CDATA[$F{CLVGAS}]]></groupExpression>
+		</group>
+		<group name="NOMGAS">
+			<groupExpression><![CDATA[$F{NOMGAS}]]></groupExpression>
+		</group>
+		<group name="AUTORIZADO">
+			<groupExpression><![CDATA[$F{AUTORIZADO}]]></groupExpression>
+		</group>
+		<group name="ACUMULADO">
+			<groupExpression><![CDATA[$F{ACUMULADO}]]></groupExpression>
+		</group>
+		<group name="EJERCIDO">
+			<groupExpression><![CDATA[$F{EJERCIDO}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="AN" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2016]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USUARIO" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["000110231"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOGO" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["/home/buser/Imágenes/cuautitlan.gif"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MES" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SECTOR" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  
+   			    COALESCE(TCIM.CLVMUN, 0) AS CLVMUN,
+   			    COALESCE(TCIM.NOMBRE_FILE,'') AS IMG_MUN,
+   			    COALESCE(TCIM.PATH_FILE,'') AS RUTA_MUN,
+   			    COALESCE(TCIEA.ID_ENTIDAD_ADMIN,0) AS ID_ENTIDAD_ADMIN,
+   			    COALESCE(TCIEA.NOMBRE_FILE,'') AS IMG_ENT,
+   			    COALESCE(TCIEA.PATH_FILE,'') AS RUTA_ENT,
+   			    F.L4,COALESCE(F.N4,'') AS N4,
+   			    F.L27,COALESCE(F.N27,'') AS N27,
+   			    F.L5,COALESCE(F.N5,'') AS N5,
+				TU.NOMBRE,
+				TU.ID_TIPO_USUARIO,
+				CM.CLVMUN,
+				CM.NOMMUN,
+				TEA.CLAVE,
+				TEA.DESCRIPCION
+		   FROM FIRMAS F
+		   LEFT JOIN TC_U_REFERENCIA TCR ON F.ID_REF = TCR.ID_REF 
+		   LEFT JOIN CATMUN CM ON  TCR.ID_MUN = CM.CLVMUN
+		   LEFT JOIN TC_ENTIDAD_ADMINISTRATIVA TEA ON TCR.ID_UNI_ADMIN = TEA.CLAVE
+		   LEFT JOIN LOCALIDADES L ON CM.CLVMUN = L.CVEMUN
+		   LEFT JOIN TC_USUARIOS TU ON L.CVELOC = TU.ID_LOCALIDAD
+		   LEFT JOIN TC_IMAGENES_MUNI  TCIM ON TCIM.CLVMUN = CM.CLVMUN
+		   LEFT JOIN  TC_IMAGENES_ENT_ADMIN TCIEA ON TCR.ID_MUN = CM.CLVMUN AND TCR.ID_UNI_ADMIN = TCIEA.ID_ENTIDAD_ADMIN	       
+		   WHERE TU.USUARIO =$P{USUARIO}]]>
+	</queryString>
+	<field name="CLVMUN" class="java.lang.Integer"/>
+	<field name="IMG_MUN" class="java.lang.String"/>
+	<field name="RUTA_MUN" class="java.lang.String"/>
+	<field name="ID_ENTIDAD_ADMIN" class="java.lang.Long"/>
+	<field name="IMG_ENT" class="java.lang.String"/>
+	<field name="RUTA_ENT" class="java.lang.String"/>
+	<field name="L4" class="java.lang.String"/>
+	<field name="N4" class="java.lang.String"/>
+	<field name="L27" class="java.lang.String"/>
+	<field name="N27" class="java.lang.String"/>
+	<field name="L5" class="java.lang.String"/>
+	<field name="N5" class="java.lang.String"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="ID_TIPO_USUARIO" class="java.lang.Long"/>
+	<field name="COLUMN_15" class="java.lang.Integer"/>
+	<field name="NOMMUN" class="java.lang.String"/>
+	<field name="CLAVE" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="109" y="3" width="150" height="10" uuid="062873e4-25c1-49bd-92d8-102758a23a93"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[GOBIERNO DEL ESTADO DE MEXICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="14" width="150" height="10" uuid="3c84b6d9-fe05-46d4-ae76-47a1a844ceae"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA DE FINANZAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="25" width="220" height="10" uuid="20bced27-6deb-4438-91ff-2908d521657e"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[SUBSECRETARIA DE PLANEACION Y PRESUPUESTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="36" width="200" height="10" uuid="8e45af58-6daa-49eb-8c5e-5148de418cc5"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[CONTADURIA GENERAL GUBERNAMENTAL]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="553" y="23" width="177" height="10" uuid="1ab4040c-2f40-452d-9abb-a9c12728efcc"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FECHA DE EMISION: "+new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="553" y="38" width="177" height="10" uuid="19d79822-079f-47a8-8de8-90ccd89377e0"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["HOJA NO.       :        "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="20" y="3" width="50" height="50" uuid="1c24f4dc-23a4-4b03-b603-593dc28077d8"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="82" splitType="Stretch">
+			<textField>
+				<reportElement x="12" y="47" width="738" height="20" uuid="9c7c84b5-d1fc-4a21-a7cf-d777280c16f5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ESTADO DE INGRESOS Y EGRESOS DEL 01   DE   ENERO DE "+$P{AN}+"   AL   31  DE  ENERO  DE  "+$P{AN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="13" y="67" width="287" height="15" uuid="fb1187e3-a58b-4152-9689-8b96efaf9774">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  C O N C E P T O"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="67" width="150" height="15" uuid="77c690af-b4fe-4fd3-b0b1-b0651f3a85a1">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EJERCIDO ACUMULADO"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="67" width="150" height="15" uuid="13f07f1b-3238-41d0-87c4-226ef7dbdc5e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EJERCIDO DEL MES"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="67" width="150" height="15" uuid="97575c8a-410d-4c37-9b14-3bd280e44089">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["AUTORIZADO ANUAL"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="8" y="5" width="747" height="20" uuid="9e83f8c1-40c1-4a67-849d-96cbcc9cffbc">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="281" y="26" width="200" height="20" uuid="8da55292-7768-48b2-8346-b0fffbe5c083">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMMUN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<componentElement>
+				<reportElement x="13" y="0" width="742" height="40" uuid="dcd88de9-ffde-49a9-90ed-a0d49201c8ac">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DETALLE_INGRESOS" uuid="4dac078d-b6f2-46a3-aa38-f092da7f3d0b">
+						<datasetParameter name="MES2">
+							<datasetParameterExpression><![CDATA[$P{MES}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="287" uuid="39cd2980-83f7-4323-bf1e-1e0a123d8bc6">
+						<jr:columnFooter style="Table_CH" height="10">
+							<staticText>
+								<reportElement x="0" y="0" width="287" height="10" uuid="f62e462d-386f-4163-92b7-f4034977754c"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Left">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<text><![CDATA[TOTAL INGRESOS:]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="287" height="10" uuid="b1fce9b8-ad88-4969-9fb5-b3c43da25c8a"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement>
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA["        "+$F{NOMCTA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="9aba4be9-a365-41cd-b127-186203add46e">
+						<jr:columnFooter style="Table_CH" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="64f4258a-21f2-4a5b-a955-62d72465f9ad"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_AUTORIZADO}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="e524b2f8-2231-40d6-88e6-10fb3047e5b9"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{AUTORIZADO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="3775030d-3c19-4b8e-8790-f4ab93dd5cd9">
+						<jr:columnFooter style="Table_CH" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="82f96fec-f9b7-444c-a7a9-dda8b9c4bef3"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_EJERCIDIO}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="4ac98201-995c-422d-a90d-42a4ec65e3ad"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{EJERCIDO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="b4ed7665-67e2-47eb-97a4-d4a5badf6758">
+						<jr:columnFooter style="Table_CH" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="3e3a2b67-6e6a-4682-a637-c37596041319"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_ACUMULADO}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="0e08b3e6-9006-42a9-882c-3a7fdea4f2f4"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ACUMULADO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="40">
+			<componentElement>
+				<reportElement x="13" y="0" width="738" height="40" uuid="9181687b-3f20-4964-8714-ec1b577dbea0">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DETALLE_EGRESOS" uuid="2570506e-d160-4087-9210-70d5d8bc0208">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="287" uuid="d67863e6-3719-45ad-8095-6d6f683825d8">
+						<jr:columnFooter style="Table 1_CH" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="287" height="10" uuid="a5d0853e-8d9d-4cfb-a9b8-4d101b016aff"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Left">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA["TOTAL EGRESADOS:"]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="287" height="10" uuid="857fada5-5474-4310-ac34-dd7268a69e79"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement>
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA["        "+$F{CLVGAS}+"  "+$F{NOMGAS}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="a3e809fe-3dd9-4013-88b4-eb7cd9772bb4">
+						<jr:columnFooter style="Table 1_CH" height="10">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="150" height="10" uuid="9020e2e3-edd8-4e21-aac8-dd42f2bb1038"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_AUTORIZADO}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="150" height="10" uuid="cc0e8c4a-cae2-498e-8b11-3c618d50deb2"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{AUTORIZADO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="64861ae3-96c6-41dd-926d-fc81aa7cdf05">
+						<jr:columnFooter style="Table 1_CH" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="f42af9f3-7fa8-4375-8774-150dc4165d9c"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_EJERCIDO}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="150" height="10" uuid="7634bdad-4b85-4314-80fb-dc0681707597"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{EJERCIDO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="4fb45a1f-904c-4bb3-a090-34fa078c762c">
+						<jr:columnFooter style="Table 1_CH" height="10">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="10" uuid="5d9d2384-d7a2-412e-99c2-22a2a558c6a8"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_ACUMULADO}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="150" height="10" uuid="1d828053-c350-405c-8ed7-443835a0b1ca"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ACUMULADO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="66">
+			<textField>
+				<reportElement x="531" y="36" width="100" height="30" uuid="3bdd6ba0-d6ae-4a18-a354-53b80ef2df8e"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{N27}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="36" width="100" height="30" uuid="73190be2-5708-4c97-82d4-e4ed78bbb8a7"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{N5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="6" width="100" height="30" uuid="56f8df6e-df1d-45c9-9254-81f6626a2c7c"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{L5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="6" width="100" height="30" uuid="f418ac02-fcee-4cd9-810d-fd50d20d3206"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{L4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="36" width="100" height="30" uuid="9fb7721b-608b-4ab2-a53a-200a42570eb3"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{N4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="531" y="6" width="100" height="30" uuid="87e11d4e-6d67-4bb5-98ae-c941f26ba126"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{L27}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

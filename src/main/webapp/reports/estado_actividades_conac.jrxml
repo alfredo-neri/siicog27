@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="estado_actividades_conac" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dc61135e-00f2-49fb-a224-5c2b8538c17e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LENOVO PRUEBAS"/>
+	<parameter name="img1" class="java.lang.String"/>
+	<parameter name="img2" class="java.lang.String"/>
+	<parameter name="sSql" class="java.lang.String"/>
+	<parameter name="lastDay" class="java.lang.Integer"/>
+	<parameter name="month" class="java.lang.String"/>
+	<parameter name="year" class="java.lang.Integer"/>
+	<parameter name="monthAnt" class="java.lang.String"/>
+	<parameter name="monthAct" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[$P!{sSql}]]>
+	</queryString>
+	<field name="PRINCIPAL" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PRINCIPAL"/>
+		<property name="com.jaspersoft.studio.field.label" value="PRINCIPAL"/>
+	</field>
+	<field name="GRUPO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="GRUPO"/>
+		<property name="com.jaspersoft.studio.field.label" value="GRUPO"/>
+	</field>
+	<field name="CUENTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CUENTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="CUENTA"/>
+	</field>
+	<field name="NOMCTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NOMCTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="NOMCTA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CUENTA"/>
+	</field>
+	<field name="SALDO_ACT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="SALDO_ACT"/>
+		<property name="com.jaspersoft.studio.field.label" value="SALDO_ACT"/>
+	</field>
+	<field name="SALDO_ANT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="SALDO_ANT"/>
+		<property name="com.jaspersoft.studio.field.label" value="SALDO_ANT"/>
+	</field>
+	<variable name="subTotalIngreso" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO_ACT}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalIngresoAnte" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO_ANT}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalActual" class="java.math.BigDecimal" resetType="Group" resetGroup="principal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO_ACT}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="suTotalAnterior" class="java.math.BigDecimal" resetType="Group" resetGroup="principal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO_ANT}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalActual" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{vTotalIngresosActual}.subtract($V{vTotalPerdidasActual})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalAnterior" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{vTotalIngresosAnt}.subtract($V{vTotalPerdidasAnt})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="vTotalIngresosActual" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{GRUPO} <= 3 ?$F{SALDO_ACT} : BigDecimal.ZERO]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="vTotalPerdidasActual" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{GRUPO} > 3   ?$F{SALDO_ACT} : BigDecimal.ZERO]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="vTotalIngresosAnt" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{GRUPO} <= 3 ?$F{SALDO_ANT} : BigDecimal.ZERO]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="vTotalPerdidasAnt" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{GRUPO} >  3 &&  $F{GRUPO} <=9 ?$F{SALDO_ANT} : BigDecimal.ZERO]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<group name="principal">
+		<groupExpression><![CDATA[$F{PRINCIPAL}]]></groupExpression>
+		<groupHeader>
+			<band height="10">
+				<textField>
+					<reportElement x="0" y="0" width="353" height="10" isRemoveLineWhenBlank="true" uuid="696f6d0c-0984-49de-a1e2-0db3062acd08"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font size="7" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PRINCIPAL} == 2? "Gastos y Otras Perdidas":""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="353" y="0" width="100" height="10" isRemoveLineWhenBlank="true" uuid="8747d3a5-b2b9-490b-a354-fe7046db075f"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="453" y="0" width="100" height="10" uuid="8b9c57c6-477b-4dc4-9e63-ddd29479fc0f"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="13">
+				<textField evaluationTime="Group" evaluationGroup="principal" pattern="#,##0.0">
+					<reportElement x="353" y="0" width="100" height="12" uuid="855e4f38-ad1c-440d-889b-6ca6485a7864">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalActual}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="principal">
+					<reportElement x="0" y="0" width="353" height="12" uuid="5dcdd4aa-0d5c-49fe-b968-604e59adb42b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PRINCIPAL} ==1 ? "  Total de Ingresos y Otros Beneficios" : "  Total de Gastos y Otras Perdidas"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="principal" pattern="#,##0.0">
+					<reportElement x="453" y="1" width="100" height="12" uuid="02bd1ede-e240-44d4-9429-0bcd1c270e0c"/>
+					<box>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{suTotalAnterior}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="GRUPO">
+		<groupExpression><![CDATA[$F{GRUPO}]]></groupExpression>
+		<groupHeader>
+			<band height="10">
+				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="GRUPO">
+					<reportElement x="0" y="0" width="353" height="10" isRemoveLineWhenBlank="true" uuid="8cb834a4-9dc8-4545-a1bb-4c637655fa0f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{GRUPO} == 1? " Ingresos de Gestion":$F{GRUPO} == 2 ? "Participaciones, Aportaciones, Convenios, Incentivos Derivados de la Colaboración Fiscal y Fondos Distintos de Aportaciones, Transferencias, Asignaciones, Subsicidios y Subvenciones, Perisones y Juvilaciones": $F{GRUPO} == 3 ?"Otros Ingresos y Beneficios" :$F{GRUPO} == 4 ? "Gastos de Funcionamiento":$F{GRUPO}==5? "Transferencias, Asignaciones , Subsidios y Otras Ayudas": $F{GRUPO} ==6 ? "Participaciones y Aportaciones": $F{GRUPO} == 7 ? "Intereses, Comisiones y Otros Gastos de la Deuda Pública": $F{GRUPO} == 8 ? "Otros Gastos y Pérdidas Extraordinarias":"Inversión Publica"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="353" y="0" width="100" height="10" isRemoveLineWhenBlank="true" uuid="8222efed-5127-47d2-86c2-29572b26eeb7"/>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalIngreso}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="453" y="0" width="100" height="10" isRemoveLineWhenBlank="true" uuid="ec55e99b-6c72-4e6d-ac2e-29dafce0914c"/>
+					<box>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalIngresoAnte}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="91" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="280" height="50" uuid="0f7859fd-2686-4a12-9133-ada458761dbc"/>
+				<imageExpression><![CDATA[$P{img1}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="50" width="553" height="10" backcolor="#C4C4C4" uuid="b8d67c54-245a-43e5-9890-ce56ac353ab5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTITUTO DE TRANSPARENCIA ACCESO A LA INFORMACIÓN PÚBLICA Y PROTECCIÓN DE DATOS PERSONALES DEL ESTADO DE MÉXICO Y MUNICIPIOS (INFOEM)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="60" width="553" height="10" backcolor="#C4C4C4" uuid="46dbe1d7-aab6-49c0-a286-22695b626b15">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado de Actividades Conac]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="70" width="553" height="10" backcolor="#C4C4C4" uuid="210ea8ac-53df-4b85-9ae2-f0e5df960a9c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["del 1 de Enero al " + $P{lastDay} + " de " +$P{month} + " de " + $P{year}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="80" width="353" height="11" backcolor="#C4C4C4" uuid="951c4efc-2cb6-4db9-ad10-0e2daf942524"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Concepto]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="353" y="80" width="99" height="11" backcolor="#C4C4C4" uuid="ef1f5be9-ff5f-4e3d-b9bd-246b1314ab40"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{monthAct}+ " " + $P{year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="453" y="80" width="100" height="11" backcolor="#C4C4C4" uuid="b8dfae6d-1d4c-4a7e-9de9-9204342270e3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{monthAnt} + " " + $P{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="353" height="10" uuid="54e6563e-9237-4b66-a83e-3cced685c5e2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="934b6050-2efe-4e00-a181-324ae634ef52"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INGRESOS Y OTROS BENEFICIOS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="353" y="0" width="100" height="10" uuid="b03f91db-a2a4-4771-be65-b9b9cb8efecf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8e632ee-fd45-4fc7-a37a-0cc1e7eb2361"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="453" y="0" width="100" height="10" uuid="ebabef03-f730-4fc2-90fc-6c6dc55dba0f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2f9be317-466f-4d86-96fa-28cb2de28f21"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="353" height="10" uuid="c5bd7c95-480a-4143-a6a5-8aa4771724c3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="934b6050-2efe-4e00-a181-324ae634ef52"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}.equals("4100")? $F{NOMCTA}:"    "+ $F{NOMCTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="353" y="0" width="100" height="10" uuid="485fd6ab-41f7-4bd1-8ad8-fa3c94083571">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8e632ee-fd45-4fc7-a37a-0cc1e7eb2361"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO_ACT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="453" y="0" width="100" height="10" uuid="8f87cadb-1d52-401e-adcd-665d5ec9791e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2f9be317-466f-4d86-96fa-28cb2de28f21"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO_ANT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="353" height="10" uuid="75775414-08c1-439f-8499-bbfa6557deac"/>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resultado del Ejercicio (Ahorro/Desahorro)]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0.0">
+				<reportElement x="353" y="0" width="100" height="10" uuid="6d1fe9ae-8bd0-4eeb-b747-c7de8a964b25">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vTotalIngresosActual}.subtract($V{vTotalPerdidasActual})]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.0">
+				<reportElement x="453" y="0" width="100" height="10" uuid="866515ca-50e5-4872-aed7-36a0714963bc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{vTotalIngresosAnt}.subtract($V{vTotalPerdidasAnt})]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

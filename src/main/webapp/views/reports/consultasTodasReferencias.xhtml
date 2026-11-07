@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Todas las Referencias"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<p:panelGrid columns="10" styleClass="ui-noborder">
+							<h:outputText value="Mes: " for="idMes" />
+							<p:selectOneMenu id="idMes"
+								value="#{consultasTodasReferenciasMB.mes}">
+								<f:selectItems value="#{consultasTodasReferenciasMB.listMes}"
+									var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+							</p:selectOneMenu>
+							<h:outputText value="Dirección:" for="dire" />
+							<p:inputText id="dire"
+								value="#{consultasTodasReferenciasMB.direccion}" maxlength="5"
+								size="5" onkeyup="this.value=this.value.toUpperCase();">
+								<pe:keyFilter regEx="/[a-z0-9]/i" />
+							</p:inputText>
+							<h:outputText value="Partida Inicial: " for="partidai" />
+							<p:inputText id="partidai"
+								value="#{consultasTodasReferenciasMB.partidaIni}" maxlength="4"
+								size="4">
+								<pe:keyFilter regEx="/[\d]/" />
+							</p:inputText>
+							<h:outputText value="Partida Final: " for="partidaf" />
+							<p:inputText id="partidaf"
+								value="#{consultasTodasReferenciasMB.partidaFin}" maxlength="4"
+								size="4">
+								<pe:keyFilter regEx="/[\d]/" />
+							</p:inputText>
+							<!-- <p:commandButton value="Vista Previa" id="preView"
+								actionListener="#{consultasTodasReferenciasMB.preView}"
+								icon="ui-icon-zoomout"
+								update=":form1:preViewTxt,:form1:growlReportador"
+								onclick="PF('preViewTxtWg').show();" /> -->
+							<p:commandButton id="correcto" ajax="false" value="Correcto"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								icon="ui-icon-document"
+								actionListener="#{consultasTodasReferenciasMB.downLoadFile}"
+								update=":form1:growlReportador">
+								<p:fileDownload value="#{consultasTodasReferenciasMB.fileTxt}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<!-- <p:panelGrid>
+						<p:outputLabel rendered="#{consultasTodasReferenciasMB.bPreView}"
+							style="max-height: 400px; width: 900px; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="120" id="preViewTxt" readonly="true"
+								style="font-family: monospace; font-size: 8pt;"
+								widgetVar="preViewTxtWg"
+								rendered="#{consultasTodasReferenciasMB.bPreView}"
+								autoResize="true"
+								value="#{consultasTodasReferenciasMB.txtPreview}" />
+
+						</p:outputLabel>
+					</p:panelGrid> -->
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,1209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-03-27T10:58:33 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RF009_1_18" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65a8df8b-ac71-473b-872c-5a90f66b0be7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ServerLinux"/>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Body" uuid="0ac9c7e6-2fd3-4c62-855b-614857e4fc8b">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DB2_LOCAL"/>
+		<parameter name="IDSECTOR" class="java.lang.Integer"/>
+		<parameter name="MES" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[SELECT PARTIDA, NOMGAS, SUMAA, SUMAU, SUMAE, SUMAAA_XAMPLI_XREDU, SUMAAE, (SUMAAA_XAMPLI_XREDU - SUMAAE) ABSOLUTO FROM (
+	SELECT SUBSTR(PARTIDA,1,1)||'000' PARTIDA, '' NOMGAS,SUM(SUMAA) SUMAA, SUM(SUMAU) SUMAU, SUM(SUMAE) SUMAE, SUM(SUMAAA + XAMPLI - XREDU) SUMAAA_XAMPLI_XREDU, SUM(SUMAAE) SUMAAE FROM (
+		SELECT PA.PARTIDA, NA.NOMGAS,
+			SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10) + SUM(PA.AUTO1_11) + SUM(PA.AUTO1_12) SUMAA,
+			CASE
+				WHEN $P{MES} = 1 THEN (SUM(PA.AUTO1_1) + SUM(PA.AMPLI1_1) - SUM(PA.REDU1_1))
+				WHEN $P{MES} = 2 THEN (SUM(PA.AUTO1_2) + SUM(PA.AMPLI1_2) - SUM(PA.REDU1_2))
+				WHEN $P{MES} = 3 THEN (SUM(PA.AUTO1_3) + SUM(PA.AMPLI1_3) - SUM(PA.REDU1_3))
+				WHEN $P{MES} = 4 THEN (SUM(PA.AUTO1_4) + SUM(PA.AMPLI1_4) - SUM(PA.REDU1_4))
+				WHEN $P{MES} = 5 THEN (SUM(PA.AUTO1_5) + SUM(PA.AMPLI1_5) - SUM(PA.REDU1_5))
+				WHEN $P{MES} = 6 THEN (SUM(PA.AUTO1_6) + SUM(PA.AMPLI1_6) - SUM(PA.REDU1_6))
+				WHEN $P{MES} = 7 THEN (SUM(PA.AUTO1_7) + SUM(PA.AMPLI1_7) - SUM(PA.REDU1_7))
+				WHEN $P{MES} = 8 THEN (SUM(PA.AUTO1_8) + SUM(PA.AMPLI1_8) - SUM(PA.REDU1_8))
+				WHEN $P{MES} = 9 THEN (SUM(PA.AUTO1_9) + SUM(PA.AMPLI1_9) - SUM(PA.REDU1_9))
+				WHEN $P{MES} = 10 THEN (SUM(PA.AUTO1_10) + SUM(PA.AMPLI1_10) - SUM(PA.REDU1_10))
+				WHEN $P{MES} = 11 THEN (SUM(PA.AUTO1_11) + SUM(PA.AMPLI1_11) - SUM(PA.REDU1_11))
+				WHEN $P{MES} = 12 THEN (SUM(PA.AUTO1_12) + SUM(PA.AMPLI1_12) - SUM(PA.REDU1_12))
+			END SUMAU,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.TOEJE1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.TOEJE1_2) 
+				WHEN $P{MES} = 3 THEN SUM(PA.TOEJE1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.TOEJE1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.TOEJE1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.TOEJE1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.TOEJE1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.TOEJE1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.TOEJE1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.TOEJE1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.TOEJE1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.TOEJE1_12)
+			END SUMAE,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.AUTO1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10) + SUM(PA.AUTO1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10) + SUM(PA.AUTO1_11) + SUM(PA.AUTO1_12)
+			END SUMAAA,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.TOEJE1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9) + SUM(PA.TOEJE1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9) + SUM(PA.TOEJE1_10) + SUM(PA.TOEJE1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9) + SUM(PA.TOEJE1_10) + SUM(PA.TOEJE1_11) + SUM(PA.TOEJE1_12)
+			END SUMAAE,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.AMPLI1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9) + SUM(PA.AMPLI1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9) + SUM(PA.AMPLI1_10) + SUM(PA.AMPLI1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9) + SUM(PA.AMPLI1_10) + SUM(PA.AMPLI1_11) + SUM(PA.AMPLI1_12)
+			END XAMPLI,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.REDU1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9) + SUM(PA.REDU1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9) + SUM(PA.REDU1_10) + SUM(PA.REDU1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9) + SUM(PA.REDU1_10) + SUM(PA.REDU1_11) + SUM(PA.REDU1_12)
+			END XREDU
+			FROM PASO AS PA,
+				 NATGAS AS NA
+		WHERE PA.PARTIDA = NA.CLVGAS AND PA.IDSECTOR = NA.IDSECTOR AND PA.IDSECTOR=$P{IDSECTOR} AND SUBSTR(PA.PARTIDA,4) <> '0'
+		GROUP BY PA.PARTIDA, NA.NOMGAS
+	) T1 GROUP BY SUBSTR(PARTIDA,1,1),''
+	UNION
+	SELECT PARTIDA, NOMGAS, SUMAA, SUMAU, SUMAE, (SUMAAA + XAMPLI - XREDU), SUMAAE FROM (
+		SELECT PA.PARTIDA, NA.NOMGAS,
+			SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10) + SUM(PA.AUTO1_11) + SUM(PA.AUTO1_12) SUMAA,
+			CASE
+				WHEN $P{MES} = 1 THEN (SUM(PA.AUTO1_1) + SUM(PA.AMPLI1_1) - SUM(PA.REDU1_1))
+				WHEN $P{MES} = 2 THEN (SUM(PA.AUTO1_2) + SUM(PA.AMPLI1_2) - SUM(PA.REDU1_2))
+				WHEN $P{MES} = 3 THEN (SUM(PA.AUTO1_3) + SUM(PA.AMPLI1_3) - SUM(PA.REDU1_3))
+				WHEN $P{MES} = 4 THEN (SUM(PA.AUTO1_4) + SUM(PA.AMPLI1_4) - SUM(PA.REDU1_4))
+				WHEN $P{MES} = 5 THEN (SUM(PA.AUTO1_5) + SUM(PA.AMPLI1_5) - SUM(PA.REDU1_5))
+				WHEN $P{MES} = 6 THEN (SUM(PA.AUTO1_6) + SUM(PA.AMPLI1_6) - SUM(PA.REDU1_6))
+				WHEN $P{MES} = 7 THEN (SUM(PA.AUTO1_7) + SUM(PA.AMPLI1_7) - SUM(PA.REDU1_7))
+				WHEN $P{MES} = 8 THEN (SUM(PA.AUTO1_8) + SUM(PA.AMPLI1_8) - SUM(PA.REDU1_8))
+				WHEN $P{MES} = 9 THEN (SUM(PA.AUTO1_9) + SUM(PA.AMPLI1_9) - SUM(PA.REDU1_9))
+				WHEN $P{MES} = 10 THEN (SUM(PA.AUTO1_10) + SUM(PA.AMPLI1_10) - SUM(PA.REDU1_10))
+				WHEN $P{MES} = 11 THEN (SUM(PA.AUTO1_11) + SUM(PA.AMPLI1_11) - SUM(PA.REDU1_11))
+				WHEN $P{MES} = 12 THEN (SUM(PA.AUTO1_12) + SUM(PA.AMPLI1_12) - SUM(PA.REDU1_12))
+			END SUMAU,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.TOEJE1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.TOEJE1_2) 
+				WHEN $P{MES} = 3 THEN SUM(PA.TOEJE1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.TOEJE1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.TOEJE1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.TOEJE1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.TOEJE1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.TOEJE1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.TOEJE1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.TOEJE1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.TOEJE1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.TOEJE1_12)
+			END SUMAE,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.AUTO1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10) + SUM(PA.AUTO1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.AUTO1_1) + SUM(PA.AUTO1_2) + SUM(PA.AUTO1_3) + SUM(PA.AUTO1_4) + SUM(PA.AUTO1_5) + SUM(PA.AUTO1_6) + SUM(PA.AUTO1_7) + SUM(PA.AUTO1_8) + SUM(PA.AUTO1_9) + SUM(PA.AUTO1_10) + SUM(PA.AUTO1_11) + SUM(PA.AUTO1_12)
+			END SUMAAA,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.TOEJE1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9) + SUM(PA.TOEJE1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9) + SUM(PA.TOEJE1_10) + SUM(PA.TOEJE1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.TOEJE1_1) + SUM(PA.TOEJE1_2) + SUM(PA.TOEJE1_3) + SUM(PA.TOEJE1_4) + SUM(PA.TOEJE1_5) + SUM(PA.TOEJE1_6) + SUM(PA.TOEJE1_7) + SUM(PA.TOEJE1_8) + SUM(PA.TOEJE1_9) + SUM(PA.TOEJE1_10) + SUM(PA.TOEJE1_11) + SUM(PA.TOEJE1_12)
+			END SUMAAE,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.AMPLI1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9) + SUM(PA.AMPLI1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9) + SUM(PA.AMPLI1_10) + SUM(PA.AMPLI1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.AMPLI1_1) + SUM(PA.AMPLI1_2) + SUM(PA.AMPLI1_3) + SUM(PA.AMPLI1_4) + SUM(PA.AMPLI1_5) + SUM(PA.AMPLI1_6) + SUM(PA.AMPLI1_7) + SUM(PA.AMPLI1_8) + SUM(PA.AMPLI1_9) + SUM(PA.AMPLI1_10) + SUM(PA.AMPLI1_11) + SUM(PA.AMPLI1_12)
+			END XAMPLI,
+			CASE
+				WHEN $P{MES} = 1 THEN SUM(PA.REDU1_1)
+				WHEN $P{MES} = 2 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2)
+				WHEN $P{MES} = 3 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3)
+				WHEN $P{MES} = 4 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4)
+				WHEN $P{MES} = 5 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5)
+				WHEN $P{MES} = 6 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6)
+				WHEN $P{MES} = 7 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7)
+				WHEN $P{MES} = 8 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8)
+				WHEN $P{MES} = 9 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9)
+				WHEN $P{MES} = 10 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9) + SUM(PA.REDU1_10)
+				WHEN $P{MES} = 11 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9) + SUM(PA.REDU1_10) + SUM(PA.REDU1_11)
+				WHEN $P{MES} = 12 THEN SUM(PA.REDU1_1) + SUM(PA.REDU1_2) + SUM(PA.REDU1_3) + SUM(PA.REDU1_4) + SUM(PA.REDU1_5) + SUM(PA.REDU1_6) + SUM(PA.REDU1_7) + SUM(PA.REDU1_8) + SUM(PA.REDU1_9) + SUM(PA.REDU1_10) + SUM(PA.REDU1_11) + SUM(PA.REDU1_12)
+			END XREDU
+			FROM PASO AS PA,
+				 NATGAS AS NA
+		WHERE PA.PARTIDA = NA.CLVGAS AND PA.IDSECTOR = NA.IDSECTOR AND PA.IDSECTOR=$P{IDSECTOR} AND SUBSTR(PA.PARTIDA,4) <> '0'
+		GROUP BY PA.PARTIDA, NA.NOMGAS
+	) T1
+) TABLA ORDER BY PARTIDA]]>
+		</queryString>
+		<field name="PARTIDA" class="java.lang.String"/>
+		<field name="NOMGAS" class="java.lang.String"/>
+		<field name="SUMAA" class="java.lang.Double"/>
+		<field name="SUMAU" class="java.lang.Double"/>
+		<field name="SUMAE" class="java.lang.Double"/>
+		<field name="SUMAAA_XAMPLI_XREDU" class="java.lang.Double"/>
+		<field name="SUMAAE" class="java.lang.Double"/>
+		<field name="ABSOLUTO" class="java.lang.Double"/>
+		<variable name="porcentaje" class="java.lang.Double">
+			<variableExpression><![CDATA[($F{SUMAAA_XAMPLI_XREDU}.equals(0.00) || $F{SUMAAE}.equals(0.00))? 0.00:
+((($F{SUMAAA_XAMPLI_XREDU} - $F{SUMAAE} ) / $F{SUMAAA_XAMPLI_XREDU} ) * 100)
+]]></variableExpression>
+		</variable>
+		<variable name="totalSUMAA" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{PARTIDA}.substring( 1 ).equals("000")?$F{SUMAA}:0.00)]]></variableExpression>
+		</variable>
+		<variable name="totalSUMAU" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{PARTIDA}.substring( 1 ).equals("000")?$F{SUMAU}:0.00)]]></variableExpression>
+		</variable>
+		<variable name="totalSUMAE" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{PARTIDA}.substring( 1 ).equals("000")?$F{SUMAE}:0.00)]]></variableExpression>
+		</variable>
+		<variable name="totalSUMAAA_XAMPLI_XREDU" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{PARTIDA}.substring( 1 ).equals("000")?$F{SUMAAA_XAMPLI_XREDU}:0.00)]]></variableExpression>
+		</variable>
+		<variable name="totalSUMAAE" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{PARTIDA}.substring( 1 ).equals("000")?$F{SUMAAE}:0.00)]]></variableExpression>
+		</variable>
+		<variable name="totalABSOLUTO" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[($F{PARTIDA}.substring( 1 ).equals("000")?$F{ABSOLUTO}:0.00)]]></variableExpression>
+		</variable>
+		<variable name="totalPORCENTAJE" class="java.lang.Double">
+			<variableExpression><![CDATA[($V{totalSUMAAA_XAMPLI_XREDU} .equals(0.00) || $V{totalSUMAAE}.equals(0.00))? 0.00:
+((($V{totalSUMAAA_XAMPLI_XREDU} - $V{totalSUMAAE}) / $V{totalSUMAAA_XAMPLI_XREDU}) *100)
+
+]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="USUARIO" class="java.lang.String">
+		<defaultValueExpression><![CDATA["alfredo_c"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mes" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nFirmas" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<parameter name="firmaP1" class="java.lang.String"/>
+	<parameter name="firmaP2" class="java.lang.String"/>
+	<parameter name="firmaP3" class="java.lang.String"/>
+	<parameter name="firmaP4" class="java.lang.String"/>
+	<parameter name="firmaN1" class="java.lang.String"/>
+	<parameter name="firmaN2" class="java.lang.String"/>
+	<parameter name="firmaN3" class="java.lang.String"/>
+	<parameter name="firmaN4" class="java.lang.String"/>
+	<parameter name="entidadName" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="entidadRfc" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="year" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT ID_TIPO_USUARIO FROM TC_USUARIOS WHERE USUARIO=$P{USUARIO}]]>
+	</queryString>
+	<field name="ID_TIPO_USUARIO" class="java.lang.Integer"/>
+	<variable name="v_mes" class="java.util.List">
+		<variableExpression><![CDATA[java.util.Arrays.asList("","ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE")]]></variableExpression>
+	</variable>
+	<variable name="v_dias" class="java.util.List">
+		<variableExpression><![CDATA[java.util.Arrays.asList(0,31,28,31,30,31,30,31,31,30,31,30,31)]]></variableExpression>
+	</variable>
+	<variable name="Get_day" class="java.lang.Integer">
+		<variableExpression><![CDATA[($P{mes}==2)?(
+	(($P{year}%4)==0)?(29):($V{v_dias}.get($P{mes}))
+	):($V{v_dias}.get($P{mes})
+)]]></variableExpression>
+	</variable>
+	<group name="GroupFirmas1" footerPosition="ForceAtBottom">
+		<groupFooter>
+			<band height="55">
+				<printWhenExpression><![CDATA[$P{nFirmas}.equals(1)]]></printWhenExpression>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="5" width="100" height="35" uuid="ff24a4c5-a9e8-4533-859f-1620b6f22bf0">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[$P{nFirmas}.equals(1)]]></printWhenExpression>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="320" y="40" width="100" height="15" uuid="8918ab86-f1f1-4cce-8373-cb3650561e59">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<printWhenExpression><![CDATA[$P{nFirmas}.equals(1)]]></printWhenExpression>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="GroupFirmas2" footerPosition="ForceAtBottom">
+		<groupFooter>
+			<band height="55">
+				<printWhenExpression><![CDATA[$P{nFirmas}.equals(2)]]></printWhenExpression>
+				<textField isBlankWhenNull="true">
+					<reportElement x="220" y="5" width="100" height="35" uuid="b0ac56ca-e6c1-49f8-9d96-81dc0bbd663b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="220" y="40" width="100" height="15" uuid="0b8f081a-3d54-4b7e-b38a-364d237e4e08">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="420" y="39" width="100" height="15" uuid="f576879c-edc0-41c0-b9df-800e30e2279b"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="420" y="4" width="100" height="35" uuid="5458eee1-1460-4667-8d9d-844d978586fb">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="GroupFirmas3" footerPosition="ForceAtBottom">
+		<groupFooter>
+			<band height="55">
+				<printWhenExpression><![CDATA[$P{nFirmas}.equals(3)]]></printWhenExpression>
+				<textField isBlankWhenNull="true">
+					<reportElement x="127" y="5" width="100" height="35" uuid="0c0332c8-4ecb-49d0-9b61-ef4f515e88ec">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="127" y="40" width="100" height="15" uuid="f936daf5-a477-4aed-8a63-d5c2fe5e52a7">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="513" y="5" width="100" height="35" uuid="53f5eaa8-78c7-4686-adb6-e6437fa1b877"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP3}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="513" y="40" width="100" height="15" uuid="615d8d95-32a9-4a5e-a9a2-e190b92abf84"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN3}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="320" y="40" width="100" height="15" uuid="f07bde02-a5ae-4735-a800-e6391313495f"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="320" y="5" width="100" height="35" uuid="cc36be1f-98f3-4125-b9aa-10f80ddaafda">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="GroupFirmas4" footerPosition="ForceAtBottom">
+		<groupFooter>
+			<band height="55">
+				<printWhenExpression><![CDATA[$P{nFirmas}.equals(4)]]></printWhenExpression>
+				<textField isBlankWhenNull="true">
+					<reportElement x="27" y="5" width="100" height="35" uuid="e6c08e95-0662-41ce-bea0-c8068ce6f146">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="27" y="40" width="100" height="15" uuid="4fd6f13f-5056-440f-8870-ced0a3c8eebc">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="227" y="5" width="100" height="35" uuid="7c3583bd-00fa-4c80-b7ec-36d2b0a17d2b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP2}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="227" y="40" width="100" height="15" uuid="5dd977f0-9841-4af7-a3cc-6cd918359f01">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="420" y="5" width="100" height="35" uuid="1390b5bb-0c7b-4433-845b-1a9a510638af"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP3}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="420" y="40" width="100" height="15" uuid="7902ec66-ea37-468a-81f0-d7274faa1de9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN3}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="620" y="5" width="100" height="35" uuid="69e71e90-27c7-4bb6-ae45-2ae5c759d952">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaP4}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="620" y="40" width="100" height="15" uuid="c8b1a0e0-23a4-4a2c-80ae-f6d3125d084f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{firmaN4}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="65" splitType="Stretch">
+			<image onErrorType="Blank">
+				<reportElement x="0" y="0" width="45" height="45" uuid="5e2fb5aa-e7e5-41f5-9042-d6e1ca68c202">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagePath}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="45" y="0" width="660" height="15" uuid="23ca2471-5c7e-4c09-8b8a-9000c74c1acd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entidadName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="45" y="15" width="660" height="15" uuid="41f5c85a-27e4-462b-b716-86111780d73d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{entidadRfc}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="45" y="30" width="660" height="15" uuid="fbb21db2-de8c-4bdc-b366-6b6a9a71395f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ESTADO COMPARATIVO DE EGRESOS CORRESPONDIENTE AL MES DE " + $V{v_mes}.get($P{mes}) + " DE " + $P{year}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="45" width="670" height="10" uuid="16048d63-4e80-4416-a5ce-b7ad7ec58813"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha de Elaboración:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="55" width="670" height="10" uuid="67c94eaf-7a1e-483a-81f1-3d1159cc24e8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Hoja:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="670" y="45" width="80" height="10" uuid="bf9a6b56-41f9-4eef-97f1-c318d0629c47"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="55" width="80" height="10" uuid="bd66f9ab-324b-4fb9-b357-2573f528a3fa"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="190" height="30" uuid="a902a800-5544-4399-a929-6dac0b95bdc4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[CONCEPTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="0" width="80" height="30" uuid="1af53f56-3cd7-4955-8126-9a881c9bcec9"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[PRES. APROBADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="0" width="160" height="15" uuid="bde2f59d-d5a9-40db-aa10-cc978f5300fe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[PRESUPUESTO DEL MES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="15" width="80" height="15" uuid="37a2d533-8984-4de6-827c-d21bb061b339">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[MODIFICADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="15" width="80" height="15" uuid="4d8b041a-4b57-4d58-8057-cc71e6d618b0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[EJERCIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="0" width="160" height="15" uuid="d2353158-c1c3-4596-8037-ecf315120847">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[PRESUPUESTO ACUMULADO AL MES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="15" width="80" height="15" uuid="c390df33-de81-465a-abae-8cdc0282eaf3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[MODIFICADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="15" width="80" height="15" uuid="2b9f960c-c0c7-442e-bafc-bda86cea6b7f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[EJERCIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="590" y="0" width="160" height="15" uuid="84ad2552-1bd1-4efa-8de6-57ea1ad63140">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[VARIACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="590" y="15" width="80" height="15" uuid="99c1bb19-ffb6-4644-97df-ed85f906d887">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[ABSOLUTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="670" y="15" width="80" height="15" uuid="22ff4bd9-4550-4f2f-a7c6-8d228d6a672c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="35" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="750" height="35" uuid="e850ee21-1ef2-4e05-9a89-72df3d9d2a71">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="Body" uuid="c6759af5-9000-434e-95c1-e7932de8d68e">
+						<datasetParameter name="IDSECTOR">
+							<datasetParameterExpression><![CDATA[$F{ID_TIPO_USUARIO}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="MES">
+							<datasetParameterExpression><![CDATA[$P{mes}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="190" uuid="af8fd391-2b4d-4507-9eb8-da90834b1984">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="190" height="10" uuid="448a5ba1-cda4-44df-ad46-1c2b8883f1db"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+								</textElement>
+								<text><![CDATA[T O T A L E S    ]]></text>
+							</staticText>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement x="0" y="0" width="190" height="10" uuid="76190e6f-ee99-4a6b-b9dd-65458710b346"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+								</textElement>
+								<textFieldExpression><![CDATA[($F{PARTIDA}.equals("1000")? "SERVICIOS PERSONALES":
+	($F{PARTIDA}.equals("2000")? "MATERIALES Y SUMINISTROS":
+		($F{PARTIDA}.equals("3000")? "SERVICIOS GENERALES":
+			($F{PARTIDA}.equals("4000")? "TRANSFERENCIAS, ASIGNACIONES, SUBSIDIOS Y OTRAS AYUDAS":
+				($F{PARTIDA}.equals("5000")?"BIENES MUEBLES E INMUEBLES":
+					($F{PARTIDA}.equals("6000")? "INVERSION PUBLICA":
+						($F{PARTIDA}.equals("7000")? "INVERSIONES FINANCIERAS Y OTRAS PROVISIONES":
+							($F{PARTIDA}.equals("8000")? "PARTICIPACIONES Y APORTACIONES":
+								($F{PARTIDA}.equals("9000")?"DEUDA PUBLICA":
+									$F{NOMGAS}
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+)]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="4a7b60dc-8370-4bed-b490-294f10f6d419">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="ffea2bd9-0cdf-42c6-a7de-6b7c039a03e4"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{totalSUMAA}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="e6569462-8d33-4205-8e21-76af4d54b6ad"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{SUMAA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="5432bc92-dc25-4a78-9fa9-bf5fe54a8046">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="a9fe74c7-3bdd-44eb-b23b-8b550c4603cb"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{totalSUMAU}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="2c5b11a9-1955-46f7-a2a9-c9191cf73d5e"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{SUMAU}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="f66c1b06-9d00-4509-a994-49d84a2783ad">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="e352a04a-6d70-43e5-9151-487387174c53"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{totalSUMAE}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="86d3e878-a567-4429-b97c-add714d38e25"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{SUMAE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="320da31e-8800-4798-bce4-74502fe76279">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="611ea641-fd38-4ab4-8840-f7849072f9f6"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{totalSUMAAA_XAMPLI_XREDU}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="91172d70-ec29-4b61-b79a-d43a10dca3d3"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{SUMAAA_XAMPLI_XREDU}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="704a9046-e84d-40c1-bf48-0a021411e390">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="0ce41e71-f4ed-46a8-bc06-9b2361d7122d"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{totalSUMAAE}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="c0dea293-95d7-497b-8ac4-6dbd57ae43ef"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{SUMAAE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="1a01239e-a0ec-41b0-8ac7-47dd2a1b9e7b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="c295f440-4c77-484d-83b6-36f4d905e01e"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{totalABSOLUTO}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="6a8c2810-6949-47fd-81ea-0be53ed7cbbf"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ABSOLUTO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="56c019b3-4780-4a98-82ca-f13347182f5b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:tableFooter height="10" rowSpan="1">
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="0abfa780-4f10-4078-bca2-d36e833e499a"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{totalPORCENTAJE}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnFooter height="10" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="10">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="#,##0.00">
+								<reportElement x="0" y="0" width="80" height="10" uuid="b9b393a2-46b4-4c0f-a0d5-7c16daf2eb77"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="6"/>
+									<paragraph rightIndent="1"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{porcentaje}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

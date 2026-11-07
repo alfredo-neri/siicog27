@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogThemeGrowthMB.onPageLoad}" update=":form1:objects" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:focus context="objects" id="focusTable" />
+				<p:panel id="panel" header="B&uacute;squeda de Temas de Desarrollo"
+					style="width:40%;"
+					styleClass="green  col-centered row-centered shadow-panel">
+
+					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+
+						<h:outputText value="Cvetemas" for="keyInput"
+							style="padding-left: 30px; padding-right: 30px;" />
+						<p:inputText id="keyInput"
+							value="#{catalogThemeGrowthMB.beanFind.cvetemas}" maxlength="8"
+							validatorMessage="cvetemas solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="keyInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogThemeGrowthMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Tema" for="nameInput"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="nameInput"
+							value="#{catalogThemeGrowthMB.beanFind.tema}"
+							style="margin-top: 10px;" maxlength="2"
+							validatorMessage="Tema solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+								for="nameInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogThemeGrowthMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<br />
+						<p:outputPanel layout="block" style="text-align:center">
+
+							<br />
+
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								update=":form1:messagesEdit, :form1:objects"
+								actionListener="#{catalogThemeGrowthMB.findValuesCatalog}" />
+
+							<p:commandButton value="Limpiar"
+								style="padding: 5px; margin-left: 15px;"
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+								actionListener="#{catalogThemeGrowthMB.findAllValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:panel>
+				<br />
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+						actionListener="#{catalogThemeGrowthMB.insertRow}"
+						style="margin-left: 50%; padding: 5px;"
+						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+				</p:panel>
+				<p:dataTable id="objects" binding="#{table}" var="objects"
+					value="#{catalogThemeGrowthMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{objects.id}">
+
+					<f:facet name="header">Cat&aacute;logo de Temas de Desarrollo</f:facet>
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogThemeGrowthMB.onRowEdit}"
+						update=":form1:messagesEdit, :form1:objects" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogThemeGrowthMB.onRowCancel}"
+						update=":form1:messagesEdit, :form1:objects" />
+
+					<p:column headerText="Cve Temas" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{objects.cvetemas}" />
+					</p:column>
+
+					<p:column headerText="Cve Temas" exportable="false"
+						style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{objects.cvetemas}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="cvetemas" value="#{objects.cvetemas}"
+									style="width:100%" maxlength="255" required="true"
+									requiredMessage="El campo Cve Temas es requerido"
+									validatorMessage="Cve Temas solo permite valores alfanum&eacute;ricos"
+									disabled="true">
+
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+										for="cvetemas" />
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Descripci&oacute;n" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{objects.descripcion}" />
+					</p:column>
+
+					<p:column headerText="Descripci&oacute;n" exportable="false"
+						style="width:35%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{objects.descripcion}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="descripcion" value="#{objects.descripcion}"
+									style="width:100%" maxlength="255" required="true"
+									requiredMessage="El campo Descripci&oacute;n es requerido"
+									validatorMessage="Descripci&oacute;n solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+										for="descripcion" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Pilar/Eje" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{objects.pe}" />
+					</p:column>
+
+					<p:column headerText="Pilar/Eje" exportable="false"
+						style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{objects.pe}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="pe" value="#{objects.pe}" style="width:100%"
+									maxlength="2" required="true"
+									onkeyup="this.value = this.value.toUpperCase();"
+									requiredMessage="El campo Pilar/Eje es requerido"
+									validatorMessage="Pilar/Eje solo permite valores alfanum&eacute;ricos y debe tener una longitud de 2">
+
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" for="pe" />
+									<f:validateLength minimum="2" maximum="2" />
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="No. Pilar/Eje" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{objects.nope}" />
+					</p:column>
+
+					<p:column headerText="No. Pilar/Eje" exportable="false"
+						style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{objects.nope}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nope" value="#{objects.nope}"
+									style="width:100%" maxlength="2"
+									onkeyup="this.value = this.value.toUpperCase();"
+									validatorMessage="No. Pilar/Eje solo permite valores alfanum&eacute;ricos">
+
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" for="nope" />
+
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Tema" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{objects.tema}" />
+					</p:column>
+
+					<p:column headerText="Tema" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{objects.tema}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="tema" value="#{objects.tema}"
+									style="width:100%" maxlength="2"
+									onkeyup="this.value = this.value.toUpperCase();"
+									validatorMessage="Tema solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" for="tema" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Sub Tema" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{objects.subTema}" />
+					</p:column>
+
+					<p:column headerText="Sub Tema" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{objects.subTema}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="subtema" value="#{objects.subTema}"
+									onkeyup="this.value = this.value.toUpperCase();"
+									style="width:100%" maxlength="2">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$" for="tema" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Borrar" style="width:5%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+							<f:setPropertyActionListener value="#{objects}"
+								target="#{catalogThemeGrowthMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:5%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+					<f:facet name="footer">
+
+						<p:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogThemeGrowthMB.fileXls}" />
+						</p:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogThemeGrowthMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							actionListener="#{catalogThemeGrowthMB.getFileCsvPl}">
+							<p:graphicImage value="csv.png" width="24" />
+							<p:fileDownload value="#{catalogThemeGrowthMB.csvByPl}" />
+
+							<!-- <p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="TemasDesarrollo" pageOnly="false" /> -->
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogThemeGrowthMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<br />
+				<br />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar"
+							update=":form1:messagesEdit, :form1:objects"
+							actionListener="#{catalogThemeGrowthMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

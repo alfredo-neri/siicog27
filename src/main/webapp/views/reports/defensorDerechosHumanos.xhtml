@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+
+				<p:panel id="panel"
+					header="Competencia Laboral del #{derechosHumanosMB.COMPETENCIA_NAME}"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:dataGrid id="dataGrid" var="entity"
+						value="#{derechosHumanosMB.listDefensor}"
+						styleClass="et_datatable col-md-12 no-border"
+						emptyMessage="Cargando información..." paginator="true" rows="1"
+						columns="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="dataGrid" paginatorPosition="bottom"
+						rowIndexVar="rowIndexCaptura">
+						<p:ajax event="page" listener="#{derechosHumanosMB.cambiarPagina}"
+							process="dataGrid" />
+
+						<p:panelGrid style="width: 100%;" styleClass="ui-noborder">
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText value="Semestre:" />
+								</p:column>
+								<p:column>
+									<p:outputLabel value="#{entity.semestre}" id="lblSemestre"
+										style="margin-left: 18px;"
+										rendered="#{!derechosHumanosMB.editando}" />
+									<p:selectOneMenu size="18" editable="false" id="semestre"
+										value="#{entity.semestre}"
+										disabled="#{!derechosHumanosMB.editando}"
+										rendered="#{derechosHumanosMB.editando}">
+										<f:selectItems value="#{derechosHumanosMB.listSemestres}"
+											var="periodo" itemValue="#{periodo.periodo}"
+											itemLabel="#{periodo.periodo}" />
+									</p:selectOneMenu>
+
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="width:75%; text-align:right;">
+									<h:outputText value="Nombre Completo: " />
+								</p:column>
+								<p:column style="width:25%;">
+									<p:outputLabel id="lblNombre" value="#{entity.nombre}"
+										rendered="#{!derechosHumanosMB.editando}" />
+									<p:inputText style="width:100%"
+										rendered="#{derechosHumanosMB.editando}"
+										value="#{entity.nombre}" />
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="width:75%; text-align:right;">
+									<h:outputText
+										value="Cargo dentro del Ayuntamiento (Nombramiento) : " />
+								</p:column>
+								<p:column>
+									<p:outputLabel id="lblCargo" value="#{entity.cargo}"
+										style="text-align:left !important"
+										rendered="#{!derechosHumanosMB.editando}">
+									</p:outputLabel>
+									<p:inputText style="width:100%"
+										rendered="#{derechosHumanosMB.editando}"
+										value="#{entity.cargo}" />
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText value="Fecha de Ingreso al Cargo:" />
+								</p:column>
+								<p:column styleClass="col-md-2">
+									<p:outputLabel value="#{entity.fechaing}" id="lblFechaIng"
+										style="margin-left: 18px;"
+										rendered="#{!derechosHumanosMB.editando}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:outputLabel>
+
+									<p:calendar id="fechaIng" showOn="button" locale="es"
+										rendered="#{derechosHumanosMB.editando}" size="10"
+										pattern="dd/MM/yyyy" mask="true" maxlength="10"
+										requiredMessage="Seleccione una fecha"
+										value="#{entity.fechaing}"
+										converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:calendar>
+								</p:column>
+
+							</p:row>
+
+							<p:row>
+								<p:column style="text-align: right;">
+									<h:outputText
+										value="Experiencia mínima de un año para ocupar el cargo:" />
+								</p:column>
+								<p:column>
+									<p:outputLabel id="lblExperiencia"
+										value="#{entity.experiencia}"
+										rendered="#{!derechosHumanosMB.editando}" />
+
+									<p:inputTextarea style="width:100%" maxlength="300"
+										value="#{entity.experiencia}"
+										rendered="#{derechosHumanosMB.editando}"
+										requiredMessage="Favor de capturar la Experiencia"></p:inputTextarea>
+
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="text-align: right;">
+									<h:outputText id="idTitulo"
+										value="#{derechosHumanosMB.TITLE_LABEL} :" />
+								</p:column>
+								<p:column>
+									<p:outputLabel value="#{entity.titulo == 1 ? 'Si': 'No'}"
+										id="lbltitulo" rendered="#{!derechosHumanosMB.editando}" />
+
+									<p:selectOneRadio style="display: inline-block;"
+										rendered="#{derechosHumanosMB.editando}" id="hasTitulo"
+										value="#{entity.titulo}">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneRadio>
+
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="text-align:right;">
+									<h:outputText
+										value="Certificación en Competencia Laboral expedida por el Instituto Hacendario del Estado de México:" />
+								</p:column>
+								<p:column>
+									<p:outputLabel
+										value="#{entity.certificacion == 1 ? 'Si': 'No'}"
+										id="lblCertificado" rendered="#{!derechosHumanosMB.editando}" />
+
+									<p:selectOneRadio style="display: inline-block;"
+										rendered="#{derechosHumanosMB.editando}"
+										value="#{entity.certificacion}" id="hasCertificado">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneRadio>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column style="text-align: right;">
+									<h:outputText value="Alta del servidor público en ISSEMYM:" />
+								</p:column>
+								<p:column>
+									<p:outputLabel id="lblIssemym"
+										value="#{entity.issemym==1?'Si':'No'}"
+										rendered="#{!derechosHumanosMB.editando}" />
+
+									<p:selectOneRadio style="display: inline-block;"
+										rendered="#{derechosHumanosMB.editando}"
+										value="#{entity.issemym}" id="hasIssemym">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneRadio>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="text-align: right;">
+									<h:outputText
+										value="Constancia de no inhabilitación expedida por autoridad competente:" />
+								</p:column>
+								<p:column>
+									<p:outputLabel id="lblConstancia"
+										value="#{entity.constancia == 1?'Si':'No'}"
+										rendered="#{!derechosHumanosMB.editando}" />
+
+									<p:selectOneRadio style="display: inline-block;"
+										rendered="#{derechosHumanosMB.editando}"
+										value="#{entity.constancia}" id="hasConstancia">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneRadio>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column style="text-align: right;">
+									<h:outputText value="Certificado de No Antecedentes Penales:" />
+								</p:column>
+								<p:column>
+									<p:outputLabel id="lblAntecedentes"
+										value="#{entity.antecedentes == 1?'Si':'No'}"
+										rendered="#{!derechosHumanosMB.editando}" />
+
+									<p:selectOneRadio style="display: inline-block;"
+										rendered="#{derechosHumanosMB.editando}"
+										value="#{entity.antecedentes}" id="hasAntecedentes">
+										<f:selectItem itemLabel="Si" itemValue="1" />
+										<f:selectItem itemLabel="No" itemValue="0" />
+									</p:selectOneRadio>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:dataGrid>
+					<p:panelGrid id="idForm"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:row>
+							<p:column colspan="3">
+
+								<h:panelGroup id="pnlBotonesCRUD">
+									<p:commandButton value="Modificar" icon="ui-icon-pencil"
+										id="modificar" actionListener="#{derechosHumanosMB.modificar}"
+										rendered="#{!derechosHumanosMB.editando}"
+										disabled="#{derechosHumanosMB.bModificar}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid" />
+									<p:commandButton value="Salvar" icon="ui-icon-disk" id="salvar"
+										action="#{derechosHumanosMB.salvar}"
+										rendered="#{derechosHumanosMB.editando}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+									<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+										id="adicionar" actionListener="#{derechosHumanosMB.adicionar}"
+										disabled="#{derechosHumanosMB.editando}"
+										rendered="#{derechosHumanosMB.bAdicionar}"
+										update=":form1:pnlBotonesCRUD, :form1:dataGrid, :form1:msgs" />
+									<p:commandButton value="Limpiar" icon="ui-icon-circle-plus"
+										id="limpiar" disabled="#{!derechosHumanosMB.editando}"
+										actionListener="#{derechosHumanosMB.clean}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+									<p:commandButton value="Borrar" icon="ui-icon-trash"
+										id="Borrar" disabled="#{derechosHumanosMB.bBorrar}"
+										oncomplete="PF('confirmDeleteDlg').show()"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+									<p:commandButton value="Cancelar" icon="ui-icon-closethick"
+										actionListener="#{derechosHumanosMB.reset}" id="cancelar"
+										disabled="#{derechosHumanosMB.bCancelar}"
+										update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs" />
+								</h:panelGroup>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:panel id="panelReporte"
+						styleClass=" col-centered row-centered ui-noborder">
+						<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+							<h:outputText value="Semestre: " for="trimestre" />
+							<p:selectOneMenu id="trimestre" size="18" editable="false"
+								value="#{derechosHumanosMB.semestre}">
+
+								<f:selectItems value="#{derechosHumanosMB.listSemestres}"
+									var="trim" itemLabel="#{trim.periodo}"
+									itemValue="#{trim.periodo}" />
+							</p:selectOneMenu>
+							<p:panelGrid columns="4" styleClass="ui-noborder">
+
+								<p:commandButton id="generateportepdf"
+									onstart="PF('blockUIWidget').block()"
+									oncomplete="PF('blockUIWidget').unblock()"
+									action="#{derechosHumanosMB.generatePDF}" value="Correcto"
+									update="form1:inlinePdf, :form1:msgs">
+								</p:commandButton>
+							</p:panelGrid>
+						</p:panelGrid>
+						<p:panel id="inlinePdf" style="border:0px"
+							visible="#{derechosHumanosMB.uuid ne null}">
+
+							<object type="application/pdf"
+								data="#{request.contextPath}/GetFileInline?uuid=#{derechosHumanosMB.uuid}&amp;filename=#{derechosHumanosMB.endFilename}"
+								height="380px" width="100%"> </object>
+						</p:panel>
+					</p:panel>
+
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+
+					<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+						resizable="false" width="400" height="90" showEffect="clip"
+						hideEffect="clip" modal="true">
+
+						<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+							style="padding-left: 30px; padding-right: 30px;" />
+						<br />
+						<br />
+						<p:outputPanel id="panelDelete" layout="block"
+							style="text-align:center">
+
+							<p:commandButton value="Aceptar"
+								update="form1:pnlBotonesCRUD, form1:dataGrid, form1:msgs"
+								actionListener="#{derechosHumanosMB.borrar}"
+								oncomplete="PF('confirmDeleteDlg').hide()" />
+
+							<p:commandButton value="Cancelar"
+								onclick="PF('confirmDeleteDlg').hide()" type="button"
+								style="margin-left: 15px;" />
+						</p:outputPanel>
+					</p:dialog>
+
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

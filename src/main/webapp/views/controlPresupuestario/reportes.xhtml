@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<h:form id="form">
+				<p:growl id="messages" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Control Presupuestario - Reportes"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Reporte: " for="reporte" />
+						<p:selectOneMenu id="reporte"
+							value="#{controlPresupuestalReportesMB.report}">
+							<f:selectItem itemLabel="Seguimiento FAM" itemValue="RPT_FAM" />
+							<f:selectItem itemLabel="Seguimiento de Obras PAD" itemValue="RPT_PAD" />
+							<f:selectItem itemLabel="PAD Trimestral" itemValue="RPT_PAD_TRIM" />
+						</p:selectOneMenu>
+
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+ 							
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload value="#{controlPresupuestalReportesMB.fileXls}" />
+							</h:commandLink>
+
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{controlPresupuestalReportesMB.createFilePdfInline()}"
+								value="Vista Preliminar" update="form:inlinePdf, :form:messages">
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{controlPresupuestalReportesMB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{controlPresupuestalReportesMB.uuid}&amp;filename=#{controlPresupuestalReportesMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../reports/indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

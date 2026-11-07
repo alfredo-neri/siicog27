@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean"
+			value="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB}"></ui:param>
+		<ui:define name="content">
+			<script>
+	                $(document).ready(() => {
+	                    $(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align', 'center');
+	                /**
+	                	 * POSICIONA EL FOCUS EN EL ELEMENTO RECIBIDO. 
+	                	 * @param id
+	                	 * @returns
+	                	 */
+	                	focusEl = function(id){
+	                		if(id == '') return;
+	                		let el = $(PrimeFaces.escapeClientId(id));
+	                		let isFocusable = $(el).is(':focusable');
+	                		if(!isFocusable){
+	                			//search for focusable inside childrens
+	                			el = $(PrimeFaces.escapeClientId(id)+' :focusable');
+	                		}
+	                		$(el).focus(250);
+	                		//check if is focused
+	                		if(!$(el).hasClass('ui-state-focus')){
+	                			$(el).focus(250);
+	                		}
+	                	}	                    
+	                })
+	            </script>
+			<style>
+.input-4 input {
+	width: 4em;
+}
+
+.input-5 input {
+	width: 5em;
+}
+
+.input-6 input {
+	width: 6em;
+}
+
+.input-7 input {
+	width: 7em;
+}
+
+.input-8 input {
+	width: 8em;
+}
+
+.input-9 input {
+	width: 9em;
+}
+
+.input-10 input {
+	width: 10em;
+}
+
+.input-11 input {
+	width: 11em;
+}
+
+.input-12 input {
+	width: 12em;
+}
+
+.input-17 input {
+	width: 17em;
+}
+
+.ui-panelgrid-cell {
+	padding: .2em !important;
+}
+
+span.calendar-small input {
+	width: 6em;
+}
+
+.calendar-small {
+	padding-right: 1em;
+}
+
+.headerBorder .ui-panel-titlebar {
+	margin-top: -37px;
+	background-color: transparent !important;
+	border: none;
+	text-align: center;
+	font-size: 15px;
+}
+
+.headerTitle .ui-panel-titlebar {
+	margin-top: -23px;
+	background-color: transparent !important;
+	border: none;
+	text-align: center;
+	font-size: 15px;
+}
+
+.headerBorder .ui-panel-title {
+	background-color: white;
+}
+
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button
+	{
+	-webkit-appearance: none;
+	margin: 0;
+}
+</style>
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto; ">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Inventario de Bienes Muebles de Bajo Costo"
+					style="height: 58em;" styleClass="green shadow-panel container">
+					<p:dataGrid id="dataGrid" var="entity"
+						value="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.masterList}"
+						styleClass="et_datatable col-md-12 no-border"
+						emptyMessage="Cargando información..." paginator="true" rows="1"
+						columns="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="dataGrid" paginatorPosition="bottom"
+						rowIndexVar="rowIndexCaptura">
+
+						<p:ajax event="page"
+							listener="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.cambiarPagina}"
+							process="dataGrid" update="dataGrid form1:pnlBotonesCRUD" />
+
+						<div class="row">
+							<div
+								class="col-12 col-xs-12 col-sm-12 col-12-md col-lg-12 col-xs-12">
+								<h:panelGroup id="panel-filtros">
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+											<p:column>
+												<h:outputText value="Mes:" />
+											</p:column>
+											<p:column>
+												<h:panelGroup style="width:4em;display:block;">
+													<p:inputText value="#{entity.mes}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:4em;"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													<p:selectOneMenu editable="false" value="#{entity.mes}"
+														styleClass="input-4"
+														rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}">
+														<f:selectItem itemValue="1" itemLabel="01" />
+														<f:selectItem itemValue="2" itemLabel="02" />
+														<f:selectItem itemValue="3" itemLabel="03" />
+														<f:selectItem itemValue="4" itemLabel="04" />
+														<f:selectItem itemValue="5" itemLabel="05" />
+														<f:selectItem itemValue="6" itemLabel="06" />
+														<f:selectItem itemValue="7" itemLabel="07" />
+														<f:selectItem itemValue="8" itemLabel="08" />
+														<f:selectItem itemValue="9" itemLabel="09" />
+														<f:selectItem itemValue="10" itemLabel="10" />
+														<f:selectItem itemValue="11" itemLabel="11" />
+														<f:selectItem itemValue="12" itemLabel="12" />
+													</p:selectOneMenu>
+												</h:panelGroup>
+											</p:column>
+											<p:column>
+												<h:outputText value="Consecutivo:" />
+											</p:column>
+											<p:column>
+												<h:panelGroup style="width:4em;display:block;">
+													<p:inputText value="#{entity.consec}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:4em;"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													<pe:inputNumber id="inputConsecutivo"
+														value="#{entity.consec}" styleClass="input-4"
+														decimalPlaces="0" decimalSeparator="."
+														thousandSeparator="," minValue="0" maxlength="9"
+														rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+											<p:column>
+												<h:outputText value="Partida:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup
+													style="width:4em;display:block; text-align: left;">
+													<p:inputText value="#{entity.ssscta}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:4em;display: block;"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													<p:inputText value="#{entity.ssscta}" styleClass="input-4"
+														style="width:4em;" decimalPlaces="0" decimalSeparator=""
+														thousandSeparator="" minValue="0" maxlength="4"
+														maxValue="9999" id="partida"
+														rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}">
+														<pe:keyFilter mask="pint" />
+														<p:ajax event="blur"
+															listener="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.findAcount(rowIndexCaptura)}"
+															update=":form1:growlReportador, nomcta" />
+													</p:inputText>
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="Nombre de Partida:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:17.6em;display:block;">
+													<p:inputText value="#{entity.nomcta}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:17em; display: block; text-align: left;"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													<p:inputText value="#{entity.nomcta}" maxlength="250"
+														id="nomcta"
+														rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														disabled="true" style="width:17em;" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="No. inventario:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:6em;display:block;">
+													<p:inputText value="#{entity.inventario}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:6em;display: block; text-align: left;"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													<p:inputText value="#{entity.inventario}" maxlength="50"
+														style="width:6em;"
+														rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="Resguardo:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:6em;display:block;">
+													<p:inputText value="#{entity.resguardo}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:7.3em;display: block; text-align: left;"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													<p:inputText value="#{entity.resguardo}" maxlength="50"
+														style="width:7.3em;"
+														rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+											<p:column>
+												<h:outputText value="Resguardatario:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:30em;display:block;">
+													<!-- <h:outputText value="#{entity.resguardatario}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:30em;display: block; text-align: left;" /> -->
+													<p:inputTextarea value="#{entity.resguardatario}"
+														maxlength="200" rows="2" autoResize="true"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:30em;" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="Nombre del mueble:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:30.6em;display:block;">
+													<!-- <h:outputtext value="#{entity.nommueble}"
+														rendered="#{!inventariogeneralbienesmueblesbajocostocapturainformacionmb.editando}"
+														style="width:30.6em;display: block; text-align: left;" /> -->
+													<p:inputTextarea value="#{entity.nommueble}"
+														maxlength="200" rows="2" autoResize="true"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:30.6em;" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+											<p:column>
+												<h:outputText value="Marca:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:6em;display:block;">
+													<!-- <h:outputText value="#{entity.marca}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:6em;display: block; text-align: left;" /> -->
+													<p:inputTextarea value="#{entity.marca}" maxlength="50"
+														style="width:6em;" rows="2" autoResize="true"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="Modelo:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:8em;display:block;">
+													<!-- <h:outputText value="#{entity.modelo}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:8em;display: block; text-align: left;" /> -->
+													<p:inputTextarea value="#{entity.modelo}" maxlength="50"
+														style="width:8em;" rows="2" autoResize="true"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="Serie:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:13em;display:block;">
+													<!-- <h:outputText value="#{entity.serie}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:13em;display: block; text-align: left;" /> -->
+													<p:inputTextarea value="#{entity.serie}" maxlength="50"
+														style="width:13em;" rows="2" autoResize="true"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="Estado del mueble:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:8em;display:block;">
+													<p:inputText value="#{entity.estado}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:8em;display: block; text-align: left;"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													<p:selectOneMenu editable="false" value="#{entity.estado}"
+														styleClass="input-4"
+														rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}">
+														<f:selectItem itemValue="Bueno" itemLabel="Bueno" />
+														<f:selectItem itemValue="Regular" itemLabel="Regular" />
+														<f:selectItem itemValue="Malo" itemLabel="Malo" />
+														<f:selectItem itemValue="Inservible"
+															itemLabel="Inservible" />
+													</p:selectOneMenu>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panel header="Factura"
+										style="padding:1em;margin-left: 1.5em; margin-top: 1em;"
+										styleClass="headerBorder">
+										<p:panelGrid styleClass="ui-noborder">
+											<p:row style="height: 2.8em;">
+												<p:column>
+													<h:outputText value="Factura:" />
+												</p:column>
+
+												<p:column>
+													<h:panelGroup style="width:8em;display:block;">
+														<!-- <h:outputText value="#{entity.factura}"
+															rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+															style="width:8em;display: block; text-align: left;" /> -->
+														<p:inputTextarea value="#{entity.factura}" maxlength="70"
+															style="width:8em;" rows="2" autoResize="true"
+															disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													</h:panelGroup>
+												</p:column>
+
+												<p:column>
+													<h:outputText value="Fecha de Factura:" />
+												</p:column>
+
+												<p:column>
+													<h:panelGroup style="width:6em;display:block;">
+														<!-- <h:outputText value="#{entity.fecfactura}"
+															rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+															style="width:6em;display: block;">
+															<f:convertDateTime pattern="dd/MM/yyyy" />
+														</h:outputText> -->
+														<p:calendar value="#{entity.fecfactura}"
+															pattern="dd/MM/yyyy" mask="true"
+															styleClass="calendar-small" locale="es"
+															disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													</h:panelGroup>
+												</p:column>
+
+												<p:column>
+													<h:outputText value="Nombre del Proveedor:" />
+												</p:column>
+
+												<p:column>
+													<h:panelGroup style="width:22em;display:block;">
+														<!-- <h:outputtext value="#{entity.proveedor}"
+															rendered="#{!inventariogeneralbienesmueblesbajocostocapturainformacionmb.editando}"
+															style="width:22em;display: block; text-align: left;" /> -->
+														<p:inputTextarea value="#{entity.proveedor}"
+															maxlength="250" rows="2" autoResize="true"
+															disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+															style="width:22em;" />
+													</h:panelGroup>
+												</p:column>
+
+												<p:column>
+													<h:outputText value="Costo del mueble:" />
+												</p:column>
+
+												<p:column>
+													<h:panelGroup style="width:6em;display:block;">
+														<!-- <p:inputText value="#{entity.costo}"
+															rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+															style="width:8em;display: block;"
+															disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}">
+															<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+														</p:inputText> -->
+														<pe:inputNumber value="#{entity.costo}"
+															styleClass="input-7" decimalPlaces="2"
+															decimalSeparator="." thousandSeparator="," minValue="0"
+															maxlength="9" maxValue="999999999"
+															disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													</h:panelGroup>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panelGrid styleClass="ui-noborder" columns="2">
+										<p:panel header="Póliza"
+											style="padding:0em;margin-left: 1.3em; margin-top: 1em;border: 1px solid #dddddd;"
+											styleClass="headerBorder headerTitle">
+	.											<p:panelGrid styleClass="ui-noborder">
+												<p:row style="height: 2.8em;">
+													<p:column>
+														<h:outputText value="Tipo póliza:" />
+													</p:column>
+
+													<p:column>
+														<h:panelGroup style="width:2em;display:block;">
+															<p:inputText value="#{entity.tippol}"
+																rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+																style="width:2em;display: block;"
+																disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+															<p:inputText value="#{entity.tippol}" maxlength="1"
+																rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+																style="width:2em;text-transform: uppercase;" />
+														</h:panelGroup>
+													</p:column>
+
+													<p:column>
+														<h:outputText value="Número de póliza:" />
+													</p:column>
+
+													<p:column>
+														<h:panelGroup style="width:4em;display:block;">
+															<!-- <h:outputText value="#{entity.conpol}"
+																rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+																style="width:4em;display: block;" /> -->
+															<pe:inputNumber styleClass="input-4"
+																value="#{entity.conpol}" maxlength="4" decimalPlaces="0"
+																decimalSeparator="" thousandSeparator="" maxValue="9999"
+																disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}">
+															</pe:inputNumber>
+														</h:panelGroup>
+													</p:column>
+
+													<p:column>
+														<h:outputText value="Fecha de póliza:" />
+													</p:column>
+
+													<p:column>
+														<h:panelGroup style="width:6em;display:block;">
+															<!-- <h:outputText value="#{entity.fecpol}"
+																rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+																style="width:6em;display: block;">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputText> -->
+															<p:calendar value="#{entity.fecpol}" pattern="dd/MM/yyyy"
+																mask="true" styleClass="calendar-small" locale="es"
+																disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+														</h:panelGroup>
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</p:panel>
+										<h:panelGroup>
+											<p:panelGrid styleClass="ui-noborder"
+												style="margin-top: 2em;">
+												<p:row style="height: 2.8em;">
+													<p:column>
+														<h:outputText value="Recurso Federal:" />
+													</p:column>
+
+													<p:column>
+														<h:panelGroup style="width:10em;display:block;">
+															<!-- <h:outputText value="#{entity.recurso}"
+																rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+																style="width:10em;display: block;" /> -->
+															<p:inputTextarea value="#{entity.recurso}" maxlength="50"
+																style="width:10em;" rows="2" autoResize="true"
+																disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+														</h:panelGroup>
+													</p:column>
+
+													<p:column>
+														<h:outputText value="Fecha alta:" />
+													</p:column>
+
+													<p:column>
+														<h:panelGroup style="width:6em;display:block;">
+															<!-- <h:outputText value="#{entity.fecalta}"
+																rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+																style="width:6em;display: block;">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputText> -->
+															<p:calendar value="#{entity.fecalta}"
+																pattern="dd/MM/yyyy" mask="true"
+																styleClass="calendar-small" locale="es"
+																disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+														</h:panelGroup>
+													</p:column>
+
+													<p:column>
+														<h:outputText value="Fecha baja:" />
+													</p:column>
+
+													<p:column>
+														<h:panelGroup style="width:6em;display:block;">
+															<!-- <h:outputText value="#{entity.fecbaja}"
+																rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+																style="width:6em;display: block;">\
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputText> -->
+															<p:calendar value="#{entity.fecbaja}"
+																pattern="dd/MM/yyyy" mask="true"
+																styleClass="calendar-small" locale="es"
+																disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+														</h:panelGroup>
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</h:panelGroup>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+											<p:column>
+												<h:outputText value="Área responsable:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:33.1em;display:block;">
+													<!-- <h:outputText value="#{entity.area}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:33.1em;display: block; text-align: left;" /> -->
+													<p:inputTextarea value="#{entity.area}" maxlength="150"
+														rows="2" autoResize="true"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:33.1em;" />
+												</h:panelGroup>
+											</p:column>
+
+											<p:column>
+												<h:outputText value="Localidad:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:33.1em;display:block;">
+													<!-- <h:outputText value="#{entity.localidad}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:33.1em;display: block; text-align: left;" /> -->
+													<p:inputText value="#{entity.localidad}" maxlength="150"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:33.1em;" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+											<p:column>
+												<h:outputText value="Observaciones:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:72.5em;display:block;">
+													<!-- <h:outputText value="#{entity.obs}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:72.5em;display: block; text-align: left;" /> -->
+													<p:inputText value="#{entity.obs}" maxlength="350"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:72.5em;" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+											<p:column>
+												<h:outputText value="Tiempo de Vida Útil:" />
+											</p:column>
+
+											<p:column>
+												<h:panelGroup style="width:31.7em;display:block;">
+													<!-- <h:outputText value="#{entity.tvidautil}"
+														rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:31.7em;display: block; text-align: left;" /> -->
+													<p:inputText value="#{entity.tvidautil}" maxlength="75"
+														disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+														style="width:31.7em;" />
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panel header="DEPRECIACIÓN"
+										style="padding:1em;margin-left: 1.5em; margin-top: -1em;"
+										styleClass="headerBorder pull-right">
+										<p:panelGrid styleClass="ui-noborder">
+											<p:row style="height: 2.8em;">
+												<p:column>
+													<h:outputText value="DEL PERIODO" />
+												</p:column>
+
+												<p:column>
+													<h:outputText value="ACUMULADO" />
+												</p:column>
+											</p:row>
+											<p:row style="height: 2.8em;">
+
+												<p:column>
+													<h:panelGroup style="width:10em;display:block;">
+														<!-- <h:outputText value="#{entity.depreperiodo}"
+															rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+															style="width:8em;display: block;">
+															<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+														</h:outputText> -->
+														<pe:inputNumber value="#{entity.depreperiodo}"
+															styleClass="input-8" decimalPlaces="2"
+															decimalSeparator="." thousandSeparator="," minValue="0"
+															maxlength="9" maxValue="999999999"
+															disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													</h:panelGroup>
+												</p:column>
+
+												<p:column>
+													<h:panelGroup style="width:10em;display:block;">
+														<!-- <h:outputText value="#{entity.depreacum}"
+															rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+															style="width:8em;display: block;">
+															<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+														</h:outputText> -->
+														<pe:inputNumber value="#{entity.depreacum}"
+															styleClass="input-8" decimalPlaces="2"
+															decimalSeparator="." thousandSeparator="," minValue="0"
+															maxlength="9" maxValue="999999999"
+															disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+													</h:panelGroup>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+									<p:panelGrid styleClass="ui-noborder">
+										<p:row style="height: 2.8em;">
+
+										</p:row>
+									</p:panelGrid>
+								</h:panelGroup>
+							</div>
+						</div>
+					</p:dataGrid>
+					<h:panelGroup id="pnlBotonesCRUD">
+						<p:commandButton value="Salvar" icon="ui-icon-disk"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.salvar}"
+							update="dataGrid pnlBotonesCRUD"
+							rendered="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+						<p:commandButton value="Modificar" icon="ui-icon-tag"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.modificar}"
+							update="dataGrid pnlBotonesCRUD"
+							disabled="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.selected.id == null}"
+							rendered="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+						<p:commandButton value="Limpiar"
+							actionListener="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.reset}"
+							style="padding: 5px; width:100px"
+							disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+							update="dataGrid pnlBotonesCRUD"
+							icon="ui-icon-arrowreturnthick-1-n" />
+						<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.adicionar}"
+							update="dataGrid pnlBotonesCRUD"
+							disabled="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+						<p:commandButton value="Borrar" icon="ui-icon-trash"
+							style="padding: 5px; width:100px"
+							onclick="PF('confirmFileDeleteMeta').show();"
+							disabled="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.selected.id == null or inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}" />
+						<p:commandButton value="Cancelar " icon="ui-icon-circle-close"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.cancelar}"
+							disabled="#{!inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.editando}"
+							update="dataGrid pnlBotonesCRUD" />
+					</h:panelGroup>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+					message="Desea eliminar el registro actual?" header="Confirmación"
+					severity="alert">
+					<p:commandButton value="SI" label="SI"
+						style="margin-top:10px;padding:5px;"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						actionListener="#{inventarioGeneralBienesMueblesBajoCostoCapturaInformacionMB.delete}"
+						oncomplete="PF('confirmFileDeleteMeta').hide();"
+						update="dataGrid pnlBotonesCRUD" />
+					<p:commandButton value="NO" label="NO"
+						style="margin-top:10px;padding:5px;"
+						onclick="PF('confirmFileDeleteMeta').hide();"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

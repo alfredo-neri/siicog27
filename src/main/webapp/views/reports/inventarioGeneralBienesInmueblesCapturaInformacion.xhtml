@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.input-6 input {
+	width: 6em;
+}
+
+.input-7 input {
+	width: 7em;
+}
+
+.input-8 input {
+	width: 9em;
+}
+
+.input-10 input {
+	width: 10em;
+}
+
+.input-14 input {
+	width: 14em;
+}
+
+.panelGridCenter {
+	margin: 0 auto;
+}
+</style>
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true" />
+				<p:panel id="panelReporte"
+					header="Inventario General de Bienes Inmuebles"
+					styleClass="col-md-10 green col-centered row-centered shadow-panel">
+					<p:dataGrid id="dataGrid" var="entity"
+						value="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.masterList}"
+						emptyMessage="Cargando información..." paginator="true" rows="1"
+						columns="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="dataGrid" paginatorPosition="bottom"
+						rowIndexVar="rowIndexCaptura">
+
+						<p:ajax event="page"
+							listener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.cambiarPagina}"
+							process="dataGrid" update="dataGrid form1:pnlBotonesCRUD" />
+
+						<p:panelGrid styleClass="ui-noborder">
+							<p:row style="text-align:left;">
+								<p:column>
+									<h:outputText value="Mes:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Consecutivo:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Cuenta:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="SCTA:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Nombre de Cuenta:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Nombre del Inmueble:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Fecha Contrato:" />
+								</p:column>
+							</p:row>
+							<p:row style="position:relative; top:-9px;">
+
+								<p:column>
+									<p:inputText value="#{entity.mes}" style="width:4em"
+										rendered="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									<p:selectOneMenu editable="false" value="#{entity.mes}"
+										rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
+										<f:selectItems
+											value="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.listMeses}"
+											var="mes" itemLabel="#{mes.periodo}"
+											itemValue="#{mes.periodo}" />
+									</p:selectOneMenu>
+								</p:column>
+
+								<p:column>
+									<pe:inputNumber style="width: 7em;" id="inputConsecutivo"
+										value="#{entity.consec}" decimalPlaces="0"
+										decimalSeparator="." thousandSeparator="," minValue="0"
+										maxlength="9" styleClass="input-7"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<p:inputText value="#{entity.cuenta}" style="width: 5em;"
+										rendered="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									<p:inputText value="#{entity.cuenta}" decimalPlaces="0"
+										style="width:5em" decimalSeparator="" thousandSeparator=""
+										minValue="0" maxlength="4" maxValue="9999"
+										rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
+										<pe:keyFilter mask="pint" />
+										<p:ajax event="blur"
+											listener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.findAcount(rowIndexCaptura)}"
+											update=":form1:growlReportador, nomcta" />
+									</p:inputText>
+								</p:column>
+								<p:column>
+									<p:inputText value="#{entity.scta}" style="width: 8em;"
+										rendered="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									<p:inputText id="inputScta" value="#{entity.scta}"
+										maxlength="10"
+										rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
+										<pe:keyFilter mask="pint" />
+										<p:ajax event="change"
+											listener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.leftPad}"
+											update="inputScta" />
+									</p:inputText>
+								</p:column>
+								<p:column>
+									<p:inputText value="#{entity.nomcta}" style="width: 18em;"
+										rendered="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									<p:inputText value="#{entity.nomcta}" maxlength="250"
+										id="nomcta"
+										rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										disabled="true" />
+								</p:column>
+								<p:column>
+									<p:inputText value="#{entity.nommueble}" maxlength="200"
+										style="width: 18em;"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<p:calendar value="#{entity.feccontrato}" pattern="dd/MM/yyyy"
+										mask="true" locale="es" styleClass="input-7"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:panelGrid styleClass="ui-noborder">
+							<p:row style="text-align:left">
+								<p:column>
+									<h:outputText value="No. de Inventario:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Ubicación:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Localidad:" />
+								</p:column>
+							</p:row>
+							<p:row style="position:relative; top:-9px;">
+								<p:column style="width:15em">
+									<p:inputText value="#{entity.campo3}" maxlength="70"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column style="width:39em;">
+									<p:inputTextarea value="#{entity.ubicacion}"
+										style="width:100%;" maxlength="200" rows="2" autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column style="width:39em;">
+									<p:inputTextarea value="#{entity.localidad}"
+										style="width:100%;" maxlength="200" rows="2" autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:panel header="Medidas y Colindancias"
+							style="width:max-content;">
+							<p:panelGrid styleClass="ui-noborder">
+								<p:row style="text-align:left;">
+									<p:column>
+										<h:outputText value="Norte:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Colindante Norte:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Sur:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Colindante Sur:" />
+									</p:column>
+								</p:row>
+								<p:row style="position:relative; top:-9px;">
+									<p:column>
+										<pe:inputNumber value="#{entity.norte}" styleClass="input-8"
+											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+											minValue="0" maxlength="5" maxValue="99999"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+									<p:column>
+										<p:inputText value="#{entity.nnorte}" maxlength="150"
+											style="width:27em;"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+									<p:column>
+										<pe:inputNumber value="#{entity.sur}" styleClass="input-8"
+											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+											minValue="0" maxlength="5" maxValue="99999"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+									<p:column>
+										<p:inputText value="#{entity.nsur}" maxlength="150"
+											style="width:27em"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+								</p:row>
+								<p:row style="text-align:left;">
+									<p:column>
+										<h:outputText value="Oriente:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Colindante Oriente:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Poniente:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Colindante Poniente:" />
+									</p:column>
+								</p:row>
+								<p:row style="position:relative; top:-9px;">
+									<p:column>
+										<pe:inputNumber value="#{entity.oriente}" styleClass="input-8"
+											decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+											minValue="0" maxlength="5" maxValue="99999"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+									<p:column>
+										<p:inputText value="#{entity.noriente}" maxlength="150"
+											style="width:27em"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+									<p:column>
+										<pe:inputNumber value="#{entity.poniente}"
+											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
+											thousandSeparator="," minValue="0" maxlength="5"
+											maxValue="99999"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+									<p:column>
+										<p:inputText value="#{entity.nponiente}" maxlength="150"
+											style="width:27em"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panelGrid styleClass="ui-noborder">
+							<p:row style="text-align:left; line-height: 25px;">
+								<p:column>
+									<h:outputText value="Superficie:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Superficie construida:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Valor del Inmueble:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Zona:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Escritura:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Fecha Adquisición:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Valor Catastral:" />
+								</p:column>
+							</p:row>
+							<p:row style="position:relative; top:-9px;">
+								<p:column>
+									<pe:inputNumber value="#{entity.superficie}"
+										maxValue="999999999" styleClass="input-8" decimalPlaces="2"
+										decimalSeparator="." thousandSeparator="," minValue="0"
+										maxlength="9"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber value="#{entity.supconst}" maxValue="999999999"
+										styleClass="input-8" decimalPlaces="2" decimalSeparator="."
+										thousandSeparator="," minValue="0" maxlength="9"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber value="#{entity.valorinm}" maxValue="999999999"
+										styleClass="input-8" decimalPlaces="2" decimalSeparator="."
+										thousandSeparator="," minValue="0" maxlength="9"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<p:inputText value="#{entity.zona}"
+										rendered="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										style="width:8em;" />
+									<p:selectOneMenu editable="false" value="#{entity.zona}"
+										styleClass="input-6"
+										rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
+										<f:selectItem itemValue="Urbano" itemLabel="Urbano" />
+										<f:selectItem itemValue="Rural" itemLabel="Rural" />
+										<f:selectItem itemValue="Ejido" itemLabel="Ejido" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:inputText value="#{entity.escritura}" maxlength="50"
+										style="width:16em;"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<p:calendar value="#{entity.fecadq}" pattern="dd/MM/yyyy"
+										mask="true" styleClass="input-8" locale="es"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+
+
+								<p:column>
+									<pe:inputNumber value="#{entity.valorcatas}"
+										styleClass="input-8" decimalPlaces="2" decimalSeparator="."
+										thousandSeparator="," minValue="0" maxlength="9"
+										maxValue="999999999"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:panelGrid styleClass="ui-noborder">
+							<p:row style="text-align:left;">
+								<p:column>
+									<h:outputText value="Uso del Inmueble:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Documento que Acredita la Posesión:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Registro:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:inputTextarea value="#{entity.uso}" maxlength="50" rows="2"
+										autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										style="width:25em; text-transform: uppercase;" />
+								</p:column>
+								<p:column>
+									<p:inputTextarea value="#{entity.documento}" maxlength="100"
+										rows="2" autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										style="width:25em; text-transform: uppercase;" />
+								</p:column>
+								<p:column>
+									<p:inputTextarea value="#{entity.registro}" maxlength="50"
+										style="width:25em;" rows="2" autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+							</p:row>
+							<p:row style="text-align:left;">
+								<p:column>
+									<h:outputText value="Clave Catastral:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Situación Jurídica:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Modalidad de Adquisición:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:inputTextarea value="#{entity.cvecatas}" maxlength="50"
+										style="width:25em;" rows="2" autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<p:inputTextarea value="#{entity.juridica}" maxlength="150"
+										style="width:25em;" rows="2" autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+								<p:column>
+									<p:inputTextarea value="#{entity.modadqui}" maxlength="50"
+										style="width:25em;" rows="2" autoResize="true"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-g-nopad">
+
+
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-6">
+										<p:panel header="P&oacute;liza"
+											style="margin-bottom:20px; width: 45%; left: 5%; position: absolute;">
+											<p:panelGrid styleClass="panelGridCenter ui-noborder">
+												<p:row>
+													<p:column style="width:10em;">
+														<h:outputText value="Tipo póliza:" />
+													</p:column>
+													<p:column style="width:10em;">
+														<h:outputText value="Número de póliza:" />
+													</p:column>
+													<p:column style="width:10em;">
+														<h:outputText value="Fecha de póliza:" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column>
+														<p:inputText value="#{entity.tippol}" maxlength="1"
+															disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+															style="width:5em;text-transform: uppercase;">
+															<pe:keyFilter mask="alpha" regEx="/[cCdDeEiI]/" />
+														</p:inputText>
+													</p:column>
+													<p:column>
+														<pe:inputNumber styleClass="input-8"
+															value="#{entity.conpol}" maxlength="4" decimalPlaces="0"
+															decimalSeparator="" thousandSeparator="" maxValue="9999"
+															disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}">
+														</pe:inputNumber>
+													</p:column>
+													<p:column>
+														<p:calendar value="#{entity.fecpol}" pattern="dd/MM/yyyy"
+															mask="true" styleClass="input-8" locale="es"
+															disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</p:panel>
+									</div>
+									<div class="ui-g-12 ui-md-6">
+										<p:panel header="Movimientos"
+											style="margin-bottom:20px; width: 45%; position: relative; left: 50%;">
+											<p:panelGrid styleClass="panelGridCenter ui-noborder">
+												<p:row>
+													<p:column>
+														<h:outputText value="Fecha alta:" />
+													</p:column>
+													<p:column>
+														<h:outputText value="Fecha baja:" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column>
+														<p:calendar value="#{entity.fecalta}" pattern="dd/MM/yyyy"
+															mask="true" styleClass="input-8" locale="es"
+															disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+													</p:column>
+													<p:column>
+														<p:calendar value="#{entity.fecbaja}" pattern="dd/MM/yyyy"
+															mask="true" styleClass="input-8" locale="es"
+															disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</p:panel>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<p:panel
+							style="margin-bottom:20px; border:none; width: 45%; left: 5%; position: absolute; top: 73%;">
+							<p:row>
+								<p:column>
+									<h:outputText value="Observaciones:"
+										style="text-align:left; float:left;" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:inputTextarea value="#{entity.obs}" maxlength="350" rows="2"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										style="width:100%;" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<h:outputText value="Tiempo de Vida Útil:"
+										style="text-align:left; float:left;" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:inputTextarea value="#{entity.tvidautil}" maxlength="75"
+										rows="2"
+										disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+										style="width:100%;" />
+								</p:column>
+							</p:row>
+						</p:panel>
+						<p:panel header="Depreciaci&oacute;n"
+							style="margin-bottom:20px; width: 45%; position: relative; left: 50%;">
+							<p:panelGrid styleClass="panelGridCenter ui-noborder">
+								<p:row>
+									<p:column>
+										<h:outputText value="Porcentaje (%)" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Del Periodo" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Acumulado" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>
+										<pe:inputNumber value="#{entity.porcentaje}"
+											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
+											thousandSeparator="," minValue="0" maxlength="3"
+											maxValue="100"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+									<p:column>
+										<pe:inputNumber value="#{entity.depreperiodo}"
+											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
+											thousandSeparator="," minValue="0" maxlength="9"
+											maxValue="999999999"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+
+									<p:column>
+										<pe:inputNumber value="#{entity.depreacum}"
+											styleClass="input-8" decimalPlaces="2" decimalSeparator="."
+											thousandSeparator="," minValue="0" maxlength="9"
+											maxValue="999999999"
+											disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel styleClass="ui-noborder"
+							style="margin-bottom:20px; border:none; width:80%">
+
+						</p:panel>
+
+					</p:dataGrid>
+					<h:panelGroup id="pnlBotonesCRUD">
+						<p:commandButton value="Salvar" icon="ui-icon-disk"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.salvar}"
+							update="dataGrid pnlBotonesCRUD"
+							rendered="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+						<p:commandButton value="Modificar" icon="ui-icon-tag"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.modificar}"
+							update="dataGrid pnlBotonesCRUD"
+							disabled="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.selected.id == null}"
+							rendered="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+						<p:commandButton value="Limpiar"
+							actionListener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.reset}"
+							style="padding: 5px; width:100px"
+							disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+							update="dataGrid pnlBotonesCRUD"
+							icon="ui-icon-arrowreturnthick-1-n" />
+						<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.adicionar}"
+							update="dataGrid pnlBotonesCRUD"
+							disabled="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+						<p:commandButton value="Borrar" icon="ui-icon-trash"
+							style="padding: 5px; width:100px"
+							onclick="PF('confirmFileDeleteMeta').show();"
+							disabled="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.selected.id == null or inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}" />
+						<p:commandButton value="Cancelar " icon="ui-icon-circle-close"
+							style="padding: 5px; width:100px"
+							action="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.cancelar}"
+							disabled="#{!inventarioGeneralBienesInmueblesCapturaInformacionMB.editando}"
+							update="dataGrid pnlBotonesCRUD" />
+					</h:panelGroup>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+					message="Desea eliminar el registro actual?" header="Confirmación"
+					severity="alert">
+					<p:commandButton value="SI" label="SI"
+						style="margin-top:10px;padding:5px;"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						actionListener="#{inventarioGeneralBienesInmueblesCapturaInformacionMB.delete}"
+						oncomplete="PF('confirmFileDeleteMeta').hide();"
+						update="dataGrid pnlBotonesCRUD" />
+					<p:commandButton value="NO" label="NO"
+						style="margin-top:10px;padding:5px;"
+						onclick="PF('confirmFileDeleteMeta').hide();"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

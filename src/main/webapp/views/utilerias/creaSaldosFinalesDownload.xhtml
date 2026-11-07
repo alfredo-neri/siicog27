@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+  <h:body>
+    <ui:composition template="/WEB-INF/layout/layout.xhtml">
+        <ui:define name="content">
+    			<script type="text/javascript">
+            function showStatus() {
+                PF('statusDialog').show();
+            }
+            function hideStatus() {
+                PF('statusDialog').hide();
+            }
+          </script>
+          <p:panel id="pSaldosFinales" header="Crea Saldos Finales"
+                   styleClass="green col-md-8 col-centered row-centered shadow-panel"
+                   widgetVar="pSaldosFinales">
+            <h:form>
+    					<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+    						draggable="false" closable="false">
+    						<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+    					</p:dialog>
+
+    					<p:commandButton value="Descargar archivo de Saldos" ajax="false"
+                style="margin-top:10px;padding:5px;"
+                actionListener="#{creaSaldosFinalesMB.prepareDownload}"
+    						onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)">
+                <p:fileDownload value="#{creaSaldosFinalesMB.download}"/>
+              </p:commandButton>
+            </h:form>
+        </p:panel>
+	    </ui:define>
+    </ui:composition>
+  </h:body>
+</html>

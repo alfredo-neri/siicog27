@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-04-20T12:59:50 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte263_subfuncion" pageWidth="810" pageHeight="102" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="810" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="168b7bf2-1940-434f-9266-06f32556a86f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SERVER_CRUZ_ LINUX"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="CLAVE" class="java.lang.String"/>
+	<parameter name="FIN" class="java.lang.String"/>
+	<parameter name="FUN" class="java.lang.String"/>
+	<parameter name="SFUN" class="java.lang.String"/>
+	<parameter name="pSector" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="pMes" class="java.lang.Integer"/>
+	<parameter name="pAuto1" class="java.lang.String"/>
+	<parameter name="pToeje1" class="java.lang.String"/>
+	<parameter name="pAmpli1" class="java.lang.String"/>
+	<parameter name="pRedu1" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+SUBSTR(paso.clave,1,6) as clave,
+SUBSTR(paso.programa,1,2) as fin, 
+SUBSTR(paso.programa,3,2) as fun,
+SUBSTR(paso.programa,5,2) as sfun, 
+paso.partida, 
+(auto1_1+auto1_2+auto1_3+auto1_4+auto1_5+auto1_6+auto1_7+auto1_8+auto1_9+auto1_10+auto1_11+auto1_12) auto13
+, (auto1_$P!{pMes} + ampli1_$P!{pMes} - redu1_$P!{pMes}) automes2
+, toeje1_$P!{pMes}  impmes
+, ( $P!{pAuto1} ) + ( $P!{pAmpli1} ) - ( $P!{pRedu1} )  autoacu2
+, ( $P!{pToeje1} ) + ( $P!{pAmpli1} ) - ( $P!{pRedu1} ) impacum
+FROM
+PASO PASO
+where paso.IDSECTOR= $P{pSector} 
+and SUBSTR(paso.clave,1,6) =   $P{CLAVE} 
+and SUBSTR(paso.programa,1,2) =  $P{FIN} 
+and SUBSTR(paso.programa,3,2) =   $P{FUN} 
+and SUBSTR(paso.programa,5,2) =  $P{SFUN} 
+]]>
+	</queryString>
+	<field name="CLAVE" class="java.lang.String"/>
+	<field name="FIN" class="java.lang.String"/>
+	<field name="FUN" class="java.lang.String"/>
+	<field name="SFUN" class="java.lang.String"/>
+	<field name="PARTIDA" class="java.lang.String"/>
+	<field name="AUTO13" class="java.math.BigDecimal"/>
+	<field name="AUTOMES2" class="java.math.BigDecimal"/>
+	<field name="IMPMES" class="java.math.BigDecimal"/>
+	<field name="AUTOACU2" class="java.math.BigDecimal"/>
+	<field name="IMPACUM" class="java.math.BigDecimal"/>
+	<variable name="ampli" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[(MID($F{PARTIDA},2,3).equals("000"))? $F{AUTO13} : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="modificado" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[(MID($F{PARTIDA},2,3).equals("000"))? $F{AUTOMES2} : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="ejerdmes" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[(MID($F{PARTIDA},2,3).equals("000"))? $F{IMPMES} : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="modificadoacum" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[(MID($F{PARTIDA},2,3).equals("000"))? $F{AUTOACU2} : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="ejeralmes" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[(MID($F{PARTIDA},2,3).equals("000"))? $F{IMPACUM} : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnFooter>
+		<band height="12" splitType="Stretch">
+			<textField evaluationTime="Report" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="240" y="0" width="50" height="12" backcolor="#DDDDDD" uuid="20b63d32-5066-423d-a994-0423b2d57f6c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="160" y="0" width="80" height="12" backcolor="#DDDDDD" uuid="e50fa8e6-8296-4214-8d84-02fac8ae0dd4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ejerdmes}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="80" y="0" width="80" height="12" backcolor="#DDDDDD" uuid="3d16d3d1-d213-4ad8-89b9-040e8de09d5b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{modificado}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="0" width="80" height="12" backcolor="#DDDDDD" uuid="8ec8abd7-4790-4e1e-9fc1-daf49a1baca2"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ampli}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="420" y="0" width="80" height="12" backcolor="#DDDDDD" uuid="ed533784-757d-4f04-85df-6a71958716e0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ejeralmes}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="340" y="0" width="80" height="12" backcolor="#DDDDDD" uuid="d5b3c4f7-39fc-4368-b005-0846313c2a58"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{modificadoacum}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="290" y="0" width="50" height="12" backcolor="#DDDDDD" uuid="83b727f1-9892-4c9e-abb2-715ada0174e6"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="500" y="0" width="300" height="12" backcolor="#DDDDDD" uuid="5ea9ffdb-d109-4021-aa09-cec45dfe917d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

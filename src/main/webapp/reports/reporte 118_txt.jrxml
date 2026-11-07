@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-20T14:01:48 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte 118_txt" pageWidth="2000" pageHeight="612" orientation="Landscape" columnWidth="1960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7f863fe1-6ada-463a-9aa5-cf529a741962">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ReportesFer"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="3"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="10"/>
+	<parameter name="ANO_EMP" class="java.lang.Integer"/>
+	<parameter name="TRIMESTRE" class="java.lang.Integer"/>
+	<parameter name="IDSECTOR" class="java.lang.Integer"/>
+	<parameter name="CLAVE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT '"' || SUBSTR( $P{CLAVE} ,1,1) || '"|"' || SUBSTR( $P{CLAVE} ,2,3) || '"|' || $P{ANO_EMP} || '|' || IND.PERIODO || '|' ||  $P{TRIMESTRE}  || '|' || LAST_DAY(CONCAT( $P{ANO_EMP} , CONCAT('-', CONCAT( $P{TRIMESTRE}*3 , CONCAT('-','01'))))) || '|' || IND.CVEIND || '|"' || IND.CLVFUN || '"|' || LTRIM(VARCHAR_FORMAT(TE,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(ACUTE,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(ACUSP,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(SPSPA,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(ACUSPSPA,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(DIF,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(AVMA,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(SJAF,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(PAFD,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(OAPF,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(SPDC,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(ALS,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(AMSE,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(APE,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(APCD,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(AAM,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(AMPG,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(AJ,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(OANA,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(IED,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(AID,'999,999,990.99')) || '|' || LTRIM(VARCHAR_FORMAT(EI,'999,999,990.99')) || '|"' || OBSTE || '"|"' || OBSSPSPA || '"' AS DATO
+FROM pm1411 PM
+INNER JOIN indicadores IND ON IND.IDSECTOR = PM.IDSECTOR
+WHERE MENSUAL =  $P{TRIMESTRE} AND PM.IDSECTOR =  $P{IDSECTOR}  AND IND.CVEIND = 29]]>
+	</queryString>
+	<field name="DATO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="1960" height="20" uuid="95cc5f9d-7f7a-4963-a7f0-d78152da799d"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

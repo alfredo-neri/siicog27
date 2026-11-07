@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Cuenta y partida al mes"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:focus context="panelControles" />
+					<p:panelGrid styleClass="col-centered ui-noborder"
+						id="panelControles">
+						<p:row>
+							<p:column colspan="3">
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Inicial" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Final" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Cuenta: " for="CuentaInput" />
+							</p:column>
+							<p:column>
+								<p:inputText id="CuentaInput"
+									value="#{reporte91GraficoMB.cuenta}" required="true"
+									requiredMessage="El campo Cuenta no debe de ir vacío"
+									maxlength="4" size="4">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="Partida(Nat. Gasto): "
+									for="PartidaInicialInput" />
+							</p:column>
+							<p:column>
+								<p:inputText id="PartidaInicialInput"
+									value="#{reporte91GraficoMB.partidaInicial}" maxlength="4"
+									size="4">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</p:column>
+							<p:column>
+								<p:inputText id="PartidaFinalInput"
+									value="#{reporte91GraficoMB.partidaFinal}" maxlength="4"
+									size="4">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</p:column>
+							<p:column colspan="0" style="text-align: center;">
+								<p:commandButton id="generateportepdf"
+									onstart="PF('blockUIWidget').block()"
+									oncomplete="PF('blockUIWidget').unblock()"
+									action="#{reporte91GraficoMB.viewPdf}" value="Correcto"
+									update="form1:inlinePdf, :form1:growlReportador"
+									styleClass="btn btn-default">
+								</p:commandButton>
+
+								<h:commandLink
+									onclick="PrimeFaces.monitorDownload(start, stop);"
+									title="EXCEL">
+									<p:graphicImage value="excel.png" width="24" />
+									<p:fileDownload value="#{reporte91GraficoMB.fileXls}" />
+								</h:commandLink>
+
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="3" style="text-align: right;">
+								<h:outputText value="Mes: " for="mesInputOri" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="mesInputOri"
+									value="#{reporte91GraficoMB.mesIni}">
+									<f:selectItems value="#{reporte91GraficoMB.listMes}"
+										var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+									<p:ajax event="change"
+										listener="#{reporte91GraficoMB.validateMonthInit}"
+										update=":form1:growlReportador" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="mesFInOri"
+									value="#{reporte91GraficoMB.mesFin}">
+									<f:selectItems value="#{reporte91GraficoMB.listMes}" var="mes"
+										itemValue="#{mes.mes}" itemLabel="#{mes.mes}" />
+									<p:ajax event="change"
+										listener="#{reporte91GraficoMB.validateMonthEnd}"
+										update=":form1:growlReportador" />
+								</p:selectOneMenu>
+							</p:column>
+
+						</p:row>
+					</p:panelGrid>
+
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte91GraficoMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte91GraficoMB.uuid}&amp;filename=#{reporte91GraficoMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

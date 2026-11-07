@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:panel id="panelReporte" header="Crea cuenta ingreso"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:messages id="messages" showDetail="true" showSummary="false"
+						closable="true" style="text-align:initial" />
+					<p:focus for="panel-filtros" />
+					<p:panelGrid columns="7" styleClass="col-centered ui-noborder"
+						id="panel-filtros">
+						<h:outputText value="Cuenta" for="CuentaInput" />
+						<h:outputText value="Scta" for="SctaInput" />
+						<h:outputText value="Sscta" for="SsctaInput" />
+						<h:outputText value="Ssscta" for="SssctaInput" />
+						<h:outputText value="Sssscta" for="SsssctaInput" />
+						<h:outputText value="Fuente" for="fuente" />
+						<h:outputText value="" />
+						<p:inputText id="CuentaInput" style="width: 4em;"
+							value="#{creaCuentaIngresoMB.cuenta}" maxlength="4">
+							<p:ajax event="change" process="@this form1:CuentaInput" />
+						</p:inputText>
+						<p:inputText id="SctaInput" style="width: 9em;"
+							value="#{creaCuentaIngresoMB.scta}" maxlength="10">
+							<p:ajax event="change" listener="#{creaCuentaIngresoMB.leftPad}"
+								update="form1:panel-filtros" />
+						</p:inputText>
+						<p:inputText id="SsctaInput" style="width: 14em;"
+							value="#{creaCuentaIngresoMB.sscta}" maxlength="15">
+							<p:ajax event="change" listener="#{creaCuentaIngresoMB.leftPad}"
+								update="form1:panel-filtros" />
+						</p:inputText>
+						<p:inputText id="SssctaInput" style="width: 5em;"
+							value="#{creaCuentaIngresoMB.ssscta}" maxlength="4">
+							<p:ajax event="change" listener="#{creaCuentaIngresoMB.leftPad}"
+								update="form1:panel-filtros" />
+						</p:inputText>
+						<p:inputText id="SsssctaInput" style="width: 5em;"
+							value="#{creaCuentaIngresoMB.sssscta}" maxlength="4">
+							<p:ajax event="change" listener="#{creaCuentaIngresoMB.leftPad}"
+								update="form1:panel-filtros" />
+						</p:inputText>
+						<p:inputText id="fuente" style="width: 5em;"
+							value="#{creaCuentaIngresoMB.fuente}" maxlength="3">
+						</p:inputText>
+						<p:commandButton onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							styleClass="btn btn-default" title="TXT" value="Crear"
+							action="#{creaCuentaIngresoMB.creaCuenta}" update="messages">
+						</p:commandButton>
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

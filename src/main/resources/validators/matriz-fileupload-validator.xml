@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<description>
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Validaciones al archivo de matrices
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	</description>
+
+
+	<bean id="matricesCsvValidator"
+		class="com.gem.sistema.load.fileupload.validators.impl.CsvFileValidatorImpl">
+		<property name="noTokensByLine" value="13"></property>
+		<property name="lineToStart" value="1"></property>
+		<property name="skipFail" value="true"></property>
+		<property name="separator" value=","></property>
+		<property name="errorSeparator" value=","></property>
+		<property name="validators">
+			<util:list
+				value-type="com.gem.sistema.load.fileupload.validators.FieldValidator">
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: Clave debe de tener de 1 a 3 caracateres numericos" />
+					<property name="index" value="0" />
+					<property name="fieldName" value="CLAVE" />
+					<property name="pattern" value="^[0-9]{1,3}$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: Programa debe de tener 8 caracteres numericos" />
+					<property name="index" value="1" />
+					<property name="fieldName" value="PROGRAMA" />
+					<property name="pattern" value="^[0-9]{8}$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: Tema desarrollo debe de tener 6 caracteres alfanumericos" />
+					<property name="index" value="2" />
+					<property name="fieldName" value="TEMA DESARROLLO" />
+					<property name="pattern" value="^[0-9A-Z]{6}$" />
+				</bean>
+				<!-- <bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator"> 
+					<property name="messageError" value="%1$s :: Objetivo no debe de contener 
+					comas o commillas" /> <property name="index" value="3" /> <property name="fieldName" 
+					value="OBJETIVO" /> <property name="pattern" value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ0-9;*()=:;\–\-\\\/….?¿´_ 
+					\s]+$"></property> </bean> <bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator"> 
+					<property name="messageError" value="%1$s :: Nombre no debe de contener comas 
+					o commillas" /> <property name="index" value="4" /> <property name="fieldName" 
+					value="NOMBRE" /> <property name="pattern" value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ0-9;*()=:;\–\-\\\/….?¿´_ 
+					\s]+$"></property> </bean> <bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator"> 
+					<property name="messageError" value="%1$s :: Formula no debe de contener 
+					comas o commillas" /> <property name="index" value="5" /> <property name="fieldName" 
+					value="FORMULA" /> <property name="pattern" value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ0-9;*()=:;\–\-\\\/….?¿´_ 
+					\s]+$"></property> </bean> -->
+
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: Frecuencia solo debe de contener letras" />
+					<property name="index" value="6" />
+					<property name="fieldName" value="FRECUENCIA" />
+					<property name="pattern" value="^[a-zA-Z]+$"></property>
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: Tipo solo debe de contener letras" />
+					<property name="index" value="7" />
+					<property name="fieldName" value="TIPO" />
+					<property name="pattern"
+						value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ]+$"></property>
+				</bean>
+				<!-- <bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator"> 
+					<property name="messageError" value="%1$s :: Medios de verificacion no debe 
+					de contener comas o commillas" /> <property name="index" value="8" /> <property 
+					name="fieldName" value="MEDIOS VERIFICACION" /> <property name="pattern" 
+					value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ0-9;*()=:;\–\-\\\/….?¿´_ \s]+$"></property> 
+					</bean> <bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator"> 
+					<property name="messageError" value="%1$s :: Supuestos no debe de contener 
+					comas o commillas" /> <property name="index" value="9" /> <property name="fieldName" 
+					value="SUPUESTOS" /> <property name="pattern" value="^[a-zA-ZáéíóúàèìòùÀÈÌÒÙÁÉÍÓÚñÑüÜ0-9;*()=:;\–\-\\\/….?¿´_ 
+					\s]+$"></property> </bean> -->
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: Nivel solo deve de contener una letra" />
+					<property name="index" value="10" />
+					<property name="fieldName" value="NIVEL" />
+					<property name="pattern" value="^[A-Z]{1}$" />
+				</bean>
+
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: La columna 12 solo deve de contener numeros y/o guiones medios y 3 caracteres" />
+					<property name="index" value="11" />
+					<property name="fieldName" value="COLUMNA-8" />
+					<property name="pattern" value="^[0-9-]{1,3}$" />
+				</bean>
+				<!-- <bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator"> 
+					<property name="messageError" value="%1$s :: El programa debe de contener 
+					14 caracteres alfanumericos" /> <property name="index" value="12" /> <property 
+					name="fieldName" value="PROGRAMA" /> <property name="pattern" value="^[A-Z0-9]{14}$|(^$)" 
+					/> </bean> -->
+			</util:list>
+		</property>
+	</bean>
+</beans>

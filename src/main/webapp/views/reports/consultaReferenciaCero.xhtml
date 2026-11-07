@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Referencia Cero"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<p:panelGrid columns="11" styleClass="ui-noborder">
+							<h:outputText value="Mes Inicial: " for="idMesIni" />
+							<p:selectOneMenu id="idMesIni"
+								value="#{consultaReferenciaCeroMB.mesIni}">
+								<f:selectItems value="#{consultaReferenciaCeroMB.listMesIni}"
+									var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+								<p:ajax event="change"
+									listener="#{consultaReferenciaCeroMB.onChangeValidaMeses}"
+									update=":form1:growlReportador, :form1:dire, :form1:partidai, :form1:partidaf, :form1:correcto" />
+							</p:selectOneMenu>
+							<h:outputText value="Mes Fin: " for="idMes" />
+							<p:selectOneMenu id="idMes"
+								value="#{consultaReferenciaCeroMB.mes}">
+								<f:selectItems value="#{consultaReferenciaCeroMB.listMes}"
+									var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+								<p:ajax event="change"
+									listener="#{consultaReferenciaCeroMB.onChangeValidaMeses}"
+									update=":form1:growlReportador, :form1:dire, :form1:partidai, :form1:partidaf, :form1:correcto" />
+							</p:selectOneMenu>
+							<h:outputText value="Dirección:" for="dire" />
+							<p:inputText id="dire"
+								disabled="#{consultaReferenciaCeroMB.bActive}"
+								value="#{consultaReferenciaCeroMB.direccion}" maxlength="5"
+								size="5" onkeyup="this.value=this.value.toUpperCase();"
+								requiredMessage="La Dirección es obligatoria">
+								<pe:keyFilter regEx="/[a-z0-9]/i" />
+							</p:inputText>
+							<h:outputText value="Partida Inicial: " for="partidai" />
+							<p:inputText id="partidai"
+								disabled="#{consultaReferenciaCeroMB.bActive}"
+								value="#{consultaReferenciaCeroMB.partidaIni}" maxlength="4"
+								size="4" requiredMessage="La Partida Inicial es obligatoria.">
+								<pe:keyFilter regEx="/[\d]/" />
+							</p:inputText>
+							<h:outputText value="Partida Final: " for="partidaf" />
+							<p:inputText id="partidaf"
+								disabled="#{consultaReferenciaCeroMB.bActive}"
+								value="#{consultaReferenciaCeroMB.partidaFin}" maxlength="4"
+								size="4" requiredMessage="La Partida Final es obligatoria.">
+								<pe:keyFilter regEx="/[\d]/" />
+							</p:inputText>
+							<!-- p:commandButton value="Vista Previa" id="preView"
+								actionListener="#{consultaReferenciaCeroMB.preView}"
+								icon="ui-icon-zoomout"
+								update=":form1:preViewTxt,:form1:growlReportador"
+								onclick="PF('preViewTxtWg').show();" /> -->
+							<p:commandButton id="correcto" ajax="false" value="Correcto"
+								disabled="#{consultaReferenciaCeroMB.bActive}"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								icon="ui-icon-document"
+								actionListener="#{consultaReferenciaCeroMB.downLoadFile}"
+								update=":form1:growlReportador">
+								<p:fileDownload value="#{consultaReferenciaCeroMB.fileTxt}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panelGrid>
+						<p:outputLabel rendered="#{consultaReferenciaCeroMB.bPreView}"
+							style="max-height: 400px; width: 900px; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="120" id="preViewTxt" readonly="true"
+								style="font-family: monospace; font-size: 8pt;"
+								widgetVar="preViewTxtWg"
+								rendered="#{consultaReferenciaCeroMB.bPreView}"
+								autoResize="true" value="#{consultaReferenciaCeroMB.txtPreview}" />
+
+						</p:outputLabel>
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

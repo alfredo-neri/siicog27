@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<p:growl id="growlIndicadores" showDetail="false" sticky="true"></p:growl>
+			<h:form id="formIndCaptura">
+
+				<p:remoteCommand name="onload"
+					action="#{ficTecSegIndEstrategicosMB.init}" autoRun="true"
+					update="panelIndicadores" />
+
+				<p:remoteCommand name="consultVariables"
+					actionListener="#{ficTecSegIndEstrategicosMB.consultVariables}"
+					oncomplete="PF('catalogVariablesDlg').show()"
+					update="formIndCaptura:variablesTbl" />
+
+				<p:remoteCommand name="consultIndicadores"
+					actionListener="#{ficTecSegIndEstrategicosMB.consultIndicadores}"
+					oncomplete="PF('catalogIndicadoresDlg').show()"
+					update="formIndCaptura:indicadoresTbl" />
+
+				<p:panel id="panelIndicadores"
+					header="Ficha Técnica de Seguimiento de Indicadores de Gestión o Estratégicos"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+
+					<p:dataTable id="indTable" var="ind"
+						value="#{ficTecSegIndEstrategicosMB.encabezadosList}"
+						styleClass="et_datatable" emptyMessage="Cargando información..."
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="indWdg" rowIndexVar="rowIndexCaptura">
+						<p:ajax update="indTable,formIndCaptura:indDetalleTable"
+							event="page"
+							listener="#{ficTecSegIndEstrategicosMB.cambiarPagina}" />
+						<p:column>
+							<center>
+								<p:panel>
+									<p:panelGrid columns="4" styleClass="noBorders">
+										<h:panelGroup>
+											<h:outputText value="Cve Temas: " />
+											<p:selectOneMenu value="#{ind.cvetemas}"
+												disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}">
+												<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+												<f:selectItems
+													value="#{ficTecSegIndEstrategicosMB.clvTemasList}" />
+												<p:ajax update="desTema,formIndCaptura:indDetalleTable"
+													event="change"
+													listener="#{ficTecSegIndEstrategicosMB.changeTema(rowIndexCaptura)}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<h:outputText value="Dependencia: "></h:outputText>
+											<p:selectOneMenu value="#{ind.clvdep}"
+												disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}">
+												<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+												<f:selectItems
+													value="#{ficTecSegIndEstrategicosMB.clvDependenciasList}" />
+												<p:ajax
+													update="desDep,cmbPrograma,desProg,formIndCaptura:indDetalleTable"
+													event="change"
+													listener="#{ficTecSegIndEstrategicosMB.changeDependencia(rowIndexCaptura)}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<h:outputText value="Programa: "></h:outputText>
+											<p:selectOneMenu id="cmbPrograma" value="#{ind.clvfun}"
+												disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}">
+												<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+												<f:selectItems
+													value="#{ficTecSegIndEstrategicosMB.clvProgramasList}" />
+												<p:ajax update="desProg,formIndCaptura:indDetalleTable"
+													event="change"
+													listener="#{ficTecSegIndEstrategicosMB.changePrograma(rowIndexCaptura)}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<h:outputText value="Código de Indicador: "></h:outputText>
+											<h:inputText id="txtCveInd" value="#{ind.cveind}" size="14"
+												maxlength="14"
+												disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}">
+												<p:ajax
+													update="txtCveInd, desCodInd, formIndCaptura:indDetalleTable, growlIndicadores"
+													event="change"
+													listener="#{ficTecSegIndEstrategicosMB.changeCodInd(rowIndexCaptura)}" />
+											</h:inputText>
+											<!--
+											<p:selectOneMenu value="#{ind.cveind}"
+												disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}">
+												<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+												<f:selectItems
+													value="#{ficTecSegIndEstrategicosMB.clvCodigosIndList}" />
+												<p:ajax update="desCodInd,formIndCaptura:indDetalleTable"
+													event="change"
+													listener="#{ficTecSegIndEstrategicosMB.changeCodInd(rowIndexCaptura)}" />
+											</p:selectOneMenu>
+											-->
+
+											<p:commandLink id="searchcInds"
+												disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+												styleClass="glyphicon glyphicon-search"
+												onclick="consultIndicadores(); return false;"
+												style="width:18px;height:18px;" />
+
+										</h:panelGroup>
+
+										<h:outputText id="desTema"
+											value="#{ficTecSegIndEstrategicosMB.desTema}"></h:outputText>
+										<h:outputText id="desDep"
+											value="#{ficTecSegIndEstrategicosMB.desDep}"></h:outputText>
+										<h:outputText id="desProg"
+											value="#{ficTecSegIndEstrategicosMB.desProg}"></h:outputText>
+										<h:outputText id="desCodInd"
+											value="#{ficTecSegIndEstrategicosMB.desCodInd}"></h:outputText>
+
+										<!--
+										<h:inputText id="desTema"
+											value="#{ficTecSegIndEstrategicosMB.desTema}" size="40"
+											disabled="true"></h:inputText>
+										<h:inputText id="desDep"
+											value="#{ficTecSegIndEstrategicosMB.desDep}" size="40"
+											disabled="true"></h:inputText>
+										<h:inputText id="desProg"
+											value="#{ficTecSegIndEstrategicosMB.desProg}" size="40"
+											disabled="true"></h:inputText>
+										<h:inputText id="desCodInd"
+											value="#{ficTecSegIndEstrategicosMB.desCodInd}" size="40"
+											disabled="true"></h:inputText>
+											-->
+
+									</p:panelGrid>
+
+								</p:panel>
+								<br />
+								<p:panel>
+									<p:panelGrid columns="2" columnClasses="col-md-1,col-md-9"
+										styleClass="noBorders">
+										<h:outputText value="Objetivo del Programa: "></h:outputText>
+										<h:inputText value="#{ind.objetivo}" size="300"
+											maxlength="300"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+
+										<h:outputText value="Interpretación: "></h:outputText>
+										<h:inputText value="#{ind.interpretacion}" size="300"
+											maxlength="300"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+									</p:panelGrid>
+
+									<p:panelGrid columns="6"
+										columnClasses="col-md-1,col-md-3,col-md-1,col-md-1,col-md-1,col-md-3"
+										styleClass="noBorders">
+										<h:outputText value="Dimensión que Atiende: "></h:outputText>
+										<h:inputText value="#{ind.dimension}" size="80"
+											maxlength="100"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+
+										<h:outputText value="Frecuencia: "></h:outputText>
+										<p:selectOneMenu value="#{ind.frecuencia}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}">
+											<f:selectItem itemLabel="Seleccione..."></f:selectItem>
+											<f:selectItems
+												value="#{ficTecSegIndEstrategicosMB.frecuenciList}" />
+										</p:selectOneMenu>
+
+										<h:outputText value="Fórmula del Cálculo: "></h:outputText>
+										<h:inputText value="#{ind.formula}" size="80" maxlength="300"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+
+										<h:outputText value="Descripción del Factor: "></h:outputText>
+										<h:inputText value="#{ind.descfac}" size="80" maxlength="300"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+
+										<h:outputText value="Ambito Geográfico: " />
+
+										<p:inputText value="#{ind.ambito1}" size="3" maxlength="4"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}">
+											<pe:keyFilter mask="pint" />
+										</p:inputText>
+
+										<h:outputText value="Cobertura: "></h:outputText>
+										<h:inputText value="#{ind.cobertura}" size="80"
+											maxlength="300"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+									</p:panelGrid>
+
+									<p:panelGrid columns="2" columnClasses="col-md-1,col-md-9"
+										styleClass="noBorders">
+										<h:outputText value="Descripción de Resultados: "></h:outputText>
+										<h:inputText value="#{ind.descripcion}" size="300"
+											maxlength="300"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+
+										<h:outputText value="Evaluación del Indicador: "></h:outputText>
+										<h:inputText value="#{ind.evaluacion}" size="300"
+											maxlength="300"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+										<h:outputText value="Linea Base: " />
+										<h:inputText value="#{ind.lineaBase}" size="200"
+											maxlength="200"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"></h:inputText>
+									</p:panelGrid>
+
+								</p:panel>
+
+								<p:panel>
+
+									<p:panelGrid columns="8">
+										<h:outputText value=""></h:outputText>
+										<h:outputText value="Meta Anual"></h:outputText>
+										<h:outputText value="Programada"></h:outputText>
+										<h:outputText value="%"></h:outputText>
+										<h:outputText value="Alcanzada"></h:outputText>
+										<h:outputText value="%"></h:outputText>
+										<h:outputText value="Semáforo"></h:outputText>
+										<h:outputText value="Semáforo Acum."></h:outputText>
+
+										<h:outputText value="Trimestre 1"></h:outputText>
+										<pe:inputNumber value="#{ind.metanuale1}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.proge1}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcproge1}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.alcane1}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcalcane1}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<h:inputText value="#{ind.semaforo11}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+										<h:inputText value="#{ind.semaforo21}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+
+										<h:outputText value="Trimestre 2"></h:outputText>
+										<pe:inputNumber value="#{ind.metanuale2}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.proge2}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcproge2}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.alcane2}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcalcane2}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<h:inputText value="#{ind.semaforo12}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+										<h:inputText value="#{ind.semaforo22}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+
+										<h:outputText value="Trimestre 3"></h:outputText>
+										<pe:inputNumber value="#{ind.metanuale3}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.proge3}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcproge3}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.alcane3}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcalcane3}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<h:inputText value="#{ind.semaforo13}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+										<h:inputText value="#{ind.semaforo23}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+
+										<h:outputText value="Trimestre 4"></h:outputText>
+										<pe:inputNumber value="#{ind.metanuale4}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.proge4}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcproge4}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.alcane4}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{ind.porcalcane4}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<h:inputText value="#{ind.semaforo14}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+										<h:inputText value="#{ind.semaforo24}"
+											disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+											size="10" maxlength="15"></h:inputText>
+									</p:panelGrid>
+								</p:panel>
+
+								<br />
+								<p:panelGrid id="pnlBotones" columns="6" style="width:initial;"
+									styleClass="noBorders">
+									<p:commandButton value="Salvar   "
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.salvarEncabezado(rowIndexCaptura)}"
+										rendered="#{ficTecSegIndEstrategicosMB.salvarEncabezadoVisible}"
+										update="indTable,formIndCaptura:indDetalleTable,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Modificar"
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.modificarEncabezado(rowIndexCaptura)}"
+										rendered="#{! ficTecSegIndEstrategicosMB.salvarEncabezadoVisible}"
+										disabled="#{ficTecSegIndEstrategicosMB.habilitarModificar}"
+										update="indTable,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Limpiar  "
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.resetEncabezado(rowIndexCaptura)}"
+										disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+										update="indTable,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Adicionar"
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.adicionarEncabezado}"
+										disabled="#{! ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+										update="indTable,formIndCaptura:indDetalleTable,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Borrar   "
+										style="padding: 5px; width:100px"
+										disabled="#{! ficTecSegIndEstrategicosMB.habilitarBorrarMaestro}"
+										onclick="PF('confirmDeleteEncabezado').show();">
+										<p:confirmDialog widgetVar="confirmDeleteEncabezado"
+											message="¿Desea borrar el registro actual?"
+											header="Confirmacion" severity="alert">
+											<!-- appendTo="@(body)"   oncomplete="PF('confirmDeleteEncabezado').hide();"-->
+											<p:commandButton value="SI" label="SI"
+												style="margin-top:10px;padding:5px;"
+												onclick="PF('confirmDeleteEncabezado').hide();"
+												actionListener="#{ficTecSegIndEstrategicosMB.borrarEncabezado(rowIndexCaptura)}"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update="indTable,formIndCaptura:indDetalleTable,growlIndicadores" />
+											<p:commandButton value="NO" label="NO"
+												style="margin-top:10px;padding:5px;"
+												onclick="PF('confirmDeleteEncabezado').hide();"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update="growlIndicadores" />
+										</p:confirmDialog>
+									</p:commandButton>
+									<p:commandButton value="Cancelar "
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.cancelarEncabezado(rowIndexCaptura)}"
+										disabled="#{ficTecSegIndEstrategicosMB.capturaDeshabilitado}"
+										update="indTable,formIndCaptura:indDetalleTable,growlIndicadores"></p:commandButton>
+								</p:panelGrid>
+							</center>
+						</p:column>
+					</p:dataTable>
+
+					<br />
+					<!-- Detalle -->
+
+					<p:dataTable id="indDetalleTable" var="indDetalle"
+						value="#{ficTecSegIndEstrategicosMB.detallesList}"
+						styleClass="et_datatable" emptyMessage="Cargando información..."
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="indDetalleWdg" paginatorPosition="bottom"
+						rowIndexVar="rowIndexDetalle">
+						<p:column>
+							<center>
+								<p:panel>
+									<p:panelGrid columns="4" styleClass="noBorders">
+										<h:panelGroup>
+											<h:outputText value="Cve Temas: "></h:outputText>
+											<h:outputText id="desIdTema"
+												value="#{ficTecSegIndEstrategicosMB.desIdTema}"></h:outputText>
+										</h:panelGroup>
+										<h:panelGroup>
+											<h:outputText value="Dependencia: "></h:outputText>
+											<h:outputText id="desIdDep"
+												value="#{ficTecSegIndEstrategicosMB.desIdDep}"></h:outputText>
+										</h:panelGroup>
+										<h:panelGroup>
+											<h:outputText value="Programa: "></h:outputText>
+											<h:outputText id="desIdProg"
+												value="#{ficTecSegIndEstrategicosMB.desIdProg}"></h:outputText>
+										</h:panelGroup>
+										<h:panelGroup>
+											<h:outputText value="Código de Identificador: "></h:outputText>
+											<h:outputText id="desIdCodInd"
+												value="#{ficTecSegIndEstrategicosMB.desIdCodInd}"></h:outputText>
+										</h:panelGroup>
+									</p:panelGrid>
+								</p:panel>
+
+								<p:panel>
+									<p:panelGrid styleClass="noBorders"
+										rendered="#{ficTecSegIndEstrategicosMB.tieneDetalles}">
+										<p:row style="text-align: center"
+											styleClass="ui-widget-header">
+											<p:column style="width:5%">
+												<h:outputText value="Código" />
+											</p:column>
+											<p:column style="width:10%">
+												<h:outputText value="Número de Variable" />
+											</p:column>
+											<p:column style="width:10%">
+												<h:outputText value="Nombre Corto de la Variable" />
+											</p:column>
+											<p:column>
+												<h:outputText value="Nombre de la Variable" />
+											</p:column>
+											<p:column>
+												<h:outputText value="Unidad de Medida" />
+											</p:column>
+											<p:column>
+												<h:outputText value="Operación" />
+											</p:column>
+											<p:column style="width:10%">
+												<h:outputText value="Meta Anual" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:inputText id="detCodigo" value="#{indDetalle.codigo}"
+													emptyValue="zero" maxlength="4" style="width:100%"
+													onkeydown="return event.keyCode &gt;= 48 &amp;&amp; event.keyCode &lt;= 57 || event.keyCode &gt;= 96 &amp;&amp; event.keyCode &lt;= 105 || event.keyCode == 8 || event.keyCode == 9"
+													disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}" />
+											</p:column>
+											<p:column>
+												<h:inputText id="numVar" value="#{indDetalle.numvar}"
+													style="width:70%"
+													disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}">
+													<p:ajax event="change"
+														update="numVar,varClave,varDescripcion,growlIndicadores"
+														listener="#{ficTecSegIndEstrategicosMB.cambiarVariable(rowIndexDetalle)}" />
+												</h:inputText>
+												<p:commandLink id="searchclvdgm"
+													disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+													styleClass="glyphicon glyphicon-search"
+													onclick="consultVariables(); return false;"
+													style="width:18px;height:18px;" />
+											</p:column>
+											<p:column>
+												<h:inputText id="varClave" value="#{indDetalle.cvevar}"
+													style="width:100%" readonly="true" />
+											</p:column>
+											<p:column>
+												<h:inputText id="varDescripcion" readonly="true"
+													style="width:100%" value="#{indDetalle.variables}" />
+											</p:column>
+											<p:column>
+												<h:inputText value="#{indDetalle.unimed}" style="width:100%"
+													maxlength="100"
+													disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}" />
+											</p:column>
+											<p:column>
+												<h:inputText value="#{indDetalle.operacion}"
+													style="width:100%" maxlength="50"
+													disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}" />
+											</p:column>
+											<p:column>
+												<pe:inputNumber value="#{indDetalle.metanual}"
+													disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+													size="14" emptyValue="zero" decimalPlaces="2"
+													decimalSeparator="." thousandSeparator="," maxlength="12" />
+											</p:column>
+										</p:row>
+
+									</p:panelGrid>
+									<br />
+									<p:panelGrid columns="5"
+										rendered="#{ficTecSegIndEstrategicosMB.tieneDetalles}">
+										<h:outputText value=""></h:outputText>
+										<h:outputText value="Programada"></h:outputText>
+										<h:outputText value="%"></h:outputText>
+										<h:outputText value="Alcanzada"></h:outputText>
+										<h:outputText value="%"></h:outputText>
+
+										<h:outputText value="Primer Trimestre"></h:outputText>
+										<pe:inputNumber value="#{indDetalle.prog1}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcprog1}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.alcan1}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcalcan1}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+
+										<h:outputText value="Segundo Semestre"></h:outputText>
+										<pe:inputNumber value="#{indDetalle.prog2}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcprog2}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.alcan2}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcalcan2}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+
+										<h:outputText value="Tercer Trimestre"></h:outputText>
+										<pe:inputNumber value="#{indDetalle.prog3}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcprog3}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.alcan3}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcalcan3}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+
+										<h:outputText value="Cuarto Trimestre"></h:outputText>
+										<pe:inputNumber value="#{indDetalle.prog4}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcprog4}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.alcan4}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+										<pe:inputNumber value="#{indDetalle.porcalcan4}"
+											disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+											size="10" emptyValue="zero" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"></pe:inputNumber>
+									</p:panelGrid>
+								</p:panel>
+								<br />
+								<p:panelGrid id="pnlBotonesDetalle" columns="6"
+									style="width:initial;" styleClass="noBorders"
+									rendered="#{ficTecSegIndEstrategicosMB.puedeAgregarDetalles}">
+									<p:commandButton value="Salvar   "
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.salvarDetalle(rowIndexDetalle)}"
+										rendered="#{ficTecSegIndEstrategicosMB.salvarDetalleVisible}"
+										update="indDetalleTable,pnlBotonesDetalle,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Modificar"
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.modificarDetalle(rowIndexDetalle)}"
+										rendered="#{! ficTecSegIndEstrategicosMB.salvarDetalleVisible}"
+										disabled="#{! ficTecSegIndEstrategicosMB.tieneDetalles}"
+										update="indDetalleTable,pnlBotonesDetalle,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Limpiar  "
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.resetDetalle(rowIndexDetalle)}"
+										disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+										update="indDetalleTable,pnlBotonesDetalle,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Adicionar"
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.adicionarDetalle}"
+										disabled="#{! ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+										update="indDetalleTable,pnlBotonesDetalle,growlIndicadores"></p:commandButton>
+									<p:commandButton value="Borrar   "
+										style="padding: 5px; width:100px"
+										disabled="#{! ficTecSegIndEstrategicosMB.habilitarBorrarDetalle}"
+										onclick="PF('confirmDeleteDetalle').show();">
+										<p:confirmDialog widgetVar="confirmDeleteDetalle"
+											message="¿Desea borrar el registro actual?"
+											header="Confirmacion" severity="alert">
+											<p:commandButton value="SI" label="SI"
+												style="margin-top:10px;padding:5px;"
+												onclick="PF('confirmDeleteDetalle').hide();"
+												actionListener="#{ficTecSegIndEstrategicosMB.borrarDetalle(rowIndexDetalle)}"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update="indDetalleTable,pnlBotonesDetalle,growlIndicadores" />
+											<p:commandButton value="NO" label="NO"
+												style="margin-top:10px;padding:5px;"
+												onclick="PF('confirmDeleteDetalle').hide();"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update="growlIndicadores" />
+										</p:confirmDialog>
+									</p:commandButton>
+									<p:commandButton value="Cancelar "
+										style="padding: 5px; width:100px"
+										action="#{ficTecSegIndEstrategicosMB.cancelarDetalle(rowIndexDetalle)}"
+										disabled="#{ficTecSegIndEstrategicosMB.captDetDeshabilitado}"
+										update="indDetalleTable,pnlBotonesDetalle,growlIndicadores"></p:commandButton>
+								</p:panelGrid>
+							</center>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+
+				<p:dialog header="Consulta al Cat&aacute;logo de Variables"
+					widgetVar="catalogVariablesDlg" resizable="false" width="800"
+					height="650" showEffect="clip" hideEffect="clip" modal="true">
+					<br />
+					<p:outputPanel id="panelCatalogVariables" layout="block"
+						style="text-align:left">
+						<p:dataTable id="variablesTbl" var="variable"
+							value="#{ficTecSegIndEstrategicosMB.variables}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single" widgetVar="variableWdg"
+							selection="#{ficTecSegIndEstrategicosMB.variableSelected}"
+							rowKey="#{variable.cvevar}" emptyMessage="No hay registros"
+							filteredValue="#{ficTecSegIndEstrategicosMB.filteredVariables}">
+
+							<p:ajax event="rowDblselect"
+								update=":formIndCaptura:indDetalleTable,growlIndicadores,formIndCaptura:panelIndicadores"
+								listener="#{ficTecSegIndEstrategicosMB.onClvdgmRowDblClckSelect}"
+								oncomplete="PF('catalogVariablesDlg').hide();"></p:ajax>
+							<f:facet name="header">Consulta al Cat&aacute;logo de Variables</f:facet>
+
+							<p:column headerText="N&uacute;mero de Variable" width="15%"
+								filterMatchMode="contains" filterBy="#{variable.numvar}">
+								<h:outputText value="#{variable.numvar}" />
+							</p:column>
+
+							<p:column headerText="Nombre Corto de la Variable" width="20%"
+								filterMatchMode="contains" filterBy="#{variable.cvevar}">
+								<h:outputText value="#{variable.cvevar}" />
+							</p:column>
+
+							<p:column headerText="Nombre" width="65%"
+								filterMatchMode="contains" filterBy="#{variable.nomvar}">
+								<h:outputText value="#{variable.nomvar}" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:commandButton value="Aceptar"
+							actionListener="#{ficTecSegIndEstrategicosMB.changeVariable}"
+							update="growlIndicadores,formIndCaptura:panelIndicadores"
+							oncomplete="PF('catalogVariablesDlg').hide();"
+							style="padding: 5px; position: absolute; right: 50%;" />
+						<p:commandButton value="Cancelar"
+							oncomplete="PF('catalogVariablesDlg').hide();"
+							style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+				<p:dialog
+					header="Consulta al Cat&aacute;logo de Código de Indicadores"
+					widgetVar="catalogIndicadoresDlg" resizable="false" width="800"
+					height="650" showEffect="clip" hideEffect="clip" modal="true">
+					<br />
+					<p:outputPanel id="panelCatalogIndicadores" layout="block"
+						style="text-align:left">
+						<p:dataTable id="indicadoresTbl" var="indicador"
+							value="#{ficTecSegIndEstrategicosMB.indicadores}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single" widgetVar="indicadorWdg"
+							selection="#{ficTecSegIndEstrategicosMB.indicadorSelected}"
+							rowKey="#{indicador.codigo}" emptyMessage="No hay registros"
+							filteredValue="#{ficTecSegIndEstrategicosMB.filteredIndicadores}">
+
+							<p:ajax event="rowDblselect"
+								update="growlIndicadores,formIndCaptura:panelIndicadores"
+								listener="#{ficTecSegIndEstrategicosMB.onIndRowDblClckSelect}"
+								oncomplete="PF('catalogIndicadoresDlg').hide();"></p:ajax>
+							<f:facet name="header">Consulta al Cat&aacute;logo de Indicadores</f:facet>
+
+							<p:column headerText="Código" width="20%"
+								filterMatchMode="contains" filterBy="#{indicador.codigo}">
+								<h:outputText value="#{indicador.codigo}" />
+							</p:column>
+
+							<p:column headerText="Nombre" width="80%"
+								filterMatchMode="contains" filterBy="#{indicador.nomind}">
+								<h:outputText value="#{indicador.nomind}" />
+							</p:column>
+						</p:dataTable>
+						<br />
+						<p:commandButton value="Aceptar"
+							actionListener="#{ficTecSegIndEstrategicosMB.changeIndicador}"
+							update="growlIndicadores,formIndCaptura:panelIndicadores"
+							oncomplete="PF('catalogIndicadoresDlg').hide();"
+							style="padding: 5px; position: absolute; right: 50%;" />
+						<p:commandButton value="Cancelar"
+							oncomplete="PF('catalogIndicadoresDlg').hide();"
+							style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

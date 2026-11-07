@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Reportes de Indicadores Mensual de Indicador de Autonom&iacute;a Financiera"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:dataTable id="object" var="objects"
+						value="#{reporte53MB.listPm5211}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm5011Wdg" rowIndexVar="rowIndex">
+
+						<p:column>
+							<p:panelGrid id="idGrid1" styleClass="col-centered">
+
+								<p:row>
+									<p:column style="text-align: right; width:5%">
+										<h:outputText value="Mensual: " />
+									</p:column>
+									<p:column colspan="2" style="text-align: left; width:10%;">
+										<p:outputLabel id="lblMensual" value="#{objects.mensual}"
+											 rendered="#{reporte53MB.bLbl}">
+											<pe:keyFilter for="lblMensual" mask="pint"></pe:keyFilter>
+											<f:convertNumber pattern="00" />
+										</p:outputLabel>
+										<p:selectOneMenu id="txtMensual" value="#{reporte53MB.mes}"
+											rendered="#{reporte53MB.bCombo}">
+											<f:selectItems value="#{reporte53MB.listMes}" var="mes"
+												itemValue="#{mes.mes}" itemLabel="#{mes.mes}" />
+										</p:selectOneMenu>
+									</p:column>
+								</p:row>
+								<br />
+								<p:row>
+									<p:column />
+									<p:column>
+										<h:outputText value="Cantidad" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Observaciones:" />
+									</p:column>
+								</p:row>
+								<br></br>
+								<p:row>
+									<p:column style="text-align: right; width:5%;">
+										<h:outputText value="Ingresos Propios Recudados: " />
+									</p:column>
+									<p:column style="text-align: left; width:70%;">
+										<p:inputText value="#{objects.ipr}" id="ipr" size="15"
+											maxlength="17" disabled="#{reporte53MB.bInabilitado}">
+											<pe:keyFilter for="ipr" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+									<p:column rowspan="9">
+										<p:inputTextarea rows="30" cols="35"
+											disabled="#{reporte53MB.bInabilitado}"
+											value="#{objects.obsgral}"></p:inputTextarea>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Impuestos: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.imp}" id="imp" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="imp" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Derechos: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.der}" id="der" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="der" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Productos: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.prod}" id="prod" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="prod" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Aprovechamientos: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.aprov}" id="aprov" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="aprov" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Aprotaciones de Mejoras: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.apmej}" id="apmej" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="apmej" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Acessorios: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.acc}" id="acc" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="acc" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Ingresos Propios Financiamiento: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.ipf}" id="ipf" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="ipf" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align: right">
+										<h:outputText value="Total de Ingresos: " />
+									</p:column>
+									<p:column style="text-align: left; width:10px;">
+										<p:inputText value="#{objects.ting}" id="ting" size="15"
+											disabled="#{reporte53MB.bInabilitado}" maxlength="17">
+											<pe:keyFilter for="ting" mask="pnum"></pe:keyFilter>
+											<f:convertNumber pattern="#,##0.00" />
+										</p:inputText>
+									</p:column>
+
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid id="idGrid4">
+								<p:commandButton value="Modificar" id="modificar"
+									actionListener="#{reporte53MB.modify(rowIndex)}"
+									icon="ui-icon-arrowreturnthick-1-n"
+									rendered="#{reporte53MB.bVModficar}"
+									disabled="#{reporte53MB.bBorrar}" update=":form1:object" />
+								<p:commandButton value="Salvar" id="salvar" icon="ui-icon-disk"
+									actionListener="#{reporte53MB.save(rowIndex)}"
+									rendered="#{reporte53MB.bVSalvar}"
+									update=":form1:object,  :form1:messagesEdit, :form1:idReporte" />
+								<p:commandButton value="Limpiar"
+									actionListener="#{reporte53MB.clean(rowIndex)}"
+									icon="ui-icon-arrowreturnthick-1-n"
+									disabled="#{reporte53MB.bInabilitado}"
+									update=":form1:object,  :form1:messagesEdit" />
+								<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+									update=":form1:object,  :form1:messagesEdit"
+									disabled="#{reporte53MB.bAdd}"
+									actionListener="#{reporte53MB.add(rowIndex)}" />
+								<p:commandButton value="Borrar" icon="ui-icon-trash"
+									disabled="#{reporte53MB.bBorrar}"
+									update=":form1:object,  :form1:messagesEdit, :form1:idReporte"
+									actionListener="#{reporte53MB.delete(rowIndex)}" >
+									<p:confirm header="Confirmación" message="¿Desea eliminar el registro actual?" icon="ui-icon-alert" />
+									</p:commandButton>
+								<p:commandButton value="Cancelar" icon="ui-icon-circle-close"
+									disabled="#{reporte53MB.bInabilitado}"
+									update=":form1:object,  :form1:messagesEdit "
+									actionListener="#{reporte53MB.cancel(rowIndex)}" />
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="idGrid2" columns="3" styleClass="col-centered">
+						<h:outputText value="Mes a Consultar:" />
+						<!-- <p:inputText value="#{reporte53MB.mesReport}" id="mespdf" size="2"
+							maxlength="2">
+							<pe:keyFilter for="mespdf" mask="pint"></pe:keyFilter>
+							<f:convertNumber pattern="00" />
+							<p:ajax event="change" process="idGrid2" update=":form1:mespdf"></p:ajax>
+						</p:inputText> -->
+						<p:selectOneMenu id="idReporte" value="#{reporte53MB.mesReport}">
+							<f:selectItems value="#{reporte53MB.listPmReport}" var="reporte"
+								itemValue="#{reporte.mensual}" itemLabel="#{reporte.mensual}" />
+						</p:selectOneMenu>
+						<!-- <p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{reporte53MB.createFilePdfInline}" value="Correcto"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							styleClass="btn btn-default">
+						</p:commandButton> -->
+						<p:commandButton value="Correcto" id="generateportepdf"
+							action="#{reporte53MB.createPDF}"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit" />
+
+					</p:panelGrid>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte53MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte53MB.uuid}&amp;filename=#{reporte53MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

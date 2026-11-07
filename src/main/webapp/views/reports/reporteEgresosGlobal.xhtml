@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:remoteCommand id="sendMessage" name="sendMessage"
+					actionListener="#{reporteEgresosGlobalMB.sendMessage}" update=":form1:growlReportador"
+					 />
+				<p:panel id="panel"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel"
+					header="Estado de Avance Presupuestal de Egresos Global del mes">
+					<p:growl id="growlReportador" showDetail="true" sticky="true" />
+					<p:panelGrid columns="7"
+						styleClass="col-centered row-centered ui-noborder">
+						<h:outputText value="Mes: " for="mesInputOri"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+						<p:selectOneMenu id="mesInputOri"
+							value="#{reporteEgresosGlobalMB.mes}">
+							<f:selectItems value="#{reporteEgresosGlobalMB.listMes}"
+								var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="Num. Firmas: " for="firInputOri"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+						<p:selectOneMenu id="firInputOri" size="18" editable="false"
+							value="#{reporteEgresosGlobalMB.nFirmas}">
+							<f:selectItem itemValue="4" itemLabel="4" />
+							<f:selectItem itemValue="3" itemLabel="3" />
+							<f:selectItem itemValue="2" itemLabel="2" />
+							<f:selectItem itemValue="1" itemLabel="1" />
+							<f:selectItem itemValue="0" itemLabel="0" />
+						</p:selectOneMenu>
+
+						<p:commandButton value="Vista Previa" id="preView"
+							actionListener="#{reporteEgresosGlobalMB.preView}"
+							icon="ui-icon-zoomout"
+							update=":form1:preViewTxt,:form1:growlReportador"
+							onclick="PF('preViewTxtWg').show();" />
+						<p:commandButton id="correcto" ajax="false" value="Correcto"
+							onstart="PF('blockUIWidget').block();" oncomplete="PF('blockUIWidget').unblock(); " 
+							actionListener="#{reporteEgresosGlobalMB.downLoadFile}">
+							<p:fileDownload value="#{reporteEgresosGlobalMB.fileTxt}" /> 
+						</p:commandButton>
+					</p:panelGrid>
+					<p:panelGrid>
+						<p:outputLabel rendered="#{reporteEgresosGlobalMB.bPreView}"
+							style="max-height: 400px; width: 1100px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="270" id="preViewTxt"
+								style="font-family: monospace; font-size: 8pt;" readonly="true"
+								widgetVar="preViewTxtWg"
+								rendered="#{reporteEgresosGlobalMB.bPreView}" autoResize="true"
+								value="#{reporteEgresosGlobalMB.txtPreview}" />
+
+						</p:outputLabel>
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

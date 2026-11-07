@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+		<script type="text/javascript">
+			function showStatus() {
+				PF('statusDialog').show();
+			}
+			function hideStatus() {
+				PF('statusDialog').hide();
+			}
+		</script>
+			<h:form id="generaPartidasPresupCero">
+				<p:panel id="panel" header="Genera Partidas Presupuestales  en Cero"
+					styleClass="green col-md-5 col-centered row-centered shadow-panel">
+						<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+					<br />
+					<h:panelGrid columns="5" styleClass="col-centered row-centered">
+					<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+										draggable="false" closable="false">
+						<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+					</p:dialog>
+						<p:commandButton value="Correcto" ajax="false" actionListener="#{genPartPresEnCeroMB.process}" style="padding: 5px;" onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)">
+						  <!-- <p:fileDownload value="#{genPartPresEnCeroMB.download}"/> -->
+						</p:commandButton>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

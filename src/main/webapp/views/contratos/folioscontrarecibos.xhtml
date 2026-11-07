@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.no-border {
+	border: 0;
+}
+
+.block {
+	display: grid;
+}
+
+.input-max {
+	width: 100% !important;
+}
+
+.left-text {
+	text-align: left
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+</style>
+
+
+			<h:form id="form">
+				<p:panel id="panel"
+					header="Configuración de folios para contrarecibos"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel green container">
+					<p:messages id="msn" showDetail="true" closable="true"
+						showSummary="false" />
+					<p:focus id="focus" />
+					<p:panel id="panelForm">
+						<div class="row">
+							<div class="col-md-2 ui-noborder left-text block">
+								<h:outputText value="Año" />
+								<p:inputText id="anio" maxlength="100" styleClass="input-max"
+									disabled="true" value="#{foliosContraRecibosMB.folio.anio}">
+								</p:inputText>
+							</div>
+							<div class="col-md-2 ui-noborder left-text block">
+								<h:outputText value="Folio inicial" />
+								<p:inputText id="finit" maxlength="100" styleClass="input-max"
+									type="number" disabled="#{!foliosContraRecibosMB.editing}"
+									value="#{foliosContraRecibosMB.folio.folioInicial}">
+								</p:inputText>
+							</div>
+							<div class="col-md-2 ui-noborder left-text block">
+								<h:outputText value="Siguiente folio" />
+								<p:inputText id="fact" maxlength="100" styleClass="input-max"
+									disabled="true"
+									value="#{foliosContraRecibosMB.folio.folioActual}">
+								</p:inputText>
+							</div>
+							<div class="col-md-6 ui-noborder left-text block">
+								<h:outputText value="Folio identificación" />
+								<p:inputText id="fide" maxlength="30" styleClass="input-max"
+									disabled="#{!foliosContraRecibosMB.editing}"
+									value="#{foliosContraRecibosMB.folio.folioIdentificacion}">
+								</p:inputText>
+							</div>
+						</div>
+					</p:panel>
+					<p:panelGrid columns="2"
+						styleClass=" ui-noborder center panel-buttons">
+						<p:commandButton value="Guardar" update="form"
+							action="#{foliosContraRecibosMB.guardarFolio}"
+							onclick="PF('blockUIWidget').show();"
+							oncomplete="PF('blockUIWidget').hide();"
+							rendered="#{foliosContraRecibosMB.editing}"
+							styleClass="ui-confirmdialog-no " icon="ui-icon-disk" ajax="true" />
+						<p:commandButton value="Editar" update="form"
+							rendered="#{!foliosContraRecibosMB.editing}"
+							action="#{foliosContraRecibosMB.editar}"
+							onclick="PF('blockUIWidget').show();"
+							oncomplete="PF('blockUIWidget').hide();"
+							styleClass="ui-confirmdialog-no " icon="ui-icon-disk" ajax="true" />
+						<p:commandButton value="Cancelar" update=":form"
+							onclick="PF('blockUIWidget').show();"
+							rendered="#{foliosContraRecibosMB.editing}"
+							oncomplete="PF('blockUIWidget').hide();" ajax="true"
+							action="#{foliosContraRecibosMB.cancelarEdicion}"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
+					</p:panelGrid>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../reports/indice.png"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

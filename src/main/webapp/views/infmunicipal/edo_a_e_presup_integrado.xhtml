@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<h:form id="form1">
+				<p:remoteCommand name="onload" update=":form1:objects"
+					onstart="PF('blockUIWidget').block();"
+					oncomplete="PF('blockUIWidget').unblock();" />
+
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel"
+					header="Estado Anal&iacute;tico de Egresos Presupuestal Integrado"
+					styleClass="green col-md-8 col-centered  row-centered shadow-panel">
+					<h:panelGrid id="display_1" columns="1" cellpadding="0">
+						<h:panelGrid id="display_11" columns="1" cellpadding="2">
+							<div class="table-responsive table-bordered table-condensed">
+								<p:dataTable id="objects" var="object" widgetVar="tbNatgas"
+									value="#{edoAnalitoEgrePIntegradoMB.natgasCustomDataModel}"
+									styleClass="et_datatable" emptyMessage="La cuenta no existe"
+									editable="false" paginator="true" lazy="true" rows="10"
+									resizableColumns="true" scrollable="true"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									selectionMode="single"
+									selection="#{edoAnalitoEgrePIntegradoMB.natgasCustomDataModel.selected}"
+									rowKey="#{object.id}">
+									<p:ajax event="rowSelect"
+										listener="#{edoAnalitoEgrePIntegradoMB.onRowSelect}"
+										update=":form1:display_12, :form1:display_14, :form1:display_13, :form1:messagesEdit"></p:ajax>
+									<p:ajax event="page"
+										oncomplete="PF('blockUIWidget').unblock();"
+										onstart="PF('blockUIWidget').block();"
+										listener="#{edoAnalitoEgrePIntegradoMB.update}" />
+
+									<p:column headerText="Clvgas" width="15%">
+										<h:outputText value="#{object.clvgas}"  />
+									</p:column>
+
+									<p:column headerText="Nomgas" width="85%"
+										style="text-align:left;">
+										<h:outputText value="#{object.nomgas}" />
+									</p:column>
+
+								</p:dataTable>
+							</div>
+							<br />
+						</h:panelGrid>
+						<h:panelGrid id="display_12" columns="2" cellpadding="2"
+							styleClass="col-centered">
+							<h:outputText value="Partida:" for="partidaInput"
+								styleClass="control-label"
+								style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+							<p:inputText id="partidaInput"
+								value="#{edoAnalitoEgrePIntegradoMB.rowSelected.clvgas}"
+								maxlength="4" disabled="true"
+								style="width: 60px; text-align: right;">
+								<f:convertNumber pattern="#" />
+							</p:inputText>
+							<br />
+						</h:panelGrid>
+
+						<h:panelGrid id="display_13" columns="5" cellpadding="4"
+							styleClass="col-centered">
+
+							<h:outputLabel value="" />
+							<h:outputLabel value="Ayuntamiento" />
+							<h:outputLabel value="Organismo de Agua" />
+							<h:outputLabel value="Dif Municipal" />
+							<h:outputLabel value="Organismo del Deporte" />
+							<h:outputText value="Enero" for="ayttotoeje11Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje11Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje11}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+								<p:ajax event="blur" update="ayttotoeje11Input"/>
+							</p:inputText>
+							<p:inputText id="aguatoeje11Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje11}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+								<p:ajax event="blur" update="aguatoeje11Input"/>
+							</p:inputText>
+							<p:inputText id="diftoeje11Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje11}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje11Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje11}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Febrero" for="ayttotoeje12Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje12Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje12}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje12Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje12}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje12Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje12}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje12Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje12}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Marzo" for="ayttotoeje13Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje13Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje13}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje13Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje13}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje13Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje13}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje13Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje13}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Abril" for="ayttotoeje14Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje14Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje14}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje14Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje14}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje14Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje14}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje14Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje14}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Mayo" for="ayttotoeje15Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje15Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje15}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje15Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje15}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje15Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje15}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje15Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje15}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Junio" for="ayttotoeje16Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje16Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje16}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje16Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje16}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje16Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje16}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje16Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje16}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Julio" for="ayttotoeje17Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje17Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje17}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje17Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje17}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje17Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje17}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje17Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje17}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Agosto" for="ayttotoeje18Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje18Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje18}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje18Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje18}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje18Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje18}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje18Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje18}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Septiembre" for="ayttotoeje19Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje19Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje19}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje19Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje19}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje19Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje19}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje19Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje19}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Octubre" for="ayttotoeje110Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje110Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje110}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje110Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje110}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje110Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje110}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje110Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje110}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Noviembre" for="ayttotoeje111Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje111Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje111}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje111Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje111}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje111Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje111}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje111Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje111}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+
+							<h:outputText value="Diciembre" for="ayttotoeje112Input"
+								style="padding-left: 20px; padding-right: 20px;"
+								styleClass="control-label" />
+							<p:inputText id="ayttotoeje112Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.ayttotoeje112}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="aguatoeje112Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.aguatoeje112}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="diftoeje112Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.diftoeje112}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<p:inputText id="deportetoeje112Input"
+								style="margin-rigth: 20px; text-align: right; margin-left:20px;"
+								value="#{edoAnalitoEgrePIntegradoMB.integradoeSelected.deportetoeje112}"
+								maxlength="24" disabled="#{edoAnalitoEgrePIntegradoMB.edit}">
+								<f:convertNumber pattern="#,###,###,##0.00" />
+								<pe:keyFilter mask="pnum" />
+							</p:inputText>
+							<br />
+						</h:panelGrid>
+
+						<h:panelGrid id="display_14" columns="4" cellpadding="2"
+							styleClass="col-centered">
+							<p:commandButton id="saveBtn" value="Salvar"
+								disabled="#{edoAnalitoEgrePIntegradoMB.edit}"
+								oncomplete="PF('blockUIWidget').unblock();"
+								onstart="PF('blockUIWidget').block();"
+								actionListener="#{edoAnalitoEgrePIntegradoMB.save}"
+								update=":form1:display_13, :form1:messagesEdit, :form1:display_1"></p:commandButton>
+							<p:commandButton id="resetBtn" value="Limpiar"
+								disabled="#{edoAnalitoEgrePIntegradoMB.edit}"
+								oncomplete="PF('blockUIWidget').unblock();"
+								onstart="PF('blockUIWidget').block();"
+								actionListener="#{edoAnalitoEgrePIntegradoMB.reset}"
+								update=":form1:display_13"></p:commandButton>
+							<p:commandButton id="addBtn"
+								value="#{edoAnalitoEgrePIntegradoMB.labelAdd}"
+								disabled="#{edoAnalitoEgrePIntegradoMB.enableAdd}"
+								oncomplete="PF('blockUIWidget').unblock();"
+								onstart="PF('blockUIWidget').block();"
+								actionListener="#{edoAnalitoEgrePIntegradoMB.add}"
+								update=":form1:display_13, :form1:display_14"></p:commandButton>
+							<p:commandButton id="cancelBtn" value="Cancelar"
+								disabled="#{edoAnalitoEgrePIntegradoMB.edit}"
+								oncomplete="PF('blockUIWidget').unblock();"
+								onstart="PF('blockUIWidget').block();"
+								actionListener="#{edoAnalitoEgrePIntegradoMB.cancel}"
+								update=":form1:display_13, :form1:display_14"></p:commandButton>
+							<br />
+						</h:panelGrid>
+
+					</h:panelGrid>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+
+
+
+
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

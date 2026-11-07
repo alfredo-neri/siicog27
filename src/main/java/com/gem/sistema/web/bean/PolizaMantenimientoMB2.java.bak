@@ -1,0 +1,1027 @@
+package com.gem.sistema.web.bean;
+
+import static com.gem.sistema.util.UtilFront.generateNotificationFront;
+import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static javax.faces.application.FacesMessage.SEVERITY_INFO;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
+
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gem.sistema.business.domain.Cattpo;
+import com.gem.sistema.business.domain.Cuenta;
+import com.gem.sistema.business.domain.Polide;
+import com.gem.sistema.business.domain.Polien;
+import com.gem.sistema.business.domain.Poliend;
+import com.gem.sistema.business.domain.Polifl;
+import com.gem.sistema.business.domain.Poliza;
+import com.gem.sistema.business.domain.TcMes;
+import com.gem.sistema.business.repository.catalogs.CattpoRepository;
+import com.gem.sistema.business.repository.catalogs.PolideRepository;
+import com.gem.sistema.business.repository.catalogs.PolienRepository;
+import com.gem.sistema.business.repository.catalogs.TcMesRepository;
+import com.gem.sistema.business.service.catalogos.ConsultaPolizaSirveImpl;
+import com.gem.sistema.business.service.catalogos.DataYearSystemService;
+import com.gem.sistema.business.service.catalogos.PolizaService;
+import com.gem.sistema.web.datamodel.CuentaPolizaDataModel;
+import com.gem.sistema.web.util.FrontProperty;
+
+@ManagedBean(name = "polizaMantenimientoMB2")
+@ViewScoped
+public class PolizaMantenimientoMB2 extends AbstractMB implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(PolizaMantenimientoMB2.class);
+	private static final String FOUS_JQUERY = "jQuery('#cuenta').eq(%1$s).each(function(){jQuery(this).focus});";
+
+	@ManagedProperty(value = "#{consultaPolizaSirveImpl}")
+	private ConsultaPolizaSirveImpl conPolizSirvice;
+	private Integer year;
+	private BigDecimal suma1 = BigDecimal.ZERO;
+	private BigDecimal suma2 = BigDecimal.ZERO;
+	private BigDecimal sumaFf;
+	
+	private BigDecimal canflu;
+	private BigDecimal clvflu;
+	private Integer conpolflu;
+	private Integer mespolflu;
+
+	private BigDecimal renpolflu;
+
+	private String tippolflu;
+	
+	
+	public BigDecimal getCanflu() {
+		return canflu;
+	}
+
+	public void setCanflu(BigDecimal canflu) {
+		this.canflu = canflu;
+	}
+
+	public BigDecimal getClvflu() {
+		return clvflu;
+	}
+
+	public void setClvflu(BigDecimal clvflu) {
+		this.clvflu = clvflu;
+	}
+
+	public Integer getConpolflu() {
+		return conpolflu;
+	}
+
+	public void setConpolflu(Integer conpolflu) {
+		this.conpolflu = conpolflu;
+	}
+
+	public Integer getMespolflu() {
+		return mespolflu;
+	}
+
+	public void setMespolflu(Integer mespolflu) {
+		this.mespolflu = mespolflu;
+	}
+
+	public BigDecimal getRenpolflu() {
+		return renpolflu;
+	}
+
+	public void setRenpolflu(BigDecimal renpolflu) {
+		this.renpolflu = renpolflu;
+	}
+
+	public String getTippolflu() {
+		return tippolflu;
+	}
+
+	public void setTippolflu(String tippolflu) {
+		this.tippolflu = tippolflu;
+	}
+
+	public Polifl getPolifl() {
+		return polifl;
+	}
+
+	private boolean banderaFl;
+	
+	public boolean isBanderaFl() {
+		return banderaFl;
+	}
+
+	public void setBanderaFl(boolean banderaFl) {
+		this.banderaFl = banderaFl;
+	}
+
+	public BigDecimal getSumaFf() {
+		return sumaFf;
+	}
+
+	public void setSumaFf(BigDecimal sumaFf) {
+		this.sumaFf = sumaFf;
+	}
+
+	private List<Polifl> listPolifl;
+	
+	private Polifl selectPolifl;
+	/**
+	 * Fila seleccionada del catalogo de programas
+	 */
+	private Cuenta rowSelected;
+
+	@ManagedProperty(value = "#{dataYearSystemService}")
+	private DataYearSystemService dataYearSystemService;
+
+	@ManagedProperty(value = "#{polienRepository}")
+	private PolienRepository polienRepository;
+
+	private Polien polien;
+	
+	private Polifl polifl;
+
+	public Polifl polifl() {
+		return polifl;
+	}
+
+	public void setPolifl(Polifl polifl) {
+		this.polifl = polifl;
+	}
+
+	private String idUser;
+	private Integer idEntidad;
+
+	private List<TcMes> listMeses;
+	private TcMes tcMes;
+
+	@ManagedProperty(value = "#{tcMesRepository}")
+	private TcMesRepository tcMesRepository;
+
+	private Polide polide;
+	private List<Polide> listPolide;
+	private List<Cattpo> lisCattpo;
+	private Cattpo cattpo;
+	private List<Cuenta> listCuenta;
+	private Cuenta cuenta;
+
+	private Polide polideSelect;
+	
+	
+
+	public Polifl getSelectPolifl() {
+		return selectPolifl;
+	}
+
+	public void setSelectPolifl(Polifl selectPolifl) {
+		this.selectPolifl = selectPolifl;
+	}
+
+	public List<Polifl> getListPolifl() {
+		return listPolifl;
+	}
+
+	public void setListPolifl(List<Polifl> listPolifl) {
+		this.listPolifl = listPolifl;
+	}
+
+	@ManagedProperty(value = "#{cattpoRepository}")
+	private CattpoRepository cattpoRepository;
+
+	@ManagedProperty(value = "#{polideRepository}")
+	private PolideRepository polideRepository;
+
+	private String sumaCargo;
+	private String sumaAbono;
+	private String sumaA8000;
+	private String sumaB8000;
+
+	private boolean repetgir = Boolean.FALSE;
+	private boolean activButtons = Boolean.FALSE;
+	private Integer mesActivo;
+
+	@ManagedProperty(value = "#{cuentaPolizaDataModel}")
+	private CuentaPolizaDataModel cuentaPolizaDataModel; 
+	/**
+	 * Mapa para guardar las filas seleccionadas del catalogo de naturaleza de
+	 * gasto.
+	 */
+	private Map<Integer, Cuenta> mapCuentaExp;
+
+	public Map<Integer, Cuenta> getMapCuentaExp() {
+		return mapCuentaExp;
+	}
+
+	public void setMapCuentaExp(Map<Integer, Cuenta> mapCuentaExp) {
+		this.mapCuentaExp = mapCuentaExp;
+	}
+
+	public Cuenta getRowSelected() {
+		return rowSelected;
+	}
+
+	public void setRowSelected(Cuenta rowSelected) {
+		this.rowSelected = rowSelected;
+	}
+
+	public boolean isRepetgir() {
+		return repetgir;
+	}
+
+	public void setRepetgir(boolean repetgir) {
+		this.repetgir = repetgir;
+	}
+
+	/**
+	 * Habilitar el modo de edicion
+	 */
+	// @Value("${view.edit.row.activate.icon.pencil}")
+	private static final String VIEW_EDIT_ROW_ACTIVATE_PENCIL = FrontProperty
+			.getPropertyValue("view.edit.row.activate.icon.pencil");
+
+	/**
+	 * Habilitar el modo de edicion
+	 */
+	// @Value("${view.edit.row.activate.icon.pencil.complement}")
+	private static final String VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT = FrontProperty
+			.getPropertyValue("view.edit.row.activate.icon.pencil.complement");
+
+	/**
+	 * Habilitar el modo de edicion
+	 */
+	// @Value("${view.catalog.form1.objects}")
+	protected static final String VIEW_CATALOG_FORM1_OBJECTS = FrontProperty
+			.getPropertyValue("view.catalog.form1.objects");
+
+	private BigDecimal renglon;
+
+	private StreamedContent streamedContent;
+
+	private List<Poliend> listIncorrectas;
+
+	public List<Poliend> getListIncorrectas() {
+		return listIncorrectas;
+	}
+
+	public void setListIncorrectas(List<Poliend> listIncorrectas) {
+		this.listIncorrectas = listIncorrectas;
+	}
+
+	public StreamedContent getStreamedContent() {
+		if (streamedContent != null)
+			try {
+				streamedContent.getStream().reset();
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+		return streamedContent;
+	}
+
+	public void setStreamedContent(StreamedContent streamedContent) {
+		this.streamedContent = streamedContent;
+	}
+
+	public BigDecimal getRenglon() {
+		return renglon;
+	}
+
+	public void setRenglon(BigDecimal renglon) {
+		this.renglon = renglon;
+	}
+
+	public String getSumaCargo() {
+		return sumaCargo;
+	}
+
+	public void setSumaCargo(String sumaCargo) {
+		this.sumaCargo = sumaCargo;
+	}
+
+	public String getSumaAbono() {
+		return sumaAbono;
+	}
+
+	public void setSumaAbono(String sumaAbono) {
+		this.sumaAbono = sumaAbono;
+	}
+
+	public String getSumaA8000() {
+		return sumaA8000;
+	}
+
+	public void setSumaA8000(String sumaA8000) {
+		this.sumaA8000 = sumaA8000;
+	}
+
+	public String getSumaB8000() {
+		return sumaB8000;
+	}
+
+	public void setSumaB8000(String sumaB8000) {
+		this.sumaB8000 = sumaB8000;
+	}
+
+	public CattpoRepository getCattpoRepository() {
+		return cattpoRepository;
+	}
+
+	public void setCattpoRepository(CattpoRepository cattpoRepository) {
+		this.cattpoRepository = cattpoRepository;
+	}
+
+	public PolideRepository getPolideRepository() {
+		return polideRepository;
+	}
+
+	public void setPolideRepository(PolideRepository polideRepository) {
+		this.polideRepository = polideRepository;
+	}
+
+	public List<Polide> getListPolide() {
+		return listPolide;
+	}
+
+	public void setListPolide(List<Polide> listPolide) {
+		this.listPolide = listPolide;
+	}
+
+	public List<Cattpo> getLisCattpo() {
+		return lisCattpo;
+	}
+
+	public void setLisCattpo(List<Cattpo> lisCattpo) {
+		this.lisCattpo = lisCattpo;
+	}
+
+	public Cattpo getCattpo() {
+		return cattpo;
+	}
+
+	public void setCattpo(Cattpo cattpo) {
+		this.cattpo = cattpo;
+	}
+
+	public TcMesRepository getTcMesRepository() {
+		return tcMesRepository;
+	}
+
+	public void setTcMesRepository(TcMesRepository tcMesRepository) {
+		this.tcMesRepository = tcMesRepository;
+	}
+
+	public List<TcMes> getListMeses() {
+		return listMeses;
+	}
+
+	public void setListMeses(List<TcMes> listMeses) {
+		this.listMeses = listMeses;
+	}
+
+	public TcMes getTcMes() {
+		return tcMes;
+	}
+
+	public void setTcMes(TcMes tcMes) {
+		this.tcMes = tcMes;
+	}
+
+	public String getIdUser() {
+		return idUser;
+	}
+
+	public void setIdUser(String idUser) {
+		this.idUser = idUser;
+	}
+
+	public Integer getIdEntidad() {
+		return idEntidad;
+	}
+
+	public void setIdEntidad(Integer idEntidad) {
+		this.idEntidad = idEntidad;
+	}
+
+	public Polien getPolien() {
+		return polien;
+	}
+
+	public void setPolien(Polien polien) {
+		this.polien = polien;
+	}
+
+	public PolienRepository getPolienRepository() {
+		return polienRepository;
+	}
+
+	public void setPolienRepository(PolienRepository polienRepository) {
+		this.polienRepository = polienRepository;
+	}
+
+	public Polide getPolide() {
+		return polide;
+	}
+
+	public void setPolide(Polide polide) {
+		this.polide = polide;
+	}
+
+	public DataYearSystemService getDataYearSystemService() {
+		return dataYearSystemService;
+	}
+
+	public void setDataYearSystemService(DataYearSystemService dataYearSystemService) {
+		this.dataYearSystemService = dataYearSystemService;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
+	public ConsultaPolizaSirveImpl getConPolizSirvice() {
+		return conPolizSirvice;
+	}
+
+	public void setConPolizSirvice(ConsultaPolizaSirveImpl conPolizSirvice) {
+		this.conPolizSirvice = conPolizSirvice;
+	}
+
+	public List<Cuenta> getListCuenta() {
+		return listCuenta;
+	}
+
+	public void setListCuenta(List<Cuenta> listCuenta) {
+		this.listCuenta = listCuenta;
+	}
+
+	public Cuenta getCuenta() {
+		return cuenta;
+	}
+
+	public void setCuenta(Cuenta cuenta) {
+		this.cuenta = cuenta;
+	}
+
+	public Integer getMesActivo() {
+		return mesActivo;
+	}
+
+	public void setMesActivo(Integer mesActivo) {
+		this.mesActivo = mesActivo;
+	}
+
+	public boolean isActivButtons() {
+		return activButtons;
+	}
+
+	public void setActivButtons(boolean activButtons) {
+		this.activButtons = activButtons;
+	}
+	
+	
+	public void removeListFl(){
+		if(this.getSelectPolifl().getRenpol() !=null){
+		     listPolifl.remove(this.getSelectPolifl().getIndex());
+		} else {
+			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "Seleeccione un renglon  para poder eliminar");
+		}
+	}
+	@PostConstruct
+	public void init() {
+		year = dataYearSystemService.getYear();
+		polien = polienRepository.getByFirstMonth(this.getUserDetails().getIdSector());
+		listMeses = tcMesRepository.findAll();
+		lisCattpo = cattpoRepository.findAll();
+		listPolide = this.reIndex(conPolizSirvice.findPoliceBy(polien.getTippol(), polien.getMespol(),
+				polien.getConpol(), this.getUserDetails().getIdSector()));
+		sumaAbono = conPolizSirvice.getSumByAbono(polien.getMespol(), polien.getConpol(), polien.getTippol(),
+				this.getUserDetails().getIdSector());
+		sumaCargo = conPolizSirvice.getSumByCargo(polien.getMespol(), polien.getConpol(), polien.getTippol(),
+				this.getUserDetails().getIdSector());
+		sumaA8000 = conPolizSirvice.sumaAbono8000(polien.getTippol(), polien.getMespol(), polien.getConpol(),
+				this.getUserDetails().getIdSector());
+		sumaB8000 = conPolizSirvice.sumaCargo8000(polien.getTippol(), polien.getMespol(), polien.getConpol(),
+				this.getUserDetails().getIdSector());
+		activButtons = Boolean.TRUE;
+		listCuenta = conPolizSirvice.findAllCounts(this.getUserDetails().getIdSector());
+
+	}
+
+	private List<Polide> reIndex(List<Polide> polides) {
+		int index = 0;
+		for (Polide polide : polides) {
+			polide.setIndex(index);
+			polide.setRenpol(BigDecimal.valueOf(index + 1));
+			;
+			index++;
+		}
+		return polides;
+	}
+	
+	
+	private List<Polifl> reIndexPplifl(List<Polifl> polifl) {
+		int index = 0;
+		for (Polifl f : polifl) {
+			f.setIndex(index);
+			f.setRenpol(BigDecimal.valueOf(index + 1));
+			;
+			index++;
+		}
+		return polifl;
+	}
+
+	public void onPegaLoad() {
+		idUser = this.getUserDetails().getUsername();
+		LOGGER.info("id Users:::: " + idUser);
+	}
+
+	public void llenalistSelec() {
+		polideSelect.setIndex(1);
+		polideSelect.setAnopol(dataYearSystemService.getYear());
+		polideSelect.setFecpol(new Date());
+	}
+
+	public void createFirstRow() {
+		LOGGER.info("entra a crear una nueva linea....");
+		int index = 0;
+		if (!isDateNotNull(polien)) {
+			Polide newPolien = new Polide();
+			Polide selected = this.getPolideSelect();
+			if (selected == null) {
+				selected = new Polide();
+				selected.setIndex(index);
+
+				selected.setAnopol(dataYearSystemService.getYear());
+			}
+			if (listPolide.isEmpty()) {
+				this.listPolide.add(selected.getIndex() + 0, newPolien);
+			} else {
+				this.listPolide.add(selected.getIndex() + 1, newPolien);
+			}
+			this.listPolide = this.reIndex(listPolide);
+			this.activateRowEdit(selected.getIndex() + 1);
+			activateRowEdit(selected.getIndex());
+		} else {
+			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "La fecha de generacion de poliza esta vacia.");
+		}
+
+	}
+
+	public void createRow() {
+		LOGGER.info("entra a crear una nueva linea....");
+		LOGGER.info("entra a crear una nueva linea....");
+		int index = 0;
+		Polide newPolien = new Polide();
+		Polide selected = this.getPolideSelect();
+		if (selected == null) {
+			selected = new Polide();
+			selected.setIndex(index);
+
+			selected.setAnopol(dataYearSystemService.getYear());
+		}
+		if (listPolide.isEmpty()) {
+			this.listPolide.add(selected.getIndex() + 0, newPolien);
+		} else {
+			this.listPolide.add(selected.getIndex() + 1, newPolien);
+		}
+		this.listPolide = this.reIndex(listPolide);
+		persistencePoliza(listPolide, selected.getIndex());
+
+		this.activateRowEdit(selected.getIndex() + 1);
+		activateRowEdit(selected.getIndex());
+
+	}
+	
+	
+	public void createFirstRowPolifl() {
+		LOGGER.info("entra a crear una nueva linea....");
+		int index = 0;
+		
+			Polifl newPolifl = new Polifl();
+			Polifl selected = this.getSelectPolifl();
+			if (selected == null) {
+				selected = new Polifl();
+				selected.setIndex(index);
+			}
+			if (listPolifl.isEmpty()) {
+				this.listPolifl.add(selected.getIndex() + 0, newPolifl);
+			} else {
+				this.listPolifl.add(selected.getIndex() + 1, newPolifl);
+			}
+			this.listPolifl = this.reIndexPplifl(listPolifl);
+			this.activateRowEdit(selected.getIndex() + 1);
+			activateRowEdit(selected.getIndex());
+		
+
+	}
+
+	/**
+	 * Activa el modo de edicion en una fila.
+	 * 
+	 * @param index
+	 *            fila a ser activada.
+	 */
+	// public void activateFocusRowEdit(final int index) {
+	// LOGGER.info(":: pone focus al row");
+	// RequestContext.getCurrentInstance().execute();
+	// }
+
+	/**
+	 * Activa el modo de edicion en una fila.
+	 * 
+	 * @param index
+	 *            fila a ser activada.
+	 */
+	public void activateRowEdit(final int index) {
+		LOGGER.info(":: Cerrar cuadro de dialogo ");
+		final StringBuilder text = new StringBuilder();
+		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL);
+		text.append(index);
+		text.append(VIEW_EDIT_ROW_ACTIVATE_PENCIL_COMPLEMENT);
+		text.append(" ");
+		text.append(String.format(FOUS_JQUERY, index));
+		RequestContext.getCurrentInstance().execute(text.toString());
+	}
+
+	public void findBybRow() {
+		LOGGER.info("entra a leer el renglon");
+		LOGGER.info("renglon:: " + renglon);
+		listPolide = this.reIndex(conPolizSirvice.findRow(renglon, polien.getMespol(), polien.getConpol(),
+				polien.getTippol(), this.getUserDetails().getIdSector()));
+	}
+
+	private boolean renderPdf = Boolean.FALSE;
+
+	public boolean isRenderPdf() {
+		return renderPdf;
+	}
+
+	public void setRenderPdf(boolean renderPdf) {
+		this.renderPdf = renderPdf;
+	}
+
+	private String filePdfPath = "/tmp/m-dpolizasd.pdf";
+
+	public String getFilePdfPath() {
+		return filePdfPath;
+	}
+
+	public void setFilePdfPath(String filePdfPath) {
+		this.filePdfPath = filePdfPath;
+	}
+
+	private boolean validate() {
+		return Boolean.TRUE;
+	}
+
+	/**
+	 * Ruta donde se encuentra el archivo jasper del reporte de cuentas
+	 */
+	// @Value("${view.report.path.jasper.poliza}")
+	private static final String REPORT_PATH_JASPER_POLICY = FrontProperty
+			.getPropertyValue("view.report.path.jasper.poliza");
+
+	/**
+	 * Nombre del reporte en texto plano
+	 */
+	// @Value("${file.name.report.txt.poliza}")
+	private static final String REPORT_NAME = FrontProperty.getPropertyValue("file.name.report.txt.poliza");
+
+	/**
+	 * Mensaje Error
+	 */
+	// @Value("${catalog.message.error}")
+	protected static final String MESSAGE_ERROR = FrontProperty.getPropertyValue("catalog.message.error");
+
+	@ManagedProperty("#{polizaService}")
+	private PolizaService polizaService;
+
+	public PolizaService getPolizaService() {
+		return polizaService;
+	}
+
+	public void setPolizaService(PolizaService polizaService) {
+		this.polizaService = polizaService;
+	}
+
+	public void buttonAction(ActionEvent actionEvent) {
+
+		if (validate()) {
+			this.setRenderPdf(Boolean.TRUE);
+			this.streamedContent = new DefaultStreamedContent(
+					this.polizaService.getReportByTipopolMespolConpol(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
+							"escudo_ecatepec.png", polien.getTippol(), polien.getMespol(), polien.getConpol(), 1));
+			try {
+				this.filePdfPath = this.polizaService.savePDFFile(REPORT_PATH_JASPER_POLICY, REPORT_NAME,
+						"escudo_ecatepec.png", polien.getTippol(), polien.getMespol(), polien.getConpol(), 1);
+			} catch (NumberFormatException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "Error al generar el archivo PDF.");
+			}
+		} else {
+			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "Error al capturar los parametros.");
+		}
+	}
+
+	private Integer me;
+
+	public Integer getMe() {
+		return me;
+	}
+
+	public void setMe(Integer me) {
+		this.me = me;
+	}
+
+	public void findWrongPolicy() {
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("Consulta Polizas incorrectas" + me);
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		LOGGER.info("::::::::::::::::::::::::::::::::.");
+		if (me == null) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+					"No existe informacion para esta Poliza");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} else {
+			listIncorrectas = conPolizSirvice.wrongPolicy(me, this.getUserDetails().getIdSector());
+
+		}
+
+	}
+
+	public void findPolice() {
+		LOGGER.info("entra a consulta el detalle");
+
+		LOGGER.info("tipo::::::: " + polien.getTippol());
+		LOGGER.info("mes::::::: " + polien.getMespol());
+		LOGGER.info("tnumero:::: " + polien.getConpol());
+		listPolide = polideRepository.getByAllDetail(polien.getMespol(), polien.getConpol(), polien.getTippol(),
+				this.getUserDetails().getIdSector());
+		Polien encabezado = polienRepository.getPoliza(polien.getMespol(), polien.getConpol(), polien.getTippol(),
+				this.getUserDetails().getIdSector());
+		sumaAbono = conPolizSirvice.getSumByAbono(polien.getMespol(), polien.getConpol(), polien.getTippol(),
+				this.getUserDetails().getIdSector());
+		sumaCargo = conPolizSirvice.getSumByCargo(polien.getMespol(), polien.getConpol(), polien.getTippol(),
+				this.getUserDetails().getIdSector());
+		sumaA8000 = conPolizSirvice.sumaAbono8000(polien.getTippol(), polien.getMespol(), polien.getConpol(),
+				this.getUserDetails().getIdSector());
+		sumaB8000 = conPolizSirvice.sumaCargo8000(polien.getTippol(), polien.getMespol(), polien.getConpol(),
+				this.getUserDetails().getIdSector());
+		activButtons = Boolean.TRUE;
+		try {
+			if (encabezado.getTippol().equals(null)) {
+				try {
+					init();
+				} catch (NullPointerException e) {
+					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+							"No existe informacion para esta Poliza");
+					FacesContext.getCurrentInstance().addMessage(null, message);
+				}
+			} else {
+				polien = encabezado;
+			}
+		} catch (Exception e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+					"La poliza no se encuentra en la base");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
+
+	}
+
+	public void createPolicy() {
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("entra a createPolicy");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info(":::::::::" + this.getUserDetails().getIdSector());
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+
+		mesActivo = conPolizSirvice.isPoliceActive(polien.getMespol(), this.getUserDetails().getIdSector());
+		if (mesActivo > 0) {
+			listPolide.clear();
+			int maxNum = polideRepository.countPoliza(polien.getMespol(), polien.getTippol(),
+					this.getUserDetails().getIdSector());
+			polien.setTippol(polien.getTippol());
+			// polide.setConpol(null);
+			polien.setFecafec(null);
+			polien.setStaafe(null);
+			polien.setStapol(null);
+			polien.setCcontrol(BigDecimal.valueOf(0.0));
+			polien.setPolclv1(null);
+			polien.setFecpol(null);
+			polien.setClvpol(null);
+			polien.setCdebe(BigDecimal.valueOf(0.0));
+			polien.setChaber(BigDecimal.valueOf(0.0));
+			sumaAbono = "0.0";
+			sumaCargo = "0.0";
+			sumaA8000 = "0.0";
+			sumaB8000 = "0.0";
+
+			activButtons = Boolean.FALSE;
+			polien.setFecpol(null);
+			polien.setConpol(maxNum);
+
+		} else {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El mes no esta activo");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
+	}
+
+	public void cuentahanged(ValueChangeEvent e) {
+		// assign new value to localeCode
+		if (null != e.getNewValue()) {
+			this.getPolideSelect();
+		} else {
+			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, "");
+		}
+		activateRowEdit(0);
+	}
+
+	public void onDateSelect(SelectEvent event) {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		facesContext.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
+	}
+
+	// @Value("${catalog.message.info}")
+	protected static final String MESSAGE_INFO = FrontProperty.getPropertyValue("catalog.message.info");
+
+	public void eliminarPoliza() {
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("entra a elimnar polizas");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::");
+		Poliza poliza = polizaService.delete(polien, this.getUserDetails().getUsername(),
+				this.getUserDetails().getIdSector(), this.getUserDetails().getUsername());
+
+		if (poliza.getErrorCode() > 0) {
+
+			generateNotificationFront(SEVERITY_INFO, MESSAGE_INFO, poliza.getMsgError());
+		} else {
+			generateNotificationFront(SEVERITY_ERROR, MESSAGE_ERROR, poliza.getMsgError());
+		}
+	}
+
+	public Polide getPolideSelect() {
+		return polideSelect;
+	}
+
+	public void setPolideSelect(Polide polideSelect) {
+		this.polideSelect = polideSelect;
+	}
+
+	public void findCuentasPolizas(String cuenta, String sCta, String ssCta, String sssCta, String ssssCta) {
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		LOGGER.info("Eenrta a revisar el caralogo de cuentas...");
+		LOGGER.info("Cuenta::: " + cuenta);
+		LOGGER.info("sCuenta::::::::" + sCta);
+		LOGGER.info("ssCuenta:::::::" + ssCta);
+		LOGGER.info("sssCuenta::::::" + sssCta);
+		LOGGER.info("ssssCuenta::::::" + ssssCta);
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::");
+		listCuenta = conPolizSirvice.findCuentas(cuenta, sCta, ssCta, sssCta, ssssCta, this.getUserDetails().getIdSector());
+	}
+
+	public void findAllCounts() {
+		listCuenta = conPolizSirvice.findAllCounts(this.getUserDetails().getIdSector());
+	}
+
+	public void persistencePoliza(List<Polide> listPoliSelect, Integer index) {
+
+		String clvPol = polien.getTippol() + " " + StringUtils.leftPad(String.valueOf(polien.getMespol()), 2, "0") + " "
+				+ StringUtils.leftPad(String.valueOf(polien.getConpol()), 4, "0");
+		polien.setClvpol(clvPol);
+		polien.setIdsector(this.getUserDetails().getIdSector());
+		polien.setUserid(this.getUserDetails().getUsername());
+		polien.setCappol(this.getUserDetails().getUsername());
+		polien.setAnopol(dataYearSystemService.getYear());
+		polien.setFecafec(Calendar.getInstance().getTime());
+		polien.setFeccap(Calendar.getInstance().getTime());
+		polien.setStaafe("N");
+		// if (sumaCargo.equals(sumaAbono) &&
+		// sumaAbono.equals(polien.getCcontrol().toString())
+		// && sumaCargo.equals(polien.getCcontrol() .toString()) &&
+		// sumaA8000.equals(polien.getCcontrol().toString()) &&
+		// sumaB8000.equals(polien.getCcontrol().toString())) {
+		// polien.setStapol("A");
+		// } else {
+		// polien.setStapol("I");
+		// }
+		suma1 = suma1.add(listPoliSelect.get(index).getCanpol());
+
+		suma2 = suma2.add(listPoliSelect.get(index).getCanpolh());
+
+		polienRepository.save(polien);
+
+		for (Polide detalles : listPoliSelect) {
+
+			detalles.setIdsector(this.getUserDetails().getIdSector());
+			detalles.setUserid(this.getUserDetails().getUsername());
+			detalles.setMespol(polien.getMespol());
+			detalles.setTippol(polien.getTippol());
+			detalles.setConpol(polien.getConpol());
+			detalles.setAnopol(dataYearSystemService.getYear());
+			polideRepository.save(detalles);
+
+		}
+
+	}
+
+	public void onCountExRowDblClckSelect(final SelectEvent event) {
+		this.changeCountExp();
+		// rest of your logic
+	}
+
+	/*
+	 * 
+	 */
+	public void changeCountExp() {
+		LOGGER.info(":: Cambiar Cunta ");
+		rowSelected.setCuenta(mapCuentaExp.get(rowSelected.getIndex()).getCuenta());
+		rowSelected.setScuenta(mapCuentaExp.get(rowSelected.getIndex()).getScuenta());
+		rowSelected.setSscuenta(mapCuentaExp.get(rowSelected.getIndex()).getSscuenta());
+		rowSelected.setSsscuenta(mapCuentaExp.get(rowSelected.getIndex()).getSsscuenta());
+		rowSelected.setSssscuenta(mapCuentaExp.get(rowSelected.getIndex()).getSssscuenta());
+		rowSelected.setNomcta(mapCuentaExp.get(rowSelected.getIndex()).getNomcta());
+		activateRowEdit(rowSelected.getIndex());
+	}
+
+	public boolean isDateNotNull(Polien polien) {
+		return null != polien.getFecpol();
+	}
+
+	public CuentaPolizaDataModel getCuentaPolizaDataModel() {
+		return cuentaPolizaDataModel;
+	}
+
+	public void setCuentaPolizaDataModel(CuentaPolizaDataModel cuentaPolizaDataModel) {
+		cuentaPolizaDataModel.setIdSector(this.getUserDetails().getIdSector());
+		this.cuentaPolizaDataModel = cuentaPolizaDataModel;
+	}
+	
+	public void onCuentaRowDblClckSelect(final SelectEvent event) {
+		Cuenta buff = (Cuenta)event.getObject();
+		polideSelect.setCuenta(buff.getCuenta());
+		polideSelect.setScta(buff.getScuenta());
+		polideSelect.setSscta(buff.getSscuenta());
+		polideSelect.setSsscta(buff.getSsscuenta());
+		polideSelect.setSssscta(buff.getSssscuenta());
+		polideSelect.setConcep(buff.getNomcta());
+		activateRowEdit(polideSelect.getIndex());
+	}
+
+}

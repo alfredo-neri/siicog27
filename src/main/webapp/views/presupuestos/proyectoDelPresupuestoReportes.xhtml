@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Reportes Proyecto del Presupuesto de Egresos"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:accordionPanel id="tabs">
+						<p:ajax event="tabChange"
+							listener="#{proyectoPresupuestarioReportesMB.onTabChange}"
+							update=":form1:growlReportador, :form1:tabs, :form1:inlinePdf" />
+
+						<p:tab id="pbrm01a"
+							title="Programa Anual Dimensión Administrativo del Gasto PbRM-01a">
+							<p:commandButton id="generateportepdf1"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{proyectoPresupuestarioReportesMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton> &nbsp;
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload
+									value="#{proyectoPresupuestarioReportesMB.fileXls}" />
+							</h:commandLink>
+						</p:tab>
+
+						<p:tab id="pbrm04a"
+							title="Presupuesto de Egresos Detallado PbRM-04a">
+							<p:commandButton id="generateportepdf2"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{proyectoPresupuestarioReportesMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>&nbsp;
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload
+									value="#{proyectoPresupuestarioReportesMB.fileXls}" />
+							</h:commandLink>
+						</p:tab>
+
+						<p:tab id="pbrm04b"
+							title="Presupuesto de Egresos por Objeto del Gasto y Dependencia PbRM-04b">
+							<p:commandButton id="generateportepdf3"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{proyectoPresupuestarioReportesMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>&nbsp;
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload
+									value="#{proyectoPresupuestarioReportesMB.fileXls}" />
+							</h:commandLink>
+						</p:tab>
+
+						<p:tab id="pbrm04c"
+							title="Presupuesto de Egresos Global Calendarizado PbRM-04c">
+							<p:commandButton id="generateportepdf4"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{proyectoPresupuestarioReportesMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>&nbsp;
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload
+									value="#{proyectoPresupuestarioReportesMB.fileXls}" />
+							</h:commandLink>
+						</p:tab>
+
+						<p:tab id="pbrm04d"
+							title="Car&aacute;tula de Presupuesto de Egresos PbRM-04d">
+							<p:commandButton id="generateportepdf5"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{proyectoPresupuestarioReportesMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>&nbsp;
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload
+									value="#{proyectoPresupuestarioReportesMB.fileXls}" />
+							</h:commandLink>
+						</p:tab>
+
+						<p:tab title="Programa Anual de Adquisiciones PbRM-06" id="pbrm06">
+							<h:panelGrid columns="2" cellpadding="10"
+								styleClass="col-centered row-centered">
+								<h:outputText value="Mostrar Saldos Cero:" />
+								<p:selectOneMenu id="SaldosInput" editable="false"
+									value="#{proyectoPresupuestarioReportesMB.saldoCero}">
+									<f:selectItem itemValue="N" itemLabel="No" />
+									<f:selectItem itemValue="S" itemLabel="Si" />
+								</p:selectOneMenu>
+							</h:panelGrid>&nbsp;
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{proyectoPresupuestarioReportesMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>&nbsp;
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload
+									value="#{proyectoPresupuestarioReportesMB.fileXls}" />
+							</h:commandLink>
+						</p:tab>
+						<p:tab id="pbrm07b"
+							title="Programa Anual de Reparaciones y Mantenimientos PbRM-07b">
+							<p:commandButton id="generateportepdf7"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{proyectoPresupuestarioReportesMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>&nbsp;
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="../reports/excel.png" width="24" />
+								<p:fileDownload
+									value="#{proyectoPresupuestarioReportesMB.fileXls}" />
+							</h:commandLink>
+						</p:tab>
+
+					</p:accordionPanel>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{proyectoPresupuestarioReportesMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{proyectoPresupuestarioReportesMB.uuid}&amp;filename=#{proyectoPresupuestarioReportesMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+						desplegar el PDF. </object>
+
+					</p:panel>
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../reports/indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

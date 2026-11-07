@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="datosimpresion" enctype="multipart/form-data">
+				<p:growl id="msgs" showDetail="true" />
+				<p:panel id="panel" header="Datos de Impresi&oacute;n"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:tabView dynamic="true" cache="true" effect="fold" id="tabs">
+						<p:tab title="Datos de Impresión">
+
+							<p:panelGrid id="dataYear"
+								styleClass="col-centered row-centered ui-noborder">
+								<p:row>
+									<p:column style="text-align:right;">
+										<p:outputLabel value="Nombre del Municipio:"
+											rendered="#{datosImpresionMB.gemUser.idSector == 1}" />
+										<p:outputLabel value="Nombre de la Dependencia:"
+											rendered="#{datosImpresionMB.gemUser.idSector == 2}" />
+									</p:column>
+									<p:column style="text-align:left; font-weight:bold;">
+										<p:inplace editor="true" event="dblclick">
+											<p:inputText value="#{datosImpresionMB.conctb.nomDep}"
+												required="true" label="text" />
+											<p:ajax event="save"
+												listener="#{datosImpresionMB.updateConctb}"
+												update="dataYear, :datosimpresion:msgs" />
+										</p:inplace>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{datosImpresionMB.gemUser.idSector == 1}">
+									<p:column style="text-align:right; font-weight:bold;">
+										<p:outputLabel value="Organismo:" />
+									</p:column>
+									<p:column style="text-align:left; font-weight:bold;">
+										<p:inplace id="event" label="#{datosImpresionMB.organismo}"
+											effectSpeed="fast" event="dblclick">
+											<p:selectOneMenu value="#{datosImpresionMB.claveOrganimo}">
+												<f:selectItem itemLabel="Ayuntamiento" itemValue="0" />
+												<f:selectItem itemLabel="Organismo de Agua" itemValue="2" />
+												<f:selectItem itemLabel="DIF" itemValue="3" />
+												<f:selectItem itemLabel="Organismo del Deporte"
+													itemValue="4" />
+												<p:ajax event="change"
+													listener="#{datosImpresionMB.updateOrganismo}"
+													update="dataYear, :datosimpresion:msgs" />
+											</p:selectOneMenu>
+										</p:inplace>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align:right;">
+										<p:outputLabel value="Clave Entidad:" />
+									</p:column>
+									<p:column style="text-align:left; font-weight:bold;">
+										<p:inplace editor="true" event="dblclick">
+											<p:inputText value="#{datosImpresionMB.conctb.clave}"
+												required="true" label="text" />
+											<p:ajax event="save"
+												listener="#{datosImpresionMB.updateConctb}"
+												update="dataYear, :datosimpresion:msgs" />
+										</p:inplace>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align:right;">
+										<p:outputLabel value="R.F.C:" />
+									</p:column>
+									<p:column style="text-align:left; font-weight:bold;">
+										<p:inplace editor="true" event="dblclick">
+											<p:inputText value="#{datosImpresionMB.conctb.rfc}"
+												required="true" label="text" />
+											<p:ajax event="save"
+												listener="#{datosImpresionMB.updateConctb}"
+												update="dataYear, :datosimpresion:msgs" />
+										</p:inplace>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column style="text-align:right;">
+										<p:outputLabel value="Año:" />
+									</p:column>
+									<p:column style="text-align:left;">
+										<p:outputLabel value="#{datosImpresionMB.conctb.anoemp}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<h:panelGrid columns="2" cellpadding="10">
+
+								<p:dataTable var="firma"
+									value="#{datosImpresionMB.listPuestosFirma}" rows="10"
+									editable="true" id="tableFirmas" paginator="true"
+									rowIndexVar="index"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+									<p:ajax event="rowEditInit"
+										oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});" />
+
+									<p:ajax event="rowEdit"
+										listener="#{datosImpresionMB.onRowEdit}"
+										update=":datosimpresion:tabs:tableFirmas:, :datosimpresion:msgs"
+										oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});" />
+
+									<p:ajax event="rowEditCancel"
+										listener="#{datosImpresionMB.onRowCancel}"
+										update=":datosimpresion:tabs:tableFirmas:, :datosimpresion:msgs"
+										onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});" />
+
+									<p:column headerText="Clave" style="width:10%">
+										<h:outputText value="#{firma.puesto.clave.clave}" />
+									</p:column>
+
+									<p:column headerText="Puesto" style="width:40%">
+										<p:cellEditor>
+											<f:facet name="output">
+												<h:outputText value="#{firma.puesto.puesto}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText id="firma-puesto"
+													value="#{firma.puesto.puesto}" style="width:96%"
+													maxlength="100" />
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+
+									<p:column headerText="Nombre" style="width:50%">
+										<p:cellEditor>
+											<f:facet name="output">
+												<h:outputText value="#{firma.nombre}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText id="firma-name" value="#{firma.nombre}"
+													style="width:96%" maxlength="100" />
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+									<p:column style="width:35px">
+										<p:rowEditor />
+									</p:column>
+								</p:dataTable>
+
+							</h:panelGrid>
+						</p:tab>
+
+						<p:tab title="Configuraci&oacute;n de Firmas por Reporte"
+							id="tab-firmas-reportes">
+
+							<h:panelGrid id="pnl-firmas">
+
+								<p:dataTable id="reportesTable" var="reporte"
+									rowKey="#{reporte.id}" value="#{datosImpresionMB.listReportes}"
+									paginator="true" rows="10" editable="true"
+									selectionMode="single" rowIndexVar="indexRow"
+									selection="#{datosImpresionMB.reporteSelected}"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+									<f:facet name="header">
+										<p:commandButton process="reportesTable" id="btnEdit"
+											update=":datosimpresion:tabs:reportesTable,:datosimpresion:msgs,:datosimpresion:tabs:panelCatalogFinancialSources"
+											value="Editar" actionListener="openDialog()"
+											disabled="#{!datosImpresionMB.rowSelected}"
+											oncomplete="PF('catalogLocalidadesDlg').show(); PF('localidaesSourcesWdg').clearFilters();" />
+									</f:facet>
+
+									<p:ajax event="rowSelect"
+										listener="#{datosImpresionMB.onRowSelect}"
+										update=":datosimpresion:tabs:reportesTable,:datosimpresion:msgs" />
+
+									<p:column headerText="#" width="5%">
+										<h:outputText value="#{indexRow +1}" />
+									</p:column>
+
+
+									<p:column headerText="Nombre del Reporte" width="45%">
+										<h:outputText value="#{reporte.nameReport}" />
+									</p:column>
+
+									<p:column headerText="Firmas" width="15%">
+										<h:outputText value="#{reporte.firmas}" />
+									</p:column>
+
+								</p:dataTable>
+
+							</h:panelGrid>
+							<p:dialog header="Cat&aacute;logo de Claves"
+								widgetVar="catalogLocalidadesDlg" resizable="false" width="40%"
+								height="500" showEffect="clip" hideEffect="clip" modal="true">
+
+								<p:outputPanel id="panelCatalogFinancialSources" layout="block"
+									style="text-align:left">
+
+									<p:outputLabel
+										value="Para una multi selecci&oacute;n mantener presionada la tecla Shift" />
+									<p:outputLabel
+										value="Solo se permite asignar un m&aacute;ximo de 5 firmas" />
+
+									<p:dataTable id="financialProgram" var="source"
+										paginatorPosition="top" selectionMode="multiple"
+										value="#{datosImpresionMB.listClavesFirma}"
+										styleClass="et_datatable" paginator="true" rows="10"
+										rowKey="#{source.id}" emptyMessage="No hay registros"
+										rowIndexVar="rowIndex" widgetVar="localidaesSourcesWdg"
+										selection="#{datosImpresionMB.listClaveSelected}"
+										filteredValue="#{datosImpresionMB.listClaveFiltered}"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+										<p:column headerText="Clave" width="20%" exportable="true"
+											filterMatchMode="contains" filterBy="#{source.clave}">
+											<h:outputText value="#{source.clave}" />
+										</p:column>
+										<p:column headerText="Descripci&oacute;n" style="width:80%"
+											filterMatchMode="contains" filterBy="#{source.descripcion}">
+											<h:outputText value="#{source.descripcion}" />
+										</p:column>
+
+										<f:facet name="footer">
+											<p:commandButton value="Aceptar"
+												actionListener="#{datosImpresionMB.changeFirmas()}"
+												oncomplete="PF('catalogLocalidadesDlg').hide();"
+												update=":datosimpresion:tabs:reportesTable,:datosimpresion:msgs" />
+
+											<p:commandButton value="Cancelar"
+												oncomplete="PF('catalogLocalidadesDlg').hide();" />
+
+											<p:commandButton value="Limpiar Selección"
+												rendered="#{datosImpresionMB.listClaveSelected.size() > 0}"
+												oncomplete="PF('localidaesSourcesWdg').unselectAllRows();" />
+										</f:facet>
+
+									</p:dataTable>
+								</p:outputPanel>
+							</p:dialog>
+
+						</p:tab>
+
+						<p:tab title="Configuraci&oacute;n de Logos" id="tab-logos">
+
+							<h:panelGrid columns="2"
+								styleClass="col-centered row-centered ui-noborder">
+
+								<p:panel
+									header="#{datosImpresionMB.gemUser.idSector == 1 ? 'Logo del Ayuntamiento':'Logo Izquierdo'}">
+									<p:fileUpload
+										fileUploadListener="#{datosImpresionMB.handleFileUpload}"
+										mode="advanced" dragDropSupport="false" uploadLabel="Cargar"
+										cancelLabel="Cancelar" label="Seleccionar"
+										update="datosimpresion:msgs" sizeLimit="10000000000"
+										allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+								</p:panel>
+
+								<p:panel
+									header="#{datosImpresionMB.gemUser.idSector == 1 ? 'Logo del Organismo':'Logo Derecho'}">
+									<p:fileUpload
+										fileUploadListener="#{datosImpresionMB.uploadImageRigth}"
+										mode="advanced" dragDropSupport="false" uploadLabel="Cargar"
+										cancelLabel="Cancelar" label="Seleccionar"
+										update=":datosimpresion:msgs" sizeLimit="10000000000"
+										allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+								</p:panel>
+
+							</h:panelGrid>
+						</p:tab>
+
+						<p:tab title="Administración de Puestos" id="tab-puestos">
+							<h:panelGrid cellpadding="10">
+
+								<p:panel id="toggleable" header="Nuevo Puesto" toggleable="true"
+									toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+									style="margin-bottom:20px; text-align:right !important;"
+									collapsed="true"
+									rendered="#{!empty datosImpresionMB.listClaves}"
+									styleClass="green col-md-6 col-centered row-centered">
+
+									<h:panelGrid>
+										<p:row>
+											<p:column>
+												<h:outputLabel for="clave" value="Clave:" style="width:30%" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="clave"
+													value="#{datosImpresionMB.clave.id}" dynamic="true"
+													style="width:70%">
+													<f:selectItems value="#{datosImpresionMB.listClaves}"
+														var="clave" itemLabel="#{clave.clave}"
+														itemValue="#{clave.id}" />
+												</p:selectOneMenu>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<h:outputLabel for="Puesto" value="Puesto:"
+													style="width:30%" />
+											</p:column>
+											<p:column>
+												<p:inputText id="puesto" size="40"
+													value="#{datosImpresionMB.puesto.puesto}" label="puesto"
+													style="width:70%">
+												</p:inputText>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:commandButton
+												style="display: block; margin-left: 50%; margin-top: 10px"
+												actionListener="#{datosImpresionMB.newPuesto}"
+												value="Guardar"
+												update=":datosimpresion:tabs:tableFirmas:, :datosimpresion:tabs:toggleable, :datosimpresion:tabs, :datosimpresion:msgs" />
+										</p:row>
+
+									</h:panelGrid>
+
+								</p:panel>
+
+								<p:dataTable rows="10" id="singleDT" selectionMode="single"
+									editable="true" var="puesto"
+									value="#{datosImpresionMB.listPuestos}"
+									rowKey="#{puesto.index}" paginator="true" rowIndexVar="index"
+									style="margin-bottom:0"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+									<f:facet name="header">Listado de Puestos</f:facet>
+
+									<p:ajax event="rowEditInit"
+										oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});" />
+
+									<p:ajax event="rowEdit"
+										listener="#{datosImpresionMB.onRowEditPuesto}"
+										update=":datosimpresion:tabs:singleDT, :datosimpresion:msgs"
+										oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});" />
+
+									<p:ajax event="rowEditCancel"
+										update=":datosimpresion:tabs:singleDT, :datosimpresion:msgs"
+										onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});" />
+
+									<!-- <p:column headerText="#" style="width:10%;text-align:center">
+										<h:outputText value="#{index +1}" />
+									</p:column> -->
+									<p:column headerText="Clave"
+										style="width:15%;text-align:center">
+										<h:outputText value="#{puesto.clave.clave}" />
+									</p:column>
+									<p:column headerText="Puesto"
+										style="width:75%;text-align:center">
+
+										<p:cellEditor>
+											<f:facet name="output">
+												<h:outputText value="#{puesto.puesto}" />
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText id="puesto-name" value="#{puesto.puesto}"
+													style="width:96%" label="Puesto" />
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+									<!-- <p:column style="width:35px">
+										<p:rowEditor />
+									</p:column> -->
+									<p:column headerText="Visualizar"
+										style="width:10%;text-align:center">
+										<p:commandButton value="Si" id="btn-yes"
+											rendered="#{!empty puesto.firmas}"
+											update=":datosimpresion:tabs:singleDT, :datosimpresion:tabs:tableFirmas, :datosimpresion:tabs:toggleable, :datosimpresion:msgs"
+											action="#{datosImpresionMB.update(puesto)}"
+											style="margin-right:20px;" styleClass="ui-priority-primary" />
+										<p:commandButton value="No" id="btn-no"
+											rendered="#{empty puesto.firmas}"
+											update=":datosimpresion:tabs:singleDT, :datosimpresion:tabs:tableFirmas, :datosimpresion:tabs:toggleable, :datosimpresion:msgs"
+											action="#{datosImpresionMB.update(puesto)}"
+											style="margin-right:20px;" />
+									</p:column>
+								</p:dataTable>
+							</h:panelGrid>
+						</p:tab>
+
+					</p:tabView>
+
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

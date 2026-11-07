@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Cambio de Fecha"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+						<p:panelGrid styleClass="ui-noborder col-centered row-centered"
+							id="panel-filtros">
+							<p:row>
+								<p:column>
+									<h:outputText value="Año" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Tipo" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Mes" />
+								</p:column>
+								<p:column>
+									<h:outputText value="N&uacute;mero" />
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<p:inputText readonly="true" value="#{cambioFechaMB.anopol}"
+										size="4" id="anopol" disabled="true" />
+								</p:column>
+								<p:column>
+									<p:selectOneMenu editable="false"
+										value="#{cambioFechaMB.tippol}">
+										<f:selectItem itemValue="C" itemLabel="C" />
+										<f:selectItem itemValue="D" itemLabel="D" />
+										<f:selectItem itemValue="I" itemLabel="I" />
+										<f:selectItem itemValue="E" itemLabel="E" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:selectOneMenu editable="false"
+										value="#{cambioFechaMB.mespol}">
+										<f:selectItems value="#{cambioFechaMB.listMeses}" var="mes"
+											itemLabel="#{mes.periodo}" itemValue="#{mes.periodo}" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:inputText id="text1" size="6" maxlength="6"
+										value="#{cambioFechaMB.conpol}" required="true"
+										requiredMessage="Favor de ingresas un Número de póliza">
+										<pe:keyFilter regEx="/[\d]/" />
+									</p:inputText>
+								</p:column>
+								<p:column>
+									<p:commandButton onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock();"
+										actionListener="#{cambioFechaMB.obtenerPolien()}"
+										value="Correcto"
+										update=":form1:growlReportador form1:panel-filtros"
+										styleClass="btn btn-default pull-right">
+									</p:commandButton>
+								</p:column>
+							</p:row>
+
+							<p:row rendered="#{cambioFechaMB.rendered}">
+								<p:column colspan="4">
+									<h:outputText value="Nueva Fecha de la Póliza" />
+								</p:column>
+							</p:row>
+							<p:row rendered="#{cambioFechaMB.rendered}">
+								<p:column colspan="4">
+									<p:calendar id="restricted" locale="es"
+										value="#{cambioFechaMB.polien.fecpol}"
+										mindate="#{cambioFechaMB.minDate}"
+										maxdate="#{cambioFechaMB.maxDate}" pattern="dd/MM/yyyy">
+										<f:convertDateTime type="date" dateStyle="short"
+											pattern="dd/MM/yyyy" />
+									</p:calendar>
+								</p:column>
+								<p:column>
+									<p:commandButton onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock();"
+										actionListener="#{cambioFechaMB.guardarCambios}"
+										value="Guardar"
+										update=":form1:growlReportador :form1:panel-filtros"
+										styleClass="btn btn-default pull-right" style="width: 6em;">
+									</p:commandButton>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panelGrid>
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../reports/indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+	<script type="text/javascript">    
+    PrimeFaces.locales['es'] = {
+        closeText: 'Cerrar',
+        prevText: 'Anterior',
+        nextText: 'Siguiente',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        dayNamesMin: ['D', 'L', 'M', 'X ', 'J', 'V ', 'S'],
+        weekHeader: 'Semana',
+        FirstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        timeOnlyTitle: 'Nur Zeit',
+        timeText: 'Zeit',
+        hourText: 'Stunde',
+        minuteText: 'Minute',
+        secondText: 'Sekunde',
+        currentText: 'Aktuelles Datum',
+        ampm: false,
+        month: 'Monat',
+        week: 'Woche',
+        day: 'Tag',
+        allDayText: 'Ganzer Tag'
+    };
+</script>
+</h:body>
+</html>

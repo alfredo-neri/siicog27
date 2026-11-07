@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogAccountsMB.onPageLoad}"
+					update=":form1:display_1, :form1:objects"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock()" />
+				<p:remoteCommand name="consultAccountsMajor"
+					actionListener="#{catalogAccountsMB.consultAccountsMajor}"
+					onstart="PF('accountsMajorDT').clearFilters();"
+					oncomplete="PF('catalogtAccountsMajorDlg').show()"
+					update=":form1:accountsMajor" />
+				<p:remoteCommand name="consultDependencies"
+					actionListener="#{catalogAccountsMB.consultDependencies}"
+					onstart="PF('dependenciesDT').clearFilters();"
+					oncomplete="PF('catalogDependenciesDlg').show()"
+					update=":form1:dependencies" />
+				<p:remoteCommand name="consultPrograms"
+					actionListener="#{catalogAccountsMB.consultPrograms}"
+					onstart="PF('programsDT').clearFilters();"
+					oncomplete="PF('catalogProgramsDlg').show()"
+					update=":form1:programs" />
+				<p:remoteCommand name="consultNatureExp"
+					actionListener="#{catalogAccountsMB.consultNatureExp}"
+					onstart="PF('natureExpDT').clearFilters();"
+					oncomplete="PF('catalogNatureExpDlg').show()"
+					update=":form1:tableNatureExp" />
+				<p:remoteCommand name="cancelRow"
+					actionListener="#{catalogAccountsMB.onRowCancel}"
+					update="form1:objects, :form1:messagesEdit" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+
+
+
+				<p:panel id="panel"
+					header="Mantenimiento al Cat&aacute;logo de Cuentas"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<h:panelGrid id="display_1" columns="6" cellpadding="4"
+						styleClass="col-centered">
+
+						<h:outputText value="CUENTA:" for="accountInput"
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+						<p:inputText id="accountInput" styleClass="form-control"
+							value="#{catalogAccountsMB.beanFind.cuenta}" maxlength="4"
+							validatorMessage="CUENTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,4})" for="accountInput"></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="SCTA:" for="saccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="saccountInput" styleClass="form-control"
+							value="#{catalogAccountsMB.beanFind.scuenta}" maxlength="10"
+							validatorMessage="SCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9a-zA-Z]{0,10})"
+								for="saccountInput"></f:validateRegex>
+
+						</p:inputText>
+
+						<h:outputText value="SSCTA:" for="ssaccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="ssaccountInput" styleClass="form-control"
+							value="#{catalogAccountsMB.beanFind.sscuenta}" maxlength="15"
+							validatorMessage="SSCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,15})" for="ssaccountInput"></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="SSSCTA:" for="sssaccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="sssaccountInput" styleClass="form-control"
+							value="#{catalogAccountsMB.beanFind.ssscuenta}"
+							style="margin-top: 10px;" maxlength="4"
+							validatorMessage="SSSCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,4})" for="sssaccountInput"></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="SSSSCTA:" for="ssssaccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="ssssaccountInput" styleClass="form-control"
+							value="#{catalogAccountsMB.beanFind.sssscuenta}"
+							style="margin-top: 10px;" maxlength="3"
+							validatorMessage="SSSSCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,3})" for="ssssaccountInput "></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="TITULO:" for="titleInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="titleInput" styleClass="form-control"
+							value="#{catalogAccountsMB.beanFind.nomcta}"
+							style="margin-top: 10px;" maxlength="250">
+
+						</p:inputText>
+
+						<p:outputPanel layout="block" style="text-align:center">
+							<br />
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+								actionListener="#{catalogAccountsMB.findValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" id="search" />
+
+							<p:commandButton value="Resetear"
+								style="padding: 5px; margin-left: 15px; position: absolute; "
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:accountInput"
+								immediate="true"
+								actionListener="#{catalogAccountsMB.findAllValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:accountInput').value=''; document.getElementById('form1:saccountInput').value=''; document.getElementById('form1:ssaccountInput').value='';  document.getElementById('form1:sssaccountInput').value=''; document.getElementById('form1:ssssaccountInput').value=''; document.getElementById('form1:titleInput').value='';" />
+
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+				<p:panel id="panelButton" style="background-color: #E8ECED;">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+						actionListener="#{catalogAccountsMB.insertRow}"
+						style="margin-left: 47%; padding: 1px;"
+						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});"
+						onmousedown="jQuery('.ui-paginator-first').click();" />
+				</p:panel>
+
+				<p:focus context="objects" id="focusTable" />
+
+				<div class="table-responsive table-bordered table-condensed">
+					<p:dataTable id="objects" var="object"
+						value="#{catalogAccountsMB.list}" styleClass="et_datatable"
+						emptyMessage="No hay registros" editable="true" paginator="true"
+						rows="16" resizableColumns="true" scrollable="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selectionMode="single"
+						selection="#{catalogAccountsMB.rowSelected}" rowKey="#{object.id}">
+
+						<f:facet name="header">Mantenimiento al Cat&aacute;logo de Cuentas</f:facet>
+
+						<p:ajax event="rowEditInit"
+							listener="#{catalogAccountsMB.onInitRowEdit}"
+							oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden')});" />
+						<p:ajax event="rowEdit" listener="#{catalogAccountsMB.onRowEdit}"
+							update=":form1:messagesEdit, :form1:objects"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="executeClickHideButton(); PF('blockUIWidget').unblock();
+							$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+							$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+						<p:ajax event="rowEditCancel"
+							listener="#{catalogAccountsMB.onRowCancel}"
+							update=":form1:messagesEdit, :form1:objects"
+							onstart="PF('blockUIWidget').block();
+							$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+							$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});"
+							oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:hideButton2').click();" />
+
+
+						<p:column headerText="Cuenta" visible="false" width="50"
+							exportable="true">
+							<h:outputText value="#{object.cuenta}" />
+						</p:column>
+
+						<p:column headerText="Cuenta" exportable="false" style="width:10%"
+							width="30">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.cuenta}" />
+								</f:facet>
+								<f:facet name="input">
+									<div class="ui-grid ui-grid-responsive">
+										<div class="ui-grid-row">
+											<div class="ui-grid-col-8">
+												<p:inputText id="cta" value="#{object.cuenta}"
+													style="width:100%" maxlength="4"
+													valueChangeListener="#{catalogAccountsMB.cuentahanged}"
+													disabled="#{catalogAccountsMB.insertActive}"
+													onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+													<p:ajax
+														update="cta, searchScta, searchSscta, searchSsscta, title, notcta"></p:ajax>
+												</p:inputText>
+											</div>
+											<div class="ui-grid-col-2" align="center">
+
+												<p:commandLink id="searchCta"
+													styleClass="glyphicon glyphicon-search"
+													onclick="consultAccountsMajor(); return false;"
+													style="width:18px;height:18px;"
+													disabled="#{catalogAccountsMB.insertActive}" />
+											</div>
+
+										</div>
+									</div>
+
+								</f:facet>
+
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Scta" visible="false" width="60"
+							exportable="true">
+							<h:outputText
+								value="#{object.scuenta.length()==0?'':'\''.concat(object.scuenta)}" />
+						</p:column>
+
+						<p:column headerText="Scta" exportable="false" width="60">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.scuenta}" />
+								</f:facet>
+								<f:facet name="input">
+									<div class="ui-grid ui-grid-responsive">
+										<div class="ui-grid-row">
+											<div class="ui-grid-col-9">
+												<p:inputText id="scta" value="#{object.scuenta}"
+													style="width:100%" maxlength="10"
+													disabled="#{catalogAccountsMB.insertActive}"
+													onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+													<p:ajax event="blur"
+														listener="#{catalogAccountsMB.scuentaChangeListener}"
+														update="scta"></p:ajax>
+												</p:inputText>
+											</div>
+											<div class="ui-grid-col-2" align="center">
+												<p:commandLink id="searchScta"
+													styleClass="glyphicon glyphicon-search"
+													onclick="consultDependencies(); return false;"
+													style="width:18px;height:18px;"
+													disabled="#{catalogAccountsMB.helpActive}" />
+											</div>
+										</div>
+									</div>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sscta" visible="false" width="60"
+							exportable="true">
+							<h:outputText
+								value="#{object.sscuenta.length()==0?'':'\''.concat(object.sscuenta)}" />
+						</p:column>
+
+						<p:column headerText="Sscta" exportable="false" width="60">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sscuenta}" />
+								</f:facet>
+								<f:facet name="input">
+									<div class="ui-grid ui-grid-responsive">
+										<div class="ui-grid-row">
+											<div class="ui-grid-col-13">
+												<p:inputText id="sscta" value="#{object.sscuenta}"
+													style="width:100%" maxlength="15"
+													disabled="#{catalogAccountsMB.insertActive}"
+													onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+													<p:ajax event="blur"
+														listener="#{catalogAccountsMB.sscuentaChangeListener}"
+														update="scta, sscta"></p:ajax>
+												</p:inputText>
+											</div>
+											<div class="ui-grid-col-2" align="center">
+												<p:commandLink id="searchSscta"
+													styleClass="glyphicon glyphicon-search"
+													onclick="consultPrograms(); return false;"
+													style="width:18px;height:18px;"
+													disabled="#{catalogAccountsMB.helpActive}" />
+											</div>
+										</div>
+									</div>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+
+						<p:column headerText="Ssscta" visible="false" width="60"
+							exportable="true">
+							<h:outputText
+								value="#{object.ssscuenta.length()==0?'':'\''.concat(object.ssscuenta)}" />
+						</p:column>
+
+						<p:column headerText="Ssscta" exportable="false" width="60">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.ssscuenta}" />
+								</f:facet>
+								<f:facet name="input">
+									<div class="ui-grid ui-grid-responsive">
+										<div class="ui-grid-row">
+											<div class="ui-grid-col-8">
+												<p:inputText id="ssscta" value="#{object.ssscuenta}"
+													style="width:100%" maxlength="4"
+													disabled="#{catalogAccountsMB.insertActive}"
+													onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+													<p:ajax event="blur" update="ssscta"></p:ajax>
+												</p:inputText>
+											</div>
+											<div class="ui-grid-col-2" align="center">
+												<p:commandLink id="searchSsscta"
+													styleClass="glyphicon glyphicon-search"
+													onclick="consultNatureExp(); return false;"
+													style="width:18px;height:18px;"
+													disabled="#{catalogAccountsMB.helpActive}" />
+											</div>
+										</div>
+									</div>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sssscta" visible="false" width="60"
+							exportable="true">
+							<h:outputText
+								value="#{object.sssscuenta.length()==0?'':'\''.concat(object.sssscuenta)}" />
+						</p:column>
+
+						<p:column headerText="Sssscta" exportable="false" width="60">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sssscuenta}" />
+								</f:facet>
+								<f:facet name="input">
+									<div class="ui-grid ui-grid-responsive">
+										<div class="ui-grid-row">
+											<div class="ui-grid-col-12">
+												<p:inputText id="sssscta" value="#{object.sssscuenta}"
+													style="width:100%" maxlength="3"
+													validatorMessage="SSSSCTA debe ser num&eacute;rico sin punto decimal"
+													disabled="#{catalogAccountsMB.insertActive}"
+													onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+													<p:ajax event="blur" update="sssscta"></p:ajax>
+													<f:validateRegex pattern="^\s*([0-9]*)\s*$" for="sssscta" />
+												</p:inputText>
+											</div>
+											<!-- 											<div class="ui-grid-col-2" align="center"> -->
+											<!-- 												<p:commandLink id="searchSssscta" -->
+											<!-- 													styleClass="glyphicon glyphicon-search" -->
+											<!-- 													onclick="consultFinancialSources(); return false;" -->
+											<!-- 													style="width:18px;height:18px;" /> -->
+											<!-- 											</div> -->
+										</div>
+									</div>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="T&iacute;tulo" visible="false" width="165"
+							exportable="true">
+							<h:outputText value="#{object.nomcta}" />
+						</p:column>
+
+						<p:column headerText="T&iacute;tulo" exportable="false"
+							width="165">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.nomcta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="title" value="#{object.nomcta}"
+										style="width:100%" maxlength="250"
+										disabled="#{catalogAccountsMB.titleActive}"
+										onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Saldo Ini." visible="false" width="60"
+							style="align-text:rigth;" exportable="true">
+							<h:outputText value="#{object.salini}">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Saldo Ini." exportable="false" width="80">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.salini}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="salini" value="#{object.salini}"
+										style="width:100%" maxlength="17"
+										converterMessage="Saldo Ini. debe ser num&eacute;rico"
+										disabled="true"
+										onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+
+										<f:convertNumber type="number" for="salini"
+											pattern="###,###,##0.00" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Ult. niv." visible="false" width="60"
+							exportable="true">
+							<h:outputText value="#{object.nivcta}" />
+						</p:column>
+
+						<p:column headerText="Ult. niv." exportable="false" width="40">
+							<p:cellEditor>
+								<f:facet name="output">
+									<center>
+										<h:outputText value="#{object.nivcta}" />
+									</center>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="ultniv" value="#{object.nivcta}"
+										style="width:100%" maxlength="1"
+										validatorMessage="Ult. niv. solo permite: S &oacute; N"
+										disabled="true">
+										<f:validateRegex pattern="^\s*([S]|[N]*)\s*$" for="ultniv" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Nat." visible="false" width="40"
+							exportable="true">
+							<h:outputText value="#{object.stacta}" />
+						</p:column>
+
+						<p:column headerText="Nat." exportable="false" width="40">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.stacta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="stacta" value="#{object.stacta}"
+										style="width:100%" maxlength="1"
+										validatorMessage="Nat. solo permite: D &oacute; A"
+										disabled="true"
+										onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+										<f:validateRegex pattern="^\s*([D]|[A]*)\s*$" for="stacta" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Nivcta" visible="false" width="40"
+							exportable="true">
+							<h:outputText value="#{object.xnicta}" />
+						</p:column>
+
+						<p:column headerText="Nivcta" exportable="false" width="40">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.xnicta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="xnicta" value="#{object.xnicta}"
+										style="width:100%" maxlength="4"
+										converterMessage="Nivcta debe ser num&eacute;rico"
+										disabled="true"
+										onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {cancelRow(); return false;}">
+										<f:convertNumber type="number" for="xnicta" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Nota" visible="false" width="40"
+							exportable="true">
+							<h:outputText value="#{object.notcta}" />
+						</p:column>
+
+						<p:column headerText="Nota" exportable="false" width="40">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.notcta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="notcta" value="#{object.notcta}"
+										style="width:100%" maxlength="2"
+										converterMessage="NOTA debe ser num&eacute;rico"
+										disabled="true">
+										<f:convertNumber type="number" for="notcta" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Borrar" exportable="false" width="35">
+							<center>
+								<p:commandLink
+									update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+									oncomplete="PF('confirmDeleteDlg').show()"
+									image="ui-icon ui-icon-close" title="Delete"
+									rendered="#{object.deleteable}">
+
+									<f:setPropertyActionListener value="#{object}"
+										target="#{catalogAccountsMB.beanSelected}" />
+									<h:outputText styleClass="ui-icon ui-icon-close" />
+
+								</p:commandLink>
+							</center>
+						</p:column>
+
+						<p:column width="40" exportable="false">
+							<p:rowEditor rendered="#{object.editable}">
+
+							</p:rowEditor>
+						</p:column>
+						<h:commandLink action="homePage">
+							<h:graphicImage value="resources/images/img.png" />
+						</h:commandLink>
+						<f:facet name="footer">
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{catalogAccountsMB.fileXls}" />
+							</h:commandLink>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:graphicImage value="pdf.png" width="24" />
+								<p:fileDownload value="#{catalogAccountsMB.filePdf}" />
+							</h:commandLink>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:graphicImage value="csv.png" width="24" />
+								<p:dataExporter encoding="ISO-8859-1" type="csv"
+									target="objects" fileName="Cuentas" pageOnly="false" />
+							</h:commandLink>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:graphicImage value="txt.gif" width="24" />
+								<p:fileDownload value="#{catalogAccountsMB.file}" />
+							</h:commandLink>
+						</f:facet>
+
+					</p:dataTable>
+				</div>
+
+
+				<p:commandButton id="hideButton"
+					update=":form1:messagesEdit, :form1:objects"
+					actionListener="#{catalogAccountsMB.updateViewRowsAutoGenerated}"
+					style="visibility: hidden;" />
+
+				<p:commandButton id="hideButton2"
+					update=":form1:messagesEdit, :form1:objects"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+					style="visibility: hidden;" />
+				<br />
+				<br />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar"
+							update=":form1:messagesEdit, :form1:objects"
+							actionListener="#{catalogAccountsMB.delete}"
+							onstart="PF('blockUIWidget').block();"
+							oncomplete="PF('confirmDeleteDlg').hide(); PF('blockUIWidget').unblock();"
+							style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+
+				<p:dialog header="Consulta al Cat&aacute;logo de Cuentas de Mayor"
+					widgetVar="catalogtAccountsMajorDlg" resizable="false" width="800"
+					height="450" showEffect="clip" hideEffect="clip" modal="true"
+					closeOnEscape="true">
+					<p:outputPanel id="panelCatalogAccountsMajor" layout="block"
+						style="text-align:left">
+						<p:dataTable id="accountsMajor" var="accountMajor"
+							value="#{catalogAccountsMB.accountsMajor}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogAccountsMB.accountMajorSelected}"
+							rowKey="#{accountMajor.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogAccountsMB.filteredAccountsMajor}"
+							widgetVar="accountsMajorDT">
+							<p:ajax event="rowDblselect"
+								listener="#{catalogAccountsMB.onAccountsMajorRowDblClckSelect}"
+								oncomplete="PF('catalogtAccountsMajorDlg').hide();"
+								update=":form1:objects, :form1:focusTable"></p:ajax>
+
+							<p:column headerText="CTA" width="20%"
+								filterMatchMode="startsWith" filterBy="#{accountMajor.cuenta}">
+								<h:outputText value="#{accountMajor.cuenta}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width:20%"
+								filterMatchMode="startsWith" filterBy="#{accountMajor.nommay}">
+								<h:outputText value="#{accountMajor.nommay}" />
+							</p:column>
+
+							<p:column headerText="Naturaleza" style="width:20%"
+								filterMatchMode="startsWith" filterBy="#{accountMajor.natcta}">
+								<h:outputText value="#{accountMajor.natcta}" />
+							</p:column>
+
+							<p:column headerText="No. Niveles" style="width:20%"
+								filterMatchMode="startsWith" filterBy="#{accountMajor.nivcta}">
+								<h:outputText value="#{accountMajor.nivcta}" />
+							</p:column>
+
+							<p:column headerText="Nota" style="width:20%"
+								filterMatchMode="startsWith" filterBy="#{accountMajor.notcta}">
+								<h:outputText value="#{accountMajor.notcta}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<center>
+
+							<p:panelGrid columns="3" layout="grid">
+								<p:column></p:column>
+								<p:column>
+									<p:row style="align:center">
+										<p:column>
+											<p:commandButton value="Aceptar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.changeAccountMajor}"
+												oncomplete="PF('catalogtAccountsMajorDlg').hide();"
+												style="padding: 5px;" />
+										</p:column>
+										<p:column>
+											<p:commandButton value="Cancelar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.activateRowEdit}"
+												oncomplete="PF('catalogtAccountsMajorDlg').hide();"
+												style="padding: 5px; margin-left: 15px;" />
+
+
+										</p:column>
+
+									</p:row>
+								</p:column>
+								<p:column></p:column>
+							</p:panelGrid>
+						</center>
+					</p:outputPanel>
+				</p:dialog>
+
+
+				<p:dialog header="Consulta al Cat&aacute;logo de Dependencias"
+					widgetVar="catalogDependenciesDlg" resizable="false" width="800"
+					height="470" showEffect="clip" hideEffect="clip" modal="true"
+					closeOnEscape="true">
+					<p:outputPanel id="panelCatalogDependencies" layout="block"
+						style="text-align:left">
+						<p:dataTable id="dependencies" var="dependence"
+							value="#{catalogAccountsMB.dependencies}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogAccountsMB.dependenceSelected}"
+							rowKey="#{dependence.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogAccountsMB.filteredDependencies}"
+							widgetVar="dependenciesDT" sortBy="#{dependence.clvdep}">
+							<p:ajax event="rowDblselect"
+								listener="#{catalogAccountsMB.onDependenciesRowDblClckSelect}"
+								oncomplete="PF('catalogDependenciesDlg').hide();"
+								update=":form1:objects, :form1:focusTable"></p:ajax>
+							<f:facet name="header">Consulta al Cat&aacute;logo de Dependencias</f:facet>
+							<!--  -->
+							<p:column headerText="Clave" width="20%"
+								filterMatchMode="startsWith" filterBy="#{dependence.clvdep}">
+								<h:outputText value="#{dependence.clvdep}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width:80%"
+								filterMatchMode="startsWith" filterBy="#{dependence.nomdep}">
+								<h:outputText value="#{dependence.nomdep}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<center>
+							<p:panelGrid columns="3" layout="grid">
+								<p:column></p:column>
+								<p:column>
+									<p:row style="align:center">
+										<p:column>
+											<p:commandButton value="Aceptar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.changeDependence}"
+												oncomplete="PF('catalogDependenciesDlg').hide();"
+												style="padding: 5px;" />
+										</p:column>
+										<p:column>
+											<p:commandButton value="Cancelar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.activateRowEdit}"
+												oncomplete="PF('catalogDependenciesDlg').hide();"
+												style="padding: 5px; margin-left: 15px;" />
+
+										</p:column>
+
+									</p:row>
+								</p:column>
+								<p:column></p:column>
+							</p:panelGrid>
+						</center>
+					</p:outputPanel>
+				</p:dialog>
+
+				<p:dialog header="Consulta al Cat&aacute;logo de Programas"
+					widgetVar="catalogProgramsDlg" resizable="false" width="800"
+					height="475" showEffect="clip" hideEffect="clip" modal="true"
+					closeOnEscape="true">
+					<p:outputPanel id="panelCatalogPrograms" layout="block"
+						style="text-align:left">
+						<p:dataTable id="programs" var="program"
+							value="#{catalogAccountsMB.programs}" styleClass="et_datatable"
+							paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogAccountsMB.programSelected}"
+							rowKey="#{program.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogAccountsMB.filteredPrograms}"
+							widgetVar="programsDT" sortBy="#{program.clvpro}">
+							<p:ajax event="rowDblselect"
+								listener="#{catalogAccountsMB.onProgramsRowDblClckSelect}"
+								oncomplete="PF('catalogProgramsDlg').hide();"
+								update=":form1:objects, :form1:focusTable"></p:ajax>
+							<f:facet name="header">Consulta al Cat&aacute;logo de Programas</f:facet>
+							<!---->
+							<p:column headerText="Clave" width="20%"
+								filterMatchMode="startsWith" filterBy="#{program.clvpro}">
+								<h:outputText value="#{program.clvpro}" />
+							</p:column>
+
+							<p:column headerText="Nombre" style="width:80%"
+								filterMatchMode="startsWith" filterBy="#{program.nompro}">
+								<h:outputText value="#{program.nompro}" />
+							</p:column>
+
+						</p:dataTable>
+						<center>
+							<p:panelGrid columns="3" layout="grid">
+								<p:column></p:column>
+								<p:column>
+									<p:row style="align:center">
+										<p:column>
+											<p:commandButton value="Aceptar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.changeProgram}"
+												oncomplete="PF('catalogProgramsDlg').hide();"
+												style="padding: 5px;" />
+										</p:column>
+										<p:column>
+											<p:commandButton value="Cancelar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.activateRowEdit}"
+												oncomplete="PF('catalogProgramsDlg').hide();"
+												style="padding: 5px; margin-left: 15px;" />
+
+										</p:column>
+
+									</p:row>
+								</p:column>
+								<p:column></p:column>
+							</p:panelGrid>
+						</center>
+					</p:outputPanel>
+				</p:dialog>
+
+
+				<p:dialog
+					header="Consulta al Cat&aacute;logo de Naturaleza de Gasto"
+					widgetVar="catalogNatureExpDlg" resizable="false" width="800"
+					height="475" showEffect="clip" hideEffect="clip" modal="true"
+					closeOnEscape="true">
+
+					<p:outputPanel id="panelCatalogNatureExp" layout="block"
+						style="text-align:left">
+						<p:dataTable id="tableNatureExp" var="natureExp"
+							value="#{catalogAccountsMB.listNatureExp}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogAccountsMB.natureExpSelected}"
+							rowKey="#{natureExp.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogAccountsMB.filteredNatureExp}"
+							widgetVar="natureExpDT" sortBy="#{natureExp.clvgas}">
+							<p:ajax event="rowDblselect"
+								listener="#{catalogAccountsMB.onNatureExRowDblClckSelect}"
+								oncomplete="PF('catalogNatureExpDlg').hide();"
+								update=":form1:objects, :form1:focusTable"></p:ajax>
+							<!--  -->
+							<f:facet name="header">Consulta al Cat&aacute;logo de Naturaleza de Gasto</f:facet>
+
+							<p:column headerText="Clave" width="15%"
+								filterMatchMode="startsWith" filterBy="#{natureExp.clvgas}"
+								filterMaxLength="4">
+								<center>
+									<h:outputText value="#{natureExp.clvgas}"
+										style="text-align:center;" />
+								</center>
+							</p:column>
+
+							<p:column headerText="Nombre de Naturaleza de Gasto" width="85%"
+								filterMatchMode="startsWith" filterBy="#{natureExp.nomgas}">
+								<h:outputText value="#{natureExp.nomgas}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<center>
+							<p:panelGrid columns="3" layout="grid">
+								<p:column></p:column>
+								<p:column>
+									<p:row style="align:center">
+										<p:column>
+											<p:commandButton value="Aceptar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.changeNatureExp}"
+												oncomplete="PF('catalogNatureExpDlg').hide();"
+												style="padding: 5px;" />
+										</p:column>
+										<p:column>
+											<p:commandButton value="Cancelar"
+												update=":form1:objects, :form1:focusTable"
+												actionListener="#{catalogAccountsMB.activateRowEdit}"
+												oncomplete="PF('catalogNatureExpDlg').hide();"
+												style="padding: 5px; margin-left: 15px;" />
+
+										</p:column>
+
+									</p:row>
+								</p:column>
+								<p:column></p:column>
+							</p:panelGrid>
+						</center>
+
+					</p:outputPanel>
+				</p:dialog>
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

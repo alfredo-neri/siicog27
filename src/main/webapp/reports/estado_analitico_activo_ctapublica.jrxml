@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.3.final using JasperReports Library version 6.20.3-415f9428cffdb6805c6f85bbb29ebaf18813a2ab  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="estado_analitico_activo_ctapublica" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9f2c9316-092d-4016-bc81-35eca18c379b">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<parameter name="year" class="java.lang.Integer"/>
+	<parameter name="img1" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 1 GRUPO,         
+		T2.CUENTA,         
+		T2.NOMCTA,         
+		T2.SALDO,         
+		T2.CARGOS_MES,         
+		T2.ABONOS_MES,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) SALDO_FINAL,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) - T2.SALDO VARIACION       
+	FROM(  
+		SELECT 	SUBSTR(T1.CUENTA,1,2) CUENTA,         
+				'Efectivo y Equivalentes' NOMCTA,         
+				SUM(T1.SALINI + CARGOS - ABONOS)  SALDO,         
+				SUM(T1.CARGOS_MES) CARGOS_MES,         
+				SUM(T1.ABONOS_MES) ABONOS_MES       
+			FROM (  
+				SELECT 	CU.CUENTA,  	
+						CU.NOMCTA,  	
+						CU.STACTA,  	
+						CU. SALINI,
+						0 CARGOS,
+						0 ABONOS,
+						CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12 CARGOS_MES, 
+						CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12 ABONOS_MES  
+					FROM  	CUENTA CU  
+				WHERE 	CU.CUENTA AND 
+						CU.CUENTA IN ('1111', '1112') AND 
+						CU.SCTA = ''  
+			) T1  
+		GROUP BY SUBSTR(T1.CUENTA,1,2)  
+	) T2 
+UNION ALL 
+SELECT 	1 GRUPO, 
+		T2.CUENTA,         
+		T2.NOMCTA,         
+		T2.SALDO,         
+		T2.CARGOS_MES,         
+		T2.ABONOS_MES,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) SALDO_FINAL,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) - T2.SALDO VARIACION       
+	FROM(  
+		SELECT 	SUBSTR(T1.CUENTA,1,2) CUENTA,         
+				'Derechos a Recibir Efectivo o Equivalentes' NOMCTA,         
+				SUM(T1.SALINI + CARGOS - ABONOS)  SALDO,         
+				SUM(T1.CARGOS_MES) CARGOS_MES,         
+				SUM(T1.ABONOS_MES) ABONOS_MES       
+			FROM (  
+				SELECT 	CU.CUENTA,  	
+						CU.NOMCTA,  	
+						CU.STACTA,  	
+						CU. SALINI,  	
+						0 CARGOS,
+						0 ABONOS,
+						CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12 CARGOS_MES, 
+						CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12 ABONOS_MES  
+					FROM  CUENTA CU  
+				WHERE 	CU.CUENTA  = '1123'  AND 
+						CU.SCTA = ''  
+			) T1  
+		GROUP BY SUBSTR(T1.CUENTA,1,2) 
+	) T2 
+UNION ALL 
+SELECT 	1 GRUPO, 
+		CU.CUENTA,         
+		CU.NOMCTA,          
+		0 SALDO,          
+		0 CARGOS_MES,          
+		0 ABONOS_MES,          
+		0 SALDO_FINAL,          
+		0 VARIACION        
+	FROM CUENTA CU  
+WHERE 	CU.CUENTA >= '1130' AND 
+		CU.CUENTA <= '1160' AND 
+		SUBSTR(CU.CUENTA,4,1) = '0' 
+UNION ALL 
+SELECT 	1 GRUPO,
+		T2.CUENTA,         
+		T2.NOMCTA,         
+		T2.SALDO,         
+		T2.CARGOS_MES,         
+		T2.ABONOS_MES,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) SALDO_FINAL,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) - T2.SALDO VARIACION       
+	FROM(  
+		SELECT 	SUBSTR(T1.CUENTA,1,2)||'70' 
+				CUENTA,         
+				'Otros Activos  Circulantes' NOMCTA,         
+				SUM(T1.SALINI + CARGOS - ABONOS)  SALDO,         
+				SUM(T1.CARGOS_MES) CARGOS_MES,         
+				SUM(T1.ABONOS_MES) ABONOS_MES       
+				FROM (  
+					SELECT 	CU.CUENTA,  	
+							CU.NOMCTA,  	
+							CU.STACTA,  	
+							CU. SALINI, 
+							0 CARGOS,
+							0 ABONOS,
+							CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12 CARGOS_MES, 
+							CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12 ABONOS_MES  
+						FROM  	CUENTA CU  
+					WHERE 	CU.CUENTA  = '1191' AND 
+							CU.SCTA = ''  
+				) T1  
+			GROUP BY SUBSTR(T1.CUENTA,1,2)  
+	) T2 
+UNION ALL 
+SELECT 	2 GRUPO, 
+		CU.CUENTA,         
+		CU.NOMCTA,          
+		0 SALDO,          
+		0 CARGOS_MES,          
+		0 ABONOS_MES,          
+		0 SALDO_FINAL,          
+		0 VARIACION        
+	FROM CUENTA CU  
+WHERE 	CU.CUENTA >= '1210' AND 
+		CU.CUENTA <= '1230' AND 
+		SUBSTR(CU.CUENTA,4,1) = '0'   
+UNION ALL  
+SELECT 	2 GRUPO,         
+		T2.CUENTA,         
+		T2.NOMCTA,         
+		T2.SALDO,         
+		T2.CARGOS_MES,         
+		T2.ABONOS_MES,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) SALDO_FINAL, 
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) - T2.SALDO VARIACION  
+	FROM(  
+		SELECT 	SUBSTR(T1.CUENTA,1,2)||'40' CUENTA, 
+				'Bienes Muebles' NOMCTA,        
+				SUM(T1.SALINI + CARGOS - ABONOS)  SALDO,         
+				SUM(T1.CARGOS_MES) CARGOS_MES,         
+				SUM(T1.ABONOS_MES) ABONOS_MES       
+			FROM (  
+				SELECT 	CU.CUENTA,  	
+						CU.NOMCTA,  	
+						CU.STACTA,  	
+						CU. SALINI, 
+						0 CARGOS,
+						0 ABONOS,
+						CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12 CARGOS_MES, 
+						CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12 ABONOS_MES  
+					FROM  CUENTA CU  
+				WHERE 	CU.CUENTA IN ('1242','1244','1246', '1241') AND 
+						CU.SCTA = ''  
+			) T1          
+		GROUP BY SUBSTR(T1.CUENTA,1,2)  
+	) T2 
+UNION ALL 
+SELECT 	2 GRUPO,         
+		CU.CUENTA,         
+		CU.NOMCTA,          
+		0 SALDO,          
+		0 CARGOS_MES,          
+		0 ABONOS_MES,          
+		0 SALDO_FINAL,          
+		0 VARIACION        
+	FROM CUENTA CU  
+WHERE 	CU.CUENTA = '1250' AND 
+		SUBSTR(CU.CUENTA,4,1) = '0' 
+UNION ALL 
+SELECT 	2 GRUPO,         
+		T2.CUENTA,         
+		T2.NOMCTA,         
+		T2.SALDO,         
+		T2.CARGOS_MES,         
+		T2.ABONOS_MES,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) SALDO_FINAL,         
+		(T2.SALDO + T2.CARGOS_MES - T2.ABONOS_MES) - T2.SALDO VARIACION       
+	FROM(  
+		SELECT 	T1.CUENTA CUENTA,         
+				'Depreciación, Deterioro y Amortización Acumulada de Bienes' NOMCTA,         
+				SUM(T1.SALINI + CARGOS - ABONOS)  SALDO,         
+				SUM(T1.CARGOS_MES) CARGOS_MES,         
+				SUM(T1.ABONOS_MES) ABONOS_MES       
+			FROM (  
+				SELECT 	CU.CUENTA,  	
+						CU.NOMCTA,  	
+						CU.STACTA,  	
+						(CU. SALINI*-1) SALINI,  	
+						0 CARGOS,
+						0 ABONOS,
+						CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12 CARGOS_MES, 
+						CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12 ABONOS_MES  
+					FROM  	CUENTA CU  
+				WHERE 	CU.CUENTA AND 
+						CU.CUENTA ='1263' AND 
+						CU.SCTA = ''  
+			) T1  
+		GROUP BY T1.CUENTA  
+	) T2 
+UNION ALL 
+SELECT 	2 GRUPO,         
+		CU.CUENTA,         
+		CU.NOMCTA,          
+		SALINI SALDO, 
+		CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12 CARGOS_MES, 
+		CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12 ABONOS_MES,            
+		SALINI + (CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12) - (CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12) SALDO_FINAL,          
+		(SALINI + (CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12) - (CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12)) - SALINI VARIACION        
+	FROM CUENTA CU  
+WHERE 	CU.CUENTA IN ('1270', '1280', '1290') AND 
+		SUBSTR(CU.CUENTA,4,1) = '0'  
+ORDER BY 1, 2 ASC]]>
+	</queryString>
+	<field name="GRUPO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="GRUPO"/>
+		<property name="com.jaspersoft.studio.field.label" value="GRUPO"/>
+	</field>
+	<field name="CUENTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CUENTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="CUENTA"/>
+	</field>
+	<field name="NOMCTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NOMCTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="NOMCTA"/>
+	</field>
+	<field name="SALDO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="SALDO"/>
+		<property name="com.jaspersoft.studio.field.label" value="SALDO"/>
+	</field>
+	<field name="CARGOS_MES" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="CARGOS_MES"/>
+		<property name="com.jaspersoft.studio.field.label" value="CARGOS_MES"/>
+	</field>
+	<field name="ABONOS_MES" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="CARGOS_MES"/>
+		<property name="com.jaspersoft.studio.field.label" value="CARGOS_MES"/>
+	</field>
+	<field name="SALDO_FINAL" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="SALDO_FINAL"/>
+		<property name="com.jaspersoft.studio.field.label" value="SALDO_FINAL"/>
+	</field>
+	<field name="VARIACION" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="VARIACION"/>
+		<property name="com.jaspersoft.studio.field.label" value="VARIACION"/>
+	</field>
+	<variable name="subTotalCargos" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{CARGOS_MES}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalSalFinal" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO_FINAL}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalVariacion" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{VARIACION}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalSalFinal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO_FINAL}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalCargos" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CARGOS_MES}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalVariacion" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{VARIACION}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalSalIni" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="subTotalAbonos" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{ABONOS_MES}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalSalini" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDO}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="totalAbonoa" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ABONOS_MES}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<group name="GRUPO">
+		<groupExpression><![CDATA[$F{GRUPO}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="0" y="0" width="298" height="15" uuid="6f863b8a-e86f-41a2-9451-61fd263b13fb">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{GRUPO} == 1 ? "Activo Circulante" : "Activo No Circulante"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="298" y="0" width="100" height="15" uuid="fb9dd2e0-3f4e-49d3-a248-dee9f6c9227d">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalSalIni}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="398" y="0" width="100" height="15" uuid="39d13076-9388-4119-a65b-e4c43aea63bd">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalCargos}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="498" y="0" width="100" height="14" uuid="64fa5ed6-3b13-444f-af28-eb8b7077c56f">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalAbonos}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="598" y="0" width="100" height="15" uuid="372d3a5d-3b83-4d1e-b3b9-e9448bde1424">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalSalFinal}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="698" y="0" width="104" height="15" uuid="303cb42d-1ea3-41e3-bf26-5b3b84ac4f82">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subTotalVariacion}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<title>
+		<band height="97" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="52" width="802" height="15" backcolor="#A69E9D" uuid="fb2914c0-f2cd-4a0e-aa46-8f854c50f78b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Instituto de Transparencia, Acceso a la Información Pública y Protección de Datos Personales del Estado de México y Municipios"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="67" width="802" height="15" backcolor="#A69E9D" uuid="10a1157e-edb7-44f4-a5c6-e66a4ce8f428">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuenta Pública - Estado Analitico del Activo]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="82" width="802" height="15" backcolor="#A69E9D" uuid="ed03d554-c0f5-43db-b680-cd36b4d6d7fb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Del 01 de Enero al 31 de Diciembre de " +  $P{year}]]></textFieldExpression>
+			</textField>
+			<image vAlign="Middle" onErrorType="Blank">
+				<reportElement x="0" y="0" width="380" height="50" uuid="7d49efa2-0c52-4af6-88f5-755647a0182e"/>
+				<imageExpression><![CDATA[$P{img1}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="298" height="15" uuid="21875782-a901-4c37-b7cf-aa76d032a843">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fc0192ba-47b1-4878-afbd-fcd5f1255ce5"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONCEPTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="0" width="100" height="15" uuid="25ea67c9-ae30-4633-a611-6124ee205593">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="50eac407-5a68-4446-a3fb-4df551a6c86a"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="398" y="0" width="100" height="15" uuid="9107c02a-19b4-401d-83ac-017beb700ea2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ffb8d019-85ae-4e82-8b2f-62a48a4e1852"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cargos Periodo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="498" y="0" width="100" height="15" uuid="c804894f-7454-4f5d-8774-6a3efa55b166">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cdc636fb-041d-4efd-ad19-a0c4bac21565"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Abonos Periodo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="598" y="0" width="100" height="15" uuid="693ee6e8-730a-4758-b086-df1f2fdf5557">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7c191084-fe30-4b38-b9f6-eb52ee5f00b0"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Final]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="698" y="0" width="104" height="15" uuid="43cf4953-4b7c-442f-8622-53a1eaedbb0d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5362fb6a-b6ac-4461-beec-2c18fad56a1a"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Variación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="298" height="15" uuid="14e59068-1f93-49cf-aff4-6afc25afdfa2"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTIVO]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0.0">
+				<reportElement x="298" y="15" width="100" height="15" uuid="b8afd75c-d342-47fb-b84f-20773eff3953"/>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalSalini}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.0">
+				<reportElement x="398" y="15" width="100" height="15" uuid="11665efb-2dcb-4ef9-a7fd-5f7a8e3a6fe2"/>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalCargos}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.0">
+				<reportElement x="498" y="16" width="100" height="14" uuid="661daded-da7b-4765-9b65-83b9350df0f8"/>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalAbonoa}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.0">
+				<reportElement x="598" y="15" width="100" height="15" uuid="b4da52e6-3895-456f-b3b3-e0a60368dc1e"/>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalSalFinal}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.0">
+				<reportElement x="698" y="15" width="104" height="15" uuid="efc5de38-d8f8-429b-86b3-7e6baa2a4cce"/>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalVariacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="298" height="15" uuid="90e4eba0-ba4d-481f-81ee-1c89b4300b6e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fc0192ba-47b1-4878-afbd-fcd5f1255ce5"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["    "+$F{NOMCTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="298" y="0" width="100" height="15" uuid="ffd4ce59-40ce-4a34-9b9b-ff8261e8a8a2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="50eac407-5a68-4446-a3fb-4df551a6c86a"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{SALDO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="398" y="0" width="100" height="15" uuid="c36aa8ad-a598-4e03-aea5-bf11b75a4286">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ffb8d019-85ae-4e82-8b2f-62a48a4e1852"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CARGOS_MES}.compareTo(BigDecimal.ZERO) == 0 ? "" : $F{CARGOS_MES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="498" y="0" width="100" height="15" uuid="a06210f4-4bca-4c5c-bf7d-2ff8bc81b558">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cdc636fb-041d-4efd-ad19-a0c4bac21565"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ABONOS_MES}.compareTo(BigDecimal.ZERO) == 0 ? "" :$F{ABONOS_MES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="598" y="0" width="100" height="15" uuid="e94b76fd-395b-4693-a85e-908ae7b3c758">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7c191084-fe30-4b38-b9f6-eb52ee5f00b0"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO_FINAL}.compareTo(BigDecimal.ZERO) == 0 ? "" :$F{SALDO_FINAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="698" y="0" width="104" height="15" uuid="92feb5f3-6dfc-49ec-b412-620281e8e933">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5362fb6a-b6ac-4461-beec-2c18fad56a1a"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VARIACION}.compareTo(BigDecimal.ZERO) == 0 ? "" :$F{VARIACION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="30">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="30" uuid="e4edc788-128c-4c15-ba5a-5a13b65fa0e4"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

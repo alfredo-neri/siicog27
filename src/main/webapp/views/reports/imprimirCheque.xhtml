@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Impresi&oacute;n de Cheque"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:commandButton style="display: none" id="downXls" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);">
+						<p:fileDownload value="#{impresionChequeMB.fileXls}" />
+					</p:commandButton>
+					<p:tabView effect="fold" id="tabs">
+						<p:tab title="Impresión de Cheque" id="impresionCheque">
+							<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+								<p:panelGrid columns="10" styleClass="ui-noborder">
+									<h:outputText value="Mes:" />
+									<p:selectOneMenu id="mesInput" value="#{impresionChequeMB.mes}">
+										<f:selectItems value="#{impresionChequeMB.listMeses}"
+											var="item" itemValue="#{item.periodo}"
+											itemLabel="#{item.periodo}" />
+										<p:ajax event="change"
+											update="@this mes mesAsn mesSearch beneficiarioInput :form1:growlReportador"
+											listener="#{impresionChequeMB.changeBeneficiario}" />
+									</p:selectOneMenu>
+									<h:outputText value="Tipo:" />
+									<p:selectOneMenu id="tipoInput"
+										value="#{impresionChequeMB.tipo}">
+										<f:selectItems value="#{impresionChequeMB.listCattpo}"
+											var="itemTpo" itemValue="#{itemTpo.tippol}"
+											itemLabel="#{itemTpo.tippol}" />
+										<p:ajax event="change"
+											update="@this tipo tipoAsn beneficiarioInput :form1:growlReportador"
+											listener="#{impresionChequeMB.changeBeneficiario}" />
+									</p:selectOneMenu>
+									<h:outputText value="P&oacute;liza:" />
+									<p:inputText id="numeroInput"
+										value="#{impresionChequeMB.numero}" maxlength="6" size="6"
+										requiredMessage="El campo P&oacute;liza es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change"
+											update="@this beneficiarioInput, :form1:growlReportador numero numeroAsn"
+											listener="#{impresionChequeMB.changeBeneficiario}"
+											process="@this" />
+									</p:inputText>
+									<h:outputText value="N&uacute;mero Cheque:" />
+									<p:inputText id="chequeInput"
+										value="#{impresionChequeMB.cheque}" size="6"
+										requiredMessage="El campo N&uacute;mero Cheque es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change" update="@this  cheque chequeAsn" />
+									</p:inputText>
+									<h:outputText value="Tipo gasto:" />
+									<p:selectOneRadio id="gasto"
+										value="#{impresionChequeMB.tipoGasto}"
+										requiredMessage="El Tipo de Gasto es obligatorio"
+										layout="grid" columns="1" styleClass="grid-radio">
+										<f:selectItem itemLabel="Viaje" itemValue="1" />
+										<f:selectItem itemLabel="Para Comprobar" itemValue="2" />
+										<f:selectItem itemLabel="Otro" itemValue="0" />
+										<p:ajax update="form1:tabs:gastoText" event="click"
+											listener="#{impresionChequeMB.changeText()}" />
+									</p:selectOneRadio>
+								</p:panelGrid>
+								<p:panelGrid columns="2" styleClass="ui-noborder">
+									<h:outputText value="Nombre del Beneficiario:" />
+									<p:inputText id="beneficiarioInput" size="80"
+										value="#{impresionChequeMB.beneficiario}" />
+								</p:panelGrid>
+								<p:inputTextarea rows="3" cols="100"
+									value="#{impresionChequeMB.gastoText}" id="gastoText" />
+
+								<p:panelGrid columns="3"
+									styleClass="col-centered row-centered ui-noborder">
+									<p:commandButton id="generateportepdf"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										action="#{impresionChequeMB.preview}" value="Vista Preliminar"
+										update="form1:inlinePdf, :form1:growlReportador"
+										styleClass="btn btn-default">
+									</p:commandButton>
+									<p:commandButton id="save"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										action="#{impresionChequeMB.save}" value="Correcto"
+										update="form1:inlinePdf, :form1:growlReportador"
+										styleClass="btn btn-default">
+									</p:commandButton>
+								</p:panelGrid>
+							</p:panelGrid>
+						</p:tab>
+						<p:tab title="Consultas de Cheque" id="consultaCheque">
+							<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+								<p:panelGrid columns="10" styleClass="ui-noborder"
+									id="panelInputs">
+									<h:outputText value="Búsqueda por:" />
+									<p:selectOneRadio id="searchs"
+										value="#{impresionChequeMB.searchBy}" layout="grid"
+										columns="1" styleClass="grid-radio">
+										<f:selectItem itemLabel="Fecha" itemValue="1" />
+										<f:selectItem itemLabel="Póliza" itemValue="2" />
+										<f:selectItem itemLabel="Número Cheque" itemValue="3" />
+										<f:selectItem itemLabel="Mes de cheque" itemValue="4" />
+										<f:selectItem itemLabel="Rango de p&oacute;lizas"
+											itemValue="5" />
+										<p:ajax update="form1:tabs:panelInputs" event="click"
+											listener="#{impresionChequeMB.changeSearch()}" />
+									</p:selectOneRadio>
+									<!-- Controles de busqueda de Fecha -->
+									<h:outputText value="Fecha de Impresión:"
+										rendered="#{impresionChequeMB.searchByFecha}" />
+
+									<p:calendar id="fecpol"
+										rendered="#{impresionChequeMB.searchByFecha}" maxlength="10"
+										value="#{impresionChequeMB.date}" locale="es" size="10"
+										pattern="dd/MM/yyyy" mask="true"
+										requiredMessage="El campo de Fecha es requerido" timeZone=""
+										converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+										onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
+										<p:ajax event="dateSelect"
+											listener="#{impresionChequeMB.onDateSelect}"
+											update=":form1:tabs:fecpol" />
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:calendar>
+									<!-- Controles de busqueda de poliza -->
+									<h:outputText rendered="#{impresionChequeMB.searchByPoliza}"
+										value="Mes:" />
+									<p:selectOneMenu id="mes" value="#{impresionChequeMB.mes}"
+										rendered="#{impresionChequeMB.searchByPoliza}">
+										<f:selectItems value="#{impresionChequeMB.listMeses}"
+											var="item" itemValue="#{item.periodo}"
+											itemLabel="#{item.periodo}" />
+										<p:ajax event="change"
+											update="@this mesInput mesAsn mesSearch" />
+									</p:selectOneMenu>
+									<h:outputText value="Tipo:"
+										rendered="#{impresionChequeMB.searchByPoliza}" />
+									<p:selectOneMenu id="tipo"
+										rendered="#{impresionChequeMB.searchByPoliza}"
+										value="#{impresionChequeMB.tipo}">
+										<f:selectItems value="#{impresionChequeMB.listCattpo}"
+											var="itemTpo" itemValue="#{itemTpo.tippol}"
+											itemLabel="#{itemTpo.tippol}" />
+										<p:ajax event="change" update="@this tipoInput tipoAsn" />
+									</p:selectOneMenu>
+									<h:outputText value="P&oacute;liza:"
+										rendered="#{impresionChequeMB.searchByPoliza}" />
+									<p:inputText id="numero" value="#{impresionChequeMB.numero}"
+										maxlength="6" rendered="#{impresionChequeMB.searchByPoliza}"
+										size="6" required="true"
+										requiredMessage="El campo P&oacute;liza es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change" update="@this numeroAsn numeroInput " />
+									</p:inputText>
+									<!-- Controles de busqueda de numero de cheque -->
+									<h:outputText value="N&uacute;mero Cheque:"
+										rendered="#{impresionChequeMB.searchByCheque}" />
+									<p:inputText id="cheque" value="#{impresionChequeMB.cheque}"
+										size="6" rendered="#{impresionChequeMB.searchByCheque}"
+										required="true"
+										requiredMessage="El campo N&uacute;mero Cheque es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change" update="@this  chequeInput chequeAsn" />
+									</p:inputText>
+									<!-- Controles de busqueda de mes -->
+									<p:selectOneMenu id="mesSearch"
+										value="#{impresionChequeMB.mes}"
+										rendered="#{impresionChequeMB.searchByMes}">
+										<f:selectItems value="#{impresionChequeMB.listMeses}"
+											var="item" itemValue="#{item.periodo}"
+											itemLabel="#{item.periodo}" />
+										<p:ajax event="change" update="@this mesInput mesAsn mes" />
+									</p:selectOneMenu>
+									<!-- Controles de busqueda de rangos -->
+									<h:outputText rendered="#{impresionChequeMB.searchByRango}"
+										value="Mes:" />
+									<p:selectOneMenu id="mesRango" value="#{impresionChequeMB.mes}"
+										rendered="#{impresionChequeMB.searchByRango}">
+										<f:selectItems value="#{impresionChequeMB.listMeses}"
+											var="item" itemValue="#{item.periodo}"
+											itemLabel="#{item.periodo}" />
+										<p:ajax event="change"
+											update="@this mesInput mesAsn mesSearch" />
+									</p:selectOneMenu>
+									<h:outputText value="Tipo:"
+										rendered="#{impresionChequeMB.searchByRango}" />
+									<p:selectOneMenu id="tipoRango"
+										rendered="#{impresionChequeMB.searchByRango}"
+										value="#{impresionChequeMB.tipo}">
+										<f:selectItems value="#{impresionChequeMB.listCattpo}"
+											var="itemTpo" itemValue="#{itemTpo.tippol}"
+											itemLabel="#{itemTpo.tippol}" />
+										<p:ajax event="change" update="@this tipoInput tipoAsn" />
+									</p:selectOneMenu>
+									<h:outputText value="Del consecutivo"
+										rendered="#{impresionChequeMB.searchByRango}" />
+									<p:inputText id="numeroRango"
+										value="#{impresionChequeMB.numero}" maxlength="6"
+										rendered="#{impresionChequeMB.searchByRango}" size="6"
+										required="true"
+										requiredMessage="El campo P&oacute;liza es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change" update="@this numeroAsn numeroInput " />
+									</p:inputText>
+									<h:outputText value="Al consecutivo"
+										rendered="#{impresionChequeMB.searchByRango}" />
+									<p:inputText id="numeroRango2"
+										value="#{impresionChequeMB.numero2}" maxlength="6"
+										rendered="#{impresionChequeMB.searchByRango}" size="6"
+										required="true"
+										requiredMessage="El campo P&oacute;liza es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change" update="@this" />
+									</p:inputText>
+								</p:panelGrid>
+								<p:panelGrid columns="3"
+									styleClass="col-centered row-centered ui-noborder">
+									<p:commandButton id="generateporte"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										action="#{impresionChequeMB.search}" value="Correcto"
+										update="form1:inlinePdf, :form1:growlReportador"
+										styleClass="btn btn-default">
+									</p:commandButton>
+									<p:commandLink title="EXCEL"
+										update=":form1:growlReportador, :form1:downXls"
+										actionListener="#{impresionChequeMB.downloadXls}">
+										<p:graphicImage value="excel.png" width="24" />
+									</p:commandLink>
+								</p:panelGrid>
+
+							</p:panelGrid>
+							<p:panel id="inlinePdf2" style="border:0px"
+								visible="#{impresionChequeMB.uuid ne null}">
+								<object type="application/pdf"
+									data="#{request.contextPath}/GetFileInline?uuid=#{impresionChequeMB.uuid}&amp;filename=#{impresionChequeMB.endFilename}"
+									height="380px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
+							</p:panel>
+						</p:tab>
+						<p:tab title="Asignaci&oacute;n de cheque" id="aisgnacionCheque">
+							<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+								<p:panelGrid columns="10" styleClass="ui-noborder">
+									<h:outputText value="Mes:" />
+									<p:selectOneMenu id="mesAsn" value="#{impresionChequeMB.mes}">
+										<f:selectItems value="#{impresionChequeMB.listMeses}"
+											var="item" itemValue="#{item.periodo}"
+											itemLabel="#{item.periodo}" />
+										<p:ajax event="change" update="@this mesInput mes mesSearch" />
+									</p:selectOneMenu>
+									<h:outputText value="Tipo:" />
+									<p:selectOneMenu id="tipoAsn" value="#{impresionChequeMB.tipo}">
+										<f:selectItems value="#{impresionChequeMB.listCattpo}"
+											var="itemTpo" itemValue="#{itemTpo.tippol}"
+											itemLabel="#{itemTpo.tippol}" />
+										<p:ajax event="change" update="@this tipoInput tipo " />
+									</p:selectOneMenu>
+									<h:outputText value="P&oacute;liza:" />
+									<p:inputText id="numeroAsn" value="#{impresionChequeMB.numero}"
+										maxlength="6" size="6"
+										requiredMessage="El campo P&oacute;liza es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change" update="@this numero numeroInput " />
+									</p:inputText>
+									<h:outputText value="N&uacute;mero Cheque:" />
+									<p:inputText id="chequeAsn" value="#{impresionChequeMB.cheque}"
+										size="6"
+										requiredMessage="El campo N&uacute;mero Cheque es obligatorio">
+										<pe:keyFilter regEx="/[\d]/" />
+										<p:ajax event="change" update="@this  chequeInput chequeAsn" />
+									</p:inputText>
+								</p:panelGrid>
+								<p:panelGrid columns="1"
+									styleClass="col-centered row-centered ui-noborder">
+
+									<p:commandButton id="asignar"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										action="#{impresionChequeMB.asignar}" value="Correcto"
+										update="form1:growlReportador" styleClass="btn btn-default">
+									</p:commandButton>
+								</p:panelGrid>
+							</p:panelGrid>
+						</p:tab>
+					</p:tabView>
+
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{impresionChequeMB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{impresionChequeMB.uuid}&amp;filename=#{impresionChequeMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

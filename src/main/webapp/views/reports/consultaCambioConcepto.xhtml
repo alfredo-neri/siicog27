@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean" value="#{consultaCambioConceptoMB}"></ui:param>
+		<ui:define name="content">
+			<script>
+	                $(document).ready(() => {
+	                    $(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align', 'center');
+	                })
+	            </script>
+			<style>
+.input-small, span.input-small input {
+	width: 6em;
+}
+/*INICIO CALENDAR ONLY YEAR*/
+.ui-datepicker-calendar, .ui-datepicker-month, .ui-datepicker-prev,
+	.ui-datepicker-next {
+	display: none;
+}
+
+.ui-datepicker-year {
+	width: 4em !important;
+	margin-left: -1.8em !important;
+}
+
+.ui-datepicker-header {
+	width: 5em;
+}
+
+.ui-datepicker-inline {
+	width: 6em;
+}
+/*INICIO CALENDAR ONLY YEAR*/
+</style>
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto; ">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte" header="Cambio concepto"
+					style="height: 26em;" styleClass="green shadow-panel container">
+					<div class="row">
+						<div
+							class="col-12 col-xs-12 col-sm-12 col-12-md col-lg-12 col-xs-12">
+							<p:panelGrid styleClass="ui-noborder col-centered row-centered"
+								id="panel-filtros">
+								<p:row>
+									<p:column>
+										<h:outputText value="Tipo Poliza" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Número Poliza" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Renglon" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Mes Poliza" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Año Poliza" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>
+										<p:inputText styleClass="input-small"
+											style="text-transform: uppercase"
+											value="#{bean.polide.tippol}" maxlength="1" id="tippol"
+											onblur="$(this).val($(this).val().toUpperCase());">
+											<pe:keyFilter regEx="/[CDEI]/i" />
+										</p:inputText>
+									</p:column>
+
+									<p:column>
+										<pe:inputNumber styleClass="input-small" id="conpol"
+											value="#{bean.polide.conpol}" decimalPlaces="0"
+											decimalSeparator="" thousandSeparator=""
+											maxValue="9999999999">
+										</pe:inputNumber>
+									</p:column>
+
+									<p:column>
+										<pe:inputNumber styleClass="input-small" id="renpol"
+											value="#{bean.polide.renpol}" decimalPlaces="1"
+											decimalSeparator="." thousandSeparator=""
+											maxValue="9999999999">
+										</pe:inputNumber>
+									</p:column>
+
+									<p:column>
+										<p:selectOneMenu editable="false" id="mespol"
+											value="#{bean.polide.mespol}">
+											<f:selectItem itemValue="1" itemLabel="01" />
+											<f:selectItem itemValue="2" itemLabel="02" />
+											<f:selectItem itemValue="3" itemLabel="03" />
+											<f:selectItem itemValue="4" itemLabel="04" />
+											<f:selectItem itemValue="5" itemLabel="05" />
+											<f:selectItem itemValue="6" itemLabel="06" />
+											<f:selectItem itemValue="7" itemLabel="07" />
+											<f:selectItem itemValue="8" itemLabel="08" />
+											<f:selectItem itemValue="9" itemLabel="09" />
+											<f:selectItem itemValue="10" itemLabel="10" />
+											<f:selectItem itemValue="11" itemLabel="11" />
+											<f:selectItem itemValue="12" itemLabel="12" />
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column>
+										<p:calendar widgetVar="calendarAnopol" value="#{bean.anopol}" size="6" 
+											yearRange="2000:#{bean.lastYear}" effect="slideDown" 
+											navigator="true" mode="inline">
+											<p:ajax event="viewChange"
+												onstart="
+								                	let calendar = PF('calendarAnopol')
+					                                ,year = cfg.ext.params[1].value
+					                                ,date = new Date(year, 1, 1, 0, 0, 0)
+					                                ,strDate = $.datepicker.formatDate(calendar.cfg.dateFormat, date);
+					                                calendar.input.val(strDate);
+					                                return false;" />
+										</p:calendar>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="5">
+										<p:commandButton onstart="PF('blockUIWidget').block()"
+											actionListener="#{bean.obtenerPolide}" value="Correcto"
+											update=":form1:growlReportador form1:panel-filtros"
+											styleClass="btn btn-default pull-right" style="width: 6em;">
+										</p:commandButton>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>
+										<h:outputText value="Concepto" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="5">
+										<p:inputText value="#{bean.polide.concep}" maxlength="250" id="concep"
+											style="width:100%;" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="5">
+										<p:commandButton onstart="PF('blockUIWidget').block()"
+											actionListener="#{bean.guardarCambios}" value="Guardar"
+											update=":form1:growlReportador, :form1:tippol, :form1:conpol, :form1:renpol,  :form1:concep"
+											styleClass="btn btn-default pull-right" style="width: 6em;">
+										</p:commandButton>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</div>
+					</div>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

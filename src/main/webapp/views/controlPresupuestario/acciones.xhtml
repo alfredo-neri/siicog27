@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.input-busqueda {
+	width: 40% !important;
+	margin-right: 5px;
+}
+</style>
+			<h:form id="form">
+				<p:panel id="panel" header="Administración de Acciones"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel green container">
+					<p:messages id="messageMain" showDetail="true" closable="true"
+						showSummary="false" />
+
+					<p:remoteCommand name="buscar"
+						actionListener="#{proveedoresMB.buscar}" update=":form:dataGrid" />
+					<p:focus id="focus" />
+
+					<p:outputLabel style="color: red;"
+						value="Nota: Para Modificar y/o Eliminar alg&uacute;n registro favor de dar clic derecho sobre el item que desea manipular." />
+					<p:dataTable id="dataGrid" var="object"
+						value="#{accionesMB.acciones}" rowKey="#{object.id}"
+						selection="#{accionesMB.selectedAccion}" selectionMode="single"
+						styleClass="et_datatable col-md-12 no-border "
+						emptyMessage="No existen registros" paginator="true" rows="10"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="dataGrid" paginatorPosition="top"
+						rowIndexVar="rowIndexCaptura">
+						<f:facet name="header">
+							<p:outputPanel>
+								<h:outputText value="Busqueda: " />
+								<p:inputText id="inputBusqueda" styleClass="input-busqueda"
+									autocomplete="off" value="#{accionesMB.search}"
+									placeholder="Ingrese texto"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) { return false;}">
+								</p:inputText>
+								<p:commandButton icon="ui-icon-search"
+									actionListener="#{accionesMB.searchAccion()}"
+									update=":form:dataGrid" />
+								&nbsp;&nbsp;&nbsp;
+								<p:commandButton icon="ui-icon-plusthick" value="Agregar Acción"
+									actionListener="#{accionesMB.addRow}"
+									oncomplete="PF('carDialog').show()" update=":form:formModal" />
+							</p:outputPanel>
+						</f:facet>
+						<p:column headerText="Clave" exportable="false" width="7%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.clave}" />
+						</p:column>
+						<p:column headerText="Direcci&oacute;n" exportable="false"
+							width="23%" style="text-align: left!important;">
+							<p:outputLabel value="#{object.direccion.descripcion}" />
+						</p:column>
+						<p:column headerText="Acci&oacute;n" exportable="false"
+							width="30%" style="text-align: left!important;">
+							<p:outputLabel value="#{object.nombre}" />
+						</p:column>
+						<p:column headerText="Descripción" exportable="false" width="40%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.descripcion}" />
+						</p:column>
+					</p:dataTable>
+					<p:contextMenu for="dataGrid" id="context">
+						<p:menuitem value="Modificar" icon="ui-icon-pencil"
+							actionListener="#{accionesMB.editRows}"
+							oncomplete="PF('carDialog').show()" update="formModal" />
+						<p:menuitem value="Eliminar" update="dataGrid"
+							oncomplete="PF('confirmFileDelete').show()" icon="ui-icon-trash" />
+					</p:contextMenu>
+
+					<p:dialog header="#{accionesMB.titleModal}" id="formModal"
+						widgetVar="carDialog" modal="true" width="700" height="auto"
+						showEffect="fade" hideEffect="fade" resizable="false">
+
+						<p:messages id="messages" showDetail="true" closable="true"
+							showSummary="false" />
+						<p:outputPanel id="carDetail" style="text-align: right;"
+							styleClass="ui-noborder">
+							<p:panelGrid columns="2" styleClass="ui-noborder">
+
+								<h:outputText value="Direcc&oacute;n:" />
+								<p:selectOneMenu id="direccion" converter="genericConverter"
+									rendered="#{not empty accionesMB.accion.direccion}"
+									value="#{accionesMB.accion.direccion}" style="width:100%;">
+									<f:selectItems value="#{accionesMB.direcciones}"
+										var="direccion" itemLabel="#{direccion.descripcion}"
+										itemValue="#{direccion}" />
+								</p:selectOneMenu>
+								<!-- <p:inputText style="width: 100%;" id="claveImpd2" maxlength="10"
+									rendered="#{not empty accionesMB.accion}" autocomplete="off"
+									value="#{accionesMB.accion.clave}" /> -->
+
+								<h:outputText value="Clave:" />
+								<p:inputText style="width: 100%;" id="claveImp2" maxlength="10"
+									rendered="#{not empty accionesMB.accion}" autocomplete="off"
+									value="#{accionesMB.accion.clave}" />
+
+								<h:outputText value="Acci&oacute;n:" />
+								<p:inputText style="width: 100%;" maxlength="100"
+									rendered="#{not empty accionesMB.accion}" autocomplete="off"
+									value="#{accionesMB.accion.nombre}" />
+
+
+								<h:outputText value="Descripción:" />
+								<p:inputTextarea rows="5" cols="70"
+									rendered="#{not empty accionesMB.accion}"
+									value="#{accionesMB.accion.descripcion}" counter="display"
+									maxlength="200" counterTemplate="{0} caracteres restantes."
+									autoResize="true" />
+
+								<h:outputText value="" />
+								<h:outputText id="display" />
+
+							</p:panelGrid>
+
+							<p:panel styleClass="col-centered row-centered"
+								style="border:0em;">
+								<p:commandButton value="Guardar" icon="ui-icon-disk"
+									id="buttonSave"
+									style="color: #000; padding: .3em; background: #8eb987; font-weight: bolder;"
+									update=":form:messages, form:messageMain, form:dataGrid"
+									actionListener="#{accionesMB.saveAccion}" />
+								<p:commandButton value="Cancelar" icon="ui-icon-cancel"
+									oncomplete="PF('carDialog').hide();" update="form:dataGrid"
+									style="padding: .3em; font-weight: bolder;" />
+							</p:panel>
+						</p:outputPanel>
+					</p:dialog>
+				</p:panel>
+
+			</h:form>
+
+			<p:confirmDialog widgetVar="confirmFileDelete"
+				message="¿Desea eliminar el registro actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{accionesMB.deleteAccion()}"
+					oncomplete="PF('confirmFileDelete').hide();"
+					update=":form:dataGrid :form:messageMain " />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('confirmFileDelete').hide();"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+			</p:confirmDialog>
+			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="../reports/indice.png"
+						style="margin-right: 12px; vertical-align: middle;" />
+					<h:outputText value="Por favor espere..."
+						style="white-space: nowrap;" />
+				</h:panelGrid>
+			</pe:blockUI>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<style type="text/css">
+.mystyleClass .pf-panel-bd {
+	background: #333333;
+	height: 150px;
+	color: #CCCCCC;
+}
+</style>
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="msgs" showDetail="true" sticky="true"></p:growl>
+
+				<p:panel id="reporte"
+					header="Impresion de Cheques Empleados/Proveedores"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="6" styleClass="col-centered ui-noborder">
+
+						<p:panel id="chdImpresos" header="Cheques Impresos"
+							styleClass="mystyleClass">
+							<p:outputLabel
+								value="Numero de Cheques: #{chequeInfoemMB.numeroPagados}"
+								style="background: #59846;" />
+						</p:panel>
+						<p:draggable for="chdImpresos" />
+
+						<p:panel id="chqCancelados" header="Cheques Cancelados">
+							<p:outputLabel
+								value="Numero de Cheques Cancelados: #{chequeInfoemMB.numeroCancelados}" />
+						</p:panel>
+						<p:draggable for="chqCancelados" />
+						<p:panelGrid columns="1">
+							<!--p:commandButton value="Imprimir"/>
+                            <p:commandButton value="Limpiar"
+                                             actionListener="#{chequeInfoemMB.cleanElements}"
+                                             update="form1:line, form1:folio, form1:nombre, form1:concepto, form1:cantidad, form1:montoLetras "/>
+                            <p:commandButton value="Consultar"/>
+                            <p:commandButton value="Cancelados"/ -->
+							<p:megaMenu orientation="vertical">
+								<f:facet name="start">
+									<p:graphicImage name="cheque.png" library="showcase"
+										width="150" />
+								</f:facet>
+								<p:menuitem value="Imprimir" icon="ui-icon-print"
+									oncomplete="PF('dlg1').show()"
+									actionListener="#{chequeInfoemMB.createFilePdfInline}"
+									update="form1:inlinePdf, form1:folio, form1:nombre, form1:concepto, form1:cantidad, form1:montoLetras" />
+								<p:menuitem value="Limpiar" icon="ui-icon-closethick"
+									actionListener="#{chequeInfoemMB.cleanElements}"
+									update="form1:line, form1:folio, form1:nombre, form1:concepto, form1:cantidad, form1:montoLetras " />
+
+
+								<p:menuitem value="Concultar" icon="ui-icon-document"
+									actionListener="#{chequeInfoemMB.consultarCheques}"
+									update="form2:objects" onclick="PF('dlgCheques').show();" />
+
+							</p:megaMenu>
+						</p:panelGrid>
+					</p:panelGrid>
+
+
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+						<p:outputLabel value="Tipo de Cheque" />
+						<p:outputLabel value="Mes" />
+						<p:outputLabel value="Numero de #{chequeInfoemMB.tipoPagoCad}"
+							rendered="#{chequeInfoemMB.tipoCheque  ne 'e'}" id="lblQuincena" />
+						<p:selectOneRadio id="line" value="#{chequeInfoemMB.tipoRerporte}"
+							layout="lineDirection">
+							<f:selectItems value="#{chequeInfoemMB.tipoCheques}" var="tipo"
+								itemLabel="#{tipo.nombre}" itemValue="#{tipo.claveCheque}"
+								disabled="#{chequeInfoemMB.flagActivate}" />
+							<p:ajax listener="#{chequeInfoemMB.changeTipoCheque()}"
+								update="form1:lblEtiqueta, form1:nombre, form1:lblCNumContra, form1:lblQuincena, form1:lblQuincena, form1:lblCNumContra,  form1:lblCNumContra, form1:lblConCont, form1:lblMonto, form1:nContrato, form1:conContra, form1:importeContrato" />
+						</p:selectOneRadio>
+						<p:selectOneMenu id="mes" value="#{chequeInfoemMB.mes.id}">
+							<f:selectItems value="#{chequeInfoemMB.meses}" var="mes"
+								itemLabel="#{mes.descripcion}" itemValue="#{mes.id}" />
+						</p:selectOneMenu>
+
+						<p:inputText id="txtNumPago" value="#{chequeInfoemMB.numeroPago}"
+							size="15" maxlength="20" />
+
+					</p:panelGrid>
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder"
+						id="gridCuenta">
+						<p:outputLabel value="Consecutivo Cheques" />
+						<p:outputLabel value="Cuenta Bancaria" />
+						<p:outputLabel value="Fecha Cheque" />
+						<p:inputText value="#{chequeInfoemMB.folio}" id="folio" size="5"
+							maxlength="5"
+							onkeypress="if (event.keyCode == 13) {return false;}"
+							onblur="if (event.keyCode == 13) {return false;}">
+
+							<p:ajax listener="#{chequeInfoemMB.validateFolio}" event="blur"
+								update=":form1:msgs, :form1:nombre, form1:concepto, form1:cantidad, form1:montoLetras, form1:cmbCuenta, form1:fechaInput, form1:areaNotes" />
+						</p:inputText>
+						<p:selectOneMenu id="cmbCuenta"
+							disabled="#{chequeInfoemMB.flagActivate}"
+							value="#{chequeInfoemMB.cuentaBancaria}">
+							<f:selectItems value="#{chequeInfoemMB.listCuentaBancaria}"
+								var="cuenta" itemLabel="#{cuenta}" itemValue="#{cuenta}" />
+						</p:selectOneMenu>
+						<p:calendar id="fechaInput" showOn="button" locale="es" size="10"
+							disabled="#{chequeInfoemMB.flagActivate}" pattern="dd/MM/yyyy"
+							mask="true" required="true"
+							requiredMessage="Seleccione una fecha"
+							value="#{chequeInfoemMB.date}"
+							converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:calendar>
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+						<p:outputLabel value="Notas" />
+						<p:inputTextarea cols="100" rows="2" id="areaNotes"
+							disabled="#{chequeInfoemMB.flagActivate}" />
+					</p:panelGrid>
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder"
+						id="gridContrato">
+						<p:outputLabel id="lblCNumContra" value="Numero de Contrato"
+							style="display: #{chequeInfoemMB.none}; " />
+
+						<p:outputLabel id="lblConCont" value="Concepto Contrato"
+							style="display: #{chequeInfoemMB.none}; " />
+						<p:outputLabel id="lblMonto" value="Monto Contrato"
+							style="display: #{chequeInfoemMB.none}; " />
+						<p:inputText id="nContrato" value="#{chequeInfoemMB.nContrato}"
+							style="display: #{chequeInfoemMB.none}; ">
+							<p:ajax event="blur" listener="#{chequeInfoemMB.findContrato}"
+								update="form1:conContra, form1:importeContrato" />
+						</p:inputText>
+						<p:inputTextarea id="conContra" cols="60" rows="2" disabled="true"
+							value="#{chequeInfoemMB.contrato.objetoAdquisicion}"
+							style="display: #{chequeInfoemMB.none}; " />
+						<p:inputText id="importeContrato"
+							value="#{chequeInfoemMB.contrato.importeAdquisicion}"
+							disabled="true" style="display: #{chequeInfoemMB.none}; " />
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+
+						<p:outputLabel id="lblEtiqueta" value="#{chequeInfoemMB.etiqueta}" />
+
+						<p:autoComplete id="nombre" value="#{chequeInfoemMB.nombre}"
+							onkeyup="this.value=this.value.toUpperCase();" size="100"
+							disabled="#{chequeInfoemMB.tipoRerporte eq 'p'}"
+							completeMethod="#{chequeInfoemMB.findEmpleadoByFullName}"
+							scrollHeight="250" />
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="col-centered ui-noborder">
+						<p:outputLabel value="Concepto" />
+						<p:inputTextarea id="concepto" rows="2" cols="100" maxlength="300"
+							disabled="#{chequeInfoemMB.flagActivate}"
+							counterTemplate="{0} caracteres " autoResize="true"
+							onkeyup="this.value=this.value.toUpperCase();"
+							value="#{chequeInfoemMB.concepto}" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" styleClass="col-centered ui-noborder">
+						<p:outputLabel value="Cantidad en Moneda" />
+						<p:outputLabel value="Cantidad en Letra" />
+						<p:inputText id="cantidad" value="#{chequeInfoemMB.monto}"
+							disabled="#{chequeInfoemMB.flagActivate}"
+							onkeypress="if (event.keyCode == 13) {return false;} if(event.KeyCode == 9){if(this.value == null){this.value = 0.0;} return false;}">
+							<pe:keyFilter for="cantidad" mask="num"></pe:keyFilter>
+							<f:convertNumber pattern="###,###,##0.00" type="number" />
+							<p:ajax listener="#{chequeInfoemMB.chageNumbersToLetters}"
+								event="keyup" update="form1:montoLetras" />
+						</p:inputText>
+						<p:inputTextarea id="montoLetras" rows="2" cols="100"
+							disabled="true" counterTemplate="{0} caracteres "
+							autoResize="true" value="#{chequeInfoemMB.montoLetras}" />
+					</p:panelGrid>
+
+				</p:panel>
+				<p:dialog header="Impresion de Cheque" widgetVar="dlg1"
+					minHeight="500" width="1000" showEffect="fade" styleClass="green"
+					closeOnEscape="true">
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{chequeInfoemMB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{chequeInfoemMB.uuid}&amp;filename=#{chequeInfoemMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:dialog>
+			</h:form>
+			<h:form id="form2">
+
+				<p:dialog header="Consulta de Cheques" id="dlgCheques"
+					widgetVar="dlgCheques" minHeight="900" styleClass="green"
+					width="1300" showEffect="fade" closeOnEscape="true">
+					<p:panel id="consultaCheque" header="Consulta de Cheques Generados"
+						styleClass="green col-md-12 col-centered row-centered shadow-panel">
+						<p:panelGrid columns="5"
+							styleClass="green col-centered ui-noborder">
+
+							<p:outputLabel value="Folio" />
+							<p:outputLabel value="Nombre Enpleado" />
+							<p:outputLabel value="Mes" />
+							<p:outputLabel value="Estatus Cheque" />
+							<p:outputLabel value="Tipo Cheque" />
+							<p:inputText value="#{chequeInfoemMB.folioConsulta}"
+								id="fConsulta" size="10" maxlength="99999" />
+							<p:autoComplete id="nConsulta"
+								value="#{chequeInfoemMB.nombreConsulta}"
+								completeMethod="#{chequeInfoemMB.findEmpleadoByFullName}"
+								scrollHeight="250" />
+							<p:selectOneMenu id="mConsulta"
+								value="#{chequeInfoemMB.mesConsulta}">
+								<f:selectItem itemLabel="SELECCIONE" itemValue="" />
+								<f:selectItems value="#{chequeInfoemMB.meses}" var="mes"
+									itemValue="#{mes.periodo}" itemLabel="#{mes.descripcion}" />
+							</p:selectOneMenu>
+							<p:selectOneMenu id="cCheques"
+								value="#{chequeInfoemMB.statusCheque}">
+								<f:selectItem itemLabel="SELECCIONE" itemValue="" />
+								<f:selectItem itemLabel="PAGADO" itemValue="PAGADO" />
+								<f:selectItem itemLabel="CANCELADO" itemValue="CANCELADO" />
+
+							</p:selectOneMenu>
+							<p:selectOneMenu id="cTCheques"
+								value="#{chequeInfoemMB.statusCheque}">
+								<f:selectItem itemLabel="SELECCIONE" itemValue="" />
+								<f:selectItem itemLabel="EMPLEADO" itemValue="e" />
+								<f:selectItem itemLabel="GASTOS" itemValue="g" />
+								<f:selectItem itemLabel="PROVEEDOR" itemValue="p" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+						<p:panelGrid columns="2"
+							styleClass="green col-centered ui-noborder">
+							<p:commandButton value="Buscar" id="find"
+								actionListener="#{chequeInfoemMB.findByCheque}"
+								update="form2:objects " />
+							<p:commandButton value="Limpiar" id="clean"
+								actionListener="#{chequeInfoemMB.cleanConsultElements}"
+								update=":form2:nConsulta, form2:mConsulta, form2:cTCheques" />
+						</p:panelGrid>
+						<p:panelGrid columns="1"
+							styleClass="green col-centered ui-noborder">
+							<p:commandButton value="Generar Reporte" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								icon="ui-icon-arrowthick-1-s">
+								<p:fileDownload value="#{chequeInfoemMB.fileCheques}" />
+							</p:commandButton>
+						</p:panelGrid>
+						<p:dataTable id="objects" binding="#{table}" var="object"
+							value="#{chequeInfoemMB.modelGeneric.listT}"
+							resizableColumns="true" emptyMessage="No hay registros"
+							editable="#{chequeInfoemMB.editableTable}" selectionMode="single"
+							rowKey="#{object.index}" scrollable="true" paginator="true"
+							lazy="true" rows="10" paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							style="margin-bottom:10px; padding: 0px 10px !important;"
+							selection="#{chequeInfoemMB.selectPagoCheque}"
+							widgetVar="chequeWdg" rowIndexVar="index">
+
+							<p:column headerText="Folio" style="width:6%">
+								<p:outputLabel value="#{object.folio}" />
+							</p:column>
+							<p:column headerText="Destinatario" style="width:20%">
+								<p:outputLabel value="#{object.destinario}" />
+							</p:column>
+							<p:column headerText="Mes" style="width:6%">
+								<p:outputLabel value="#{object.tcPeriodo.descripcion}" />
+							</p:column>
+							<p:column headerText="Numero Pago" style="width:6%">
+								<p:outputLabel value="#{object.numeroPago}" />
+							</p:column>
+							<p:column headerText="Estatus Cheque" style="width:6%">
+								<p:outputLabel value="#{object.tcEstatusCheque.nombre}" />
+							</p:column>
+							<p:column headerText="Tipo de Cheque" style="width:6%">
+								<p:outputLabel value="#{object.tcTipoCheque.nombre}" />
+							</p:column>
+							<p:column headerText="Cancelar" style="width:6%">
+								<p:commandButton icon="ui-icon-trash" value="Cancelar"
+									actionListener="#{chequeInfoemMB.cancelCheque(object.id)}"
+									disabled="#{object.tcEstatusCheque.nombre eq 'CANCELADO'}"
+									update=":form3:gridCancel, form3:msgsCancel, form2:objects" />
+
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+				</p:dialog>
+			</h:form>
+			<h:form id="form3">
+				<p:dialog header="Cheques a Cancelar" id="dlgChequesCan"
+					widgetVar="dlgChequesCan" minHeight="800" styleClass="green"
+					width="600" showEffect="fade" closeOnEscape="true">
+					<p:growl id="msgsCancel" showDetail="true" sticky="true" />
+					<p:panel header="Cancelación de Cheques" id="pCancel"
+						styleClass="green col-md-9 col-centered row-centered shadow-panel">
+						<p:panelGrid columns="1" id="gridBtnCancel"
+							styleClass="green col-centered ui-noborder">
+							<p:commandButton value="Confirm"
+								actionListener="#{chequeInfoemMB.confirmarCalcelCheque}"
+								update="form3:msgsCancel, form2:objects" styleClass="mr-2"
+								icon="pi pi-check">
+								<p:confirm header="Confirmation"
+									message="¿Estas seguro de Cancelar el Cheque?"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+						</p:panelGrid>
+						<p:panelGrid columns="2" id="gridCancel"
+							styleClass="green col-centered ui-noborder">
+							<p:outputLabel value="Folio" />
+							<p:outputLabel
+								value="#{chequeInfoemMB.cancelTregistroCheque.folio}"
+								id="canFolio" />
+							<p:outputLabel value="Nombre" />
+							<p:outputLabel
+								value="#{chequeInfoemMB.cancelTregistroCheque.destinario}"
+								id="canDest" />
+							<p:outputLabel value="Mes" />
+							<p:outputLabel
+								value="#{chequeInfoemMB.cancelTregistroCheque.tcPeriodo.descripcion}"
+								id="canMes" />
+							<p:outputLabel value="Tipo Cheque" />
+							<p:outputLabel
+								value="#{chequeInfoemMB.cancelTregistroCheque.tcTipoCheque.nombre}"
+								id="canTipo" />
+							<p:outputLabel value="Monto" />
+							<p:outputLabel
+								value="#{chequeInfoemMB.cancelTregistroCheque.monto}"
+								id="canMonto" />
+							<p:outputLabel value="Monto Letras" />
+							<p:outputLabel
+								value="#{chequeInfoemMB.cancelTregistroCheque.montoLetras}"
+								id="canLetras" />
+
+						</p:panelGrid>
+						<p:confirmDialog global="true">
+							<p:commandButton value="Si" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:panel>
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

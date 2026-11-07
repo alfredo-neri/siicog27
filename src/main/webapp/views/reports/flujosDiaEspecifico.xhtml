@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<h:body>
+	    <ui:composition template="/WEB-INF/layout/layout.xhtml">
+	        <ui:param name="bean" value="#{flujosDiaEspecificoMB}"></ui:param>
+	        <ui:define name="content">
+	            <script>
+	                $(document).ready(() => {
+	                    $(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align', 'center');
+	                })
+	            </script>
+	            <style>
+	                span.calendar-small input {
+	                    width: 6em;
+	                }
+	                
+	                .calendar-small {
+	                    padding-right: 1em;
+	                }
+	            </style>
+	            <h:form id="form1" style="display: inline-block; margin-left: auto; margin-right: auto; ">
+	                <p:growl id="growlReportador" showDetail="true" sticky="true" autoUpdate="true"></p:growl>
+	                <p:panel id="panelReporte" header="Flujos por dia específico" style="height: 26em;" styleClass="green shadow-panel container">
+	                    <div class="col-centered row-centered">
+	                        <p:outputLabel for="event" value="Fecha:" />
+	                        <p:calendar id="event" value="#{bean.fecha}" pattern="dd/MM/yyyy" mask="true" styleClass="calendar-small" locale="es">
+	                        </p:calendar>
+	                        <p:commandLink actionListener="#{bean.createFileTxtInlineValidate}" title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+							</p:commandLink>
+							<h:commandLink style="display:none;" id="donwloadTxt"
+								onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:fileDownload value="#{bean.fileTxt}"/>
+							</h:commandLink>
+							<p:commandLink actionListener="#{bean.createFileXlsInlineValidate}" title="Excel">
+								<p:graphicImage value="excel.png" width="24" />
+							</p:commandLink>
+							<h:commandLink style="display:none;" id="donwloadXls"
+								onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:fileDownload value="#{bean.fileXls}"/>
+							</h:commandLink>
+	                        <p:commandButton id="generateportepdf" onstart="PF('blockUIWidget').block()" action="#{bean.createFilePdfInlineValidate}" value="Correcto" update="form1:inlinePdf, :form1:growlReportador" styleClass="btn btn-default">
+	                        </p:commandButton>
+	                        <p:panel id="inlinePdf" style="border:0px" visible="#{bean.uuid ne null}">
+	
+	                            <object type="application/pdf" style="margin-top: 1em;" data="#{request.contextPath}/GetFileInline?uuid=#{bean.uuid}&amp;filename=#{bean.endFilename}" height="380px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
+	
+	                        </p:panel>
+	                    </div>
+	                </p:panel>
+	
+	                <pe:blockUI widgetVar="blockUIWidget" centerX="false">
+	                    <h:panelGrid columns="2">
+	                        <h:graphicImage value="indice.png" style="margin-right: 12px; vertical-align: middle;" />
+	                        <h:outputText value="Por favor espere..." style="white-space: nowrap;" />
+	                    </h:panelGrid>
+	                </pe:blockUI>
+	            </h:form>
+	        </ui:define>
+	    </ui:composition>
+	</h:body>
+
+</html>

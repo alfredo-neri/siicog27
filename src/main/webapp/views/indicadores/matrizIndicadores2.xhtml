@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<p:growl id="growlIndicadores" showDetail="true" sticky="true"></p:growl>
+			<h:form id="formIndCaptura">
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+				<p:panel id="panelIndicadores" header="Matriz de Indicadores"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+
+					<p:panel id="panel" header="B&uacute;squeda"
+						styleClass="green col-md-4 col-centered row-centered shadow-panel">
+
+						<p:panelGrid style="text-align: right;" styleClass="noBorders">
+							<p:row>
+								<p:column>
+									<h:outputText value="Dependencia General:" />
+								</p:column>
+								<p:column>
+									<p:inputText id="codigoSearch" styleClass="form-control"
+										value="#{matrizIndicadores2MB.dependenciaSearch}"
+										maxlength="3" />
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Programa:" />
+								</p:column>
+								<p:column>
+									<p:inputText id="programaSearch" styleClass="form-control"
+										value="#{matrizIndicadores2MB.programaSearch}" maxlength="8" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+
+						<p:outputPanel layout="block" style="text-align:center">
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								actionListener="#{matrizIndicadores2MB.search(true)}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+							<p:commandButton value="Limpiar"
+								style="padding: 5px; margin-left: 15px;"
+								update=":formIndCaptura:indTable, :formIndCaptura:codigoSearch, :formIndCaptura:programaSearch"
+								actionListener="#{matrizIndicadores2MB.cleanSearch()}" />
+
+						</p:outputPanel>
+					</p:panel>
+					<p:blockUI block="indTable" trigger="indTable">
+
+						<h:graphicImage value="../reports/indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</p:blockUI>
+					<p:dataTable id="indTable" var="matriz"
+						paginatorAlwaysVisible="true"
+						value="#{matrizIndicadores2MB.listMatriz}"
+						styleClass="et_datatable" rows="1" widgetVar="indWdg"
+						paginatorPosition="top" rowIndexVar="index"
+						rowKey="#{matriz.index}"
+						emptyMessage="No hay Información para mostrar" paginator="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}">
+
+						<p:ajax event="page" update="formIndCaptura:indTable"
+							listener="#{matrizIndicadores2MB.changePageMatriz}" />
+
+						<p:column>
+							<p:panelGrid
+								styleClass="col-md-11 col-centered row-centered noBorders">
+
+								<p:panel style="border: none;"
+									rendered="#{!matriz.existXcatpro}">
+									<h:outputText style="color:red"
+										value="Favor de Registar el Programa en el Catálogo de Programas" />
+								</p:panel>
+
+								<p:panel style="border: none;"
+									rendered="#{!matriz.canUpdateIndicador}">
+									<h:outputText style="color:red"
+										value="Favor de Completar la Informaci&oacute;n del Encabezado para poder continuar" />
+								</p:panel>
+
+								<p:row>
+									<p:column
+										style="width:15%; text-align:right; font-weight: bold;">
+										<h:outputText value="Clave Dependencia:" />
+									</p:column>
+
+									<p:column style="width:10%;">
+										<p:inputText styleClass="form-control"
+											rendered="#{!matrizIndicadores2MB.editingEncabezado}"
+											value="#{matriz.dependencia.clave}" readonly="true" />
+
+										<p:selectOneMenu value="#{matriz.dependencia.id}"
+											style="width:100%;"
+											rendered="#{matrizIndicadores2MB.editingEncabezado}">
+											<f:selectItem itemLabel="Seleccione" itemValue="0" />
+											<f:selectItems var="general"
+												value="#{matrizIndicadores2MB.listGenerales}"
+												itemLabel="#{general.clave}" itemValue="#{general.id}" />
+
+											<p:ajax event="change"
+												listener="#{matrizIndicadores2MB.changeDependenciaGen}"></p:ajax>
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column style="width:75%;">
+										<h:inputText id="desDep" value="#{matriz.dependencia.nombre}"
+											styleClass="form-control" disabled="true" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column
+										style="width:10%; text-align:right; font-weight: bold;">
+										<h:outputText value="Clave Dependencia Auxiliar:" />
+									</p:column>
+
+									<p:column style="width:15%;">
+										<p:inputText styleClass="form-control"
+											rendered="#{!matrizIndicadores2MB.editingEncabezado}"
+											value="#{matriz.dependenciaAuxiliar.clave}" readonly="true" />
+
+										<p:selectOneMenu value="#{matriz.dependenciaAuxiliar.id}"
+											style="width:100%;"
+											rendered="#{matrizIndicadores2MB.editingEncabezado}">
+											<f:selectItem itemLabel="Seleccione" itemValue="0" />
+											<f:selectItems var="auxiliar"
+												value="#{matrizIndicadores2MB.listAuxiliares}"
+												itemLabel="#{auxiliar.clave}" itemValue="#{auxiliar.id}" />
+
+											<p:ajax event="change"
+												listener="#{matrizIndicadores2MB.changeDependenciaAux}"></p:ajax>
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column style="width:75%;">
+										<h:inputText id="desDepAux"
+											value="#{matriz.dependenciaAuxiliar.nombre}"
+											styleClass="form-control" disabled="true" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column
+										style="width:10%; text-align:right; font-weight: bold;">
+										<h:outputText value="Clave Programa:" />
+									</p:column>
+
+									<p:column style="width:15%;">
+										<p:inputText styleClass="form-control"
+											value="#{matriz.programa}" readonly="true" />
+									</p:column>
+
+									<p:column style="width:75%;">
+										<h:inputText id="desProgram"
+											value="#{matriz.programaDescripcion}" disabled="true"
+											styleClass="form-control" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column
+										style="width:10%; text-align:right; font-weight: bold;">
+										<h:outputText value="Clave Proyecto:" />
+									</p:column>
+
+									<p:column style="width:15%;">
+										<p:inputText styleClass="form-control"
+											rendered="#{!matrizIndicadores2MB.editingEncabezado}"
+											value="#{fn:substring(matriz.proyecto.campo7, 8,12)}"
+											readonly="true" />
+
+										<p:selectOneMenu value="#{matriz.proyecto.id}"
+											style="width:100%;"
+											rendered="#{matrizIndicadores2MB.editingEncabezado}">
+											<f:selectItem itemLabel="Seleccione" itemValue="0"
+												noSelectionOption="true" />
+											<f:selectItems var="prog"
+												value="#{matrizIndicadores2MB.listProyectos}"
+												itemLabel="#{fn:substring(prog.campo7, 8,12)}"
+												itemValue="#{prog.id}" />
+											<p:ajax event="valueChange"
+												listener="#{matrizIndicadores2MB.changeProyecto}"></p:ajax>
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column style="width:75%;">
+										<h:inputText id="desProyecto"
+											value="#{matriz.proyecto.campo6}" disabled="true"
+											styleClass="form-control" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column
+										style="width:10%; text-align:right; font-weight: bold;">
+										<h:outputText value="Clave Temas de Desarrollo:" />
+									</p:column>
+
+									<p:column style="width:15%;">
+										<p:inputText styleClass="form-control"
+											rendered="#{!matrizIndicadores2MB.editingEncabezado}"
+											value="#{matriz.tema.cvetemas}" readonly="true" />
+
+										<p:selectOneMenu value="#{matriz.tema.id}" style="width:100%;"
+											rendered="#{matrizIndicadores2MB.editingEncabezado}">
+											<f:selectItem itemLabel="Seleccione" itemValue="0" />
+											<f:selectItems var="tema"
+												value="#{matrizIndicadores2MB.listTemas}"
+												itemLabel="#{tema.cvetemas}" itemValue="#{tema.id}" />
+											<p:ajax event="change"
+												listener="#{matrizIndicadores2MB.changeTemaDesarrollo}"></p:ajax>
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column style="width:75%;">
+										<h:inputText id="desDesarrollo"
+											value="#{matriz.tema.descripcion}"
+											styleClass="form-control input-sm" disabled="true" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column
+										style="width:10%; text-align:right; font-weight: bold;">
+										<h:outputText value="Objetivo:" />
+									</p:column>
+
+									<p:column style="width:90%;" colspan="2">
+										<p:inputTextarea value="#{matriz.proyecto.campo8}"
+											id="objProyecto" disabled="true" styleClass="form-control" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="3">
+										<!-- <span>#{matriz.id}</span> -->
+										<p:commandButton value="Replicar Matriz"
+											update=":formIndCaptura"
+											rendered="#{matriz.proyecto.id != null}"
+											action="#{matrizIndicadores2MB.replicarMatriz}" />
+
+										<p:commandButton value="Editar Encabezado"
+											rendered="#{matriz.existXcatpro and !matrizIndicadores2MB.editingEncabezado}"
+											update=":formIndCaptura"
+											action="#{matrizIndicadores2MB.editEncabezado}" />
+
+										<p:commandButton value="Salvar"
+											rendered="#{matrizIndicadores2MB.editingEncabezado}"
+											update="formIndCaptura, growlIndicadores"
+											action="#{matrizIndicadores2MB.saveEncabezado}" />
+
+										<p:commandButton value="Cancelar"
+											rendered="#{matrizIndicadores2MB.editingEncabezado}"
+											update="formIndCaptura, growlIndicadores"
+											action="#{matrizIndicadores2MB.cancel}" />
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+
+							<p:tabView id="tabs"
+								rendered="#{matriz.canUpdateIndicador and matriz.existXcatpro}">
+								<p:tab title="Finalidad">
+									<p:panelGrid id="panelGridFinalidad" styleClass="noBorders"
+										columnClasses="col-md-4,col-md-8" columns="2">
+										<p:panel id="panelInputsFinalidad" style="border:none"
+											styleClass="col-centered row-centered">
+											<p:panelGrid id="encabesadoDetalleFinalidad">
+
+												<p:row style="font-weight: bold;">
+													<p:column width="20%">
+														<h:outputText value="Num. Indicador:" />
+													</p:column>
+													<p:column width="20%">
+														<h:outputText value="Código de Indicador:" />
+													</p:column>
+												</p:row>
+
+												<p:row>
+													<p:column width="20%">
+														<h:inputText id="numIndicadorF"
+															value="#{fn:substring(matriz.finalidad.nivel.codigoIndicador,10,14)}"
+															styleClass="form-control" readonly="true">
+															<f:convertNumber pattern="0000" />
+														</h:inputText>
+													</p:column>
+													<p:column width="20%">
+														<h:inputText
+															value="#{matriz.finalidad.nivel.codigoIndicador}"
+															styleClass="form-control" readonly="true" width="20%" />
+													</p:column>
+												</p:row>
+
+											</p:panelGrid>
+										</p:panel>
+										<p:panel id="panelButtonsFinalidad"
+											style="border:none; text-align: initial;">
+											<!-- <span>#{matriz.finalidad.id}</span> -->
+											<p:commandButton value="Crear Ficha"
+												disabled="#{!matriz.canUpdateIndicador}"
+												rendered="#{matriz.finalidad.ficha == null}"
+												update="formIndCaptura, growlIndicadores"
+												action="#{matrizIndicadores2MB.createFicha(matriz.finalidad)}" />
+
+											<p:commandButton value="Eliminar Ficha"
+												update="formIndCaptura, growlIndicadores"
+												rendered="#{matriz.finalidad.ficha != null}"
+												action="#{matrizIndicadores2MB.deleteFicha(matriz.finalidad.ficha.id)}">
+												<p:confirm header="¿Estas Seguro?"
+													message="Perderas la información de las Fichas, ¿Deseas Continuar?" />
+											</p:commandButton>
+										</p:panel>
+									</p:panelGrid>
+
+									<p:panelGrid columnClasses="col-md-2"
+										style="text-align:center; border:1;"
+										id="panelDetalleIndicador">
+										<p:row>
+											<p:column styleClass="ui-widget-header" rowspan="2">
+												<h:outputLabel value="Obj. o Resumen Narrativo" />
+											</p:column>
+											<p:column styleClass="ui-widget-header" colspan="3">
+												<h:outputLabel value="I  n  d  i  c  a  d  o  r  e  s" />
+											</p:column>
+											<p:column styleClass="ui-widget-header" rowspan="2">
+												<h:outputLabel value="Medios de Verificación" />
+											</p:column>
+											<p:column styleClass="ui-widget-header" rowspan="2">
+												<h:outputLabel value="Supuestos" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel value="Nombre" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel value="Fórmula" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel value="Frecuencia y Tipo" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.finalidad.nivel.objetivo}" readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="20" rows="5"
+													value="#{matriz.finalidad.nivel.nombre}" readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.finalidad.nivel.formula}" readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.finalidad.nivel.frecuencia} #{matriz.finalidad.nivel.tipo}"
+													readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.finalidad.nivel.mediosVerificacion}"
+													readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.finalidad.nivel.supuesto}" readonly="true" />
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+								</p:tab>
+								<p:tab title="Proposito">
+									<p:panelGrid id="panelGridProposito" styleClass="noBorders"
+										columnClasses="col-md-4,col-md-8" columns="2">
+										<p:panel id="panelInputsProposito" style="border:none"
+											styleClass="col-centered row-centered">
+											<p:panelGrid styleClass="noBorders"
+												id="encabesadoDetalleProposito">
+
+												<p:row style="font-weight: bold;">
+													<p:column>
+														<h:outputText value="Num. Indicador:" />
+													</p:column>
+													<p:column>
+														<h:outputText value="Código de Indicador:" />
+													</p:column>
+												</p:row>
+
+												<p:row>
+													<p:column>
+														<h:inputText id="numIndicadorP"
+															value="#{fn:substring(matriz.proposito.nivel.codigoIndicador,10,14)}"
+															styleClass="form-control" readonly="true">
+															<f:convertNumber pattern="0000" />
+														</h:inputText>
+													</p:column>
+													<p:column>
+														<h:inputText
+															value="#{matriz.proposito.nivel.codigoIndicador}"
+															styleClass="form-control" readonly="true" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</p:panel>
+										<p:panel id="panelButtonsProposito"
+											style="border:none; text-align: initial;">
+											<!-- <span>#{matriz.proposito.id}</span> -->
+											<p:commandButton value="Crear Ficha"
+												disabled="#{!matriz.canUpdateIndicador}"
+												rendered="#{matriz.proposito.ficha == null}"
+												update="formIndCaptura, growlIndicadores"
+												action="#{matrizIndicadores2MB.createFicha(matriz.proposito)}" />
+
+											<p:commandButton value="Eliminar Ficha"
+												update="formIndCaptura, growlIndicadores"
+												rendered="#{matriz.proposito.ficha != null}"
+												action="#{matrizIndicadores2MB.deleteFicha(matriz.proposito.ficha.id)}">
+												<p:confirm header="¿Estas Seguro?"
+													message="Perderas la información de las Fichas, ¿Deseas Continuar?" />
+											</p:commandButton>
+										</p:panel>
+									</p:panelGrid>
+									<p:panelGrid columnClasses="col-md-2"
+										style="text-align:center; border:1;"
+										id="panelDetalleIndicadorP">
+										<p:row>
+											<p:column styleClass="ui-widget-header" rowspan="2">
+												<h:outputLabel value="Obj. o Resumen Narrativo" />
+											</p:column>
+											<p:column styleClass="ui-widget-header" colspan="3">
+												<h:outputLabel value="I  n  d  i  c  a  d  o  r  e  s" />
+											</p:column>
+											<p:column styleClass="ui-widget-header" rowspan="2">
+												<h:outputLabel value="Medios de Verificación" />
+											</p:column>
+											<p:column styleClass="ui-widget-header" rowspan="2">
+												<h:outputLabel value="Supuestos" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel value="Nombre" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel value="Fórmula" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel value="Frecuencia y Tipo" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.proposito.nivel.objetivo}" readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="20" rows="5"
+													value="#{matriz.proposito.nivel.nombre}" readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.proposito.nivel.formula}" readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.proposito.nivel.frecuencia} #{matriz.proposito.nivel.tipo}"
+													readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.proposito.nivel.mediosVerificacion}"
+													readonly="true" />
+											</p:column>
+											<p:column>
+												<p:inputTextarea style="width:100%;" cols="25" rows="5"
+													value="#{matriz.proposito.nivel.supuesto}" readonly="true" />
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:tab>
+								<p:tab title="Componentes" id="tabComponentes">
+
+									<p:dataTable id="compTable" var="componente"
+										value="#{matriz.componentes}"
+										emptyMessage="No existen registros" paginator="true" rows="1"
+										paginatorTemplate="Componente {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+										widgetVar="comWdg" paginatorPosition="top"
+										rowIndexVar="rowIndexComponente">
+
+										<p:ajax event="page"
+											listener="#{matrizIndicadores2MB.changePageComponente}"
+											update="growlIndicadores" />
+										<p:column>
+											<p:panelGrid id="panelGridComponente" styleClass="noBorders"
+												columnClasses="col-md-4,col-md-8" columns="2">
+												<p:panel id="panelInputComponente"
+													style="border:none;background: none;"
+													styleClass="col-centered row-centered">
+													<p:panelGrid styleClass="noBorders"
+														id="encabesadoDetalleProposito">
+														<p:row style="font-weight: bold;">
+															<p:column>
+																<h:outputText value="Num. Indicador:" />
+															</p:column>
+															<p:column>
+																<h:outputText value="Código de Indicador:" />
+															</p:column>
+														</p:row>
+
+														<p:row>
+															<p:column>
+																<h:inputText id="numIndicadorC"
+																	value="#{fn:substring(componente.nivel.codigoIndicador,10,14)}"
+																	styleClass="form-control input-sm" readonly="true">
+																	<f:convertNumber pattern="0000" />
+																</h:inputText>
+															</p:column>
+															<p:column>
+																<h:inputText value="#{componente.nivel.codigoIndicador}"
+																	styleClass="form-control" readonly="true" />
+															</p:column>
+														</p:row>
+													</p:panelGrid>
+												</p:panel>
+												<p:panel id="panelButtonsComponente"
+													style="border:none; text-align: initial; background: none;">
+													<!-- <span>#{componente.id}</span> -->
+													<p:commandButton value="Crear Ficha"
+														disabled="#{!matriz.canUpdateIndicador}"
+														rendered="#{componente.ficha == null}"
+														update="formIndCaptura, growlIndicadores"
+														action="#{matrizIndicadores2MB.createFicha(componente)}" />
+
+													<p:commandButton value="Eliminar Ficha"
+														update="formIndCaptura, growlIndicadores"
+														rendered="#{componente.ficha != null}"
+														action="#{matrizIndicadores2MB.deleteFicha(componente.ficha.id)}">
+														<p:confirm header="¿Estas Seguro?"
+															message="Perderas la información de las Fichas, ¿Deseas Continuar?" />
+													</p:commandButton>
+
+												</p:panel>
+											</p:panelGrid>
+
+											<p:panelGrid columnClasses="col-md-2"
+												style="text-align:center; border:1;"
+												id="panelDetalleIndicadorC">
+												<p:row>
+													<p:column styleClass="ui-widget-header" rowspan="2">
+														<h:outputLabel value="Obj. o Resumen Narrativo" />
+													</p:column>
+													<p:column styleClass="ui-widget-header" colspan="3">
+														<h:outputLabel value="I  n  d  i  c  a  d  o  r  e  s" />
+													</p:column>
+													<p:column styleClass="ui-widget-header" rowspan="2">
+														<h:outputLabel value="Medios de Verificación" />
+													</p:column>
+													<p:column styleClass="ui-widget-header" rowspan="2">
+														<h:outputLabel value="Supuestos" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel value="Nombre" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel value="Fórmula" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel value="Frecuencia y Tipo" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column>
+														<p:inputTextarea style="width:100%;" cols="25" rows="5"
+															value="#{componente.nivel.objetivo}" readonly="true" />
+													</p:column>
+													<p:column>
+														<p:inputTextarea style="width:100%;" cols="20" rows="5"
+															value="#{componente.nivel.nombre}" readonly="true" />
+													</p:column>
+													<p:column>
+														<p:inputTextarea style="width:100%;" cols="25" rows="5"
+															value="#{componente.nivel.formula}" readonly="true" />
+													</p:column>
+													<p:column>
+														<p:inputTextarea style="width:100%;" cols="25" rows="5"
+															value="#{componente.nivel.frecuencia} #{componente.nivel.tipo}"
+															readonly="true" />
+													</p:column>
+													<p:column>
+														<p:inputTextarea style="width:100%;" cols="25" rows="5"
+															value="#{componente.nivel.mediosVerificacion}"
+															readonly="true" />
+													</p:column>
+													<p:column>
+														<p:inputTextarea style="width:100%;" cols="25" rows="5"
+															value="#{componente.nivel.supuesto}" readonly="true" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+
+											<p:dataTable id="actTable" var="actividad"
+												value="#{componente.nivel.actividades}"
+												styleClass="et_datatable"
+												emptyMessage="No existen registros" paginator="true"
+												paginatorTemplate="Actividad {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+												widgetVar="actWdg" paginatorPosition="top" rows="1"
+												rowIndexVar="rowIndexActividad">
+
+												<p:ajax event="page"
+													listener="#{matrizIndicadores2MB.changePageActividad}"
+													update="growlIndicadores" />
+
+												<f:facet name="header">Actividades</f:facet>
+												<p:column>
+													<p:panelGrid id="panelGridActividad" styleClass="noBorders"
+														columnClasses="col-md-4,col-md-8" columns="2">
+														<p:panel id="panelInputActividad"
+															style="border:none;background: none;"
+															styleClass="col-centered row-centered">
+															<p:panelGrid styleClass="noBorders"
+																id="encabesadoDetalleProposito" columnClasses="col-md-2">
+																<p:row style="font-weight: bold;">
+																	<p:column>
+																		<h:outputText value="Num. Indicador:" />
+																	</p:column>
+																	<p:column>
+																		<h:outputText value="Código de Indicador:" />
+																	</p:column>
+																</p:row>
+
+																<p:row>
+																	<p:column>
+																		<h:inputText id="numIndicadorA"
+																			value="#{fn:substring(actividad.nivel.codigoIndicador,10,14)}"
+																			styleClass="form-control input-sm" readonly="true">
+																			<f:convertNumber pattern="0000" />
+																		</h:inputText>
+																	</p:column>
+																	<p:column>
+																		<h:inputText
+																			value="#{actividad.nivel.codigoIndicador}"
+																			styleClass="form-control" readonly="true" />
+																	</p:column>
+																</p:row>
+															</p:panelGrid>
+														</p:panel>
+														<p:panel id="panelButtonsComponente"
+															style="border:none; text-align: initial; background: none;">
+
+															<!-- <span>#{actividad.id}</span> -->
+															<p:commandButton value="Crear Ficha"
+																disabled="#{!matriz.canUpdateIndicador}"
+																rendered="#{actividad.ficha == null}"
+																update="formIndCaptura, growlIndicadores"
+																action="#{matrizIndicadores2MB.createFicha(actividad)}" />
+
+															<p:commandButton value="Eliminar Ficha"
+																update="formIndCaptura, growlIndicadores"
+																rendered="#{actividad.ficha != null}"
+																action="#{matrizIndicadores2MB.deleteFicha(actividad.ficha.id)}">
+																<p:confirm header="¿Estas Seguro?"
+																	message="Perderas la información de las Fichas, ¿Deseas Continuar?" />
+															</p:commandButton>
+
+														</p:panel>
+													</p:panelGrid>
+													<p:panelGrid columnClasses="col-md-2"
+														style="text-align:center; border:1;"
+														id="panelDetalleIndicadorC">
+														<p:row>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Obj. o Resumen Narrativo" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" colspan="3">
+																<h:outputLabel value="I  n  d  i  c  a  d  o  r  e  s" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Medios de Verificación" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Supuestos" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Nombre" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Fórmula" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Frecuencia y Tipo" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{actividad.nivel.objetivo}" readonly="true" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="20" rows="5"
+																	value="#{actividad.nivel.nombre}" readonly="true" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{actividad.nivel.formula}" readonly="true" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{actividad.nivel.frecuencia} #{actividad.nivel.tipo}"
+																	readonly="true" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{actividad.nivel.mediosVerificacion}"
+																	readonly="true" />
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{actividad.nivel.supuesto}" readonly="true" />
+															</p:column>
+														</p:row>
+													</p:panelGrid>
+												</p:column>
+											</p:dataTable>
+										</p:column>
+									</p:dataTable>
+								</p:tab>
+							</p:tabView>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

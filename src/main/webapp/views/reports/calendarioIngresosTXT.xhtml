@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header=" Presupuesto Calendarizado de Ingresos "
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<h:outputText value="Firmas: " for="firmasInput" />
+						<p:selectOneMenu id="firmasInput" size="5" editable="false"
+							value="#{calendarioIngresosTXTMB.firmas}">
+							<f:selectItem itemValue="4" itemLabel="4" />
+							<f:selectItem itemValue="3" itemLabel="3" />
+							<f:selectItem itemValue="2" itemLabel="2" />
+							<f:selectItem itemValue="1" itemLabel="1" />
+							<f:selectItem itemValue="0" itemLabel="0" />
+						</p:selectOneMenu>
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+						</p:panelGrid>
+						<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+							<p:commandButton value="Vista Previa" id="preView"
+								actionListener="#{calendarioIngresosTXTMB.preView}"
+								icon="ui-icon-zoomout" update=":form1:preViewTxt"
+								onclick="PF('preViewTxtWg').show();" />
+							<p:commandButton value="Correcto" ajax="false" id="correcto"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								actionListener="#{calendarioIngresosTXTMB.downLoadFile}"
+								update=":form1:growlReportador" icon="ui-icon-arrowthick-1-s">
+								<p:fileDownload value="#{calendarioIngresosTXTMB.fileTxt}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panelGrid>
+						<p:outputLabel rendered="#{calendarioIngresosTXTMB.bPreView}"
+							style="max-height: 400px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="255" id="preViewTxt"
+								readonly="true" widgetVar="preViewTxtWg" style="font-family: monospace; font-size: 8pt;"
+								rendered="#{calendarioIngresosTXTMB.bPreView}" autoResize="true"
+								value="#{calendarioIngresosTXTMB.txtPreview}" />
+						</p:outputLabel>
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

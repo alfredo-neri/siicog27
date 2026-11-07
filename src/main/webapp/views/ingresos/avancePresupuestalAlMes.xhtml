@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:focus context="idMesInicial" />
+				<p:commandButton style="display: none" id="downPdf" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{avancePresupuestalAlMesMB.filePdf}" />
+				</p:commandButton>
+				<p:panel id="panel" header="Avance Presupuestal al Mes"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:messages id="growlReportador" showDetail="true" closable="true" />
+					<p:panelGrid columns="7"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:outputLabel value="Mes Inicial" />
+						<p:selectOneMenu id="idMesInicial"
+							value="#{avancePresupuestalAlMesMB.mesInicial}">
+							<f:selectItems value="#{avancePresupuestalAlMesMB.listMes}"
+								var="meses" itemValue="#{meses}" itemLabel="#{meses}" />
+							<p:ajax event="change" update="idMesInicial" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Mes Final" />
+						<p:selectOneMenu id="idMesFinal"
+							value="#{avancePresupuestalAlMesMB.mesFinal}">
+							<f:selectItems value="#{avancePresupuestalAlMesMB.listMes}"
+								var="meses" itemValue="#{meses}" itemLabel="#{meses}" />
+							<p:ajax event="change" update="idMesFinal" />
+						</p:selectOneMenu>
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							title="EXCEL">
+							<p:graphicImage value="../reports/excel.png" width="24" />
+							<p:fileDownload value="#{avancePresupuestalAlMesMB.fileXls}" />
+						</h:commandLink>
+						<p:commandLink
+							actionListener="#{avancePresupuestalAlMesMB.downloadPdf}"
+							update=":form1:growlReportador, :form1:downPdf" title="PDF">
+							<p:graphicImage value="../reports/pdf.png" width="24" />
+						</p:commandLink>
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{avancePresupuestalAlMesMB.viewPdf}"
+							value="Vista Previa"
+							update="form1:inlinePdf, :form1:growlReportador"
+							styleClass="btn btn-default">
+						</p:commandButton>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{avancePresupuestalAlMesMB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{avancePresupuestalAlMesMB.uuid}&amp;filename=#{avancePresupuestalAlMesMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../reports/indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

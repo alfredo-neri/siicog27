@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.left-text {
+	text-align: left
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.input-busqueda {
+	width: 40% !important;
+	margin-right: 5px;
+}
+
+.flex {
+	display: flex;
+}
+
+.p0 {
+	padding: 0 !important;
+}
+
+.ui-icon-circle-triangle-e {
+	background-position: -32px 0;
+}
+
+.ui-icon-circle-triangle-s {
+	background-position: -65px 0;
+}
+
+.toggler {
+	text-align: left !important;
+}
+
+.toggler>div {
+	border: 1px solid gray;
+	border-radius: 50%;
+	background-color: #8db886;
+}
+
+input {
+	width: 100%;
+}
+
+.block {
+	display: grid;
+}
+</style>
+			<p:tabView id="tabs">
+				<p:tab title="Personal administrativo ">
+					<h:form id="formPersonal">
+						<p:remoteCommand name="guardarPersonal"
+							actionListener="#{personalAreasAdministrativasMB.guardarAdministrativo}"
+							update=":tabs:formPersonal focusPersonal" />
+						<p:remoteCommand name="buscarPersonal"
+							actionListener="#{personalAreasAdministrativasMB.buscarAdministrativo()}"
+							update="dataGridPersonal" />
+						<p:messages id="msnPersonal" showDetail="true" closable="true"
+							showSummary="false" style="text-align:initial" />
+						<p:focus id="focusPersonal" />
+						<p:panel id="panelPersonal"
+							header="Administración de personal administrativo"
+							styleClass="green col-md-12 col-centered row-centered shadow-panel green container ">
+							<p:focus id="focus" />
+							<div class="row">
+								<div class="col-md-12 ui-noborder left-text block">
+									<h:outputText value="Unidad Administrativa" />
+									<p:selectOneMenu id="area" converter="genericConverter"
+										style="width: 100% !important;"
+										value="#{personalAreasAdministrativasMB.administrativoSelected.administrativa}">
+										<f:selectItems value="#{personalAreasAdministrativasMB.areas}"
+											var="area" itemLabel="#{area.descripcion}"
+											itemValue="#{area}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 ui-noborder left-text block">
+									<h:outputText value="Nombre" />
+									<p:inputText id="nombre"
+										value="#{personalAreasAdministrativasMB.administrativoSelected.nombre}"
+										maxlength="100" onblur="value=value.toUpperCase()"
+										onkeypress="if (event.which == 13) {guardarPersonal();return false;}if(event.keyCode == 27) {return false;}" />
+								</div>
+								<div class="col-md-6 ui-noborder left-text block">
+									<h:outputText value="Cargo" />
+									<p:inputText id="cargo"
+										value="#{personalAreasAdministrativasMB.administrativoSelected.cargo}"
+										maxlength="100" onblur="value=value.toUpperCase()"
+										onkeypress="if (event.which == 13) {guardarPersonal();return false;}if(event.keyCode == 27) {return false;}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 ui-noborder left-text block">
+									<h:outputText value="Domicilio" />
+									<p:inputText id="domicilio"
+										value="#{personalAreasAdministrativasMB.administrativoSelected.domicilio}"
+										maxlength="100" onblur="value=value.toUpperCase()"
+										onkeypress="if (event.which == 13) {guardarPersonal();return false;}if(event.keyCode == 27) {return false;}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 ui-noborder left-text block">
+									<h:outputText value="Telefono" />
+									<p:inputText id="telefono" maxlength="100"
+										value="#{personalAreasAdministrativasMB.administrativoSelected.telefono}"
+										onkeyup="if (event.which == 13) {guardarPersonal();return false;}if(event.keyCode == 27) {return false;}">
+									</p:inputText>
+								</div>
+								<div class="col-md-4 ui-noborder left-text block">
+									<h:outputText value="Telfax" />
+									<p:inputText id="telfax"
+										value="#{personalAreasAdministrativasMB.administrativoSelected.telfax}"
+										maxlength="100"
+										onkeyup="if (event.which == 13) {guardarPersonal();return false;}if(event.keyCode == 27) {return false;}">
+									</p:inputText>
+								</div>
+								<div class="col-md-4 ui-noborder left-text block">
+									<h:outputText value="Correo electronico" />
+									<p:inputText id="email"
+										value="#{personalAreasAdministrativasMB.administrativoSelected.email}"
+										maxlength="100"
+										onkeyup="if (event.which == 13) {guardarPersonal();return false;}if(event.keyCode == 27) {return false;}">
+									</p:inputText>
+								</div>
+							</div>
+
+							<div class="row">
+								<p:commandButton value="Guardar" widgetVar="guardar"
+									update=":tabs:formPersonal"
+									action="#{personalAreasAdministrativasMB.guardarAdministrativo}"
+									styleClass="ui-confirmdialog-no " icon="ui-icon-disk" />
+								<p:commandButton value="Cancelar"
+									disabled="#{personalAreasAdministrativasMB.administrativoSelected.id==null}"
+									update=":tabs:formPersonal"
+									action="#{personalAreasAdministrativasMB.resetAdministrativoSelected}"
+									styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
+							</div>
+							<p:dataTable id="dataGridPersonal" var="object"
+								value="#{personalAreasAdministrativasMB.personal}"
+								styleClass="et_datatable col-md-12 no-border "
+								emptyMessage="No existen registros" paginator="true" rows="10"
+								rowsPerPageTemplate="5,10,20"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink}  {CurrentPageReport} {LastPageLink} {RowsPerPageDropdown}"
+								widgetVar="dataGridPersonal" paginatorPosition="bottom"
+								rowIndexVar="rowIndexCaptura">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Busqueda: " />
+										<p:inputText id="inputBusqueda" styleClass="input-busqueda"
+											value="#{personalAreasAdministrativasMB.busquedaPersonal}"
+											placeholder="Ingrese texto"
+											onkeypress="if (event.which == 13) {buscarPersonal();return false;}if(event.keyCode == 27) {return false;}">
+										</p:inputText>
+										<p:commandButton icon="ui-icon-search"
+											actionListener="#{personalAreasAdministrativasMB.buscarAdministrativo}"
+											update=":tabs:formPersonal:dataGridPersonal" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="toggler" width="3%">
+									<p:rowToggler />
+								</p:column>
+								<p:column headerText="Nombre" exportable="false" width="30%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.nombre}" />
+								</p:column>
+								<p:column headerText="Cargo" exportable="false" width="30%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.cargo}" />
+								</p:column>
+								<p:column headerText="Telefono" exportable="false" width="32%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.administrativa.descripcion}" />
+								</p:column>
+								<p:column headerText="Acciones" exportable="false" width="5%">
+									<div class="row no-margin">
+										<div class="col-md-4 ui-noborder left-text flex p0 ">
+											<p:commandLink id="deleteRow"
+												update=":tabs:formPersonal:focusPersonal :tabs:formPersonal:msnPersonal :tabs:formPersonal:panelPersonal"
+												oncomplete="PF('deletePersonal').show()"
+												image="ui-icon ui-icon-close" title="Eliminar">
+												<f:setPropertyActionListener value="#{object}"
+													target="#{personalAreasAdministrativasMB.administrativoSelected}" />
+												<h:outputText styleClass="ui-icon ui-icon-close" />
+											</p:commandLink>
+											<p:commandLink
+												update=":tabs:formPersonal:focusPersonal :tabs:formPersonal:msnPersonal :tabs:formPersonal:panelPersonal "
+												image="ui-icon ui-icon-edit" title="Editar">
+												<f:setPropertyActionListener value="#{object}"
+													target="#{personalAreasAdministrativasMB.administrativoSelected}" />
+												<h:outputText styleClass="ui-icon ui-icon-pencil" />
+											</p:commandLink>
+										</div>
+									</div>
+								</p:column>
+								<p:rowExpansion>
+									<div class="row">
+										<div class="col-md-12 ui-noborder left-text block">
+											<p:outputLabel value="Direccion: #{object.domicilio}" />
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Telefono: #{object.telefono}" />
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Telfax: #{object.telfax}" />
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Correo: #{object.email}" />
+										</div>
+									</div>
+								</p:rowExpansion>
+							</p:dataTable>
+
+						</p:panel>
+					</h:form>
+				</p:tab>
+				<p:tab title="Areas administrativas">
+					<h:form id="formArea">
+						<p:remoteCommand name="guardarArea"
+							actionListener="#{personalAreasAdministrativasMB.guardarArea}"
+							update=":tabs:formArea :tabs:formPersonal:area" />
+						<p:remoteCommand name="buscarArea"
+							actionListener="#{personalAreasAdministrativasMB.buscarArea()}"
+							update=":tabs:formArea:dataGridArea" />
+
+						<p:panel id="panelArea" header="Areas administrativas"
+							styleClass="green col-md-12 col-centered row-centered shadow-panel green container ">
+							<p:messages id="msnArea" showDetail="true" closable="true"
+								showSummary="false" style="text-align:initial" />
+							<p:focus id="focusArea" />
+							<p:panel id="panelFormArea">
+								<div class="row">
+									<div class="col-md-7 ui-noborder left-text block">
+										<h:outputText value="Nombre area administrativa" />
+										<p:inputText id="nombreArea" maxlength="200"
+											value="#{personalAreasAdministrativasMB.areaSelected.descripcion}"
+											onkeypress="if (event.which == 13) {guardarArea();return false;}if(event.keyCode == 27) {return false;}" />
+									</div>
+									<div class="col-md-3 ui-noborder left-text block">
+										<h:outputText value="Clave area" />
+										<p:inputText id="clave" maxlength="15"
+											value="#{personalAreasAdministrativasMB.areaSelected.clave}"
+											onkeypress="if (event.which == 13) {guardarArea();return false;}if(event.keyCode == 27) {return false;}" />
+									</div>
+								</div>
+							</p:panel>
+							<p:panelGrid columns="2" id="panelButtonsArea"
+								styleClass=" ui-noborder center panel-buttons">
+								<p:commandButton value="Guardar" widgetVar="guardar"
+									update=":tabs:formArea"
+									action="#{personalAreasAdministrativasMB.guardarArea}"
+									styleClass="ui-confirmdialog-no " icon="ui-icon-disk" />
+								<p:commandButton value="Cancelar"
+									disabled="#{personalAreasAdministrativasMB.areaSelected.id==null}"
+									update=":tabs:formArea:focusArea :tabs:formArea:msnArea :tabs:formArea:panelArea"
+									action="#{personalAreasAdministrativasMB.resetareaSelected}"
+									styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
+							</p:panelGrid>
+
+							<p:dataTable id="dataGridArea" var="object"
+								value="#{personalAreasAdministrativasMB.areas}"
+								styleClass="et_datatable col-md-12 no-border "
+								emptyMessage="No existen registros" paginator="true" rows="10"
+								rowsPerPageTemplate="5,10,20"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink}  {CurrentPageReport} {LastPageLink} {RowsPerPageDropdown}"
+								widgetVar="dataGrid" paginatorPosition="bottom"
+								rowIndexVar="rowIndexCaptura">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Busqueda: " />
+										<p:inputText id="inputBusqueda" styleClass="input-busqueda"
+											value="#{personalAreasAdministrativasMB.busquedaAreas}"
+											placeholder="Ingrese texto"
+											onkeypress="if (event.which == 13) {console.log('ook');buscarArea();return false;}if(event.keyCode == 27) {return false;}">
+										</p:inputText>
+										<p:commandButton icon="ui-icon-search"
+											actionListener="#{personalAreasAdministrativasMB.buscarArea}"
+											update=":tabs:formArea:dataGridArea" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column headerText="Nombre" exportable="false" width="30%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.descripcion}" />
+								</p:column>
+
+								<p:column headerText="Clave area" exportable="false" width="12%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.clave}" />
+								</p:column>
+
+								<p:column headerText="Acciones" exportable="false" width="5%">
+									<div class="row no-margin">
+										<div class="col-md-4 ui-noborder left-text flex p0 ">
+											<p:commandLink id="deleteRow"
+												oncomplete="PF('deleteArea').show()"
+												image="ui-icon ui-icon-close" title="Delete">
+												<f:setPropertyActionListener value="#{object}"
+													target="#{personalAreasAdministrativasMB.areaSelected}" />
+												<h:outputText styleClass="ui-icon ui-icon-close" />
+											</p:commandLink>
+											<p:commandLink
+												update=":tabs:formArea:focusArea :tabs:formArea:msnArea :tabs:formArea:panelArea "
+												image="ui-icon ui-icon-edit" title="Editar">
+												<f:setPropertyActionListener value="#{object}"
+													target="#{personalAreasAdministrativasMB.areaSelected}" />
+												<h:outputText styleClass="ui-icon ui-icon-pencil" />
+											</p:commandLink>
+										</div>
+									</div>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+
+			<p:confirmDialog widgetVar="deletePersonal"
+				message="Desea eliminar el personal actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{personalAreasAdministrativasMB.deleteAdministrativo}"
+					oncomplete="PF('deletePersonal').hide();"
+					update=":tabs:formPersonal:dataGridPersonal :tabs:formPersonal:msnPersonal " />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('deletePersonal').hide();"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+			</p:confirmDialog>
+			<p:confirmDialog widgetVar="deleteArea"
+				message="Desea eliminar el area actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{personalAreasAdministrativasMB.deleteArea}"
+					oncomplete="PF('deleteArea').hide();"
+					update=":tabs:formArea:dataGridArea :tabs:formArea:msnArea :tabs:formPersonal:area" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('deleteArea').hide();" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-check" />
+			</p:confirmDialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

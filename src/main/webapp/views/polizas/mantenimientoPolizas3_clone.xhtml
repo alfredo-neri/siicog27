@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+
+				<p:panel id="panel" header="Mantenimiento de Polizas"
+					styleClass="green col-md-14 col-centered row-centered shadow-panel">
+					<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+					<p:remoteCommand name="onpage"
+						actionListener="#{polizaMantenimientoMB2Clone.onPegaLoad}"
+						autoRun="true" update=":form1:iduser" />
+					<p:focus context="objects" id="focusTable" />
+
+					<p:remoteCommand name="zeroCH"
+						actionListener="#{polizaMantenimientoMB2Clone.defaultZero}"
+						update=":form1:objects" />
+
+					<p:remoteCommand name="createRow"
+						update=":form1:tcuentas, :form1:panel, :form1:objects"
+						actionListener="#{polizaMantenimientoMB2Clone.createRow}" />
+					<p:remoteCommand name="cuentascatalog"
+						update=":form1:tcuentas, :form1:panel, :form1:objects"
+						actionListener="#{polizaMantenimientoMB2Clone.findAllCounts}" />
+
+					<p:remoteCommand name="validaFl" update=":form1:ctafluTable" />
+
+					<center>
+						<p:panelGrid id="pgrid1">
+							<p:row>
+								<p:column style="text-align: center;">
+									<h:outputText value="A&ntilde;o" />
+								</p:column>
+								<p:column style="text-align: center;">
+									<h:outputText value="Tipo" />
+								</p:column>
+								<p:column style="text-align: center;">
+									<h:outputText value="Mes" />
+								</p:column>
+								<p:column style="text-align: center;">
+									<h:outputText value="Numero" />
+								</p:column>
+								<p:column style="text-align: center;">
+									<h:outputText value="Fecha" />
+								</p:column>
+								<p:column colspan="2" style="text-align: center;">
+									<h:outputText value="Status" />
+								</p:column>
+								<p:column colspan="4" style="text-align: center;">
+									<h:outputText value="Concepto" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Captur&oacute;:" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{polizaMantenimientoMB2Clone.polien.cappol}"
+										id="cappol" size="10" maxlength="10" disabled="true" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Capturando" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{polizaMantenimientoMB2Clone.idUser}"
+										id="iduser" size="10" maxlength="10" disabled="true" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Eliminar Poliza" id="pdl"
+										onclick="PF('wingetPasswor').show();" icon="ui-icon-trash" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<h:outputText value="#{polizaMantenimientoMB2Clone.year}" id="year" />
+								</p:column>
+								<p:column>
+									<p:selectOneMenu id="idPomantenimiento"
+										value="#{polizaMantenimientoMB2Clone.polien.tippol}">
+										<f:selectItems value="#{polizaMantenimientoMB2Clone.lisCattpo}"
+											var="po" itemValue="#{po.tippol}" itemLabel="#{po.tippol}" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:selectOneMenu id="selectmespoliza"
+										value="#{polizaMantenimientoMB2Clone.polien.mespol}" required="true">
+										<f:selectItems value="#{polizaMantenimientoMB2Clone.listMeses}"
+											var="m" itemValue="#{m.mes}" itemLabel="#{m.mes}" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<pe:keyFilter for="lisconpol" mask="pint"></pe:keyFilter>
+									<h:inputText value="#{polizaMantenimientoMB2Clone.polien.conpol}"
+										id="lisconpol" size="4" maxlength="4"
+										onkeypress="if (event.keyCode == 13) {onchange(); return false; }">
+										<f:ajax event="change" render="@all"
+											listener="#{polizaMantenimientoMB2Clone.findPolice}"
+											update=":form1:panel, form1:objects " />
+										<f:convertNumber pattern="0000" />
+									</h:inputText>
+								</p:column>
+
+								<p:column>
+
+									<p:calendar id="fecpol"
+										value="#{polizaMantenimientoMB2Clone.polien.fecpol}" maxlength="10"
+										locale="es" size="10" pattern="dd/MM/yyyy">
+										<p:ajax event="dateSelect"
+											listener="#{polizaMantenimientoMB2Clone.onDateSelect}"
+											update=":form1:fecpol" />
+									</p:calendar>
+									<!-- h:inputText value="#{polizaMantenimientoMB2Clone.polien.fecpol}"  id="fecpol" size="10" maxlength="10" disabled="true" / -->
+								</p:column>
+								<p:column>
+									<h:inputText value="#{polizaMantenimientoMB2Clone.polien.stapol}"
+										id="stapol" size="1" maxlength="1" disabled="true" />
+								</p:column>
+								<p:column>
+									<h:inputText value="#{polizaMantenimientoMB2Clone.polien.staafe}"
+										id="staafe" size="1" maxlength="1" disabled="true" />
+								</p:column>
+
+								<p:column rowspan="2" colspan="4">
+									<h:inputTextarea
+										value="#{polizaMantenimientoMB2Clone.polien.polclv1}" rows="2"
+										id="concepto" cols="50" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Crear Poliza" id="newpoliza"
+										actionListener="#{polizaMantenimientoMB2Clone.createPolicy}"
+										update=":form1:panel" icon="ui-icon-newwin" ajax="false"/>
+								</p:column>
+								<p:column>
+									<p:commandButton value="Buscar" id="findpoliza"
+										actionListener="#{polizaMantenimientoMB2Clone.findPolice}"
+										update=":form1:panel, :form1:" icon="ui-icon-search"
+										ajax="false" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Primero" id="primero"
+										actionListener="#{polizaMantenimientoMB2Clone.firstHead}"
+										disabled="#{polizaMantenimientoMB2Clone.bloqueaBoton}"
+										update=":form1:objects, :form1:panel" />
+									<p:commandButton value="Siguiente" id="siguiente"
+										actionListener="#{polizaMantenimientoMB2Clone.nextHead}"
+										update=":form1:panel, :form1:objects" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Anterior" id="anterior" update=":form1:objects, :form1:panel"
+										actionListener="#{polizaMantenimientoMB2Clone.previusHead}" />
+									<p:commandButton value="Ultimo" id="ultimo"
+										update=":form1:objects, :form1:panel"
+										actionListener="#{polizaMantenimientoMB2Clone.lastHead}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</center>
+					<p:dataTable id="objects" binding="#{table}" var="object"
+						value="#{polizaMantenimientoMB2Clone.listPolide}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						editable="#{polizaMantenimientoMB2Clone.editableTable}"
+						selectionMode="single" rowKey="#{object.index}" scrollRows="20"
+						scrollable="true" liveScroll="true" scrollHeight="150"
+						style="margin-bottom:0"
+						selection="#{polizaMantenimientoMB2Clone.polideSelect}"
+						widgetVar="polizasWdg">
+
+						<p:ajax event="rowEdit"
+							listener="#{polizaMantenimientoMB2Clone.onRowEdit}"
+							update=":form1:messagesEdit, :form1:objects"
+							oncomplete="executeClickHideButton();" />
+						<p:ajax event="rowEditCancel"
+							listener="#{polizaMantenimientoMB2Clone.onRowCancel}"
+							update=":form1:messagesEdit, :form1:objects" />
+
+						<p:column headerText="#" style="width:4%">
+							<h:outputText value="#{object.renpol}" id="renglon">
+
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Cuenta" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+
+									<h:outputText value="#{object.cuenta}" />
+
+								</f:facet>
+								<f:facet name="input">
+
+									<p:inputText id="cuenta" value="#{object.cuenta}"
+										style="width:100%" maxlength="4"
+										ondblclick="PF('cuentascon').show(); return false;"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+										<pe:keyFilter for="cuenta" mask="int"></pe:keyFilter>
+										<p:ajax event="blur" update="cuenta, :form1:tcuentas"></p:ajax>
+
+									</p:inputText>
+
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Scta" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.scta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="scta" value="#{object.scta}"
+										style="width:100%" maxlength="10"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+
+										<p:ajax event="blur" update="scta"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sscta" style="width:12%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sscta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="sscta" value="#{object.sscta}"
+										style="width:100%" maxlength="15"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+
+										<p:ajax event="blur" update="sscta"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Ssscta" style="width:8%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.ssscta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="ssscta" value="#{object.ssscta}"
+										style="width:100%" maxlength="4"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+										<pe:keyFilter for="ssscta" mask="pint"></pe:keyFilter>
+										<p:ajax event="blur" update="ssscta"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sssscta" style="width:8%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sssscta}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="sssscta" value="#{object.sssscta}"
+										style="width:100%" maxlength="3"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+										<pe:keyFilter for="sssscta" mask="pint"></pe:keyFilter>
+										<p:ajax event="blur" update="ssscta"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Concepto" style="width:50%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.concep}"
+										style="text-align: left;" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="concep" value="#{object.concep}"
+										style="width:100%" maxlength="300"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+										<p:ajax event="blur" update="concep"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="RefPol" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.refpol}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="refpol" value="#{object.refpol}"
+										style="width:100%" maxlength="7"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+										<p:ajax event="blur" update="refpol"></p:ajax>
+										<pe:keyFilter for="refpol" mask="pint"></pe:keyFilter>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Dn" style="width:4%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.dn}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="dn" value="#{object.dn}" style="width:100%"
+										maxlength="1"
+										onkeyup="this.value=this.value.toUpperCase();"
+										converterMessage="Solo permi C,D,E,I"
+										validatorMessage="Solo permi C,D,E,I"
+										required="true"
+										requiredMessage="Solo permi C,D,E,I"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}">
+										<f:validateRegex pattern="^[CDEI]$"
+													for="clvdep" />
+										<p:ajax event="blur" update="dn"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Cargo" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.canpol}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="canpol" value="#{object.canpol}"
+										style="width:100%" maxlength="15"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;} if(event.KeyCode == 9){if(this.value == null){this.value = 0.0;} return false;}">
+										<f:convertNumber pattern="###,###,##0.00" type="number"
+											minFractionDigits="0" />
+										<pe:keyFilter for="canpol" mask="money"></pe:keyFilter>
+										<p:ajax event="blur" update="canpol"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Abono" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.canpolh}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="canpolh" value="#{object.canpolh}"
+										style="width:100%" maxlength="15"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {return false;}if(event.KeyCode == 9){zeroCH(); return false;}">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+										<pe:keyFilter for="canpolh" mask="money"></pe:keyFilter>
+										<p:ajax event="blur" update="canpolh"></p:ajax>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Cuenta Adicional" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.cuenta1}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="cuentaa" value="#{object.cuenta1}"
+										style="width:100%" maxlength="4"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13) {jQuery('div span.ui-icon-check').last().click(); return false; } ">
+
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column width="10%">
+							<p:rowEditor>
+
+							</p:rowEditor>
+						</p:column>
+					</p:dataTable>
+					<p:commandButton id="hideButton"
+						actionListener="#{polizaMantenimientoMB2Clone.updateViewRowsAutoGenerated}"
+						update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000"
+						style="visibility: hidden;"
+						oncomplete="jQuery('div.ui-datatable-scrollable-body').scrollTop(jQuery('div.ui-datatable-scrollable-body').prop('scrollHeight'));" />
+					<center>
+						<p:panelGrid id="pgrid2" columns="6">
+							<h:outputText value="Nombre Concepto" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.polien.polclv1}"
+								id="polclv1" size="100" maxlength="100" disabled="true" />
+
+							<p:commandButton value="Repetir Concepto" id="repConBtn"
+								actionListener="#{polizaMantenimientoMB2Clone.repetirConcepto}"
+								disabled="#{polizaMantenimientoMB2Clone.activButtons}"
+								update=":form1:panel, :form1:objects, :form1:pgrid2"
+								icon="ui-icon-plus" ajax="true" />
+
+							<h:outputText value="Suma:" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.polien.cdebe}"
+								id="sumaa" disabled="true" size="15" maxlength="15"
+								style="float:right;">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</h:inputText>
+							<h:inputText id="sumac"
+								value="#{polizaMantenimientoMB2Clone.polien.chaber}" size="15"
+								maxlength="15" disabled="true" style="float:right;">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</h:inputText>
+
+
+
+							<h:outputText value="Nombre Cuenta:" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.cuenta.nomcta}"
+								id="nomcta" size="80" maxlength="80" disabled="true" />
+
+							<h:outputText value="" />
+							<h:outputText value="Suma 8000:" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.polien.ctc600}"
+								id="sumaA8000" disabled="true" size="15" maxlength="15"
+								style="float:right;">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+
+							</h:inputText>
+							<h:inputText value="#{polizaMantenimientoMB2Clone.polien.cta600}"
+								id="sumaB8000" disabled="true" size="15" maxlength="15"
+								style="float:right;">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+
+							</h:inputText>
+
+
+						</p:panelGrid>
+						<p:panelGrid id="pgrid3" columns="8">
+							<h:outputText value="Renglon:" />
+							<pe:keyFilter for="rowid" mask="pint"></pe:keyFilter>	
+							<h:inputText value="#{polizaMantenimientoMB2Clone.renglon}" id="rowid"
+								size="4" maxlength="4">
+								<p:ajax event="keyup" update=":form1:objects, :form1:panel"
+									listener="#{polizaMantenimientoMB2Clone.findBybRow}" />
+							</h:inputText>
+							<p:commandButton value="Polizas Incorrectas" id="wrongbuton"
+								onclick="PF('wrongPoli').show();" icon="ui-icon-closethick" />
+							<p:commandButton value="Imprimir Poliza" id="impresion"
+								style="margin-left: 47%; padding: 1px;"
+								actionListener="#{polizaMantenimientoMB2Clone.buttonAction}"
+								icon="ui-icon-print" oncomplete="PF('impPoliza').show();"
+								update=":form1:imPoliza, :form1:pdfContent" />
+							<p:commandButton value="Adicionar" id="addpoliza"
+								actionListener="#{polizaMantenimientoMB2Clone.createFirstRow}"
+								update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:pgrid2"
+								icon="ui-icon-plus"
+								disabled="#{polizaMantenimientoMB2Clone.activButtons}" />
+
+							<p:commandButton value="Borrar" id="borrar"
+								actionListener="#{polizaMantenimientoMB2Clone.deleteRow}"
+								disabled="#{polizaMantenimientoMB2Clone.activButtons}"
+								update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:pgrid2"
+								icon="ui-icon-trash" />
+							<p:commandButton value="Reset" id="reset"
+								disabled="#{polizaMantenimientoMB2Clone.activButtons}"
+								icon="ui-icon-battery-0" ajax="true" />
+
+
+						</p:panelGrid>
+					</center>
+
+
+
+					<p:dialog header="Imprimir Poliza" id="imPoliza"
+						widgetVar="impPoliza" width="800" height="500">
+						<p:media id="pdfContent"
+							value="#{polizaMantenimientoMB2Clone.filePdfPath}" width="100%"
+							height="500" player="pdf">
+						</p:media>
+					</p:dialog>
+
+
+					<p:dialog header="Polizas Incorrectas" widgetVar="wrongPoli"
+						id="wrongP" width="800" height="400">
+						<center>
+							<p:panelGrid columns="3" id="pgridWrongs">
+								<h:outputText value="Mes:" />
+								<h:inputText value="#{polizaMantenimientoMB2Clone.me}" id="wrongmes"
+									size="2" maxlength="2" />
+								<p:commandButton value="Buscar" id="wserach"
+									icon="icon-file-search"
+									actionListener="#{polizaMantenimientoMB2Clone.findWrongPolicy}"
+									update=":form1:wrongTable" />
+							</p:panelGrid>
+							<p:dataTable id="wrongTable" var="object2"
+								value="#{polizaMantenimientoMB2Clone.listIncorrectas}"
+								styleClass="et_datatable" emptyMessage="No hay registros"
+								editable="true" paginator="true" rows="10"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column headerText="Tipo" style="with:5%">
+									<h:outputText value="#{object2.tippol}" />
+								</p:column>
+								<p:column headerText="Mes" style="with:5%">
+									<h:outputText value="#{object2.mespol}" />
+								</p:column>
+								<p:column headerText="Numero" style="with:5%">
+									<h:outputText value="#{object2.conpol}" />
+								</p:column>
+								<p:column headerText="Cifra Control" style="with:5%">
+									<h:outputText value="#{object2.ccontro}">
+										<f:convertNumber pattern="###,###,###.##" />
+									</h:outputText>
+
+								</p:column>
+								<p:column headerText="Suma  Debe" style="with:5%">
+									<h:outputText value="#{object2.sdebe}" />
+								</p:column>
+								<p:column headerText="Suma Haber" style="with:5%">
+									<h:outputText value="#{object2.shaber}" />
+								</p:column>
+								<p:column headerText="Abono 6000" style="with:5%">
+									<h:outputText value="#{object2.ctc6000}" />
+								</p:column>
+								<p:column headerText="Cargo 6000" style="with:5%">
+									<h:outputText value="#{object2.cta6000}" />
+								</p:column>
+							</p:dataTable>
+						</center>
+					</p:dialog>
+
+					<p:dialog id="concuentas" widgetVar="cuentascon" width="1000"
+						modal="true" height="480" header="Consulta de Cuentas">
+						<p:dataTable id="tcuentas" var="object3" styleClass="et_datatable"
+							resizableColumns="true"
+							value="#{polizaMantenimientoMB2Clone.cuentaPolizaDataModel}"
+							lazy="true" selectionMode="single"
+							emptyMessage="No hay registros" paginator="true" rows="10"
+							rowKey="#{object3.id}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+							<p:ajax event="rowDblselect"
+								update=":form1:objects, :form1:focusTable"
+								listener="#{polizaMantenimientoMB2Clone.onCuentaRowDblClckSelect}"
+								oncomplete="PF('cuentascon').hide();"></p:ajax>
+
+							<p:column headerText="Cuenta" filterMatchMode="startswith"
+								filterBy="#{object3.cuenta}" width="10%">
+								<h:outputText value="#{object3.cuenta}" />
+							</p:column>
+
+							<p:column headerText="sCuenta" style="width:5%">
+								<h:outputText value="#{object3.scuenta}" />
+							</p:column>
+							<p:column headerText="ssCuenta" style="width:10%">
+								<h:outputText value="#{object3.sscuenta}" />
+							</p:column>
+
+							<p:column headerText="sssCuenta" style="width:5%">
+								<h:outputText value="#{object3.ssscuenta}" />
+							</p:column>
+							<p:column headerText="ssssCuenta" style="width:5%">
+								<h:outputText value="#{object3.sssscuenta}" />
+							</p:column>
+
+							<p:column headerText="Nombre Cuenta" style="width:30%">
+								<h:outputText value="#{object3.nomcta}" />
+							</p:column>
+						</p:dataTable>
+					</p:dialog>
+
+					<p:dialog id="ff" widgetVar="flujoefectivo" modal="true"
+						width="630" height="300">
+						<p:remoteCommand name="editRowPf"
+							actionListener="#{polizaMantenimientoMB2Clone.onEdit}"
+							update=":form1:errorMsg" />
+
+						<p:remoteCommand name="cancelRwPf"
+							actionListener="#{polizaMantenimientoMB2Clone.onCancel}"
+							update=":form1:errorMsg" />
+
+						<p:panelGrid columns="8">
+							<h:outputText value="Tipo:" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.tippolflu}"
+								id="tippolflu" size="2" maxlength="2" disabled="true" />
+							<h:outputText value="Mes:" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.mespolflu}"
+								id="mespolflu" size="2" maxlength="2" disabled="true" />
+							<h:outputText value="Numero:" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.conpolflu}"
+								id="conpolflu" size="4" maxlength="4" disabled="true">
+								<f:convertNumber pattern="0000" />
+							</h:inputText>
+							<h:outputText value="Rengl&oacute;n:" />
+							<h:inputText value="#{polizaMantenimientoMB2Clone.renpolflu}"
+								id="renpolflu" size="2" maxlength="2" disabled="true" />
+						</p:panelGrid>
+						<p:messages for="errorMsg" id="errorMsg" />
+						<center>
+							<p:dataTable value="#{polizaMantenimientoMB2Clone.orderlist}"
+								id="ctafluTable" var="o" widgetVar="50" style="width: 300px;"
+								editMode="cell"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15" editable="true" rows="5">
+								<f:facet name="header">  
+			                       Flujo de Efectivo
+			                    </f:facet>
+								<p:ajax event="rowEdit"
+									listener="#{polizaMantenimientoMB2Clone.onEdit}"
+									update=":form1:messagesEdit, :form1:sumaflujoe, :form1:errorMsg" />
+								<p:ajax event="rowEditCancel"
+									listener="#{polizaMantenimientoMB2Clone.onCancel}"
+									update=":form1:messagesEdit" />
+								
+								<p:column style="width:5%">
+									<f:facet name="header">
+										<h:outputText value="Clave" />
+									</f:facet>
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.clvflu}">
+
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{o.clvflu}" style="width:100%"
+												id="oclvflu"
+												onkeypress="if(event.keyCode == 13) {validaFl(); return false;}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column style="width:10%">
+									<f:facet name="header">
+										<h:outputText value="Cantidad" />
+									</f:facet>
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.canflu}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{o.canflu}" style="width:100%"
+												onkeypress="if(event.keyCode == 13){return false;}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+
+								<p:column headerText="Options" style="width:5%">
+									<p:rowEditor />
+								</p:column>
+							</p:dataTable>
+						</center>
+						<h:outputText value="Suma:" />
+						<h:inputText value="#{polizaMantenimientoMB2Clone.sumaFf}"
+							id="sumaflujoe" disabled="true" style="aling-text: rigth">
+							<f:convertNumber pattern="###,###,###.##" />
+						</h:inputText>
+						<center>
+							<p:panelGrid columns="4">
+								<p:commandButton value="Agregar"
+									action="#{polizaMantenimientoMB2Clone.addAction}" id="add"
+									update=":form1:ctafluTable">
+
+								</p:commandButton>
+								<p:commandButton value="Borrar"
+									actionListener="#{polizaMantenimientoMB2Clone.removeListFl}"
+									id="rrrrrr" />
+
+								<p:commandButton value="Salir" id="salir"
+									onclick="PF('flujoefectivo').hide();" />
+							</p:panelGrid>
+						</center>
+					</p:dialog>
+
+					<p:dialog id="panelValida" widgetVar="wingetPasswor"
+						header="Valida Password" modal="true" styleClass="green">
+						<p:panelGrid id="pgridpass" columns="2">
+							<h:outputText value="Password Administrador" />
+							<h:inputSecret id="validatePass"
+								value="#{polizaMantenimientoMB2Clone.password}"
+								onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;}" />
+							<h:outputText value="" />
+							<p:commandButton value="Validar"
+								update=":form1:messagesEdit, :form1:panel, form1:objects"
+								actionListener="#{polizaMantenimientoMB2Clone.isPassvalidate}"
+								oncomplete="PF('wingetPasswor').hide();" />
+						</p:panelGrid>
+
+					</p:dialog>
+				</p:panel>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

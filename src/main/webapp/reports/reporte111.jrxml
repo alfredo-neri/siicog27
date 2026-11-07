@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-03-06T11:19:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte111" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3fe52ded-fec7-4ab5-ba6f-1d364894e54b">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="5.238"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="13.948"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ServerLinux"/>
+	<parameter name="TRIMESTRE" class="java.lang.Integer"/>
+	<parameter name="SECTOR" class="java.lang.Integer"/>
+	<parameter name="imagen" class="java.lang.String"/>
+	<parameter name="nombreMunicipio" class="java.lang.String"/>
+	<parameter name="clave" class="java.lang.String"/>
+	<parameter name="N4" class="java.lang.String"/>
+	<parameter name="L4" class="java.lang.String"/>
+	<parameter name="N3" class="java.lang.String"/>
+	<parameter name="L3" class="java.lang.String"/>
+	<parameter name="N5" class="java.lang.String"/>
+	<parameter name="L5" class="java.lang.String"/>
+	<parameter name="ANO_EMP" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT TRIMESTRE, AGUA, POBLACION, ACUMAGUA, OBSAGUA, OBSPOB
+FROM PM2511
+WHERE TRIMESTRE = $P{TRIMESTRE}
+AND IDSECTOR = $P{SECTOR}]]>
+	</queryString>
+	<field name="TRIMESTRE" class="java.lang.Integer"/>
+	<field name="AGUA" class="java.math.BigDecimal"/>
+	<field name="POBLACION" class="java.lang.Integer"/>
+	<field name="ACUMAGUA" class="java.math.BigDecimal"/>
+	<field name="OBSAGUA" class="java.lang.String"/>
+	<field name="OBSPOB" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="179" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image onErrorType="Blank">
+				<reportElement x="7" y="4" width="50" height="50" uuid="b230ea56-1650-49ba-b807-fe3148bf4a2c"/>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="62" width="802" height="1" uuid="2376a1c7-4969-42aa-bd63-9ccfc73f858b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="1" y="64" width="801" height="30" uuid="26e38c7a-7d4d-4a92-895b-130dd40b4ad9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTO DE INFORMACIÓN QUE ALIMENTA EL INDICADOR DE CONSUMO DE AGUA POTABLE PER CÁPITA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="111" width="70" height="17" uuid="2668a9b5-e738-4398-a370-42a092896736"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MUNICIPIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="111" width="210" height="17" uuid="9656b651-855e-4f40-a483-a76beeafd750"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreMunicipio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="141" width="400" height="23" uuid="fd3c23e3-9334-4d30-bf8f-d6fb80787732"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TRIMESTRE} == 1 ? "DEL 1° DE ENERO AL 31 DE MARZO DE " + $P{ANO_EMP} :
+$P{TRIMESTRE} == 2 ? "DEL 1° DE ABRIL AL 30 DE JUNIO DE " + $P{ANO_EMP} :
+$P{TRIMESTRE} == 3 ? "DEL 1° DE JULIO AL 30 DE SEPTIEMBRE DE " + $P{ANO_EMP}:
+$P{TRIMESTRE} == 4 ? "DEL 1° DE OCTUBRE AL 31 DE DICIEMBRE DE " + $P{ANO_EMP}:
+""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="480" y="111" width="40" height="17" uuid="5e3512eb-ec91-4eed-9b8e-40561e35bacd"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NÚM:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="520" y="111" width="160" height="17" uuid="50539e41-516b-4206-b718-95014e8ba965"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{clave}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="34">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="180" height="34" backcolor="#D6D6D6" uuid="32f08175-08a8-4a21-9b02-2c0a9825c700"/>
+				<box padding="0">
+					<pen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="180" y="0" width="200" height="34" backcolor="#D6D6D6" uuid="e08e02dd-01fa-4597-ab25-5c9b5da020aa"/>
+				<box padding="0">
+					<pen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE TRIMESTRAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="380" y="0" width="200" height="34" backcolor="#D6D6D6" uuid="a40a6620-8c63-423b-9116-30c0c083d94b"/>
+				<box padding="0">
+					<pen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACUMULADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="580" y="0" width="200" height="34" backcolor="#D6D6D6" uuid="40c478c9-3bf5-4317-a5cb-74831ff7e3ab"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="163" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="20" width="179" height="30" uuid="af6a25cf-0a1a-44b8-a194-e6d37eed5a6a"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Volumen total de agua potable (en metros cúbicos) entregado a usuarios]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="70" width="109" height="30" uuid="3428d0ba-882f-4f37-8529-31d8f9dcd805"/>
+				<text><![CDATA[Total de población (INEGI)]]></text>
+			</staticText>
+			<line>
+				<reportElement x="180" y="0" width="1" height="118" uuid="ee5724e2-2d6d-419b-8f9f-4fc922b43193"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="118" uuid="c983b3a0-e020-46bd-9fb0-51c74ffc3e9b"/>
+			</line>
+			<line>
+				<reportElement x="380" y="0" width="1" height="118" uuid="23896a2e-2c38-41c2-81ce-ded539fc5d1f"/>
+			</line>
+			<line>
+				<reportElement x="580" y="0" width="1" height="118" uuid="696b0016-6fc9-41b6-9542-b2b3e62b41b3"/>
+			</line>
+			<line>
+				<reportElement x="779" y="2" width="1" height="118" uuid="6c1f45fc-e786-40da-adbc-cef2a5d881a9"/>
+			</line>
+			<line>
+				<reportElement x="1" y="120" width="779" height="1" uuid="282518e0-ebf0-4ff5-8e35-0105814e3e42"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="181" y="19" width="199" height="21" uuid="c9a3f5a0-face-4f46-9fe0-0af7808b4d56"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AGUA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="181" y="70" width="199" height="30" uuid="ba0adecc-4011-47d7-b281-30d6233cd0a3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POBLACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="581" y="2" width="198" height="58" uuid="13615e8d-73c4-4e2b-b2cb-c721f2b0c6b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OBSAGUA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="381" y="20" width="199" height="20" uuid="478c4e54-41de-40e8-bf25-cdf6097ad5f9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACUMAGUA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="581" y="60" width="198" height="58" uuid="859120e5-688d-442c-86a1-651de81b2b7d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OBSPOB}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="133" width="36" height="19" uuid="1d5ef5fb-bb37-4749-b129-c3b0b1ceb264"/>
+				<textElement>
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="36" y="133" width="744" height="30" uuid="4bcf97f1-e1dd-468d-95f9-1d2b7a87d7ad"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Formato de cáracter trimestral que se presentará en archivo de texto .txt. El total de habitantes se debe obtener de una fuente oficial como INEGI, este formato soló lo requisitan los municipios que no cuentan con Organismo Descentralizado de Agua.]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="127" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="105" width="81" height="22" uuid="630e040b-5b69-4a32-bda8-6c746c90a07e"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OSFEPM/25/11]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="105" width="110" height="22" uuid="35992cde-56be-4cf0-ae6a-b08f50e20ee0"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de elaboración:]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="491" y="106" width="80" height="20" uuid="23d9ad1d-fd2d-4c55-a7ba-15bbe6e5a9b6"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[DATEFORMAT(new java.util.Date(),"dd/MM/YYYY" )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="610" y="97" width="100" height="30" uuid="456f80e1-4ced-45d3-b990-fb154f76f85f"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="710" y="97" width="90" height="30" uuid="a705c8df-e04f-4559-9619-d735fb82f397"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="17" width="160" height="20" uuid="dea2fbd9-09a4-496b-9e4c-ccc524297e94"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{N4}==null?"":$P{N4})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="51" width="160" height="15" uuid="6fc3eb82-2429-45b8-8014-c91a36472298"/>
+				<text><![CDATA[______________________________________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="66" width="160" height="20" uuid="24d791a6-4f8e-426e-aa43-7d4a28420d50"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{L4}==null?"":$P{L4})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="17" width="160" height="20" uuid="669467b1-56d9-4879-8a88-124d6b4f8ace"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{N5}==null?"":$P{N5})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="51" width="160" height="15" uuid="a88ea99f-591b-48c3-9bae-cbcf7a7eb242"/>
+				<text><![CDATA[______________________________________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="300" y="66" width="160" height="20" uuid="421bb7d5-c27f-4ea8-90a4-512aebbc69aa"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{L5}==null?"":$P{L5})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="550" y="17" width="160" height="20" uuid="2b5ec2cf-5a1d-486a-9150-35b6b8a05208"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{N3}==null?"":$P{N3})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="550" y="51" width="160" height="15" uuid="0da68c1c-6400-42ef-bf5c-9472b65f14e5"/>
+				<text><![CDATA[______________________________________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="550" y="66" width="160" height="20" uuid="92eadafa-4188-4b40-82cf-9e800514cdd3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{L3}==null?"":$P{L3})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,1812 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<link
+				href="#{facesContext.externalContext.requestContextPath}/views/contratos/solicitudes-adquisicion.css"
+				rel="stylesheet" type="text/css" />
+			<h:form id="formListaSolicitudes">
+				<p:outputPanel id="panelListaSolicitudes">
+					<p:panel styleClass="noBorder"
+						rendered="#{solicitudesAdquisicionesMB.panelRendered eq 5}">
+						<p:remoteCommand name="buscar"
+							actionListener="#{solicitudesAdquisicionesMB.buscar}"
+							update=":formListaSolicitudes:tablaListaSolicitudes" />
+						<p:panel id="panel" header="Solcities de adquisición"
+							styleClass="green col-md-12 col-centered row-centered shadow-panel green container">
+							<p:messages id="msnListaSolicitudes" showDetail="true"
+								closable="true" showSummary="false" />
+							<p:dataGrid var="solicitud"
+								value="#{solicitudesAdquisicionesMB.solicitudesList}"
+								columns="2" layout="grid" emptyMessage="No existen registros"
+								widgetVar="dataGridArticulos" paginatorPosition="bottom"
+								rowIndexVar="rowIndexCaptura" paginator="true" rows="10"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+								id="tablaListaSolicitudes">
+								<f:facet name="header">
+									<p:outputPanel styleClass="lista-detalles-header">
+										<h:outputText value="Busqueda: " />
+										<p:inputText id="inputBusqueda"
+											value="#{solicitudesAdquisicionesMB.busquedaSolicitudes}"
+											placeholder="Ingrese texto"
+											onkeypress="if (event.keyCode == 13) {buscar() } if(event.keyCode == 27) { return false;}">
+										</p:inputText>
+										<p:commandButton icon="ui-icon-search"
+											actionListener="#{solicitudesAdquisicionesMB.buscar()}"
+											update="tablaListaSolicitudes" />
+										<p:commandButton icon=" ui-icon-plusthick"
+											value="Agregar nuevo"
+											actionListener="#{solicitudesAdquisicionesMB.add()}"
+											update="formListaSolicitudes form1" />
+									</p:outputPanel>
+								</f:facet>
+								<p:panel styleClass="card">
+									<div class="row">
+										<div class="col-md-9 ui-noborder left-text block">
+											<div class="row">
+												<div class="info">
+													Numero de control:
+													<p:outputLabel value="#{solicitud.numeroControl}" />
+												</div>
+											</div>
+											<div class="row">
+												<div class="info">
+													Tramitación del recurso:
+													<h:outputLabel value="#{solicitud.tramite.tramite}" />
+												</div>
+											</div>
+											<div class="row">
+												<div class="info">
+													Monto conprometido:
+													<h:outputLabel value="#{solicitud.montoComprometido}" />
+												</div>
+											</div>
+											<div class="row">
+												<div class="info">
+													Estado:
+													<h:outputLabel value="#{solicitud.estado.estado}" />
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3 ui-noborder buttons-solicitudes-list">
+											<p:commandButton value="Ver" icon="ui-icon-circle-zoomin"
+												update="formListaSolicitudes formDetallesSolicitudes"
+												action="#{solicitudesAdquisicionesMB.verDetalles()}">
+												<f:setPropertyActionListener value="#{solicitud}"
+													target="#{solicitudesAdquisicionesMB.solicitudCaptured}" />
+											</p:commandButton>
+											<p:commandButton value="Editar" icon=" ui-icon-pencil"
+												update="formListaSolicitudes form1"
+												action="#{solicitudesAdquisicionesMB.updateSolicitud()}">
+												<f:setPropertyActionListener value="#{solicitud}"
+													target="#{solicitudesAdquisicionesMB.solicitudCaptured}" />
+											</p:commandButton>
+											<p:commandButton value="Eliminar" icon="ui-icon-trash"
+												onclick="PF('confirmFileDeleteMeta').show()">
+												<f:setPropertyActionListener value="#{solicitud}"
+													target="#{solicitudesAdquisicionesMB.solicitudCaptured}" />
+											</p:commandButton>
+										</div>
+									</div>
+								</p:panel>
+							</p:dataGrid>
+						</p:panel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<h:form id="formDetallesSolicitudes">
+				<p:outputPanel id="panelDetallesSolicitudes">
+
+					<p:panel styleClass="noBorder"
+						rendered="#{solicitudesAdquisicionesMB.panelRendered eq 6}">
+						<div class="bar-detalle-solicitud">
+							<div>
+								<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-w"
+									actionListener="#{solicitudesAdquisicionesMB.backSolicitudes()}"
+									update="formDetallesSolicitudes formListaSolicitudes inlinePdf " />
+							</div>
+							<div>
+								<p:commandButton value="Solicitar modificación"
+									icon="ui-icon-pencil"
+									update="formDetallesSolicitudes modificaion inlinePdf"
+									action="#{solicitudesAdquisicionesMB.showModificaionSolicitud}" />
+								<p:commandButton value="Borrar" icon="ui-icon-newwin"
+									onclick="PF('confirmFileDeleteMeta').show();" />
+								<p:commandButton value="Articulos" icon=" ui-icon-note"
+									actionListener="#{solicitudesAdquisicionesMB.showArticulos()}"
+									update="formDetallesSolicitudes formArticulos inlinePdf" />
+								<p:commandButton value="Solicitar revisión" icon="ui-icon-check"
+									rendered="#{!solicitudesAdquisicionesMB.getCurrentUserIsRevisor()}"
+									onclick="PF('modalRevisor').show()" />
+								<p:commandButton value="Aprobar" icon="ui-icon-check"
+									rendered="#{solicitudesAdquisicionesMB.getCurrentUserIsRevisor()}"
+									onclick="PF('aprobarRevision').show()" />
+								<p:commandButton value="Firmas revisión" icon="ui-icon-contact"
+									update="formFR formDetallesSolicitudes inlinePdf"
+									action="#{solicitudesAdquisicionesMB.showFirmasRevision}" />
+								<p:commandButton value="Firmas recepción" icon="ui-icon-contact"
+									update="formFRS formDetallesSolicitudes inlinePdf"
+									action="#{solicitudesAdquisicionesMB.showFirmasRecepcion}" />
+								<p:commandButton value="Imprimir" icon="ui-icon-print"
+									onstart="PF('blockUIWidget').block()"
+									oncomplete="PF('blockUIWidget').unblock();window.location.href='#inlinePdf'; return false;"
+									action="#{solicitudesAdquisicionesMB.createFilePdfInline}"
+									update="inlinePdf formDetallesSolicitudes:msnDetallesSolicitudes" />
+								<p:commandButton value="Descargar"
+									icon=" ui-icon-arrowthickstop-1-s" ajax="false"
+									onclick="PrimeFaces.monitorDownload(start, stop);">
+									<p:fileDownload value="#{solicitudesAdquisicionesMB.filePdf}" />
+								</p:commandButton>
+							</div>
+						</div>
+
+						<p:panel id="panel"
+							styleClass="green col-md-12 col-centered row-centered shadow-panel green container">
+							<f:facet name="header">
+
+								<div class="header-panel-detalles">
+									<p:outputLabel>Detalles de la soliciutd</p:outputLabel>
+									<p:commandButton value="Observaciones" icon=" ui-icon-comment"
+										actionListener="#{solicitudesAdquisicionesMB.changePenalObs()}"
+										oncomplete="PF('editorWidget').focus()"
+										update=":formDetallesSolicitudes:panelObservaciones " />
+								</div>
+							</f:facet>
+							<p:messages id="msnDetallesSolicitudes" showDetail="true"
+								closable="true" showSummary="false" />
+							<div class="main">
+								<div class="left">
+									<p:panel styleClass="p-0"
+										rendered="#{!solicitudesAdquisicionesMB.modificaionBySA.isEmpty()}">
+										<div class="seccion">
+											<p:outputLabel value="Modifiacaiones realizadas" />
+											<div class="row">
+												<div class="info">
+													<p:dataTable var="object"
+														styleClass="et_datatable  no-border "
+														value="#{solicitudesAdquisicionesMB.modificaionBySA}"
+														emptyMessage="No se han seleccionado codigos programticos"
+														rowIndexVar="rowIndex">
+														<p:column headerText="Fecha" exportable="false"
+															width="10%" style="text-align: left!important;">
+															<p:outputLabel value="#{object.fecha}">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</p:outputLabel>
+														</p:column>
+														<p:column headerText="Archivo" exportable="false"
+															width="30%" style="text-align: left!important;">
+															<p:outputLabel value="#{object.nombreArchivo}" />
+														</p:column>
+														<p:column headerText="Archivo" exportable="false"
+															width="30%" style="text-align: left!important;">
+															<p:commandLink image="ui-icon  ui-icon-zoomin"
+																title="Visualizar"
+																action="#{solicitudesAdquisicionesMB.getviewPdf(object.id)}"
+																oncomplete="PF('modalPreviewResource').show()"
+																update=":previewResourse:pdfPre :previewResourse:imgPre">
+																<h:outputText styleClass="ui-icon ui-icon-zoomin" />
+															</p:commandLink>
+														</p:column>
+													</p:dataTable>
+												</div>
+											</div>
+										</div>
+									</p:panel>
+									<div class="seccion">
+										<p:outputLabel value="C) DATOS GENERALES DEL ÓRGANO USUARIO" />
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Fecha:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.fechaElaboracion}">
+														<f:convertDateTime pattern="dd/MM/yyyy" />
+													</p:outputLabel>
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Numero de control:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.numeroControl}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Unidad Administrativa:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.administrativa.descripcion}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Clave:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.administrativa.clave}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Nombre del solicitante:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.nombre}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Cargo:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.cargo}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<div class="info">
+													Domicilio:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.domicilio}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Telefono:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.telefono}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Telfax:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.telfax }" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Correo:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.email}" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<p:outputLabel
+											value="D) BIENES Y SERVICIOS SOLICITADOS POR CAPITULO" />
+										<div class="row">
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Bien o servicio:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.bienServicio.nombre}" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<p:outputLabel value="E) IDENTIFICACIÓN DEL REQUERIMIENTO" />
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Programa Gobierno:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.programaGobierno}" />
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Programado:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.programado}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Giro comercial:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.giro.clvgas} #{solicitudesAdquisicionesMB.solicitudCaptured.giro.nomgas}" />
+
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Sub-giro comercial:
+													<p:dataList
+														emptyMessage="No se han selecionado sub-giros comerciales"
+														value="#{solicitudesAdquisicionesMB.subgirosSelected}"
+														var="subgiro" type="none">
+												#{subgiro.clave} - #{subgiro.descripcion}.
+    										</p:dataList>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="seccion">
+										<p:outputLabel value="F) TRAMITACIÓN DEL REQUERIMIENTO" />
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Tramitación de requerimiento:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.tramite.tramite}" />
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Marca especifica:
+													<p:outputLabel value="Pendiente" />
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Oficio de justificación:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.oficioJustificacion}" />
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Dictamen tecnico:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.dictamenUnico}" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<p:outputLabel value="G) AFECTACIÓN PRESUPUESTAL" />
+										<div class="row">
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Tipo de gasto:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.tipoGasto.descripcion}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Origen de los recursos:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.origenRecurso.descripcion}" />
+												</div>
+											</div>
+
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Monto comprometido:
+													<p:outputLabel
+														value="$#{solicitudesAdquisicionesMB.solicitudCaptured.montoComprometido}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Anticipo:
+													<p:outputLabel
+														value="$#{solicitudesAdquisicionesMB.solicitudCaptured.anticipo}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Oficio certificación:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.oficioCertificacion}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Forma de pago:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.formaPago.nombre}" />
+												</div>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<div class="info">
+													Oficio Autorización No.:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.noOficioAutorizacion}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="info">
+												Codigos programaticos
+												<p:dataTable var="object"
+													styleClass="et_datatable  no-border "
+													value="#{solicitudesAdquisicionesMB.codigosBySA}"
+													emptyMessage="No se han seleccionado codigos programticos"
+													rowIndexVar="rowIndex">
+													<p:column headerText="Cuenta" exportable="false"
+														width="10%" style="text-align: left!important;">
+														<p:outputLabel value="#{object.cuenta.cuenta}" />
+													</p:column>
+													<p:column headerText="Centro de costo" exportable="false"
+														width="30%" style="text-align: left!important;">
+														<p:outputLabel value="#{object.catdep.clvdep}" />
+													</p:column>
+													<p:column headerText="Programa" exportable="false"
+														width="30%" style="text-align: left!important;">
+														<p:outputLabel value="#{object.muninep.campo7}" />
+													</p:column>
+													<p:column headerText="Partida" exportable="false"
+														width="30%" style="text-align: right;">
+														<p:outputLabel value="#{object.natgas.clvgas}" />
+													</p:column>
+													<p:column headerText="Partida" exportable="false"
+														width="30%" style="text-align: right;">
+														<p:outputLabel
+															value="#{object.fuentefGobierno.cuenta}#{object.fuentefGobierno.scta}#{object.fuentefGobierno.sscta}#{object.fuentefGobierno.ssscta}" />
+													</p:column>
+													<p:column headerText="Monto" exportable="false" width="30%"
+														style="text-align: right;">
+														<p:outputLabel value="#{object.monto}" />
+													</p:column>
+													<p:columnGroup type="footer">
+														<p:row>
+															<p:column colspan="5" style="text-align:right"
+																footerText="Total:" />
+															<p:column style="text-align:right"
+																footerText="\$#{solicitudesAdquisicionesMB.getTotaProgramas()}" />
+														</p:row>
+													</p:columnGroup>
+												</p:dataTable>
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<p:outputLabel value="H) RECEPCIÓN DEL REQUERIMIENTO" />
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Fecha de suministro del bien o servicio:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.fechaSuministro}">
+														<f:convertDateTime pattern="dd/MM/yyyy" />
+													</p:outputLabel>
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Oficio Autorización No.:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.horarioDe}" />
+													A
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.horarioA}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Nombre del servidor publico que recibe el bien o servicio:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.nombreReceptor}" />
+												</div>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<div class="info">
+													Cargo:
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.cargoReceptor}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<div class="info">
+													LUGAR DE ENTREGA DE LOS BIENES O DE LA PRESTACIÓN DEL
+													SERVICIO (CALLE, NUMERO, COLONIA, CÓDIGO POSTAL, LOCALIDAD,
+													MUNICIPIO Y ENTIDAD FEDERATIVA):
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.lugarEntrega}" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<p:outputLabel value="I) OBSERVACIONES    " />
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<div class="info">
+													<p:outputLabel
+														value="#{solicitudesAdquisicionesMB.solicitudCaptured.obs}" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<div class="row">
+											<p:outputLabel value="Articulos de la solicitud" />
+											<p:dataTable id="dataGridArticulos" var="object"
+												value="#{solicitudesAdquisicionesMB.articulosBySA}"
+												styleClass="et_datatable  no-border "
+												emptyMessage="No existen registros" paginator="true"
+												rows="20"
+												paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+												widgetVar="dataGridArticulos" paginatorPosition="bottom"
+												rowIndexVar="rowIndexCaptura">
+												<p:column headerText="Renglon" exportable="false" width="6%"
+													style="text-align: left!important;">
+													<p:outputLabel value="#{object.renglon}" />
+												</p:column>
+												<p:column headerText="Descripción" exportable="false"
+													width="40%" style="text-align: left!important;">
+													<p:outputLabel value="#{object.descripcion}" />
+												</p:column>
+												<p:column headerText="Unidad medida" exportable="false"
+													width="14%" style="text-align: left!important;">
+													<p:outputLabel value="#{object.unidadMedida}" />
+												</p:column>
+												<p:column headerText="Cantidad" exportable="false"
+													width="10%" style="text-align: right;">
+													<p:outputLabel value="#{object.cantidad}" />
+												</p:column>
+												<p:column headerText="Precio" exportable="false" width="10%"
+													style="text-align: right;">
+													<p:outputLabel value="\$#{object.precio}" />
+												</p:column>
+												<p:column headerText="Sub total" exportable="false"
+													width="10%" style="text-align: right;">
+													<p:outputLabel value="\$#{object.subTotal}" />
+												</p:column>
+												<p:columnGroup type="footer">
+													<p:row>
+														<p:column colspan="5" style="text-align:right"
+															footerText="Total:" />
+														<p:column style="text-align:right"
+															footerText="\$#{solicitudesAdquisicionesMB.totalArticulos}" />
+													</p:row>
+												</p:columnGroup>
+											</p:dataTable>
+										</div>
+									</div>
+								</div>
+								<p:panel visible="#{solicitudesAdquisicionesMB.obsRendered}"
+									styleClass="right editor-detalles" id="panelObservaciones">
+									<p:commandButton value="Guardar" icon=" ui-icon-check"
+										disabled="#{!solicitudesAdquisicionesMB.getCurrentUserIsRevisor()}"
+										actionListener="#{solicitudesAdquisicionesMB.guardarObsRevisor}"
+										update=":formDetallesSolicitudes:msnDetallesSolicitudes" />
+									<p:editor id="editor" widgetVar="editorWidget"
+										controls="#{solicitudesAdquisicionesMB.getCurrentUserIsRevisor()?
+										'bold italic underline font size color highlight numbering	numbering alignleft center justify undo redo rule':'' }"
+										disabled="#{!solicitudesAdquisicionesMB.getCurrentUserIsRevisor()}"
+										value="#{solicitudesAdquisicionesMB.solicitudCaptured.obsRevisor}" />
+								</p:panel>
+							</div>
+						</p:panel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<h:form id="form1">
+				<p:remoteCommand name="guardarSolicitud"
+					update="panelCapturaSolicitud"
+					actionListener="#{solicitudesAdquisicionesMB.guardar()}" />
+				<p:remoteCommand name="regresar"
+					update="formDetallesSolicitudes formListaSolicitudes inlinePdf form1 "
+					actionListener="#{solicitudesAdquisicionesMB.backSolicitudes()}" />
+				<p:outputPanel id="panelPrincipal">
+					<p:panel styleClass="noBorder"
+						rendered="#{solicitudesAdquisicionesMB.panelRendered eq 1}">
+						<div onclick="onMouseOverRegresar()" class="button-back-captura">
+							<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-w"
+								actionListener="#{solicitudesAdquisicionesMB.backSolicitudes()}"
+								update="formDetallesSolicitudes formListaSolicitudes inlinePdf form1"
+								disabled="true" />
+						</div>
+						<p:panel id="panelCapturaSolicitud"
+							header="Captura de solicitud de adquisicion"
+							styleClass="green col-md-12 col-centered row-centered  shadow-panel green container panel-captura-solicitud">
+							<div>
+								<p:steps activeIndex="#{solicitudesAdquisicionesMB.step}"
+									styleClass="custom" readonly="false" id="steps">
+									<p:menuitem value="DATOS GENERALES"
+										actionListener="#{solicitudesAdquisicionesMB.changeStep(0)}"
+										update="panelCapturaSolicitud" />
+									<p:menuitem value="IDENTIFICACIÓN Y TRAMITACIÓN"
+										actionListener="#{solicitudesAdquisicionesMB.changeStep(1)}"
+										update="panelCapturaSolicitud" />
+									<p:menuitem value="AFECTACIÓN PRESUPUESTAL"
+										actionListener="#{solicitudesAdquisicionesMB.changeStep(2)}"
+										update="panelCapturaSolicitud" />
+									<p:menuitem value="RECEPCIÓN"
+										actionListener="#{solicitudesAdquisicionesMB.changeStep(3)}"
+										update="panelCapturaSolicitud" />
+								</p:steps>
+								<p:messages id="messages" showDetail="true" showSummary="false"
+									closable="true" />
+								<p:panel visible="#{solicitudesAdquisicionesMB.step eq 0}">
+									<div class="seccion">
+										<p:outputLabel value="C) DATOS GENERALES DEL ÓRGANO USUARIO" />
+										<div class="row">
+											<div class="col-md-2 ui-noborder left-text block">
+												<h:outputText value="No. control" />
+												<p:inputText id="numeroControl"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.numeroControl}"
+													maxlength="10">
+												</p:inputText>
+											</div>
+											<div class="col-md-2 ui-noborder left-text block">
+												<h:outputText value="Fecha" />
+												<p:calendar id="fechaElaboracion" required="false"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.fechaElaboracion}"
+													maxlength="10" locale="es" pattern="dd/MM/yyyy" mask="true"
+													timeZone="" maxdate="#{solicitudesAdquisicionesMB.maxDate}"
+													converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+													onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
+												</p:calendar>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<h:outputText value="Personal que solicita" />
+												<p:selectOneMenu id="personal" converter="genericConverter"
+													style="width:100%;"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo}">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.personalList}"
+														var="area"
+														itemLabel="Nombre:#{area.nombre} , Area:#{area.administrativa.descripcion}"
+														itemValue="#{area}" />
+													<p:ajax event="change"
+														update="descripcionArea nombreSolicitante claveArea telfax telefono email cargo domicilio"></p:ajax>
+												</p:selectOneMenu>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-9 ui-noborder left-text block">
+												<h:outputText value="Area administrativa" />
+												<p:inputText id="descripcionArea" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.administrativa.descripcion}">
+												</p:inputText>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<h:outputText value="Clave" />
+												<p:inputText id="claveArea" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.administrativa.clave}">
+												</p:inputText>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Nombre solicitante" />
+												<p:inputText id="nombreSolicitante" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.nombre}" />
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Cargo" />
+												<p:inputText id="cargo" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.cargo}" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<h:outputText value="Domicilio" />
+												<p:inputText id="domicilio" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.domicilio}" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4 ui-noborder left-text block">
+												<h:outputText value="Telefono" />
+												<p:inputText id="telefono" maxlength="100" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.telefono}">
+												</p:inputText>
+											</div>
+											<div class="col-md-4 ui-noborder left-text block">
+												<h:outputText value="Telfax" />
+												<p:inputText id="telfax" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.telfax}">
+												</p:inputText>
+											</div>
+											<div class="col-md-4 ui-noborder left-text block">
+												<h:outputText value="Correo electronico" />
+												<p:inputText id="email" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.administrativo.email}">
+												</p:inputText>
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<p:outputLabel
+											value="D) BIENES Y SERVICIOS SOLICITADOS POR CAPITULO" />
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<p:selectOneRadio id="bienServicio" styleClass="checks"
+													converter="genericConverter" layout="grid" columns="5"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.bienServicio}">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.bienesList}" var="c"
+														itemLabel="#{c.nombre}" itemValue="#{c}" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+									</div>
+								</p:panel>
+								<p:panel visible="#{solicitudesAdquisicionesMB.step eq 1}">
+									<div class="seccion">
+										<p:outputLabel value="E) IDENTIFICACIÓN DEL REQUERIMIENTO" />
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<h:outputText value="Programa Gobierno" />
+												<p:inputText id="programaGobierno" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.programaGobierno}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+
+										</div>
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<p:selectOneRadio id="programado" styleClass="checks"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.programado}">
+													<f:selectItem itemLabel="REQUERIMIENTO PROGRAMADO"
+														itemValue="REQUERIMIENTO PROGRAMADO" />
+													<f:selectItem itemLabel="REQUERIMIENTO NO PROGRAMADO"
+														itemValue="REQUERIMIENTO NO PROGRAMADO" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-5 ui-noborder left-text block">
+												<h:outputText value="Giro comercial" />
+												<p:selectOneMenu id="giroComercial"
+													converter="genericConverter" style="width:100%;"
+													styleClass="select_giro_omercial"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.giro}">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.girosList}" var="giro"
+														itemLabel="#{giro.clvgas} #{giro.nomgas}"
+														itemValue="#{giro}" />
+													<p:ajax event="change"
+														update="subgiroComercial :form1:messages "
+														listener="#{solicitudesAdquisicionesMB.onSelectGiro}" />
+												</p:selectOneMenu>
+											</div>
+											<div class="col-md-7 ui-noborder left-text block">
+												<h:outputText value="Sub giro" />
+												<p:selectCheckboxMenu id="subgiroComercial"
+													converter="genericConverter" style="width:100%;"
+													value="#{solicitudesAdquisicionesMB.subgirosSelected}"
+													label="Subgiros" multiple="true" filter="true"
+													filterMatchMode="contains">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.subgirosList}"
+														var="subgiro"
+														itemLabel="#{subgiro.clave} #{subgiro.descripcion}"
+														itemValue="#{subgiro}" />
+
+													<p:ajax event="change"
+														listener="#{solicitudesAdquisicionesMB.onSelectSubGiro}" />
+													<p:ajax event="toggleSelect"
+														listener="#{solicitudesAdquisicionesMB.onUnSelectSubGiro}" />
+												</p:selectCheckboxMenu>
+											</div>
+										</div>
+									</div>
+
+									<div class="seccion">
+										<p:outputLabel value="F) TRAMITACIÓN DEL REQUERIMIENTO" />
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<p:selectOneRadio id="tramite" styleClass="checks"
+													converter="genericConverter"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.tramite}">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.tramitesList}" var="c"
+														itemLabel="#{c.tramite}" itemValue="#{c}" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4 ui-noborder left-text block">
+												<h:outputText value="Marca especifica" />
+												<p:selectBooleanCheckbox
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.marcaEspesifica}"
+													id="marcaEspesifica" itemLabel="Marca especifica" />
+											</div>
+											<div class="col-md-4 ui-noborder left-text block">
+												<h:outputText value="Oficio de justificacion" />
+												<p:inputText id="oficioJustificacion" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.oficioJustificacion}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+											<div class="col-md-4 ui-noborder left-text block">
+												<h:outputText value="Dictamen tecnico" />
+												<p:inputText id="dictamenUnico" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.dictamenUnico}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+										</div>
+									</div>
+								</p:panel>
+								<p:panel visible="#{solicitudesAdquisicionesMB.step eq 2}">
+									<div class="seccion">
+										<p:outputLabel value="G) AFECTACIÓN PRESUPUESTAL" />
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Tipo de gasto" />
+												<p:selectOneRadio id="tipoGasto" styleClass="checks"
+													converter="genericConverter"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.tipoGasto}">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.tiposGastoList}"
+														var="c" itemLabel="#{c.descripcion}" itemValue="#{c}" />
+												</p:selectOneRadio>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Origen de los recursos" />
+												<p:selectOneRadio id="origenRecursos" styleClass="checks"
+													converter="genericConverter"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.origenRecurso}">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.recursosList}" var="c"
+														itemLabel="#{c.descripcion}" itemValue="#{c}" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-3 ui-noborder left-text block">
+												<h:outputText value="Monto comprometido" />
+												<p:inputText id="montoComprometido" maxlength="100"
+													disabled="true"
+													value="#{solicitudesAdquisicionesMB.montoComprometidoBySolicitud}"
+													onkeyup="guardarSolicitudOn(event)">
+												</p:inputText>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<h:outputText value="Anticipo" />
+												<p:inputText id="anticipo" maxlength="100" disabled="true"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.anticipo}"
+													onkeyup="guardarSolicitudOn(event)">
+												</p:inputText>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Oficio certificación" />
+												<p:inputText id="oficioCertificacion" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.oficioCertificacion}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Forma de pago" />
+												<p:selectOneRadio id="formaPago" styleClass="checks"
+													converter="genericConverter"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.formaPago}">
+													<f:selectItems
+														value="#{solicitudesAdquisicionesMB.formasPagoList}"
+														var="c" itemLabel="#{c.nombre}" itemValue="#{c}" />
+												</p:selectOneRadio>
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Oficio Autorización No." />
+												<p:inputText id="noOficioAutorizacion" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.noOficioAutorizacion}"
+													onkeyup="guardarSolicitudOn(event)">
+												</p:inputText>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-11 pl-0">
+												<div class="col-md-2 ui-noborder left-text block">
+													<h:outputText value="Cuenta" />
+													<p:selectOneMenu converter="genericConverter"
+														style="width:100%;"
+														value="#{solicitudesAdquisicionesMB.codigosCaptured.cuenta}">
+														<f:selectItems
+															value="#{solicitudesAdquisicionesMB.cuentasList}"
+															var="entity" itemLabel="#{entity.cuenta} "
+															itemValue="#{entity}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="col-md-2 ui-noborder left-text block">
+													<h:outputText value="Centro de costo" />
+													<p:selectOneMenu converter="genericConverter"
+														style="width:100%;"
+														value="#{solicitudesAdquisicionesMB.codigosCaptured.catdep}">
+														<f:selectItems
+															value="#{solicitudesAdquisicionesMB.dependenciasList}"
+															var="entity" itemLabel="#{entity.clvdep} "
+															itemValue="#{entity}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="col-md-2 ui-noborder left-text block">
+													<h:outputText value="Programa" />
+													<p:selectOneMenu converter="genericConverter"
+														style="width:100%;"
+														value="#{solicitudesAdquisicionesMB.codigosCaptured.muninep}">
+														<f:selectItems
+															value="#{solicitudesAdquisicionesMB.muninepList}"
+															var="entity" itemLabel="#{entity.campo7} "
+															itemValue="#{entity}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="col-md-2 ui-noborder left-text block">
+													<h:outputText value="Partida" />
+													<p:selectOneMenu converter="genericConverter"
+														style="width:100%;"
+														value="#{solicitudesAdquisicionesMB.codigosCaptured.natgas}">
+														<f:selectItems
+															value="#{solicitudesAdquisicionesMB.girosList}"
+															var="entity" itemLabel="#{entity.clvgas} "
+															itemValue="#{entity}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="col-md-2 ui-noborder left-text block">
+													<h:outputText value="Fuente de financiamiento" />
+													<p:selectOneMenu converter="genericConverter"
+														style="width:100%;"
+														value="#{solicitudesAdquisicionesMB.codigosCaptured.fuentefGobierno}">
+														<f:selectItems
+															value="#{solicitudesAdquisicionesMB.fuentesGobiernoList}"
+															var="entity"
+															itemLabel="#{entity.cuenta}#{entity.scta}#{entity.sscta}#{entity.ssscta}"
+															itemValue="#{entity}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="col-md-2 ui-noborder left-text block">
+													<h:outputText value="Monto" />
+													<p:inputText maxlength="100"
+														value="#{solicitudesAdquisicionesMB.codigosCaptured.monto}"
+														onkeyup="guardarSolicitudOn(event)">
+													</p:inputText>
+												</div>
+											</div>
+											<div class="col-md-1 add-button-codigos pl-0">
+												<p:commandButton value="Agregar" icon=" ui-icon-plusthick"
+													update="form1:messages form1:codigosProgramaticos"
+													actionListener="#{solicitudesAdquisicionesMB.guardarCodigo()}">
+												</p:commandButton>
+											</div>
+										</div>
+										<br />
+										<div class="row">
+											<p:dataTable var="object" id="codigosProgramaticos"
+												styleClass="et_datatable col-md-12 no-border "
+												widgetVar="codigosProgramaticos"
+												value="#{solicitudesAdquisicionesMB.codigosBySA}"
+												emptyMessage="No se han seleccionado codigos programticos"
+												rowIndexVar="rowIndex">
+												<p:column headerText="Cuenta" exportable="false" width="15%"
+													style="text-align: left!important;">
+													<p:outputLabel value="#{object.cuenta.cuenta}" />
+												</p:column>
+												<p:column headerText="Centro de costo" exportable="false"
+													width="20%" style="text-align: left!important;">
+													<p:outputLabel value="#{object.catdep.clvdep}" />
+												</p:column>
+												<p:column headerText="Programa" exportable="false"
+													width="25%" style="text-align: left!important;">
+													<p:outputLabel value="#{object.muninep.campo7}" />
+												</p:column>
+												<p:column headerText="Partida" exportable="false"
+													width="15%" style="text-align: left!important;">
+													<p:outputLabel value="#{object.natgas.clvgas}" />
+												</p:column>
+												<p:column headerText="Fuente de financiamiento"
+													exportable="false" width="15%"
+													style="text-align: left!important;">
+													<p:outputLabel
+														value="#{object.fuentefGobierno.cuenta}#{object.fuentefGobierno.scta}#{object.fuentefGobierno.sscta}#{object.fuentefGobierno.ssscta}" />
+												</p:column>
+												<p:column headerText="Monto" exportable="false" width="10%"
+													style="text-align:right !important;">
+													<p:outputLabel value="#{object.monto}" />
+												</p:column>
+												<p:column headerText="Eliminar" exportable="false"
+													width="5%" styleClass="row-centered">
+													<p:commandLink id="deleteRow"
+														oncomplete="PF('deleteCodigoProgramatico').show()"
+														image="ui-icon ui-icon-close" title="Eliminar">
+														<f:setPropertyActionListener value="#{object.id}"
+															target="#{solicitudesAdquisicionesMB.codigoIdToDelete}" />
+														<h:outputText styleClass="ui-icon ui-icon-close" />
+													</p:commandLink>
+												</p:column>
+												<p:columnGroup type="footer">
+													<p:row>
+														<p:column colspan="5" style="text-align:right"
+															footerText="Total:" />
+														<p:column style="text-align:right"
+															footerText="\$#{solicitudesAdquisicionesMB.getTotaProgramas()}" />
+														<p:column colspan="5" style="text-align:right"
+															footerText="" />
+													</p:row>
+												</p:columnGroup>
+											</p:dataTable>
+										</div>
+									</div>
+								</p:panel>
+								<p:panel visible="#{solicitudesAdquisicionesMB.step eq 3}">
+									<div class="seccion">
+										<p:outputLabel value="H) RECEPCIÓN DEL REQUERIMIENTO" />
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText
+													value="Fecha de suministro del bien o servicio" />
+												<p:calendar id="fechaSuministro"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.fechaSuministro}"
+													maxlength="10" locale="es" pattern="dd/MM/yyyy" mask="true"
+													timeZone="" maxdate="#{solicitudesAdquisicionesMB.maxDate}"
+													converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+													onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
+												</p:calendar>
+
+											</div>
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText
+													value="Nombre del servidor publico que recibe el bien o servicio" />
+												<p:inputText id="nombreReceptor" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.nombreReceptor}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6 ui-noborder left-text block">
+												<h:outputText value="Cargo:" />
+												<p:inputText id="cargoReceptor" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.cargoReceptor}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<h:outputText value="Horario De" />
+												<p:inputText id="horade" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.horarioDe}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<h:outputText value="A:" />
+												<p:inputText id="horaa" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.horarioA}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<h:outputText
+													value="LUGAR DE ENTREGA DE LOS BIENES O DE LA PRESTACIÓN DEL SERVICIO (CALLE, NUMERO, COLONIA, CÓDIGO POSTAL, LOCALIDAD, MUNICIPIO Y ENTIDAD FEDERATIVA)" />
+												<p:inputText id="lugarEntrega" maxlength="100"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.lugarEntrega}"
+													onblur="value=value.toUpperCase()"
+													onkeyup="guardarSolicitudOn(event)" />
+											</div>
+										</div>
+									</div>
+									<div class="seccion">
+										<p:outputLabel value="I) OBSERVACIONES    " />
+										<div class="row">
+											<div class="col-md-12 ui-noborder left-text block">
+												<p:inputTextarea rows="1" cols="140" id="obs"
+													value="#{solicitudesAdquisicionesMB.solicitudCaptured.obs}"
+													queryDelay="750" minQueryLength="4"
+													onblur="value=value.toUpperCase()" />
+											</div>
+										</div>
+									</div>
+								</p:panel>
+							</div>
+							<div class="row steps-navigation">
+								<p:commandButton value="Anterior" icon=" ui-icon-triangle-1-w"
+									update="panelCapturaSolicitud"
+									actionListener="#{solicitudesAdquisicionesMB.prevStep()}">
+								</p:commandButton>
+								<p:commandButton value="Guardar" icon=" ui-icon-disk"
+									update="panelCapturaSolicitud"
+									actionListener="#{solicitudesAdquisicionesMB.guardar()}">
+								</p:commandButton>
+								<p:commandButton value="Siguiente" icon=" ui-icon-triangle-1-e"
+									iconPos="right" update="panelCapturaSolicitud"
+									actionListener="#{solicitudesAdquisicionesMB.nextStep()}">
+								</p:commandButton>
+							</div>
+						</p:panel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<h:form id="formArticulos" enctype="multipart/form-data">
+				<p:outputPanel id="panelArticulos">
+					<p:panel styleClass="noBorder"
+						rendered="#{solicitudesAdquisicionesMB.panelRendered eq 2}">
+						<div onclick="onMouseOverRegresarArticulo()"
+							class="button-back-captura">
+							<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-w"
+								action="#{solicitudesAdquisicionesMB.verDetalles()}"
+								update="formDetallesSolicitudes panelArticulos" disabled="true" />
+						</div>
+
+						<p:remoteCommand name="guardarArticulo" update="formArticulos"
+							action="#{solicitudesAdquisicionesMB.guardarArticulos()}" />
+						<p:remoteCommand name="regresarADetalles"
+							action="#{solicitudesAdquisicionesMB.verDetalles()}"
+							update="formDetallesSolicitudes panelArticulos" />
+						<p:panel id="panel"
+							styleClass="green col-md-12 col-centered row-centered shadow-panel green container panel-articulos">
+							<f:facet name="header">
+								<div class="header-panel-detalles">
+									<p:outputLabel style="width:76%">Captura de articulos</p:outputLabel>
+									<p:selectOneRadio styleClass="checks"
+										value="#{solicitudesAdquisicionesMB.cargaArticulosManual}">
+										<f:selectItem itemLabel="Carga manual" itemValue="true" />
+										<f:selectItem itemLabel="CargaAutomatica" itemValue="false" />
+										<p:ajax event="change"
+											update=":formArticulos:panelForm :formArticulos:panelFormButtons formArticulos:panelFormCargaAutomatica" />
+									</p:selectOneRadio>
+								</div>
+							</f:facet>
+							<p:messages id="messagesArticulos" showDetail="true"
+								closable="true" showSummary="false" />
+							<p:focus id="focus" />
+							<p:panel id="panelFormCargaAutomatica"
+								visible="#{!solicitudesAdquisicionesMB.cargaArticulosManual}">
+								<div class="row">
+									<div class="col-md-6 ui-noborder left-text block">
+										<div class="row">
+											<div class="col-md-8">
+												<p:fileUpload value="#{solicitudesAdquisicionesMB.file}"
+													mode="simple" dragDropSupport="false" multiple="false"
+													sizeLimit="10485760" fileLimit="1"
+													accept=".xls,.xlsx,.doc,.docx"
+													allowTypes="/(\.|\/)(xls|xlsx|docx|doc)$/"
+													invalidSizeMessage="Tamaño invalido de archivo."
+													invalidFileMessage="Tipo invalido de archivo.">
+												</p:fileUpload>
+											</div>
+											<!--
+											Pendiente para la implementacion de carga de word
+											 <div class="col-md-4">
+												<p:selectOneRadio styleClass="checks"
+													value="#{solicitudesAdquisicionesMB.typeFileToRead}">
+													<f:selectItem itemLabel="Word" itemValue="word" />
+													<f:selectItem itemLabel="Excel" itemValue="excel" />
+													<p:ajax event="change"
+														update=":formArticulos:formEcxel :formArticulos:formWord" />
+												</p:selectOneRadio>
+											</div>
+											 -->
+										</div>
+										<p:panel id="formEcxel"
+											visible="#{solicitudesAdquisicionesMB.typeFileToRead eq 'excel'}">
+											<div class="row">
+												<h:outputText
+													value="Ingrese las columnas a leer separadas por comas ej.(1,2,3,4,5,6)" />
+												<p:inputText id="columnasAleerPorUsuario"
+													value="#{solicitudesAdquisicionesMB.columnasAleerPorUsuario}"
+													minQueryLength="20">
+												</p:inputText>
+											</div>
+											<div class="row">
+												<p:selectBooleanCheckbox
+													value="#{solicitudesAdquisicionesMB.contieneEncabezados}"
+													itemLabel="Contiene encabezados" />
+											</div>
+											<div class="row">
+												<p:selectBooleanCheckbox
+													value="#{solicitudesAdquisicionesMB.remplazar}"
+													itemLabel="Marque para rempalzar desmarque para adicionar" />
+											</div>
+										</p:panel>
+										<p:panel id="formWord"
+											visible="#{solicitudesAdquisicionesMB.typeFileToRead eq 'word'}">
+											<div class="row">
+												<h:outputText value="Nombre del anexo" />
+												<p:inputText
+													value="#{solicitudesAdquisicionesMB.nombreAnexo}"
+													minQueryLength="20">
+												</p:inputText>
+											</div>
+											<div class="row">
+												<p:selectBooleanCheckbox
+													value="#{solicitudesAdquisicionesMB.contieneEncabezados}"
+													itemLabel="Contiene encabezados" />
+											</div>
+											<div class="row">
+												<p:selectBooleanCheckbox
+													value="#{solicitudesAdquisicionesMB.remplazar}"
+													itemLabel="Marque para rempalzar desmarque para adicionar" />
+											</div>
+										</p:panel>
+										<p:commandButton value="Cargar" type="submit" ajax="false"
+											update=":formArticulos:messagesArticulos dataGridArticulos"
+											styleClass="button-green small "
+											actionListener="#{solicitudesAdquisicionesMB.cargaEcxelArticulos}" />
+										<p:commandButton style="display: none" id="downTxt"
+											ajax="false"
+											onclick="PrimeFaces.monitorDownload(start, stop);">
+											<p:fileDownload
+												value="#{solicitudesAdquisicionesMB.fileErrors}" />
+										</p:commandButton>
+									</div>
+								</div>
+							</p:panel>
+							<p:panel id="panelForm"
+								visible="#{solicitudesAdquisicionesMB.cargaArticulosManual}">
+								<div class="row">
+									<div class="col-md-10 ui-noborder left-text block">
+										<h:outputText value="Descripción" />
+										<p:inputText id="descripcionArticulo"
+											value="#{solicitudesAdquisicionesMB.articuloAdd.descripcion}"
+											minQueryLength="4">
+										</p:inputText>
+									</div>
+									<div class="col-md-2 ui-noborder left-text block">
+										<h:outputText value="Clave" />
+										<p:inputText id="claveArticulo"
+											value="#{solicitudesAdquisicionesMB.articuloAdd.clave}">
+										</p:inputText>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-4 ui-noborder left-text block">
+										<h:outputText value="Unidad de medida" />
+										<p:selectOneMenu id="unidadMedidaArticulo"
+											styleClass="select-one-menu"
+											converter="genericConverter" filter="true"
+											filterMatchMode="contains"
+											value="#{solicitudesAdquisicionesMB.articuloAdd.unidad}">
+											<f:selectItems
+												value="#{solicitudesAdquisicionesMB.unidadesMedida}"
+												var="unidad" itemLabel="#{unidad.etiqueta}" itemValue="#{unidad}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="col-md-4 ui-noborder left-text block">
+										<h:outputText value="Cantidad" />
+										<p:inputText id="cantidadArticulos" maxlength="100"
+											value="#{solicitudesAdquisicionesMB.articuloAdd.cantidad}"
+											onkeyup="if (event.keyCode == 13) {guardarArticulo() } if(event.keyCode == 27) { return false;}">
+										</p:inputText>
+									</div>
+									<div class="col-md-4 ui-noborder left-text block">
+										<h:outputText value="Precio" />
+										<p:inputText id="precioArticulo" maxlength="100"
+											value="#{solicitudesAdquisicionesMB.articuloAdd.precio}"
+											onkeyup="if (event.keyCode == 13) {guardarArticulo() } if(event.keyCode == 27) { return false;}">
+										</p:inputText>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12 ui-noborder left-text block">
+										<h:outputText value="Descripción tecnica " />
+										<p:inputTextarea rows="2" id="descripcionTecnicaArticulo"
+											value="#{solicitudesAdquisicionesMB.articuloAdd.descripcionTecnica}"
+											queryDelay="750" minQueryLength="4">
+										</p:inputTextarea>
+									</div>
+								</div>
+								<p:panelGrid columns="2" id="panelFormButtons"
+									styleClass=" ui-noborder center panel-buttons">
+									<p:commandButton value="Guardar" id="guardarArticulo"
+										update="dataGridArticulos"
+										action="#{solicitudesAdquisicionesMB.guardarArticulos}"
+										styleClass="button-green no-padding"
+										onclick="PF('blockUIWidget').show();"
+										oncomplete="PF('blockUIWidget').hide();" icon="ui-icon-disk"
+										ajax="true" />
+									<p:commandButton value="Cancelar"
+										update=":formArticulos:focus :formArticulos:messagesArticulos :formArticulos:panelForm"
+										onclick="PF('blockUIWidget').show();"
+										oncomplete="PF('blockUIWidget').hide();" ajax="true"
+										styleClass="button-green no-padding"
+										action="#{solicitudesAdquisicionesMB.resetArticulo}"
+										icon="ui-icon-closethick" />
+								</p:panelGrid>
+							</p:panel>
+
+
+							<p:dataTable id="dataGridArticulos" var="object"
+								value="#{solicitudesAdquisicionesMB.articulosBySA}"
+								styleClass="et_datatable col-md-12 no-border "
+								emptyMessage="No existen registros" paginator="true" rows="20"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+								widgetVar="dataGridArticulos" paginatorPosition="bottom"
+								rowIndexVar="rowIndexCaptura">
+								<p:column headerText="Renglon" exportable="false" width="6%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.renglon}" />
+								</p:column>
+								<p:column headerText="Clave" exportable="false" width="6%"
+									style="text-align: left!important;">
+									<p:outputLabel value="#{object.clave}" />
+								</p:column>
+								<p:column headerText="Descripción" exportable="false"
+									width="40%" style="text-align: left!important;">
+									<p:outputLabel value="#{object.descripcion}" />
+								</p:column>
+								<p:column headerText="Unidad medida" exportable="false"
+									width="14%" style="text-align: left!important;">
+									<p:outputLabel value="#{object.unidadMedida}" />
+								</p:column>
+								<p:column headerText="Cantidad" exportable="false" width="10%"
+									style="text-align: right;">
+									<p:outputLabel value="#{object.cantidad}" />
+								</p:column>
+								<p:column headerText="Precio" exportable="false" width="10%"
+									style="text-align: right;">
+									<p:outputLabel value="\$#{object.precio}" />
+								</p:column>
+								<p:column headerText="Sub total" exportable="false" width="10%"
+									style="text-align: right;">
+									<p:outputLabel value="\$#{object.subTotal}" />
+								</p:column>
+								<p:column headerText="Eliminar" exportable="false" width="5%"
+									styleClass="row-centered">
+									<p:commandLink id="deleteRow"
+										update=":formArticulos:messagesArticulos"
+										oncomplete="PF('deleteArticuloDialog').show()"
+										image="ui-icon ui-icon-close" title="Delete">
+										<f:setPropertyActionListener value="#{object}"
+											target="#{solicitudesAdquisicionesMB.articuloDelete}" />
+										<h:outputText styleClass="ui-icon ui-icon-close" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="Editar" exportable="false" width="5%">
+									<p:commandLink
+										update=":formArticulos:focus :formArticulos:messagesArticulos :formArticulos:panelForm"
+										image="ui-icon ui-icon-edit" title="Editar">
+										<f:setPropertyActionListener value="#{object}"
+											target="#{solicitudesAdquisicionesMB.articuloAdd}" />
+										<h:outputText styleClass="ui-icon ui-icon-pencil" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="Ver" exportable="false" width="5%">
+									<p:commandLink image="ui-icon  ui-icon-zoomin"
+										title="Ver detalles"
+										oncomplete="PF('detallesArticulo').show()"
+										update="detallesArticulo">
+										<f:setPropertyActionListener value="#{object}"
+											target="#{solicitudesAdquisicionesMB.articuloView}" />
+										<h:outputText styleClass="ui-icon ui-icon-zoomin" />
+									</p:commandLink>
+								</p:column>
+
+								<p:columnGroup type="footer">
+									<p:row>
+										<p:column colspan="6" style="text-align:right"
+											footerText="Total:" />
+										<p:column style="text-align:right"
+											footerText="\$#{solicitudesAdquisicionesMB.totalArticulos}" />
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+						</p:panel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+
+			<h:form id="formFR">
+				<p:outputPanel id="panelFR">
+					<p:panel styleClass="noBorder"
+						rendered="#{solicitudesAdquisicionesMB.panelRendered eq 3}">
+						<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-w"
+							update="formFR formDetallesSolicitudes inlinePdf"
+							actionListener="#{solicitudesAdquisicionesMB.verDetalles()}" />
+						<p:panel id="panel" header="Solicitud de firmas de revisión"
+							styleClass="green col-md-8 col-centered row-centered shadow-panel green container">
+							<p:messages id="msFR" showDetail="true" closable="true"
+								showSummary="false" />
+							<p:dataGrid var="firma"
+								value="#{solicitudesAdquisicionesMB.firmasBySA}" columns="2"
+								paginator="false" layout="grid" rows="4" id="tableFirmasFR">
+								<p:panel header="Posicion de firma #{firma.posicion}"
+									style="text-align:center" styleClass="gray">
+									<h:panelGrid columns="2">
+
+										<h:panelGrid columns="1" styleClass="panel-buttons">
+											<h:outputText value="Estado de firma: #{firma.estado}" />
+											<p:commandButton value="Cambiar"
+												icon=" ui-icon-transferthick-e-w"
+												styleClass="button-green no-padding"
+												rendered="#{firma.estado ne 'Firmado'}" update="formFR"
+												onclick="PF('dialogFR').show()">
+												<f:setPropertyActionListener value="#{firma.posicion}"
+													target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+											</p:commandButton>
+											<p:commandButton value="Firmar" icon=" ui-icon-key"
+												styleClass="button-green no-padding"
+												rendered="#{(firma.firma ne null) and (firma.firma.usuario.usuario eq solicitudesAdquisicionesMB.username) and (firma.estado ne 'Firmado')}"
+												update=":form1:panelPrincipal formFR"
+												onclick="PF('dialogFRFirmar').show()">
+												<f:setPropertyActionListener value="#{firma.posicion}"
+													target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+											</p:commandButton>
+											<p:commandButton value="Eliminar" icon="ui-icon-trash"
+												rendered="#{firma.firma ne null }"
+												update=":form1:panelPrincipal formFR"
+												styleClass="button-green no-padding"
+												onclick="PF('dialogFRDelete').show()">
+												<f:setPropertyActionListener value="#{firma.posicion}"
+													target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+											</p:commandButton>
+										</h:panelGrid>
+										<h:panelGrid columns="1" style="width:100%;height:100%">
+											<h:outputText value="Usuario: #{firma.firma.usuario.usuario}" />
+											<p:graphicImage
+												value="../../tmp/#{firma.firma.nombreArchivo}"
+												style="border:1px solid gray;border-radius:10px; margin-left:5px;"
+												rendered="#{firma.firma ne null}" id="graphicImage"
+												width="200" height="100" cache="false">
+											</p:graphicImage>
+										</h:panelGrid>
+									</h:panelGrid>
+								</p:panel>
+							</p:dataGrid>
+						</p:panel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<h:form id="formFRS">
+				<p:outputPanel id="panelFRS">
+					<p:panel styleClass="noBorder"
+						rendered="#{solicitudesAdquisicionesMB.panelRendered eq 4}">
+						<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-w"
+							actionListener="#{solicitudesAdquisicionesMB.verDetalles()}"
+							update="formDetallesSolicitudes formFRS inlinePdf" />
+						<p:panel id="panel" header="Solicitud de firmas de recepción"
+							styleClass="green col-md-11 col-centered row-centered shadow-panel green container">
+							<p:messages id="msFRS" showDetail="true" closable="true"
+								showSummary="false" />
+							<p:dataGrid var="firma"
+								value="#{solicitudesAdquisicionesMB.firmasBySA}" columns="3"
+								paginator="false" layout="grid" rows="3" id="tableFirmasFR">
+								<p:panel header="Posicion de firma #{firma.posicion}"
+									style="text-align:center" styleClass="gray">
+									<h:panelGrid columns="2">
+										<h:panelGrid columns="1" styleClass="panel-buttons">
+											<h:outputText value="Estado de firma: #{firma.estado}" />
+											<p:commandButton value="Cambiar"
+												icon=" ui-icon-transferthick-e-w"
+												rendered="#{firma.estado ne 'Firmado'}" update="formFR"
+												styleClass="button-green no-padding"
+												onclick="PF('dialogFR').show()">
+												<f:setPropertyActionListener value="#{firma.posicion}"
+													target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+											</p:commandButton>
+											<p:commandButton value="Firmar" icon=" ui-icon-key"
+												styleClass="button-green no-padding"
+												rendered="#{(firma.firma ne null) and (firma.firma.usuario.usuario eq solicitudesAdquisicionesMB.username) and (firma.estado ne 'Firmado')}"
+												update=":form1:panelPrincipal formFR"
+												onclick="PF('dialogFRFirmar').show()">
+												<f:setPropertyActionListener value="#{firma.posicion}"
+													target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+											</p:commandButton>
+											<p:commandButton value="Eliminar" icon="ui-icon-trash"
+												styleClass="button-green no-padding"
+												rendered="#{firma.firma ne null }"
+												update=":form1:panelPrincipal formFR"
+												onclick="PF('dialogFRDelete').show()">
+												<f:setPropertyActionListener value="#{firma.posicion}"
+													target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+											</p:commandButton>
+										</h:panelGrid>
+										<h:panelGrid columns="1" style="width:100%;height:100%">
+											<h:outputLabel
+												value="Usuario: #{firma.firma.usuario.usuario}" />
+											<p:graphicImage
+												value="../../tmp/#{firma.firma.nombreArchivo}"
+												style="border:1px solid gray;border-radius:10px; margin-left:5px;"
+												rendered="#{firma.firma ne null}" id="graphicImage"
+												width="200" height="100" cache="false">
+											</p:graphicImage>
+											<h:outputLabel rendered="#{firma.firmadoEl ne null}"
+												value="Firmado el :">
+												<p:outputLabel value="#{firma.firmadoEl}">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</p:outputLabel>
+											</h:outputLabel>
+										</h:panelGrid>
+									</h:panelGrid>
+								</p:panel>
+							</p:dataGrid>
+						</p:panel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<h:form id="modificaion">
+				<p:outputPanel id="panelModificacion">
+					<p:panel styleClass="noBorder"
+						rendered="#{solicitudesAdquisicionesMB.panelRendered eq 7}">
+						<p:commandButton value="Regresar" icon="ui-icon-arrowreturn-1-w"
+							actionListener="#{solicitudesAdquisicionesMB.verDetalles()}"
+							update="formDetallesSolicitudes formFRS inlinePdf" />
+						<p:panel id="panel"
+							header="Solicitar modificaion de solicitud de adquisición"
+							styleClass="green col-md-11 col-centered row-centered shadow-panel green container">
+							<p:messages id="ms" showDetail="true" closable="true"
+								showSummary="false" />
+							<p:fileUpload
+								fileUploadListener="#{solicitudesAdquisicionesMB.subirSolicitudModidificacion}"
+								mode="advanced" dragDropSupport="false" multiple="false"
+								update=":modificaion:ms, :modificaion:panel"
+								sizeLimit="10000000000" accept=".pdf,.png,.gif,.jpeg,.jpg"
+								allowTypes="/(\.|\/)(pdf|gif|jpe?g|jpg|png)$/"
+								invalidSizeMessage="Tamaño invalido de archivo."
+								invalidFileMessage="Tipo invalido de archivo."
+								cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+							</p:fileUpload>
+							<p:commandButton value="Iniciar modificación"
+								icon=" ui-icon-newwin" styleClass="button-green no-padding"
+								onclick="PF('iniciarModificacion').show()">
+							</p:commandButton>
+						</p:panel>
+					</p:panel>
+				</p:outputPanel>
+			</h:form>
+			<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+				message="Al eliminar una solicitud se va a eliminar sus articulos capturados y se va a desasociar las firmas, subgiros comerciales, programas selecionados?"
+				header="Confirmación" severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes " icon="ui-icon-check"
+					actionListener="#{solicitudesAdquisicionesMB.delete}"
+					oncomplete="PF('confirmFileDeleteMeta').hide();"
+					update="formListaSolicitudes formDetallesSolicitudes" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('confirmFileDeleteMeta').hide();"
+					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
+			</p:confirmDialog>
+			<p:confirmDialog widgetVar="deleteArticuloDialog"
+				message="Desea eliminar el registro actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{solicitudesAdquisicionesMB.deleteArticulo}"
+					oncomplete="PF('deleteArticuloDialog').hide();"
+					update=":formArticulos:dataGridArticulos :formArticulos:messagesArticulos" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('deleteArticuloDialog').hide();"
+					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
+			</p:confirmDialog>
+
+			<h:form id="formUsuarios" styleClass="green">
+				<p:dialog header="Seleccione revisor" widgetVar="modalRevisor"
+					modal="true" height="300" width="600" showEffect="fade"
+					hideEffect="fade" resizable="true">
+					<p:dataTable id="usuarios" var="user" styleClass="et_datatable"
+						resizableColumns="true" widgetVar="tbUsuarios"
+						value="#{solicitudesAdquisicionesMB.usuariosList}" lazy="true"
+						selectionMode="single" emptyMessage="No hay registros"
+						paginator="true" rows="10" rowKey="#{user.id}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:ajax event="rowDblselect"
+							update=":formDetallesSolicitudes:msnDetallesSolicitudes"
+							listener="#{solicitudesAdquisicionesMB.onDlClickTbUsers}"
+							oncomplete="PF('modalRevisor').hide();"></p:ajax>
+						<p:column headerText="Nombre" filterMatchMode="contains"
+							filterBy="#{user.cuenta}" filterMaxLength="4">
+							<h:outputText value="#{user.nombre}" />
+						</p:column>
+					</p:dataTable>
+				</p:dialog>
+			</h:form>
+			<p:confirmDialog widgetVar="aprobarRevision"
+				message="Al aprobar la solicitud ya no sera posible el editarla, continuar?"
+				header="Confirmación" severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{solicitudesAdquisicionesMB.aprobarSolicitud}"
+					oncomplete="PF('aprobarRevision').hide();"
+					update=":formDetallesSolicitudes:msnDetallesSolicitudes" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('aprobarRevision').hide();"
+					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
+			</p:confirmDialog>
+			<h:form id="formDialogFR" styleClass="green">
+				<p:dialog header="Seleccione firma para solicitar revisión"
+					widgetVar="dialogFR" modal="true" height="300" width="600"
+					showEffect="fade" hideEffect="fade" resizable="true">
+					<p:dataTable id="firmas" var="sign" styleClass="et_datatable"
+						resizableColumns="true" widgetVar="tbFR"
+						value="#{solicitudesAdquisicionesMB.firmasList}" lazy="true"
+						selectionMode="single" emptyMessage="No hay registros"
+						paginator="true" rows="10" rowKey="#{sign.id}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:ajax event="rowDblselect" update=":formFR :formFRS"
+							listener="#{solicitudesAdquisicionesMB.guardarFirma}"
+							oncomplete="PF('dialogFR').hide();"></p:ajax>
+						<p:column headerText="Nombre">
+							<h:outputText value="#{sign.usuario.usuario}" />
+						</p:column>
+					</p:dataTable>
+				</p:dialog>
+			</h:form>
+			<h:form id="detallesArticulo" styleClass="green">
+				<p:dialog header="Detalles del articulo"
+					widgetVar="detallesArticulo" modal="true" height="300" width="1200"
+					showEffect="fade" hideEffect="fade" resizable="true">
+					<div class="row">
+						<div class="col-md-2">
+							<p:outputLabel>Renglon: </p:outputLabel>
+							<h:outputText
+								value=" #{solicitudesAdquisicionesMB.articuloView.renglon}"></h:outputText>
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel>Clave: </p:outputLabel>
+							<h:outputText
+								value=" #{solicitudesAdquisicionesMB.articuloView.clave}"></h:outputText>
+						</div>
+						<div class="col-md-8">
+							<p:outputLabel>Descripcion: </p:outputLabel>
+							<h:outputText
+								value=" #{solicitudesAdquisicionesMB.articuloView.descripcion}"></h:outputText>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<p:outputLabel>Unidad Medida: </p:outputLabel>
+							<h:outputText
+								value=" #{solicitudesAdquisicionesMB.articuloView.unidadMedida}"></h:outputText>
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel>Catidad: </p:outputLabel>
+							<h:outputText
+								value=" #{solicitudesAdquisicionesMB.articuloView.cantidad}"></h:outputText>
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel>Precio unitario: </p:outputLabel>
+							<h:outputText
+								value=" $#{solicitudesAdquisicionesMB.articuloView.precio}"></h:outputText>
+						</div>
+						<div class="col-md-2">
+							<p:outputLabel>Sub-total: </p:outputLabel>
+							<h:outputText
+								value=" $#{solicitudesAdquisicionesMB.articuloView.subTotal}"></h:outputText>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<p:outputLabel>Descripción tecnica: </p:outputLabel>
+
+						</div>
+						<div class="col-md-12 pre-wrap">
+							#{solicitudesAdquisicionesMB.articuloView.descripcionTecnica}</div>
+					</div>
+				</p:dialog>
+			</h:form>
+			<p:confirmDialog widgetVar="dialogFRDelete"
+				message="Desea eliminar la firma actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{solicitudesAdquisicionesMB.deleteFirma}"
+					oncomplete="PF('dialogFRDelete').hide();" update=":formFR :formFRS" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('dialogFRDelete').hide();"
+					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
+			</p:confirmDialog>
+			<p:confirmDialog widgetVar="dialogFRFirmar"
+				message="Esta seguro de firmar la solicitud actual?"
+				header="Confirmación" severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{solicitudesAdquisicionesMB.firmarSolicitud}"
+					oncomplete="PF('dialogFRFirmar').hide();" update=":formFR :formFRS" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('dialogFRFirmar').hide();"
+					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
+			</p:confirmDialog>
+			<p:confirmDialog widgetVar="deleteCodigoProgramatico"
+				message="Esta seguro de eliminar codigo actual?"
+				header="Confirmación" severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{solicitudesAdquisicionesMB.deleteCodigoProgramatico()}"
+					oncomplete="PF('deleteCodigoProgramatico').hide();"
+					update=":form1:messages :form1:codigosProgramaticos" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('deleteCodigoProgramatico').hide();"
+					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
+			</p:confirmDialog>
+			<p:confirmDialog widgetVar="iniciarModificacion"
+				message="Al inicar la modificación de la solicitud, 
+				tanto las firmas de la solicitud como las del contrato se volveran a solicitar,
+				Continuar ?"
+				header="Confirmación" severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{solicitudesAdquisicionesMB.aceptarModificaion}"
+					oncomplete="PF('iniciarModificacion').hide();"
+					update=":form1 :modificaion" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('iniciarModificacion').hide();"
+					styleClass="ui-confirmdialog-no" icon=" ui-icon-close" />
+			</p:confirmDialog>
+			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="../reports/indice.png"
+						style="margin-right: 12px; vertical-align: middle;" />
+					<h:outputText value="Por favor espere..."
+						style="white-space: nowrap;" />
+				</h:panelGrid>
+			</pe:blockUI>
+			<h:form id="previewResourse" styleClass="green">
+				<p:dialog widgetVar="modalPreviewResource" modal="true" height="420"
+					width="1200" showEffect="fade" hideEffect="fade" resizable="true">
+
+					<p:panel id="pdfPre" tabindex="-1" style="border:0px"
+						visible="#{solicitudesAdquisicionesMB.type eq '.pdf'}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{solicitudesAdquisicionesMB.id}&amp;filename=#{solicitudesAdquisicionesMB.name}"
+							height="480px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+					<p:panel id="imgPre" tabindex="-1" styleClass="panel-view-img"
+						visible="#{solicitudesAdquisicionesMB.type eq '.png'  or( 
+						solicitudesAdquisicionesMB.type eq '.jpg')  or( 
+						solicitudesAdquisicionesMB.type eq '.jpeg') }">
+						<p:graphicImage
+							value="/GetFileInline?uuid=#{solicitudesAdquisicionesMB.id}&amp;filename=#{solicitudesAdquisicionesMB.name}"
+							style="border:1px solid gray;border-radius:10px; margin-left:5px;"
+							id="graphicImage" cache="false">
+						</p:graphicImage>
+					</p:panel>
+				</p:dialog>
+			</h:form>
+			<p:panel id="inlinePdf" tabindex="-1" style="border:0px"
+				visible="#{solicitudesAdquisicionesMB.uuid ne null and solicitudesAdquisicionesMB.panelRendered eq 6}">
+				<object type="application/pdf"
+					data="#{request.contextPath}/GetFileInline?uuid=#{solicitudesAdquisicionesMB.uuid}&amp;filename=#{solicitudesAdquisicionesMB.endFilename}"
+					height="480px" width="100%"> Tu browser no puede desplegar
+					el PDF. </object>
+			</p:panel>
+			<script type="text/javascript">
+				const guardarSolicitudOn =(event)=>{
+					console.log(event.keyCode)
+					if (event.which == 13) {
+						guardarSolicitud();
+						return false;
+					} 
+					if(event.keyCode == 27) {
+						return false;
+					}
+				}
+				const onMouseOverRegresar=()=>{
+					regresar();
+				}
+				const onMouseOverRegresarArticulo=()=>{
+					regresarADetalles();
+				}
+			
+		</script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

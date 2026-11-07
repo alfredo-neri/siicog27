@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+			    
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				
+				<p:panel id="panel" header="Desafectar"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<p:dialog id="modal" modal="true" widgetVar="statusDialog"
+						header="Status" draggable="false" closable="false"
+						resizable="false">
+						<p:graphicImage name="/images/ajaxloadingbar.gif" />
+			        </p:dialog>
+					<center>
+					<p:panelGrid id="pgrid2" columns="2">
+					     <h:inputSecret id="pass" value="#{desafectacionPrecierreMB.password}"/>
+					     <p:commandButton value="Validar Password" ajax="false"
+								id="vidalaPass" 
+								update=":form1:panel"
+								
+								actionListener="#{desafectacionPrecierreMB.validaPassword}"
+							
+								/>
+					</p:panelGrid>
+					</center>
+					
+					<center>
+						<p:panelGrid id="pgrid" columns="2">
+						    <h:outputText value="Mes" />
+						    <h:outputText value="" />
+							<p:selectOneMenu id="selectmes" 
+							          value="#{desafectacionPrecierreMB.mes}"
+							          disabled="#{desafectacionPrecierreMB.activa}"
+							          icon="ui-icon-person"
+								required="true">
+								<f:selectItems value="#{desafectacionPrecierreMB.listMes}" var="m"
+									itemValue="#{m.mes}" itemLabel="#{m.mes}" />
+							</p:selectOneMenu>
+							<p:commandButton value="Desafectar Poliza" id="polizanumber"
+								actionListener="#{desafectacionPrecierreMB.desafecta}"
+								icon="ui-icon-search" update=":form1:messagesEdit: form1:panel"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								ajax="true" 
+								disabled="#{desafectacionPrecierreMB.activa}" />
+							
+						</p:panelGrid>
+					</center>
+				</p:panel>
+			</h:form>
+			<script type="text/javascript">
+			    function start() {
+			        PF('statusDialog').show();
+			     }
+			 
+			     function stop() {
+			         PF('statusDialog').hide();
+			     }
+           </script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

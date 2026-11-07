@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:panel id="panel"
+					header="Conciliaci&oacute;n de P&oacute;lizas Diario VS Egreso por Referencia)"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+
+					<p:messages id="msg" showDetail="true" closable="true"
+						autoUpdate="true" />
+
+					<p:dialog id="modal" modal="true" widgetVar="statusDialog"
+						header="Extrayendo Informaci&oacute;n de la Base de Datos"
+						draggable="false" closable="false" resizable="false">
+						<p:graphicImage name="/images/ajaxloadingbar.gif" />
+					</p:dialog>
++
+					<!-- Parametros de la consulta -->
+					<p:panelGrid columns="5" id="pgParametros"
+						styleClass="green col-md-7 col-centered row-centered shadow-panel ui-noborder">
+
+						<p:outputLabel value="Ejercicio:" for="anio" />
+						<p:inputText id="anio" value="#{conciliacionPolizaDEMB.anio}"
+							readonly="true" style="width:80px; text-align:center;" />
+
+						<p:outputLabel value="Mes:" for="mes" />
+						<p:selectOneMenu id="mes" value="#{conciliacionPolizaDEMB.mes}">
+							<f:selectItems value="#{conciliacionPolizaDEMB.listaMeses}"
+								var="item" itemValue="#{item.periodo}" itemLabel="#{item.periodo}" />
+						</p:selectOneMenu>
+
+						<p:commandButton value="Buscar" id="buscar"
+							actionListener="#{conciliacionPolizaDEMB.buscar}"
+							onstart="start()" oncomplete="stop()"
+							update=":form1:panelResultado" />
+					</p:panelGrid>
+
+					<p:outputPanel id="panelResultado">
+
+						<!-- Filtros sobre el resultado ya consultado -->
+						<p:panelGrid columns="5" id="pgFiltros"
+							rendered="#{conciliacionPolizaDEMB.consultaEjecutada and conciliacionPolizaDEMB.totalRegistros gt 0}"
+							styleClass="green col-md-7 col-centered row-centered ui-noborder">
+
+							<p:outputLabel value="Estatus:" for="filtroEstatus" />
+							<p:selectOneMenu id="filtroEstatus"
+								value="#{conciliacionPolizaDEMB.filtroEstatus}">
+								<f:selectItems value="#{conciliacionPolizaDEMB.listaEstatus}" />
+								<p:ajax event="change"
+									listener="#{conciliacionPolizaDEMB.aplicarFiltros}"
+									update=":form1:panelDatos" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Referencia:" for="filtroReferencia" />
+							<p:inputText id="filtroReferencia"
+								value="#{conciliacionPolizaDEMB.filtroReferencia}"
+								placeholder="contiene..." style="width:140px;">
+								<p:ajax event="keyup"
+									listener="#{conciliacionPolizaDEMB.aplicarFiltros}"
+									update=":form1:panelDatos" />
+							</p:inputText>
+
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+										   title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:dataExporter type="xls" target="objects"
+												fileName="#{conciliacionPolizaDEMB.nombreArchivo}"
+												pageOnly="false" />
+							</h:commandLink>
+						</p:panelGrid>
+
+						<!-- Resumen del periodo consultado -->
+						<p:panelGrid columns="5" id="pgResumen"
+							rendered="#{conciliacionPolizaDEMB.consultaEjecutada and conciliacionPolizaDEMB.totalRegistros gt 0}"
+							styleClass="green col-md-11 col-centered row-centered ui-noborder">
+							<p:outputLabel
+								value="Conciliadas: #{conciliacionPolizaDEMB.totalConciliadas}"
+								styleClass="conciliacion-resumen-ok" />
+							<p:outputLabel
+								value="En mes previo: #{conciliacionPolizaDEMB.totalPrevios}"
+								styleClass="conciliacion-resumen-previo" />
+							<p:outputLabel
+								value="Por movimientos: #{conciliacionPolizaDEMB.totalPorMovimientos}"
+								styleClass="conciliacion-resumen-movimientos" />
+							<p:outputLabel
+								value="Pendientes: #{conciliacionPolizaDEMB.totalPendientes}"
+								styleClass="conciliacion-resumen-pendiente" />
+							<p:outputLabel
+								value="Referencias repetidas: #{conciliacionPolizaDEMB.totalMultiples}"
+								styleClass="conciliacion-resumen-multiple" />
+						</p:panelGrid>
+
+						<p:outputPanel id="panelDatos">
+
+						<p:panelGrid columns="1" id="pgTabla"
+							styleClass="green col-md-11 col-centered row-centered shadow-panel">
+
+							<p:dataTable id="objects" var="objects"
+								value="#{conciliacionPolizaDEMB.listaConciliacion}"
+								emptyMessage="No hay registros" widgetVar="conciliacionWdg"
+								rowIndexVar="index" rowStyleClass="#{objects.estiloEstatus}"
+								paginator="true" rows="15" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="15,30,50"
+								style="margin-bottom:10px; padding: 0px 10px !important;">
+
+								<!-- Encabezado agrupado: dos niveles -->
+								<p:columnGroup type="header">
+									<p:row>
+										<p:column rowspan="2" headerText="Referencia" width="12%" />
+										<p:column rowspan="2" headerText="Estatus" width="14%" />
+										<p:column colspan="4" headerText="P&oacute;liza de Diario"
+											width="37%" />
+										<p:column colspan="4" headerText="P&oacute;liza de Egreso"
+											width="37%" />
+									</p:row>
+									<p:row>
+										<p:column headerText="Mes" />
+										<!--<p:column headerText="Tipo" />-->
+										<p:column headerText="Consecutivo" />
+										<p:column headerText="Fecha" />
+										<p:column headerText="Movimientos" />
+										<p:column headerText="Mes" />
+										<!--<p:column headerText="Tipo" />-->
+										<p:column headerText="Consecutivo" />
+										<p:column headerText="Fecha" />
+										<p:column headerText="Movimientos" />
+									</p:row>
+								</p:columnGroup>
+
+								<p:column headerText="Referencia" width="12%">
+									<p:outputLabel value="#{objects.refpol}" />
+								</p:column>
+
+								<p:column headerText="Estatus" width="14%">
+									<p:outputLabel value="#{objects.estatus}" />
+								</p:column>
+
+								<p:column headerText="Mes D" width="4%">
+									<p:outputLabel value="#{objects.mesD}" />
+								</p:column>
+								<!--
+								<p:column headerText="Tipo D" width="4%">
+									<p:outputLabel value="#{objects.tipoD}" />
+								</p:column>
+								-->
+								<p:column headerText="Consecutivo D" width="7%">
+									<p:outputLabel value="#{objects.conpolD}"
+										rendered="#{objects.tieneD}" />
+								</p:column>
+
+								<p:column headerText="Fecha D" width="8%">
+									<p:outputLabel value="#{objects.fecpolD}">
+										<f:convertDateTime pattern="dd/MM/yyyy"
+											timeZone="America/Mexico_City" />
+									</p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Movimientos D" width="14%"
+									styleClass="conciliacion-cuentas">
+									<p:outputLabel value="#{objects.cuentasD}" />
+								</p:column>
+
+								<p:column headerText="Mes E" width="4%">
+									<p:outputLabel value="#{objects.mesE}" />
+								</p:column>
+								<!--
+								<p:column headerText="Tipo E" width="4%">
+									<p:outputLabel value="#{objects.tipoE}" />
+								</p:column>
+								-->
+								<p:column headerText="Consecutivo E" width="7%">
+									<p:outputLabel value="#{objects.conpolE}"
+										rendered="#{objects.tieneE}" />
+								</p:column>
+
+								<p:column headerText="Fecha E" width="8%">
+									<p:outputLabel value="#{objects.fecpolE}">
+										<f:convertDateTime pattern="dd/MM/yyyy"
+											timeZone="America/Mexico_City" />
+									</p:outputLabel>
+								</p:column>
+
+								<p:column headerText="Movimientos E" width="14%"
+									styleClass="conciliacion-cuentas">
+									<p:outputLabel value="#{objects.cuentasE}" />
+								</p:column>
+
+							</p:dataTable>
+						</p:panelGrid>
+
+						</p:outputPanel>
+					</p:outputPanel>
+				</p:panel>
+			</h:form>
+
+			<style type="text/css">
+				.conciliacion-ok td { background-color: #eaf5ea !important; }
+				.conciliacion-previo td { background-color: #e6eef7 !important; }
+				.conciliacion-movimientos td { background-color: #eef0e3 !important; }
+				.conciliacion-pendiente td { background-color: #fdf3e0 !important; }
+				.conciliacion-multiple td { background-color: #fbe3e1 !important; }
+				.conciliacion-resumen-ok { font-weight: bold; color: #3f6e3c; }
+				.conciliacion-resumen-previo { font-weight: bold; color: #2f5878; }
+				.conciliacion-resumen-movimientos { font-weight: bold; color: #5e6b33; }
+				.conciliacion-resumen-pendiente { font-weight: bold; color: #87611a; }
+				.conciliacion-resumen-multiple { font-weight: bold; color: #93261f; }
+				.conciliacion-cuentas { word-break: break-word; white-space: normal !important; }
+			</style>
+
+			<script type="text/javascript">
+				function start() {
+					PF('statusDialog').show();
+				}
+
+				function stop() {
+					PF('statusDialog').hide();
+				}
+			</script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

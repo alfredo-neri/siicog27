@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<p:growl id="growlIndicadores" showDetail="false" sticky="true"></p:growl>
+			<h:form id="formIndCaptura">
+				<p:remoteCommand name="onload"
+					action="#{matrizIndicadoresMB.findAllIndicadores}" autoRun="true"
+					update="panelIndicadores, indTable" immediate="true" />
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+				<p:panel id="panelIndicadores" header="Matriz de Indicadores"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:dataGrid id="indTable" var="mat"
+						value="#{matrizIndicadoresMB.masterList}" columns="1" 
+						layout="grid" styleClass="et_datatable"
+						emptyMessage="Cargando información..." paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="indWdg" paginatorPosition="top"
+						rowIndexVar="rowIndexCaptura">
+						<p:ajax event="page"
+							listener="#{matrizIndicadoresMB.cambiarPagina}"
+							process="indTable" update="formIndCaptura:indTable" />
+						<p:column visible="false">
+							<p:inputText type="hidden" value="#{mat.id}"></p:inputText>
+						</p:column>
+						<p:column>
+							<center>
+								<p:panelGrid columns="2" columnClasses="col80,col20"
+									styleClass="noBorders">
+									<p:panelGrid id="gridContent" columns="2" 
+										styleClass="col-centered row-centered"
+										columnClasses="col50,col50"> 
+										<h:panelGroup>
+											<h:outputText value="Cve Dependencia:"></h:outputText>
+											<p:selectOneMenu value="#{mat.clvdepg}"
+												disabled="#{matrizIndicadoresMB.capturaDeshabilitado}">
+												<p:ajax update="desDep, oneMenuProgr, desProgram"
+													listener="#{matrizIndicadoresMB.updateDescDep(rowIndexCaptura)}" />
+												<f:selectItem itemLabel="--Seleccione--" itemValue="null"
+													noSelectionOption="true" />
+												<f:selectItems
+													value="#{matrizIndicadoresMB.clvDependenciasList}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:inputText id="desDep" value="#{mat.clvdepgDesc}" size="40"
+											disabled="true"></h:inputText>
+
+										<h:panelGroup>
+											<h:outputText value="Clave Programa:"></h:outputText>
+											<p:selectOneMenu id="oneMenuProgr" value="#{mat.cveprog}"
+												disabled="#{matrizIndicadoresMB.capturaDeshabilitado}">
+												<p:ajax update="desProgram" event="change"
+													listener="#{matrizIndicadoresMB.updateDescProg(rowIndexCaptura)}" />
+												<f:selectItem itemLabel="--Seleccione--" itemValue="null"
+													noSelectionOption="true" />
+												<f:selectItems value="#{mat.programasMap.entrySet()}"
+													var="mapProg" itemLabel="#{mapProg.key}"
+													itemValue="#{mapProg.key}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:inputText id="desProgram" value="#{mat.cveProgDesc}"
+											size="40" disabled="true"></h:inputText>
+
+										<h:panelGroup>
+											<h:outputText value="Clave Temas de Desarrollo:"></h:outputText>
+											<p:selectOneMenu id="oneMenuTemas" value="#{mat.cvetemas}"
+												disabled="#{matrizIndicadoresMB.capturaDeshabilitado}">
+												<p:ajax update="desDesarrollo" event="change"
+													listener="#{matrizIndicadoresMB.updateDescTema(rowIndexCaptura)}" />
+												<f:selectItem itemLabel="--Seleccione--" itemValue="null"
+													noSelectionOption="true" />
+												<f:selectItems value="#{matrizIndicadoresMB.clvTemaList}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:inputText id="desDesarrollo" value="#{mat.cveTemaDesc}"
+											size="40" disabled="true"></h:inputText>
+
+										<h:panelGroup>
+											<h:outputText value="Objetivo:"></h:outputText>
+										</h:panelGroup>
+										<p:inputTextarea value="#{mat.objetivo}"
+											disabled="#{matrizIndicadoresMB.capturaDeshabilitadoObjetivo}"
+											cols = "50" rows="4" autoResize="false"></p:inputTextarea>
+
+									</p:panelGrid>
+
+									<p:panelGrid id="pnlBotones" columns="1">
+										<p:commandButton value="Salvar   "
+											style="padding: 2px; width:100px;"
+											action="#{matrizIndicadoresMB.salvarEncabezado(rowIndexCaptura)}"
+											rendered="#{matrizIndicadoresMB.capturaVisibleSalvar}"
+											update="indTable,formIndCaptura:indTable:0:tabviewDetails:finTable,formIndCaptura:indTable:0:tabviewDetails:propTable,formIndCaptura:indTable:0:tabviewDetails:compTable, growlIndicadores"></p:commandButton>
+										<p:commandButton value="Modificar"
+											style="padding: 2px; width:100px;"
+											action="#{matrizIndicadoresMB.modificarCaptura(rowIndexCaptura)}"
+											rendered="#{matrizIndicadoresMB.capturaVisibleModificar}"
+											update="indTable,growlIndicadores"></p:commandButton>
+										<p:commandButton value="Limpiar  "
+											style="padding: 2px; width:100px;"
+											action="#{matrizIndicadoresMB.resetCaptura(rowIndexCaptura)}"
+											disabled="#{matrizIndicadoresMB.capturaDesabilitadoReset}"
+											update="indTable,growlIndicadores"></p:commandButton>
+										<p:commandButton value="Adicionar"
+											style="padding: 2px; width:100px;"
+											action="#{matrizIndicadoresMB.adicionarCaptura(rowIndexCaptura)}"
+											disabled="#{matrizIndicadoresMB.capturaDesabilitadoAdicionar}"
+											update="indTable,growlIndicadores"
+											oncomplete="PF('indWdg').getPaginator().setPage(PF('indWdg').paginator.cfg.pageCount-1);"
+											immediate="true"></p:commandButton>
+										<p:commandButton value="Borrar   "
+											style="padding: 2px; width:100px;"
+											update="@form,growlIndicadores"
+											actionListener="#{matrizIndicadoresMB.borrarEncabezado(rowIndexCaptura)}"
+											disabled="#{matrizIndicadoresMB.capturaDesabilitadoBorrar}">
+											<p:confirm header="Confirmación"
+												message="¿Estás seguro que deseas eliminar el registro?"
+												icon="ui-icon-alert" />
+										</p:commandButton>
+										<p:commandButton value="Cancelar "
+											style="padding: 2px; width:100px;"
+											action="#{matrizIndicadoresMB.cancelarCaptura(rowIndexCaptura)}"
+											disabled="#{matrizIndicadoresMB.capturaDesabilitadoCancelar}"
+											update="indTable,growlIndicadores"></p:commandButton>
+									</p:panelGrid>
+								</p:panelGrid>
+
+								<!-- 							Tabs -->
+								<p:panel header="Detalle Indicador" toggleable="true"
+									id="panelWgt" toggleSpeed="500" widgetVar="panelWgt">
+									<p:tabView id="tabviewDetails" style="color: black;"
+										cache="false">
+										<p:tab rendered="true" disabled="true"></p:tab>
+										<p:tab id="finalidad" title="Finalidad">
+											<p:dataTable id="finTable" var="fin"
+												value="#{mat.listaFinalidad}" styleClass="et_datatable"
+												emptyMessage="No existen registros" paginator="true"
+												rows="1"
+												paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+												widgetVar="finWdg" paginatorPosition="bottom"
+												rowIndexVar="rowIndexFinalidad">
+												<p:ajax event="page"
+													listener="#{matrizIndicadoresMB.cambiarPaginaFina}"
+													process="finTable" update="finTable" />
+												<p:column>
+													<p:panelGrid>
+														<h:panelGroup>
+															<h:outputText value="Cve Dependencia:"></h:outputText>&nbsp;
+							        		<h:inputText value="#{mat.clvdepg}" size="7"
+																disabled="true"></h:inputText>
+							        		&nbsp;&nbsp;
+							        		<h:outputText value="Clave Programa:"></h:outputText>&nbsp;
+							        		<h:inputText value="#{mat.cveprog}" size="7"
+																disabled="true"></h:inputText>
+							        		&nbsp;&nbsp;
+							        		<h:outputText value="Clave Temas de Desarrollo:"></h:outputText>&nbsp;
+							        		<h:inputText value="#{mat.cvetemas}" size="7"
+																disabled="true"></h:inputText>
+							        		&nbsp;&nbsp;
+							        		<h:outputText value="Num. Indicador:"></h:outputText>&nbsp;
+							        		<h:inputText id="numIndicadorF" value="#{fin.cvefinal}"
+																size="7" disabled="true">
+																<f:convertNumber pattern="0000" />
+															</h:inputText>
+														</h:panelGroup>
+													</p:panelGrid>
+													<br />
+
+													<h:panelGroup>
+														<h:outputText value="Código de Indicador:"></h:outputText>
+														<p:selectOneMenu id="oneMenuCode" value="#{fin.cveind}"
+															disabled="#{matrizIndicadoresMB.finalidadDisabledEditables}"
+															requiredMessage="Ingrese Código Indicador">
+															<f:selectItem itemLabel="--Seleccione--" itemValue="null"
+																noSelectionOption="true" />
+															<f:selectItems
+																value="#{matrizIndicadoresMB.listaCodigoIndicadorFinalidad}"
+																var="code" itemLabel="#{code.codigo}"
+																itemValue="#{code.codigo}" />
+															<p:ajax update="nombreInd, numIndicadorF" event="change"
+																listener="#{matrizIndicadoresMB.updateDescNombreInd(rowIndexCaptura, rowIndexFinalidad, 1)}" />
+														</p:selectOneMenu>
+													</h:panelGroup>
+													<p:separator style="width:0px;height:0px" />
+													<p:panelGrid columnClasses="col-md-2"
+														style="text-align:center;">
+														<p:row>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Obj. o Resumen Narrativo" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" colspan="3">
+																<h:outputLabel value="I  n  d  i  c  a  d  o  r  e  s" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Medios de Verificación" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Supuestos" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Nombre" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Fórmula" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Frecuencia y Tipo" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{fin.objetivo}"
+																	disabled="#{matrizIndicadoresMB.finalidadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" id="nombreInd"
+																	cols="20" rows="5" value="#{fin.nombre}"
+																	disabled="true"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{fin.formula}"
+																	disabled="#{matrizIndicadoresMB.finalidadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{fin.frecuencia}"
+																	disabled="#{matrizIndicadoresMB.finalidadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{fin.medio}"
+																	disabled="#{matrizIndicadoresMB.finalidadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{fin.supuesto}"
+																	disabled="#{matrizIndicadoresMB.finalidadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+														</p:row>
+													</p:panelGrid>
+													<p:separator style="width:0px;height:0px" />
+													<p:panelGrid id="pnlBotonesFinalidad"> 
+														<center>
+															<p:commandButton value="Salvar   "
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.salvarIndicador(rowIndexCaptura, rowIndexFinalidad, 1)}"
+																rendered="#{matrizIndicadoresMB.finalidadVisibleSalvar}"
+																update="formIndCaptura:indTable:0:tabviewDetails:finTable,formIndCaptura:indTable:0:tabviewDetails:propTable,formIndCaptura:indTable:0:tabviewDetails:compTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Modificar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.modificarIndicador(rowIndexCaptura, rowIndexFinalidad, 1)}"
+																rendered="#{matrizIndicadoresMB.finalidadVisibleModificar}"
+																update="finTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Limpiar  "
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.resetIndicador(rowIndexCaptura, rowIndexFinalidad, 1)}"
+																disabled="#{matrizIndicadoresMB.finalidadDisabledReset}"
+																update="finTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Adicionar" id="adicionarDetalle"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.adicionarIndicador(rowIndexCaptura, rowIndexFinalidad, 1)}"
+																disabled="#{matrizIndicadoresMB.finalidadDisabledAdicionar}"
+																update="finTable,growlIndicadores"
+																oncomplete="PF('finWdg').getPaginator().setPage(PF('finWdg').paginator.cfg.pageCount-1);"></p:commandButton>
+															<p:commandButton value="Borrar   "
+																style="padding: 2px; width:100px;"
+																onclick="PF('confirmDeleteIndicador').show();"
+																disabled="#{matrizIndicadoresMB.finalidadDisabledBorrar}">
+																<p:confirmDialog widgetVar="confirmDeleteIndicador"
+																	message="¿Desea Eliminar el Registro Finalidad Actual?"
+																	header="Confirmación" severity="alert">
+																	<p:commandButton value="SI" label="NO"
+																		style="margin-top:10px;padding:2px; width:100px;"
+																		actionListener="#{matrizIndicadoresMB.borrarIndicador(rowIndexCaptura, rowIndexFinalidad, 1)}"
+																		styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+																		update="@form, growlIndicadores" />
+																	<p:commandButton value="NO" label="NO"
+																		style="margin-top:10px;padding:2px; width:100px;"
+																		onclick="PF('confirmDeleteIndicador').hide();"
+																		styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+																		update="finTable,growlIndicadores" />
+																</p:confirmDialog>
+															</p:commandButton>
+															<p:commandButton value="Cancelar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.cancelarCapturaIndicador(rowIndexCaptura, rowIndexFinalidad, 1)}"
+																disabled="#{matrizIndicadoresMB.finalidadDisabledCancelar}"
+																update="finTable,growlIndicadores"></p:commandButton>
+														</center>
+													</p:panelGrid>
+												</p:column>
+											</p:dataTable>
+										</p:tab>
+
+										<p:tab id="proposito" title="Propósito">
+											<p:dataTable id="propTable" var="pro"
+												value="#{mat.listaProposito}" styleClass="et_datatable"
+												emptyMessage="No existen registros" paginator="true"
+												rows="1"
+												paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+												widgetVar="proWdg" paginatorPosition="bottom"
+												rowIndexVar="rowIndexProposito">
+												<p:ajax event="page"
+													listener="#{matrizIndicadoresMB.cambiarPaginaPro}"
+													process="propTable" update="propTable" />
+												<p:column>
+													<p:panelGrid>
+														<h:panelGroup>
+															<h:outputText value="Cve Dependencia:"></h:outputText>&nbsp;
+								        		<h:inputText value="#{mat.clvdepg}" size="7"
+																disabled="true"></h:inputText>
+								        		&nbsp;&nbsp;
+								        		<h:outputText value="Clave Programa:"></h:outputText>&nbsp;
+								        		<h:inputText value="#{mat.cveprog}" size="7"
+																disabled="true"></h:inputText>
+								        		&nbsp;&nbsp;
+								        		<h:outputText value="Clave Temas de Desarrollo:"></h:outputText>&nbsp;
+								        		<h:inputText value="#{mat.cvetemas}" size="7"
+																disabled="true"></h:inputText>
+								        		&nbsp;&nbsp;
+								        		<h:outputText value="Num. Indicador:"></h:outputText>&nbsp;
+								        		<h:inputText id="numIndicadorP" value="#{pro.cvepro}"
+																size="7" disabled="true">
+																<f:convertNumber pattern="0000" />
+															</h:inputText>
+								        		&nbsp;&nbsp;
+										</h:panelGroup>
+													</p:panelGrid>
+													<br />
+
+													<h:panelGroup>
+														<h:outputText value="Código de Indicador:"></h:outputText>
+														<p:selectOneMenu id="oneMenuCode2" value="#{pro.cveind}"
+															disabled="#{matrizIndicadoresMB.propositoDisabledEditables}"
+															requiredMessage="Ingrese Código Indicador">
+															<f:selectItem itemLabel="--Seleccione--" itemValue="null"
+																noSelectionOption="true" />
+															<f:selectItems
+																value="#{matrizIndicadoresMB.listaCodigoIndicadorProposito}"
+																var="code" itemLabel="#{code.codigo}"
+																itemValue="#{code.codigo}" />
+															<p:ajax update="nombreIndP, numIndicadorP" event="change"
+																listener="#{matrizIndicadoresMB.updateDescNombreInd(rowIndexCaptura, rowIndexProposito, 2)}" />
+														</p:selectOneMenu>
+													</h:panelGroup>
+
+													<p:separator style="width:0px;height:0px" />
+													<p:panelGrid columnClasses="col-md-2"
+														style="text-align:center;">
+														<p:row>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Obj. o Resumen Narrativo" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" colspan="3">
+																<h:outputLabel value="I  n  d  i  c  a  d  o  r  e  s" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Medios de Verificación" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Supuestos" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Nombre" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Fórmula" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Frecuencia y Tipo" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{pro.objetivo}"
+																	disabled="#{matrizIndicadoresMB.propositoDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" id="nombreIndP"
+																	cols="25" rows="5" value="#{pro.nombre}"
+																	disabled="true"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{pro.formula}"
+																	disabled="#{matrizIndicadoresMB.propositoDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{pro.frecuencia}"
+																	disabled="#{matrizIndicadoresMB.propositoDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{pro.medio}"
+																	disabled="#{matrizIndicadoresMB.propositoDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{pro.supuesto}"
+																	disabled="#{matrizIndicadoresMB.propositoDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+														</p:row>
+													</p:panelGrid>
+													<p:separator style="width:0px;height:0px" />
+													<p:panelGrid id="pnlBotonesProposito">
+														<center>
+															<p:commandButton value="Salvar   "
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.salvarIndicador(rowIndexCaptura, rowIndexProposito, 2)}"
+																rendered="#{matrizIndicadoresMB.propositoVisibleSalvar}"
+																update="propTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Modificar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.modificarIndicador(rowIndexCaptura, rowIndexProposito, 2)}"
+																rendered="#{matrizIndicadoresMB.propositoVisibleModificar}"
+																update="propTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Limpiar  "
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.resetIndicador(rowIndexCaptura, rowIndexProposito, 2)}"
+																disabled="#{matrizIndicadoresMB.propositoDisabledReset}"
+																update="propTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Adicionar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.adicionarIndicador(rowIndexCaptura, rowIndexProposito, 2)}"
+																disabled="#{matrizIndicadoresMB.propositoDisabledAdicionar}"
+																update="propTable,growlIndicadores"
+																oncomplete="PF('proWdg').getPaginator().setPage(PF('proWdg').paginator.cfg.pageCount-1);"></p:commandButton>
+															<p:commandButton value="Borrar   "
+																style="padding: 2px; width:100px;"
+																onclick="PF('confirmDeleteIndicador2').show();"
+																disabled="#{matrizIndicadoresMB.propositoDisabledBorrar}">
+																<p:confirmDialog widgetVar="confirmDeleteIndicador2"
+																	message="Desea Eliminar el Registro de Propósito Actual?"
+																	header="Confirmación" severity="alert">
+																	<p:commandButton value="SI" label="NO"
+																		style="margin-top:10px;padding:2px; width:100px;"
+																		actionListener="#{matrizIndicadoresMB.borrarIndicador(rowIndexCaptura, rowIndexProposito, 2)}"
+																		styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+																		update="@form, growlIndicadores" />
+																	<p:commandButton value="NO" label="NO"
+																		style="margin-top:10px;padding:2px; width:100px;"
+																		onclick="PF('confirmDeleteIndicador2').hide();"
+																		styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+																		update="propTable,growlIndicadores" />
+																</p:confirmDialog>
+															</p:commandButton>
+															<p:commandButton value="Cancelar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.cancelarCapturaIndicador(rowIndexCaptura, rowIndexProposito, 2)}"
+																disabled="#{matrizIndicadoresMB.propositoDisabledCancelar}"
+																update="propTable,growlIndicadores"></p:commandButton>
+														</center>
+													</p:panelGrid>
+												</p:column>
+											</p:dataTable>
+										</p:tab>
+
+										<p:tab id="componente" title="Componente">
+											<p:dataTable id="compTable" var="com"
+												value="#{mat.listaComponente}" styleClass="et_datatable"
+												emptyMessage="No existen registros" paginator="true"
+												rows="1"
+												paginatorTemplate="COMPONENTE {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+												widgetVar="compWdg" paginatorPosition="bottom"
+												rowIndexVar="rowIndexComponente">
+												<p:ajax event="rowToggle"
+													listener="#{matrizIndicadoresMB.llenarListaActividad2(rowIndexCaptura,rowIndexComponente)}"></p:ajax>
+												<p:ajax event="page"
+													listener="#{matrizIndicadoresMB.cambiarPaginaCompo}"
+													process="compTable" update="compTable" />
+												<p:column style="width:25px">
+													<p:rowToggler />
+												</p:column>
+												<p:column>
+													<p:panelGrid>
+														<h:panelGroup>
+															<h:outputText value="Cve Dependencia:"></h:outputText>&nbsp;
+							        		<h:inputText value="#{mat.clvdepg}" size="7"
+																disabled="true"></h:inputText>
+							        		&nbsp;&nbsp;
+							        		<h:outputText value="Clave Programa:"></h:outputText>&nbsp;
+							        		<h:inputText value="#{mat.cveprog}" size="7"
+																disabled="true"></h:inputText>
+							        		&nbsp;&nbsp;
+							        		<h:outputText value="Clave Temas de Desarrollo:"></h:outputText>&nbsp;
+							        		<h:inputText value="#{mat.cvetemas}" size="7"
+																disabled="true"></h:inputText>
+							        		&nbsp;&nbsp;
+							        		<h:outputText value="Num. Indicador:"></h:outputText>&nbsp;
+							        		<h:inputText id="numIndicadorC" value="#{com.cvecom}"
+																size="7" disabled="true">
+																<f:convertNumber pattern="0000" />
+															</h:inputText>
+														</h:panelGroup>
+													</p:panelGrid>
+													<br />
+
+													<h:panelGroup>
+														<h:outputText value="Código de Indicador:"></h:outputText>
+														<p:selectOneMenu id="oneMenuCode3" value="#{com.cveind}"
+															disabled="#{matrizIndicadoresMB.componenteDisabledEditables}"
+															requiredMessage="Ingrese Código Indicador">
+															<f:selectItem itemLabel="--Seleccione--" itemValue="null"
+																noSelectionOption="true" />
+															<f:selectItems
+																value="#{matrizIndicadoresMB.listaCodigoIndicadorComponente}"
+																var="code" itemLabel="#{code.codigo}"
+																itemValue="#{code.codigo}" />
+															<p:ajax update="nombreIndC, numIndicadorC" event="change"
+																listener="#{matrizIndicadoresMB.updateDescNombreInd(rowIndexCaptura, rowIndexComponente, 3)}" />
+														</p:selectOneMenu>
+													</h:panelGroup>
+
+													<p:separator style="width:0px;height:0px" />
+													<p:panelGrid columnClasses="col-md-2"
+														style="text-align:center;">
+														<p:row>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Obj. o Resumen Narrativo" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" colspan="3">
+																<h:outputLabel value="I  n  d  i  c  a  d  o  r  e  s" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Medios de Verificación" />
+															</p:column>
+															<p:column styleClass="ui-widget-header" rowspan="2">
+																<h:outputLabel value="Supuestos" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Nombre" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Fórmula" />
+															</p:column>
+															<p:column styleClass="ui-widget-header">
+																<h:outputLabel value="Frecuencia y Tipo" />
+															</p:column>
+														</p:row>
+														<p:row>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{com.objetivo}"
+																	disabled="#{matrizIndicadoresMB.componenteDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" id="nombreIndC"
+																	cols="25" rows="5" value="#{com.nombre}"
+																	disabled="true"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{com.formula}"
+																	disabled="#{matrizIndicadoresMB.componenteDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{com.frecuencia}"
+																	disabled="#{matrizIndicadoresMB.componenteDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{com.medio}"
+																	disabled="#{matrizIndicadoresMB.componenteDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+															<p:column>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{com.supuesto}"
+																	disabled="#{matrizIndicadoresMB.componenteDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:column>
+														</p:row>
+													</p:panelGrid>
+													<p:separator style="width:0px;height:0px" />
+													<p:panelGrid id="pnlBotonesComponente">
+														<center>
+															<p:commandButton value="Salvar   "
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.salvarIndicador(rowIndexCaptura, rowIndexComponente, 3)}"
+																rendered="#{matrizIndicadoresMB.componenteVisibleSalvar}"
+																update="compTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Modificar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.modificarIndicador(rowIndexCaptura, rowIndexComponente, 3)}"
+																rendered="#{matrizIndicadoresMB.componenteVisibleModificar}"
+																update="compTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Limpiar  "
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.resetIndicador(rowIndexCaptura, rowIndexComponente, 3)}"
+																disabled="#{matrizIndicadoresMB.componenteDisabledReset}"
+																update="compTable,growlIndicadores"></p:commandButton>
+															<p:commandButton value="Adicionar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.adicionarIndicador(rowIndexCaptura, rowIndexComponente, 3)}"
+																disabled="#{matrizIndicadoresMB.componenteDisabledAdicionar}"
+																update="compTable,growlIndicadores"
+																oncomplete="PF('compWdg').getPaginator().setPage(PF('compWdg').paginator.cfg.pageCount-1);"></p:commandButton>
+															<p:commandButton value="Borrar   "
+																style="padding: 2px; width:100px;"
+																onclick="PF('confirmDeleteIndicador3').show();"
+																disabled="#{matrizIndicadoresMB.componenteDisabledBorrar}">
+																<p:confirmDialog widgetVar="confirmDeleteIndicador3"
+																	message="Desea Eliminar el Registro de Componente Actual?"
+																	header="Confirmación" severity="alert">
+																	<p:commandButton value="SI" label="NO"
+																		style="margin-top:10px;padding:2px; width:100px;"
+																		immediate="true"
+																		actionListener="#{matrizIndicadoresMB.borrarIndicador(rowIndexCaptura, rowIndexComponente, 3)}"
+																		styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+																		update="@form, growlIndicadores" />
+																	<p:commandButton value="NO" label="NO"
+																		style="margin-top:10px;padding:2px; width:100px;"
+																		onclick="PF('confirmDeleteIndicador3').hide();"
+																		styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+																		update="compTable,growlIndicadores" />
+																</p:confirmDialog>
+															</p:commandButton>
+															<p:commandButton value="Cancelar"
+																style="padding: 2px; width:100px;"
+																action="#{matrizIndicadoresMB.cancelarCapturaIndicador(rowIndexCaptura, rowIndexComponente, 3)}"
+																disabled="#{matrizIndicadoresMB.componenteDisabledCancelar}"
+																update="compTable,growlIndicadores"></p:commandButton>
+														</center>
+													</p:panelGrid>
+												</p:column>
+
+
+												<p:rowExpansion>
+													<p:dataTable id="actTable" var="act"
+														value="#{mat.listaActividad}" styleClass="et_datatable"
+														emptyMessage="No existen registros" paginator="true"
+														rows="1"
+														paginatorTemplate="ACTIVIDAD {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+														widgetVar="actWdg" paginatorPosition="bottom"
+														rowIndexVar="rowIndexActividad">
+														<f:facet name="header">Actividad</f:facet>
+														<p:ajax event="page"
+															listener="#{matrizIndicadoresMB.cambiarPaginaAct}"
+															process="actTable" update="actTable" />
+														<p:column>
+															<p:panelGrid>
+																<h:panelGroup>
+																	<h:outputText value="Cve Dependencia:"></h:outputText>&nbsp;
+									        		<h:inputText value="#{mat.clvdepg}" size="3"
+																		disabled="true"></h:inputText>
+									        		&nbsp;&nbsp;
+									        		<h:outputText value="Clave Programa:"></h:outputText>&nbsp;
+									        		<h:inputText value="#{mat.cveprog}" size="7"
+																		disabled="true"></h:inputText>
+									        		&nbsp;&nbsp;
+									        		<h:outputText value="Clave Temas de Desarrollo:"></h:outputText>&nbsp;
+									        		<h:inputText value="#{mat.cvetemas}" size="6"
+																		disabled="true"></h:inputText>
+									        		&nbsp;&nbsp;
+									        		<h:outputText value="Num. del Componente:"></h:outputText>&nbsp;
+									        		<h:inputText value="#{act.cvecom}" size="4"
+																		disabled="true">
+																		<f:convertNumber pattern="0000" />
+																	</h:inputText>
+									        		&nbsp;&nbsp;
+									        		<h:outputText value="Num. Indicador:"></h:outputText>&nbsp;
+									        		<h:inputText id="numIndicadorA" value="#{act.cveact}"
+																		size="4" disabled="true">
+																		<f:convertNumber pattern="0000" />
+																	</h:inputText>
+																</h:panelGroup>
+															</p:panelGrid>
+															<br />
+
+															<h:panelGroup>
+																<h:outputText value="Código de Indicador:"></h:outputText>
+																<p:selectOneMenu id="oneMenuCode4" value="#{act.cveind}"
+																	disabled="#{matrizIndicadoresMB.actividadDisabledEditables}"
+																	requiredMessage="Ingrese Código Indicador">
+																	<f:selectItem itemLabel="--Seleccione--"
+																		itemValue="null" noSelectionOption="true" />
+																	<f:selectItems
+																		value="#{matrizIndicadoresMB.listaCodigoIndicadorActividad}"
+																		var="code" itemLabel="#{code.codigo}"
+																		itemValue="#{code.codigo}" />
+																	<p:ajax update="nombreIndA, numIndicadorA"
+																		event="change"
+																		listener="#{matrizIndicadoresMB.updateDescNombreInd(rowIndexCaptura, rowIndexActividad, 4)}" />
+																</p:selectOneMenu>
+															</h:panelGroup>
+
+															<p:separator style="width:0px;height:0px" />
+															<p:panelGrid columns="6" columnClasses="col-md-2"
+																style="text-align:center;">
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{act.objetivo}"
+																	disabled="#{matrizIndicadoresMB.actividadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+																<p:inputTextarea style="width:100%;" id="nombreIndA"
+																	cols="25" rows="5" value="#{act.nombre}"
+																	disabled="true"></p:inputTextarea>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{act.formula}"
+																	disabled="#{matrizIndicadoresMB.actividadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{act.frecuencia}"
+																	disabled="#{matrizIndicadoresMB.actividadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{act.medio}"
+																	disabled="#{matrizIndicadoresMB.actividadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+																<p:inputTextarea style="width:100%;" cols="25" rows="5"
+																	value="#{act.supuesto}"
+																	disabled="#{matrizIndicadoresMB.actividadDisabledEditables}"
+																	onkeypress="if (event.keyCode == 13) return false;"></p:inputTextarea>
+															</p:panelGrid>
+															<p:separator style="width:0px;height:0px" />
+															<p:panelGrid id="pnlBotonesActividad">
+																<center>
+																	<p:commandButton value="Salvar   "
+																		style="padding: 2px; width:100px;"
+																		action="#{matrizIndicadoresMB.salvarIndicador(rowIndexCaptura, rowIndexActividad, 4)}"
+																		rendered="#{matrizIndicadoresMB.actividadVisibleSalvar}"
+																		update="actTable,growlIndicadores"></p:commandButton>
+																	<p:commandButton value="Modificar"
+																		style="padding: 2px; width:100px;"
+																		action="#{matrizIndicadoresMB.modificarIndicador(rowIndexCaptura, rowIndexActividad, 4)}"
+																		rendered="#{matrizIndicadoresMB.actividadVisibleModificar}"
+																		update="actTable,growlIndicadores"></p:commandButton>
+																	<p:commandButton value="Limpiar  "
+																		style="padding: 2px; width:100px;"
+																		action="#{matrizIndicadoresMB.resetIndicador(rowIndexCaptura, rowIndexActividad, 4)}"
+																		disabled="#{matrizIndicadoresMB.actividadDisabledReset}"
+																		update="actTable,growlIndicadores"></p:commandButton>
+																	<p:commandButton value="Adicionar"
+																		style="padding: 2px; width:100px;"
+																		action="#{matrizIndicadoresMB.adicionarIndicador(rowIndexCaptura, rowIndexActividad, 4)}"
+																		disabled="#{matrizIndicadoresMB.actividadDisabledAdicionar}"
+																		update="actTable,growlIndicadores"
+																		oncomplete="PF('actWdg').getPaginator().setPage(PF('actWdg').paginator.cfg.pageCount-1);"></p:commandButton>
+																	<p:commandButton value="Borrar   "
+																		style="padding: 2px; width:100px;"
+																		onclick="PF('confirmDeleteIndicador4').show();"
+																		disabled="#{matrizIndicadoresMB.actividadDisabledBorrar}">
+																		<p:confirmDialog widgetVar="confirmDeleteIndicador4"
+																			message="Desea Eliminar el Registro de Actividad Actual?"
+																			header="Confirmación" severity="alert"
+																			appendTo="@(body)">
+																			<p:commandButton value="SI" label="NO"
+																				style="margin-top:10px;padding:2px; width:100px;"
+																				action="#{matrizIndicadoresMB.borrarIndicador(rowIndexCaptura, rowIndexActividad, 4)}"
+																				process="@this" styleClass="ui-confirmdialog-yes"
+																				icon="ui-icon-check"
+																				update="formIndCaptura:indTable:0:tabviewDetails:compTable,growlIndicadores"
+																				oncomplete="PF('confirmDeleteIndicador4').hide();" />
+																			<p:commandButton value="NO" label="NO"
+																				style="margin-top:10px;padding:2px; width:100px;"
+																				onclick="PF('confirmDeleteIndicador4').hide();"
+																				styleClass="ui-confirmdialog-yes"
+																				icon="ui-icon-check"
+																				update="actTable,growlIndicadores" />
+																		</p:confirmDialog>
+																	</p:commandButton>
+																	<p:commandButton value="Cancelar"
+																		style="padding: 2px; width:100px;"
+																		action="#{matrizIndicadoresMB.cancelarCapturaIndicador(rowIndexCaptura, rowIndexActividad, 4)}"
+																		disabled="#{matrizIndicadoresMB.actividadDisabledCancelar}"
+																		update="actTable,growlIndicadores"></p:commandButton>
+																</center>
+															</p:panelGrid>
+														</p:column>
+													</p:dataTable>
+												</p:rowExpansion>
+
+
+											</p:dataTable>
+
+										</p:tab>
+
+									</p:tabView>
+								</p:panel>
+							</center>
+						</p:column>
+					</p:dataGrid>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

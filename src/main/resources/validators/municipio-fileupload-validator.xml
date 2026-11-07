@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<description>
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Validaciones de carga automatica
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	</description>
+
+
+	<bean id="informacionMunicipalCsvValidator"
+		class="com.gem.sistema.load.fileupload.validators.impl.CsvFileValidatorImpl">
+		<property name="noTokensByLine" value="15"></property>
+		<property name="lineToStart" value="1"></property>
+		<property name="skipFail" value="true"></property>
+		<property name="separator" value=","></property>
+		<property name="errorSeparator" value=","></property>
+		<property name="validators">
+			<util:list
+				value-type="com.gem.sistema.load.fileupload.validators.FieldValidator">
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: CLAVE DEL PUESTO NO VALIDA" />
+					<property name="index" value="0" />
+					<property name="fieldName" value="CLAVE DEL PUESTO" />
+					<property name="pattern"  value="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ])+$" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: NIVEL invalida" />
+					<property name="index" value="1" />
+					<property name="fieldName" value="NIVEL" />
+					<property name="pattern" value="^[0-9]+" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError"
+						value="%1$s :: PUESTO FUNCIONAL invalida" />
+					<property name="index" value="2" />
+					<property name="fieldName" value="PUESTO FUNCIONAL" />
+					<property name="pattern" value="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"/>
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: CONFIANZA invalida" />
+					<property name="index" value="3" />
+					<property name="fieldName" value="CONFIANZA" />
+					<property name="pattern" value="^[0-9]+" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: SINDICALIZADO invalida" />
+					<property name="index" value="4" />
+					<property name="fieldName" value="SINDICALIZADO" />
+					<property name="pattern" value="^[0-9]+" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: EVENTUAL invalida" />
+					<property name="index" value="5" />
+					<property name="fieldName" value="EVENTUAL" />
+					<property name="pattern" value="^[0-9]+" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: DIETAS invalida" />
+					<property name="index" value="6" />
+					<property name="fieldName" value="DIETAS" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: SUELDO BASE invalida" />
+					<property name="index" value="7" />
+					<property name="fieldName" value="SUELDO BASE" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: SUELDO BASE EVENTUAL invalida" />
+					<property name="index" value="8" />
+					<property name="fieldName" value="SUELDO BASE EVENTUAL" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: COMPENSACION invalida" />
+					<property name="index" value="9" />
+					<property name="fieldName" value="COMPENSACION" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: GRATIFICACION invalida" />
+					<property name="index" value="10" />
+					<property name="fieldName" value="GRATIFICACION" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: OTRAS PRESEPCIONES invalida" />
+					<property name="index" value="11" />
+					<property name="fieldName" value="OTRAS PRESEPCIONES" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: AGUINALDO invalida" />
+					<property name="index" value="12" />
+					<property name="fieldName" value="AGUINALDO" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: AGUINALDO EVENTUAL invalida" />
+					<property name="index" value="13" />
+					<property name="fieldName" value="AGUINALDO EVENTUAL" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+				
+				
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: PRIMA VACACIONAL invalida" />
+					<property name="index" value="14" />
+					<property name="fieldName" value="PRIMA VACACIONAL" />
+					<property name="pattern" value="[0-9]+(\.[0-9][0-9]?)?" />
+				</bean>
+			</util:list>
+
+		</property>
+	</bean>
+</beans>

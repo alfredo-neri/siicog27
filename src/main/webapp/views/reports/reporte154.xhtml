@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="panelReporte"
+					header="Supervisi&oacute;n de Obras por Comit&eacute;s Ciudadanos de Control y Vigilancia"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:panelGrid id="grid1" styleClass="col-centered">
+						<p:row>
+							<p:column colspan="2" style=" text-align: right;">
+
+								<p:outputLabel value="Anual" />
+							</p:column>
+							<p:column style="width : 60%; text-align: left;">
+								<p:outputLabel id="anual" value="#{reporte154MB.anual}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="user" value="#{reporte154MB.user}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="fecha" value="#{reporte154MB.fecha}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="width : 20%; " />
+							<p:column style="width : 20%; ">
+								<p:outputLabel value="Cantidad"></p:outputLabel>
+							</p:column>
+							<p:column style="width : 60%; " colspan="3">
+								<p:outputLabel value="Observaciones"></p:outputLabel>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="text-align: left;">
+								<p:outputLabel
+									value="N&uacute;mero de obras con supervisi&oacute;n de comit&eacute;s ciudadanos de control y vigilancia:" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblNumpolarm" style="text-align: left;"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte154MB.pm3211.nobs}"
+									rendered="#{reporte154MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numpolarm" decimalPlaces="0"
+									value="#{reporte154MB.pm3211.nobs}"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									rendered="#{reporte154MB.bTxt}" maxValue="999999999" size="9" />
+							</p:column>
+							<p:column colspan="3">
+								<p:outputLabel id="lblObspolarm" style="text-align: left;"
+									value="#{reporte154MB.pm3211.obsnobs}"
+									rendered="#{reporte154MB.bLbl}" />
+								<p:inputText id="obspolarm" size="60"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte154MB.pm3211.obsnobs}"
+									rendered="#{reporte154MB.bTxt}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="text-align: left;">
+								<p:outputLabel
+									value="Total de  obras realizadas en el municipio:"></p:outputLabel>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblNumtotpol" style="text-align: left;"
+									value="#{reporte154MB.pm3211.totobr}"
+									rendered="#{reporte154MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numtotpol" decimalPlaces="0"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte154MB.pm3211.totobr}"
+									rendered="#{reporte154MB.bTxt}" maxValue="999999999" size="9" />
+							</p:column>
+							<p:column colspan="3">
+								<p:outputLabel id="lblObstotpol" style="text-align: left;"
+									value="#{reporte154MB.pm3211.obstotobr}"
+									rendered="#{reporte154MB.bLbl}" />
+								<p:inputText id="Obstotpol"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte154MB.pm3211.obstotobr}" size="60"
+									rendered="#{reporte154MB.bTxt}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid id="buttons">
+						<p:commandButton value="Salvar"
+							actionListener="#{reporte154MB.save}"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							rendered="#{reporte154MB.bVSave}" id="save" icon="ui-icon-disk" />
+						<p:commandButton value="Modificar" id="modificar"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte154MB.modify}" icon="ui-icon-pencil"
+							rendered="#{reporte154MB.bVModificar}"
+							disabled="#{reporte154MB.bBtnMoficar}" />
+						<p:commandButton value="Limpiar" id="reset"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte154MB.clean}"
+							disabled="#{reporte154MB.bLbl}" icon="ui-icon-tag" />
+						<p:commandButton value="Adicionar" id="add"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte154MB.add}" icon="ui-icon-circle-plus"
+							disabled="#{reporte154MB.bAdd}" />
+						<p:commandButton value="Borrar" id="borrar"
+							update=":form1:panelReporte, :form1:messagesEdit, :form1:inlinePdf"
+							disabled="#{reporte154MB.bBorrar}"
+							actionListener="#{reporte154MB.delete}" />
+						<p:commandButton value="Cancelar" id="cancelar"
+							update=":form1:panelReporte, :form1:messagesEdit, :form1:grid1"
+							actionListener="#{reporte154MB.cancel}"
+							icon="ui-icon-circle-close" disabled="#{reporte154MB.bLbl}" />
+					</p:panelGrid>
+					<p:panelGrid id="gridreport">
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							action="#{reporte154MB.createFilePdfInline}" value="Correcto"
+							oncomplete="PF('blockUIWidget').unblock(); $(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '64em');"
+							update="form1:inlinePdf :form1:messagesEdit" style="padding:2px;">
+						</p:commandButton>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte154MB.uuid ne null}">
+						<object type="application/pdf" style="margin-top: 1em;"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte154MB.uuid}&amp;filename=#{reporte154MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

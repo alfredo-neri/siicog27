@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.no-border {
+	border: 0;
+}
+
+.container {
+	max-width: 2000px;
+}
+
+.block {
+	display: grid;
+}
+
+.left-text {
+	text-align: left
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.input-busqueda {
+	width: 40% !important;
+	margin-right: 5px;
+}
+
+.flex {
+	display: flex;
+}
+
+.p0 {
+	padding: 0 !important;
+}
+
+.ui-icon-circle-triangle-e {
+	background-position: -32px 0;
+}
+
+.ui-icon-circle-triangle-s {
+	background-position: -65px 0;
+}
+
+.toggler {
+	text-align: left !important;
+}
+
+.toggler>div {
+	border: 1px solid gray;
+	border-radius: 50%;
+	background-color: #8db886;
+}
+
+.button-pdf {
+	max-width: 75px;
+}
+</style>
+			<h:form id="form">
+				<p:remoteCommand name="guardar"
+					actionListener="#{proveedoresNuevoMB.guardarProveedor}"
+					update=":form:focus :form:msn :form:panelForm :form:dataGrid" />
+				<p:remoteCommand name="buscar"
+					actionListener="#{proveedoresNuevoMB.buscar}" update=":form:dataGrid" />
+
+				<p:panel id="panel"
+					header="Administración  de Proveedores/Contratista"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel green container ">
+					<p:messages id="msn" showDetail="true" closable="true"
+						showSummary="false" style="text-align:initial" />
+					<p:focus id="focus" />
+					<p:panel id="panelForm">
+						<div class="row">
+							<div class="col-md-7 ui-noborder left-text block">
+								<h:outputText value="Nombre, denominación o razón social" />
+								<p:inputText id="nombre" maxlength="200"
+									value="#{proveedoresNuevoMB.proveedor.nombreProveedor}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+
+							</div>
+							<div class="col-md-3 ui-noborder left-text block">
+								<h:outputText value="Teléfono" />
+								<p:inputText id="telefono" maxlength="15"
+									value="#{proveedoresNuevoMB.proveedor.telefono}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-2 ui-noborder left-text block">
+								<h:outputText value="Tipo" />
+								<p:selectOneRadio id="ipo"
+									value="#{proveedoresNuevoMB.proveedor.tipo}">
+									<f:selectItems value="#{proveedoresNuevoMB.tipos}" var="tipo"
+										itemLabel="#{tipo}" itemValue="#{tipo}" />
+								</p:selectOneRadio>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 ui-noborder left-text block">
+								<h:outputText value="Telefax" />
+								<p:inputText id="telefax" maxlength="20"
+									value="#{proveedoresNuevoMB.proveedor.telefax}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-6 ui-noborder left-text block">
+								<h:outputText value="Correo electronico (e-mail)" />
+								<p:inputText id="correo" maxlength="100"
+									value="#{proveedoresNuevoMB.proveedor.correo}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4 ui-noborder left-text block">
+								<h:outputText value="Nacionalidad" />
+								<p:inputText maxlength="20"
+									value="#{proveedoresNuevoMB.proveedor.nacionalidad}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-4 ui-noborder left-text block">
+								<h:outputText
+									value="Clave única de registro de población (CURP)" />
+								<p:inputText maxlength="18"
+									value="#{proveedoresNuevoMB.proveedor.curp}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-4 ui-noborder left-text block">
+								<h:outputText value="Registro federeal de contribuyentes (RFC)" />
+								<p:inputText id="rfc" maxlength="13"
+									value="#{proveedoresNuevoMB.proveedor.rfc}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 ui-noborder left-text block">
+								<h:outputText
+									value="Domiciclio fiscal (calle, numero,colonia,codigo postal, localidad, municipio y entidad federeativa)" />
+								<p:inputText maxlength="200"
+									value="#{proveedoresNuevoMB.proveedor.domicilioFiscal}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 ui-noborder left-text block">
+								<h:outputText
+									value="Domiciclio en el estado de México (calle, numero,colonia,codigo postal, localidad)" />
+								<p:inputText maxlength="200"
+									value="#{proveedoresNuevoMB.proveedor.domicilioEstado}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 ui-noborder left-text block">
+								<h:outputText
+									value="Nombre del propietario (en el caso de ser persona fisica)" />
+								<p:inputText maxlength="200"
+									value="#{proveedoresNuevoMB.proveedor.nombrePropietario}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-5 ui-noborder left-text block">
+								<h:outputText value="Instrumento que acredita la personalidad" />
+								<p:inputText maxlength="200"
+									value="#{proveedoresNuevoMB.proveedor.instrumentoPersonalidad}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-1 ui-noborder left-text block">
+								<h:outputText value="PDF" />
+								<p:commandButton value="Cargar" styleClass="button-pdf"
+									icon="ui-icon-disk" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 ui-noborder left-text block">
+								<h:outputText value="Nombre del representante legal" />
+								<p:inputText maxlength="200"
+									value="#{proveedoresNuevoMB.proveedor.nombreRepresentanteLegal}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-5 ui-noborder left-text block">
+								<h:outputText value="Instrumento que acredita la representación" />
+								<p:inputText maxlength="200"
+									value="#{proveedoresNuevoMB.proveedor.instrumentoAcreditacion}"
+									onkeypress="if (event.keyCode == 13) {guardar() } if(event.keyCode == 27) { return false;}" />
+							</div>
+							<div class="col-md-1 ui-noborder left-text block">
+								<h:outputText value="PDF" />
+								<p:commandButton value="Cargar" styleClass="button-pdf"
+									icon="ui-icon-disk" />
+							</div>
+						</div>
+					</p:panel>
+					<p:panelGrid columns="2" id="panelButtons"
+						styleClass=" ui-noborder center panel-buttons">
+						<p:commandButton value="Guardar" widgetVar="guardar"
+							update=":form:focus :form:msn :form:panelForm :form:dataGrid"
+							action="#{proveedoresNuevoMB.guardarProveedor}"
+							styleClass="ui-confirmdialog-no " icon="ui-icon-disk" />
+						<p:commandButton value="Cancelar"
+							disabled="#{proveedoresNuevoMB.proveedor.id==null}"
+							update=":form:focus :form:msn :form:panelForm"
+							action="#{proveedoresNuevoMB.resetProveedor}"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-closethick" />
+					</p:panelGrid>
+
+					<p:dataTable id="dataGrid" var="object"
+						value="#{proveedoresNuevoMB.proveedores}"
+						styleClass="et_datatable col-md-12 no-border "
+						emptyMessage="No existen registros" paginator="true" rows="10"
+						rowsPerPageTemplate="5,10,20"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink}  {CurrentPageReport} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="dataGrid" paginatorPosition="bottom"
+						rowIndexVar="rowIndexCaptura">
+						<f:facet name="header">
+							<p:outputPanel>
+								<h:outputText value="Busqueda: " />
+								<p:inputText id="inputBusqueda" styleClass="input-busqueda"
+									value="#{proveedoresNuevoMB.busqueda}" placeholder="Ingrese texto"
+									onkeypress="if (event.keyCode == 13) {buscar() } if(event.keyCode == 27) { return false;}">
+								</p:inputText>
+								<p:commandButton icon="ui-icon-search"
+									actionListener="#{proveedoresNuevoMB.buscar}"
+									update=":form:dataGrid" />
+							</p:outputPanel>
+						</f:facet>
+						<p:column styleClass="toggler" width="3%">
+							<p:rowToggler />
+						</p:column>
+						<p:column headerText="Nombre" exportable="false" width="30%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.nombreProveedor}" />
+						</p:column>
+
+						<p:column headerText="RFC" exportable="false" width="12%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.rfc}" />
+						</p:column>
+						<p:column headerText="Telefono" exportable="false" width="13%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.telefono}" />
+						</p:column>
+						<p:column headerText="Correo electronico" exportable="false"
+							width="13%" style="text-align: left!important;">
+							<p:outputLabel value="#{object.correo}" />
+						</p:column>
+						<p:column headerText="Curp" exportable="false" width="13%"
+							style="text-align: left!important;">
+							<p:outputLabel value="#{object.curp}" />
+						</p:column>
+
+
+						<p:column headerText="Acciones" exportable="false" width="5%">
+							<div class="row no-margin">
+								<div class="col-md-4 ui-noborder left-text flex p0 ">
+									<p:commandLink id="deleteRow" update=":form:msn"
+										oncomplete="PF('confirmFileDelete').show()"
+										image="ui-icon ui-icon-close" title="Delete">
+										<f:setPropertyActionListener value="#{object}"
+											target="#{proveedoresNuevoMB.proveedor}" />
+										<h:outputText styleClass="ui-icon ui-icon-close" />
+									</p:commandLink>
+									<p:commandLink
+										update=":form:focus :form:msn :form:panelForm :form"
+										image="ui-icon ui-icon-edit" title="Editar">
+										<f:setPropertyActionListener value="#{object}"
+											target="#{proveedoresNuevoMB.proveedor}" />
+										<h:outputText styleClass="ui-icon ui-icon-pencil" />
+									</p:commandLink>
+								</div>
+							</div>
+						</p:column>
+						<p:rowExpansion>
+							<div class="row">
+								<div class="col-md-3 ui-noborder left-text block">
+									<h:outputText value="Tipo: #{object.tipo}" />
+								</div>
+								<div class="col-md-3 ui-noborder left-text block">
+									<h:outputText value="Telefax: #{object.telefax}" />
+								</div>
+								<div class="col-md-3 ui-noborder left-text block">
+									<h:outputText value="Nacionalidad: #{object.nacionalidad}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 ui-noborder left-text block">
+									<h:outputText
+										value="Domicilio Fiscal: #{object.domicilioFiscal}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 ui-noborder left-text block">
+									<h:outputText
+										value="Domicilio en el estado de México: #{object.domicilioEstado}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 ui-noborder left-text block">
+									<h:outputText
+										value="Nombre del propietario: #{object.nombrePropietario}" />
+								</div>
+								<div class="col-md-5 ui-noborder left-text block">
+									<h:outputText
+										value="Instrumento que acredita la replesentación: #{object.instrumentoPersonalidad}" />
+								</div>
+								<div class="col-md-1 ui-noborder left-text block">
+									<h:outputText value="Archivo: " />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 ui-noborder left-text block">
+									<h:outputText
+										value="Nombre del presentante legal: #{object.nombreRepresentanteLegal}" />
+								</div>
+								<div class="col-md-5 ui-noborder left-text block">
+									<h:outputText
+										value="Instrumento que acredita la representación: #{object.instrumentoAcreditacion}" />
+								</div>
+								<div class="col-md-1 ui-noborder left-text block">
+									<h:outputText value="Archivo" />
+								</div>
+							</div>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+
+			<p:confirmDialog widgetVar="confirmFileDelete"
+				message="Desea eliminar el registro actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{proveedoresNuevoMB.deleteProveedor}"
+					oncomplete="PF('confirmFileDelete').hide();"
+					update=":form:dataGrid :form:msn " />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('confirmFileDeleteMeta').hide();"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+			</p:confirmDialog>
+			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="../reports/indice.png"
+						style="margin-right: 12px; vertical-align: middle;" />
+					<h:outputText value="Por favor espere..."
+						style="white-space: nowrap;" />
+				</h:panelGrid>
+			</pe:blockUI>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

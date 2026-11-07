@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Indicador de Documentos para el desarrollo institucional"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte137MB.listPm3911}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm0811Wdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+						<p:column>
+							<p:panelGrid id="idGrid1">
+								<p:row>
+									<p:column style="width : 18%; text-align: right;">
+										<h:outputText value="Semestre  " />
+									</p:column>
+									<p:column style="width: 6%; text-align: left;">
+										<p:outputLabel id="lblTrimestre" value="#{objects.semes}"
+											rendered="#{reporte137MB.bLblsemestre}">
+											<f:convertNumber pattern="00" />
+										</p:outputLabel>
+										<p:selectOneMenu value="#{reporte137MB.semestre}"
+											id="comboTri" rendered="#{reporte137MB.bComboTri}">
+											<f:selectItems value="#{reporte137MB.listsemestre}" var="tri"
+												itemValue="#{tri}" itemLabel="#{tris}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column style="width: 12%;" />
+									<p:column style="width: 6%;" />
+									<p:column style="width: 12%;" />
+									<p:column style="width: 12%;" />
+									<p:column />
+
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column style="width : 18%;" />
+									<p:column style="width: 8%;">
+										<h:outputText value="No" />
+									</p:column>
+									<p:column style="width: 5%;">
+										<h:outputText value="En Proceso %" />
+									</p:column>
+									<p:column style="width: 5%;">
+										<h:outputText value="SI" />
+									</p:column>
+									<p:column style="width: 5%;">
+										<h:outputText value="Periodo de Inicio" />
+									</p:column>
+									<p:column style="width: 5%;">
+										<h:outputText value="Periodo de Fin" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Observaciones" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText value="Manual de Organizacion : " />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="#{objects.manorgno}" id="lblAgua"
+											rendered="#{reporte137MB.bLbl}">
+										</p:outputLabel>
+
+										<p:inputText value="#{objects.manorgno}" id="txtAgua" size="1"
+											maxlength="1" rendered="#{reporte137MB.bTxt}"
+											onkeyup="this.value=this.value.toUpperCase();">
+											<pe:keyFilter mask="alpha" regEx="/[NnXx]/" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:outputLabel id="lblObsAgua" value="#{objects.manorgpro}"
+											rendered="#{reporte137MB.bLbl}" />
+										<pe:inputNumber maxValue="100" size="10" id="txtObsAgua" minValue="-100"
+											decimalPlaces="2" value="#{objects.manorgpro}"
+											rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="pint" regEx="/[0-9]/" />
+											<f:convertNumber for="txtObsAgua" pattern="#0" />
+										</pe:inputNumber>
+									</p:column>
+									<p:column>
+										<p:outputLabel id="lblManorgsi" value="#{objects.manorgsi}"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputText id="txtManorgsi" size="1" maxlength="1"
+											value="#{objects.manorgsi}" rendered="#{reporte137MB.bTxt}"
+											onkeyup="this.value=this.value.toUpperCase();">
+											<pe:keyFilter mask="alpha" regEx="/[SsXx]/" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:outputLabel id="lblperinimo" value="#{objects.perinimo}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblperinimo" />
+										</p:outputLabel>
+										<p:calendar id="txtPerinimo" rendered="#{reporte137MB.bTxt}"
+											locale="es" size="10" pattern="dd/MM/yyyy" mask="true"
+											value="#{objects.perinimo}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtPerinimo" />
+										</p:calendar>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblPerfinmo" value="#{objects.perfinmo}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblPerfinmo" />
+										</p:outputLabel>
+										<p:calendar id="txtPerfinmo" rendered="#{reporte137MB.bTxt}"
+											locale="es" size="10" pattern="dd/MM/yyyy" mask="true"
+											value="#{objects.perfinmo}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtPerfinmo" />
+										</p:calendar>
+									</p:column>
+
+									<!--  -->
+									<p:column rowspan="3">
+										<p:outputLabel id="lblObservaciones"
+											value="#{objects.observaciones}"
+											rendered="#{reporte137MB.bLbl}" />
+
+										<p:inputTextarea id="txtObservaciones"
+											value="#{objects.observaciones}"
+											rendered="#{reporte137MB.bTxt}" rows="5" cols="39" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel value="Organigrama actualizado y autorizado :" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="#{objects.orgno}" id="lblMatrato"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputText value="#{objects.orgno}" id="txtMaltrato"
+											onkeyup="this.value=this.value.toUpperCase();" size="1"
+											maxlength="1" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="alpha" regEx="/[NnXx]/" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:outputLabel id="lblObstloc" value="#{objects.orgpro}"
+											rendered="#{reporte137MB.bLbl}" />
+										<pe:inputNumber maxValue="100" decimalPlaces="2" minValue="-100"
+											id="txtObstloc" maxlength="3" size="10"
+											value="#{objects.orgpro}" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="pint" />
+											<f:convertNumber for="txtObstloc" pattern="#0" />
+										</pe:inputNumber>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblOrgsi" value="#{objects.orgsi}"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputText id="txtOrgsi" size="1" maxlength="1"
+											onkeyup="this.value=this.value.toUpperCase();"
+											value="#{objects.orgsi}" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="alpha" regEx="/[SsXx]/" />
+										</p:inputText>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblperinio" value="#{objects.perinio}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblperinio" />
+										</p:outputLabel>
+										<p:calendar id="txtPerinio" rendered="#{reporte137MB.bTxt}"
+											mask="true" locale="es" size="10" pattern="dd/MM/yyyy"
+											value="#{objects.perinio}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtPerinio" />
+										</p:calendar>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblPerfino" value="#{objects.perfino}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblPerfinmo" />
+										</p:outputLabel>
+										<p:calendar id="txtPerfino" rendered="#{reporte137MB.bTxt}"
+											mask="true" locale="es" size="10" pattern="dd/MM/yyyy"
+											value="#{objects.perfino}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtPerfino" />
+										</p:calendar>
+									</p:column>
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel value="Reglamento interior de trabajo :" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="#{objects.regno}" id="lblRegno"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputText value="#{objects.regno}" id="txtRegno" size="1"
+											onkeyup="this.value=this.value.toUpperCase();" maxlength="1"
+											rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="alpha" regEx="/[NnXx]/" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:outputLabel id="lblRegpro" value="#{objects.regpro}"
+											rendered="#{reporte137MB.bLbl}" />
+										<pe:inputNumber maxValue="100" decimalPlaces="2" minValue="-100"
+											id="txtRegpro" size="10" maxlength="10"
+											value="#{objects.regpro}" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="pint" />
+											<f:convertNumber for="txtRegpro" pattern="#0" />
+										</pe:inputNumber>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblRegsi" value="#{objects.regsi}"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputText id="txtRegsi" size="1" maxlength="1"
+											onkeyup="this.value=this.value.toUpperCase();"
+											value="#{objects.regsi}" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="alpha" regEx="/[SsXx]/" />
+										</p:inputText>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblpreinireg" value="#{objects.preinireg}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblpreinireg" />
+										</p:outputLabel>
+										<p:calendar id="txtpreinireg" rendered="#{reporte137MB.bTxt}"
+											locale="es" size="10" pattern="dd/MM/yyyy" mask="true"
+											value="#{objects.preinireg}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtpreinireg" />
+										</p:calendar>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblperfinreg" value="#{objects.perfinreg}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblperfinreg" />
+										</p:outputLabel>
+										<p:calendar id="txtperfinreg" rendered="#{reporte137MB.bTxt}"
+											locale="es" size="10" pattern="dd/MM/yyyy" mask="true"
+											value="#{objects.perfinreg}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtperfinreg" />
+										</p:calendar>
+									</p:column>
+								</p:row>
+								<!--  -->
+								<p:row>
+									<p:column colspan="6" />
+
+									<p:column>
+										<p:outputLabel value="&iquest;Cuantos y Cuales?"></p:outputLabel>
+									</p:column>
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel value="Manuales de procedimientos :" />
+									</p:column>
+									<p:column>
+										<p:outputLabel value="#{objects.manprono}" id="lblmanprono"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputText value="#{objects.manprono}" id="txtmanprono"
+											onkeyup="this.value=this.value.toUpperCase();" size="1"
+											maxlength="1" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="alpha" regEx="/[NnXx]/" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:outputLabel id="lblmanpropro" value="#{objects.manpropro}"
+											rendered="#{reporte137MB.bLbl}" />
+										<pe:inputNumber maxValue="100" decimalPlaces="2" 
+											id="txtmanpropro" size="10" maxlength="10" minValue="-100"
+											value="#{objects.manpropro}" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="pint" />
+											<f:convertNumber for="txtmanpropro" pattern="#0" />
+										</pe:inputNumber>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblmanprosi" value="#{objects.manprosi}"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputText id="txtmanprosi" size="1" maxlength="1"
+											onkeyup="this.value=this.value.toUpperCase();"
+											value="#{objects.manprosi}" rendered="#{reporte137MB.bTxt}">
+											<pe:keyFilter mask="alpha" regEx="/[SsXx]/" />
+										</p:inputText>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblperiniman" value="#{objects.periniman}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblperiniman" />
+										</p:outputLabel>
+										<p:calendar id="txtperiniman" rendered="#{reporte137MB.bTxt}"
+											locale="es" size="10" pattern="dd/MM/yyyy" mask="true"
+											value="#{objects.periniman}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtperiniman" />
+										</p:calendar>
+									</p:column>
+
+									<p:column>
+										<p:outputLabel id="lblperfinman" value="#{objects.perfinman}"
+											rendered="#{reporte137MB.bLbl}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="lblperfinman" />
+										</p:outputLabel>
+										<p:calendar id="txtperfinman" rendered="#{reporte137MB.bTxt}"
+											locale="es" size="10" pattern="dd/MM/yyyy" mask="true"
+											value="#{objects.perfinman}">
+											<f:convertDateTime pattern="dd/MM/yyyy" for="txtperfinman" />
+										</p:calendar>
+									</p:column>
+									<p:column>
+										<p:outputLabel id="lblObs" value="#{objects.obsmanpro}"
+											rendered="#{reporte137MB.bLbl}" />
+										<p:inputTextarea id="txtObs" value="#{objects.obsmanpro}"
+											rendered="#{reporte137MB.bTxt}" rows="1" cols="39"></p:inputTextarea>
+									</p:column>
+								</p:row>
+
+
+
+
+							</p:panelGrid>
+							<p:panelGrid id="buttons">
+								<p:commandButton value="Salvar"
+									actionListener="#{reporte137MB.save(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									rendered="#{reporte137MB.bVSave}" id="save" icon="ui-icon-disk" />
+								<p:commandButton value="Modificar" id="modificar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte137MB.modify(rowIndex)}"
+									icon="ui-icon-pencil" rendered="#{reporte137MB.bVModificar}"
+									disabled="#{reporte137MB.bBtnMoficar}" />
+								<p:commandButton value="Limpiar" id="reset"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte137MB.clean(rowIndex)}"
+									disabled="#{reporte137MB.bLbl}" icon="ui-icon-tag" />
+								<p:commandButton value="Adicionar" id="add"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte137MB.add(rowIndex)}"
+									icon="ui-icon-circle-plus" disabled="#{reporte137MB.bAdd}" />
+								<p:commandButton value="Borrar" id="borrar"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									disabled="#{reporte137MB.bBorrar}"
+									actionListener="#{reporte137MB.delete(rowIndex)}" >
+									<p:confirm header="Confirmación" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+									</p:commandButton>
+								<p:commandButton value="Cancelar" id="cancelar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte137MB.cancel(rowIndex)}"
+									icon="ui-icon-circle-close" disabled="#{reporte137MB.bLbl}" />
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="idGrid5">
+						<h:outputText value="Semestre a Consultar: " />
+						<p:selectOneMenu value="#{reporte137MB.conTrim}" id="ctri">
+							<f:selectItems var="tri" value="#{reporte137MB.comboTri}"
+								itemValue="#{tri.semes}" itemLabel="#{tri.semes}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Correcto" id="correcto"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							icon="ui-icon-circle-arrow-s"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							actionListener="#{reporte137MB.createFilePdfInline}" />
+
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte137MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte137MB.uuid}&amp;filename=#{reporte137MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

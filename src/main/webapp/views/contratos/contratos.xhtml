@@ -1,0 +1,1317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<link rel="stylesheet" type="text/css"
+				href="#{facesContext.externalContext.requestContextPath}/views/contratos/style-buttons.css" />
+			<style type="text/css">
+.ui-button-text-only .ui-button-text .btn-success {
+	background: #8eb987 !important;
+}
+</style>
+
+			<h:form id="form1">
+				<!-- <p:growl id="growl" showDetail="true" sticky="true" /> -->
+				<p:panel id="panel" header="Contratos para Revisión"
+					rendered="#{contratosMB.showContratosReview}"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel green container">
+					<f:facet name="header">
+						<p:outputLabel>Contratos para Revisión</p:outputLabel>
+						<br />
+						<p:commandButton value="Mostrar Listado de Contratos"
+							action="#{contratosMB.showListado()}" update=":form1" />
+					</f:facet>
+
+					<p:dataGrid var="contrato"
+						value="#{contratosMB.contratosForReview}" columns="3"
+						layout="grid" emptyMessage="No existen registros"
+						widgetVar="dataGridArticulos" paginatorPosition="bottom"
+						rowIndexVar="rowIndexCaptura" paginator="true" rows="10"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						id="tablaListaSolicitudes">
+
+						<p:panel
+							header="Número de Contrato: #{contrato.contrato.numeroContrato}"
+							styleClass="card" style="text-align:center">
+							<div class="row">
+								<div class="col-md-9 ui-noborder left-text block">
+									<div class="row">
+										<div class="info">
+											Proveedor:
+											<h:outputLabel
+												value="#{contrato.contrato.proveedor.nombreProveedor}" />
+										</div>
+									</div>
+									<div class="row">
+										<div class="info">
+											Importe Adquisición:
+											<h:outputLabel
+												value="#{contrato.contrato.importeAdquisicion}">
+												<f:convertNumber pattern="#,##0.00" locale="es_MX" />
+											</h:outputLabel>
+										</div>
+									</div>
+									<div class="row">
+										<div class="info">
+											Estado:
+											<h:outputLabel
+												value="#{contrato.contrato.estadosContrato.estado}" />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-3 ui-noborder buttons-solicitudes-list">
+									<p:commandButton value="Ver" icon="ui-icon-circle-zoomin"
+										update=":form1"
+										action="#{solicitudesAdquisicionesMB.verDetalles()}">
+										<f:setPropertyActionListener value="#{solicitud}"
+											target="#{solicitudesAdquisicionesMB.solicitudCaptured}" />
+									</p:commandButton>
+									<p:commandButton value="Editar" icon=" ui-icon-pencil"
+										update=":form1"
+										action="#{solicitudesAdquisicionesMB.updateSolicitud()}">
+										<f:setPropertyActionListener value="#{solicitud}"
+											target="#{solicitudesAdquisicionesMB.solicitudCaptured}" />
+									</p:commandButton>
+									<p:commandButton value="Eliminar" icon="ui-icon-trash"
+										onclick="PF('confirmFileDeleteMeta').show()">
+										<f:setPropertyActionListener value="#{solicitud}"
+											target="#{solicitudesAdquisicionesMB.solicitudCaptured}" />
+									</p:commandButton>
+								</div>
+							</div>
+						</p:panel>
+					</p:dataGrid>
+				</p:panel>
+				<p:panel id="panelReporte" header="Contratos"
+					rendered="#{!contratosMB.showContratosReview}"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel">
+					<f:facet name="header">
+						<p:outputLabel>Contratos</p:outputLabel>
+						<br></br>
+						<p:commandButton value="Mostrar Contratos para Revisar"
+							action="#{contratosMB.showListado()}" update=":form1" />
+					</f:facet>
+
+					<!-- <p:panel id="panelBusqueda" header="Busqueda Contratos"
+						styleClass="green col-md-6 col-centered row-centered shadow-panel">
+						<p:outputLabel value="Numero de Contrato:" />
+						<p:inputText id="numeroBusqueda" style="width:90%" />
+						<p:outputLabel value="Tipo de Contrato:" />
+						<p:selectOneMenu id="tipoContratoBusqeuda"
+							converter="genericConverter" style="width:90%">
+							<f:selectItems value="#{contratosMB.tipoContratosList}"
+								var="tipoContrato" itemLabel="#{tipoContrato.tipo}"
+								itemValue="#{tipoContrato}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Estatus de Contrato:" />
+						<p:selectOneMenu id="estatusContratoBusqeuda"
+							converter="genericConverter" style="width:90%">
+							<f:selectItem itemLabel="Revision"
+								itemValue="1" />
+						</p:selectOneMenu>
+						
+						<p:commandButton value="Buscar"
+																			
+						
+																			update="form1:panelReporte" />
+					</p:panel> -->
+					<div class="contenedor">
+
+						<div class="left-contenedor">
+							<p:messages id="msgs" showDetail="true" closable="true"
+								showSummary="false" />
+							<p:dataGrid id="contratos" var="product"
+								value="#{contratosMB.contratosList}" rows="1" columns="1"
+								paginator="true" paginatorAlwaysVisible="true"
+								paginatorPosition="top"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+								currentPageReportTemplate="{startRecord} de {totalRecords} contratos">
+
+								<p:ajax event="page" listener="#{contratosMB.changePage}"
+									update="form1:contratos" />
+
+								<p:steps activeIndex="#{contratosMB.currentStep}"
+									styleClass="custom ui-noborder" readonly="false" id="steps">
+									<p:menuitem value="Datos Generales"
+										actionListener="#{contratosMB.changeStep(0)}"
+										update="form1:panelReporte" />
+									<p:menuitem value="Proveedor"
+										actionListener="#{contratosMB.changeStep(1)}"
+										update="form1:panelReporte" />
+									<p:menuitem value="Adjudicaci&oacute;n"
+										actionListener="#{contratosMB.changeStep(2)}"
+										update="form1:panelReporte" />
+									<p:menuitem value="Adquisici&oacute;n"
+										actionListener="#{contratosMB.changeStep(3)}"
+										update="form1:panelReporte" />
+									<!-- <p:menuitem value="Ok"
+										actionListener="#{contratosMB.changeStep(4)}"
+										update="form1:panelReporte" /> -->
+									<p:menuitem value="Art&iacute;culos"
+										actionListener="#{contratosMB.changeStep(4)}"
+										update="form1:panelReporte" />
+								</p:steps>
+
+								<p:panel visible="#{contratosMB.currentStep eq 0}"
+									style="border:none;">
+									<p:fieldset legend="Datos Generales del Contrato">
+
+										<!-- <p:outputLabel value="No of Adqui: #{product.contrato.contratoSolicituds.size()}" /> -->
+										<div class="col-md-12">
+											<div class="col-md-3 ui-noborder left-text block">
+												<p:outputLabel value="No. Contrato:" for="numeroContrato" />
+												<p:inputMask id="numeroContrato"
+													disabled="#{!contratosMB.editable}"
+													value="#{product.contrato.numeroContrato}" mask="9?999" />
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<p:outputLabel value="Fecha de Elaboración:"
+													for="fechaElaboracion" />
+												<p:calendar id="fechaElaboracion" required="false"
+													style="width: 100%;"
+													value="#{product.contrato.fecchaCreacion}" maxlength="10"
+													locale="es" pattern="dd/MM/yyyy" mask="true" timeZone=""
+													disabled="#{!contratosMB.editable}"
+													converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+													onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
+												</p:calendar>
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<p:outputLabel value="Solicitud de Adquisición:" />
+												<div style="display: block;">
+													<p:selectOneButton disabled="true">
+														<f:selectItems value="#{contratosMB.adquisicionSelected}"
+															var="adqui" itemLabel="#{adqui.numeroControl}"
+															itemValue="#{adqui.numeroControl}" />
+													</p:selectOneButton>
+													<p:commandLink id="searchclvfuen"
+														styleClass="glyphicon glyphicon-search"
+														disabled="#{!contratosMB.editable}"
+														oncomplete="PF('solicitudesAdquisicionDlg').show(), PF('localidaesSourcesWdg').clearFilters();"
+														style="width: 10%; margin-left: auto; margin-top: -1.5em; font-size: 1em; height: fit-content;">
+													</p:commandLink>
+												</div>
+
+												<p:dialog header="Solicitudes de Adquisici&oacute;n"
+													widgetVar="solicitudesAdquisicionDlg" resizable="false"
+													width="800" height="460" showEffect="clip"
+													hideEffect="clip" modal="true">
+													<p:outputPanel id="panelCatalogFinancialSources"
+														layout="block" style="text-align:left">
+														<p:dataTable id="financialProgram" var="source"
+															value="#{contratosMB.adquisicionList}"
+															selectionMode="multiple" styleClass="et_datatable"
+															paginator="true" rows="10" rowKey="#{source.id}"
+															paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+															selection="#{contratosMB.adquisicionSelected}"
+															emptyMessage="No hay registros" rowIndexVar="rowIndex"
+															widgetVar="localidaesSourcesWdg">
+															<p:column headerText="Numero" width="10%"
+																filterBy="#{source.numeroControl}"
+																filterMatchMode="contains" exportable="true">
+																<h:outputText value="#{source.numeroControl}" />
+															</p:column>
+
+															<p:column headerText="Fecha de Elaboraci&oacute;n"
+																style="width:20%" filterBy="#{source.fechaElaboracion}"
+																filterMatchMode="contains">
+																<h:outputText value="#{source.fechaElaboracion}" />
+															</p:column>
+
+															<p:column headerText="Area Administrativa" width="45%"
+																exportable="true"
+																filterBy="#{source.administrativo.administrativa.descripcion}"
+																filterMatchMode="contains">
+																<h:outputText
+																	value="#{source.administrativo.administrativa.descripcion}" />
+															</p:column>
+
+															<p:column headerText="Nombre Solicitante"
+																style="width:25%"
+																filterBy="#{source.administrativo.nombre}"
+																filterMatchMode="contains">
+																<h:outputText value="#{source.administrativo.nombre}" />
+															</p:column>
+														</p:dataTable>
+														<center>
+															<p:panelGrid columns="1" layout="grid">
+																<p:column>
+																	<p:row style="align:center">
+																		<p:column>
+																			<p:commandButton value="Aceptar"
+																				actionListener="#{contratosMB.changeSolicitudAdquisicion()}"
+																				oncomplete="PF('solicitudesAdquisicionDlg').hide();"
+																				style="padding: 5px; position: absolute; right: 50%;"
+																				update="form1:panelReporte" />
+																		</p:column>
+																		<p:column>
+																			<p:commandButton value="Cancelar"
+																				oncomplete="PF('solicitudesAdquisicionDlg').hide();"
+																				style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+																		</p:column>
+																	</p:row>
+																</p:column>
+															</p:panelGrid>
+														</center>
+													</p:outputPanel>
+												</p:dialog>
+
+											</div>
+											<div class="col-md-3 ui-noborder left-text block">
+												<p:outputLabel value="Tipo Contrato:" for="tipoContrato" />
+												<p:inputText value="#{product.contrato.tipoContrato.tipo}"
+													disabled="#{!contratosMB.editable}"
+													rendered="#{!contratosMB.editable}" />
+												<p:selectOneMenu id="tipoContrato"
+													rendered="#{contratosMB.editable}"
+													converter="genericConverter"
+													value="#{product.contrato.tipoContrato}" style="width:100%">
+													<f:selectItems value="#{contratosMB.tipoContratosList}"
+														var="tipoContrato" itemLabel="#{tipoContrato.tipo}"
+														itemValue="#{tipoContrato}" />
+												</p:selectOneMenu>
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="col-md-3 ui-noborder left-text block">
+												<p:outputLabel value="Importe Adquisición:"
+													for="importeAdquisicion" />
+												<pe:inputNumber id="importeAdquisicion" minValue="0"
+													maxValue="999999999999999.99" decimalPlaces="2"
+													value="#{product.contrato.importeAdquisicion}"
+													thousandSeparator="," decimalSeparator="."
+													disabled="#{!contratosMB.editable}" />
+											</div>
+
+											<div class="col-md-3 ui-noborder left-text block">
+												<p:outputLabel value="Procedimiento Adquisitivo:"
+													for="procedimientoAdquisitivo" />
+												<p:selectOneMenu rendered="#{contratosMB.editable}"
+													converter="genericConverter"
+													value="#{product.contrato.procediemientoAdquisitivo}"
+													style="width:100%">
+													<f:selectItems value="#{contratosMB.procedimientosList}"
+														var="procedimiento"
+														itemLabel="#{procedimiento.clave} - #{procedimiento.descripcion}"
+														itemValue="#{procedimiento}" />
+												</p:selectOneMenu>
+												<p:inputText id="procedimientoAdquisitivo"
+													disabled="#{!contratosMB.editable}"
+													rendered="#{!contratosMB.editable}"
+													value="#{product.contrato.procediemientoAdquisitivo.clave} - #{product.contrato.procediemientoAdquisitivo.descripcion}">
+												</p:inputText>
+											</div>
+
+											<div class="col-md-6 ui-noborder left-text block">
+												<p:outputLabel value="Objeto Adquisición:"
+													for="objetoAdquisicion" />
+												<p:inputText id="objetoAdquisicion"
+													value="#{product.contrato.objetoAdquisicion}"
+													disabled="#{!contratosMB.editable}">
+												</p:inputText>
+											</div>
+										</div>
+									</p:fieldset>
+								</p:panel>
+
+								<p:panel visible="#{contratosMB.currentStep eq 1}"
+									style="border:none;">
+									<p:fieldset legend="Datos del Proveedor">
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Nombre, Denominación o Razón Social:"
+												for="nombre" />
+											<p:inputText id="nombre"
+												value="#{product.contrato.proveedor.nombreProveedor}"
+												disabled="#{!contratosMB.editable}" style="width:95%">
+											</p:inputText>
+											<p:commandLink id="searchProveedor"
+												styleClass="glyphicon glyphicon-search"
+												disabled="#{!contratosMB.editable}"
+												oncomplete="PF('proveedorDlg').show(), PF('proveedoresSourcesWdg').clearFilters();"
+												style="width: 5%; margin-left: 95%; margin-top: -1.5em; font-size: 1em; height: fit-content;">
+											</p:commandLink>
+
+											<p:dialog header="Cat&aacute;logo de Proveedores"
+												widgetVar="proveedorDlg" resizable="false" width="720"
+												height="460" showEffect="clip" hideEffect="clip"
+												modal="true">
+												<p:outputPanel id="panelProveedoresSources" layout="block"
+													style="text-align:left">
+													<p:dataTable id="proveedorDatatable" var="source"
+														value="#{contratosMB.proveedorList}"
+														selection="#{contratosMB.proveedorSelected}"
+														selectionMode="single" styleClass="et_datatable"
+														paginator="true" rows="10" rowKey="#{source.id}"
+														paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+														emptyMessage="No hay registros" rowIndexVar="rowIndex"
+														widgetVar="proveedoresSourcesWdg">
+														<p:column headerText="Proveedor" width="30%"
+															exportable="true" filterBy="#{source.nombreProveedor}"
+															filterMatchMode="contains">
+															<h:outputText value="#{source.nombreProveedor}" />
+														</p:column>
+
+														<p:column headerText="E-mail" style="width:30%"
+															filterBy="#{source.correo}" filterMatchMode="contains">
+															<h:outputText value="#{source.correo}" />
+														</p:column>
+
+														<p:column headerText="RFC" style="width:20%"
+															filterBy="#{source.rfc}" filterMatchMode="contains">
+															<h:outputText value="#{source.rfc}" />
+														</p:column>
+
+														<p:column headerText="CURP" width="20%" exportable="true"
+															filterBy="#{source.curp}" filterMatchMode="contains">
+															<h:outputText value="#{source.curp}" />
+														</p:column>
+
+													</p:dataTable>
+													<center>
+														<p:panelGrid columns="3" layout="grid">
+															<p:column></p:column>
+															<p:column>
+																<p:row style="align:center">
+																	<p:column>
+																		<p:commandButton value="Aceptar"
+																			actionListener="#{contratosMB.selectProveedor()}"
+																			oncomplete="PF('proveedorDlg').hide();"
+																			style="padding: 5px; position: absolute; right: 50%;"
+																			update="form1:panelReporte" />
+																	</p:column>
+																	<p:column>
+																		<p:commandButton value="Cancelar"
+																			oncomplete="PF('proveedorDlg').hide();"
+																			style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+																	</p:column>
+																</p:row>
+															</p:column>
+															<p:column></p:column>
+														</p:panelGrid>
+													</center>
+												</p:outputPanel>
+											</p:dialog>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="RFC:" for="rfc" />
+											<p:inputText id="rfc"
+												value="#{product.contrato.proveedor.rfc}" disabled="true">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="CURP:" for="curp" />
+											<p:inputText id="curp" disabled="true"
+												value="#{product.contrato.proveedor.curp}" />
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Nacionalidad:" for="nacionalidad" />
+											<p:inputText id="nacionalidad" disabled="true"
+												value="#{product.contrato.proveedor.nacionalidad}" />
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Domicilio Fiscal:"
+												for="domicilioFiscal" />
+											<p:inputText id="domicilioFiscal"
+												value="#{product.contrato.proveedor.domicilioFiscal}"
+												disabled="true">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Correo Electrónico:" for="email" />
+											<p:inputText value="#{product.contrato.proveedor.correo}"
+												id="email" disabled="true" />
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Domicilio en el Estado de México:"
+												for="domicilioEstado" />
+											<p:inputText
+												value="#{product.contrato.proveedor.domicilioEstado}"
+												id="domicilioEstado" disabled="true" />
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Teléfono:" for="telefono" />
+											<p:inputText value="#{product.contrato.proveedor.telefono}"
+												id="telefono" disabled="true" />
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Telefax:" for="telfax" />
+											<p:inputText id="telfax"
+												value="#{product.contrato.proveedor.telefax}"
+												disabled="true" />
+										</div>
+										<div class="col-md-4 ui-noborder left-text block">
+											<p:outputLabel
+												value="Instrumento que Acredita la Personalidad:"
+												for="instrumentoPersonalidad" />
+											<p:inputText id="instrumentoPersonalidad"
+												value="#{product.contrato.proveedor.instrumentoPersonalidad}"
+												disabled="true" />
+										</div>
+										<div class="col-md-4 ui-noborder left-text block">
+											<p:outputLabel value="Nombre del Representante Legal:"
+												for="nombreLegal" />
+											<p:inputText
+												value="#{product.contrato.proveedor.nombreRepresentanteLegal}"
+												id="nombreLegal" disabled="true" />
+										</div>
+										<div class="col-md-4 ui-noborder left-text block">
+											<p:outputLabel
+												value="Instrumento que Acredita la Representación:"
+												for="instrumentoRepresentacion" />
+											<p:inputText id="instrumentoRepresentacion" disabled="true"
+												value="#{product.contrato.proveedor.instrumentoAcreditacion}">
+											</p:inputText>
+										</div>
+									</p:fieldset>
+								</p:panel>
+
+								<p:panel visible="#{contratosMB.currentStep eq 2}"
+									style="border:none;">
+
+									<p:fieldset legend="Datos Generales de la Adjudicaci&oacute;n">
+
+										<div class="col-md-12">
+											<div class="col-md-4 ui-noborder left-text block">
+												<p:outputLabel value="Legislación Aplicada:"
+													for="legislacionAplicada" />
+												<p:inputText id="legislacionAplicada"
+													value="#{product.legislacionAplicada}"
+													disabled="#{!contratosMB.editable}">
+												</p:inputText>
+											</div>
+											<div class="col-md-4 ui-noborder left-text block">
+												<p:outputLabel value="Fecha Fallo:" for="fechaFallo" />
+												<p:calendar id="fechaFallo" required="false"
+													style="width: 100%;" value="#{product.fechaFallo}"
+													maxlength="10" locale="es" pattern="dd/MM/yyyy" mask="true"
+													timeZone="" disabled="#{!contratosMB.editable}"
+													converterMessage="La fecha debe ser en fomato de dd/MM/aaaa"
+													onblur="if(!/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.value) ){g.renderMessage({summary:'Error', detail: 'El campo Fecha debe ser de formato dd/mm/aaaa.', severity: 1}); this.focus(); }">
+												</p:calendar>
+											</div>
+
+										</div>
+									</p:fieldset>
+									<p:fieldset>
+										<p:accordionPanel value="#{contratosMB.adquisicionSelected}"
+											style="background: #8eb987;border: 1px solid #E5E5E5;"
+											var="adqui" multiple="true">
+											<p:tab
+												title="Solicitud de Adquisición ##{adqui.numeroControl}">
+												<p:panel style="border:none;">
+													<div class="col-md-6">
+														<div class="col-md-12">
+															<div class="col-md-6 ui-noborder left-text block">
+																<p:outputLabel value="Giro:" for="giro" />
+																<pe:inputNumber id="giro" minValue="0" maxValue="9999"
+																	value="#{adqui.giro.clvgas}" thousandSeparator=""
+																	decimalPlaces="0" disabled="true" />
+															</div>
+															<div class="col-md-6 ui-noborder left-text block">
+																<p:outputLabel value="Subgiro:" />
+																<p:selectOneButton disabled="true">
+																	<f:selectItems value="#{adqui.giroSubgirosList}"
+																		var="gi" itemLabel="#{gi.subgiro.clave}"
+																		itemValue="#{gi.subgiro.clave}" />
+																</p:selectOneButton>
+															</div>
+
+
+														</div>
+														<div class="col-md-12">
+															<div class="col-md-6 ui-noborder left-text block">
+																<p:outputLabel value="Unidad Administrativa:"
+																	for="unidadAdministrativa" />
+																<p:inputText id="unidadAdministrativa"
+																	value="#{adqui.administrativo.administrativa.descripcion}"
+																	disabled="true" />
+															</div>
+															<div class="col-md-6 ui-noborder left-text block">
+																<p:outputLabel value="Número de Solicitud:"
+																	for="numeroSolicitud" />
+																<p:inputText id="numeroSolicitud"
+																	value="#{adqui.numeroControl}" disabled="true" />
+															</div>
+															<div class="col-md-6 ui-noborder left-text block">
+																<p:outputLabel value="Procedimiento Adquisitivo:"
+																	for="procedimientoAdquisitiv" />
+																<p:inputText id="procedimientoAdquisitiv"
+																	disabled="true"
+																	value="#{product.contrato.procediemientoAdquisitivo.clave} - #{product.contrato.procediemientoAdquisitivo.descripcion}">
+																</p:inputText>
+															</div>
+															<div class="col-md-6 ui-noborder left-text block">
+																<p:outputLabel value="Tipo de Gasto:" for="tipoGasto" />
+																<p:inputText id="tipoGasto"
+																	value="#{adqui.tipoGasto.descripcion}" disabled="true" />
+															</div>
+															<div class="col-md-6 ui-noborder left-text block">
+																<p:outputLabel value="Origen de Recursos:"
+																	for="origenRecursos" />
+																<p:inputText id="origenRecursos"
+																	value="#{adqui.origenRecurso.descripcion}"
+																	disabled="true" />
+															</div>
+														</div>
+
+													</div>
+													<div class="col-md-6">
+														<p:panel
+															styleClass="green col-centered row-centered shadow-panel"
+															header="Clave(s) Programática(s)">
+															<p:dataTable var="car" value="#{adqui.programasList}"
+																emptyMessage="No existen Claves Programaticas">
+
+																<p:column headerText="Cuenta" width="20%">
+																	<h:outputText value="#{car.cuenta.cuenta}" />
+																</p:column>
+
+																<p:column headerText="Centro de Costo" width="25%">
+																	<h:outputText value="#{car.catdep.clvdep}" />
+																</p:column>
+
+																<p:column headerText="Programa" width="30%">
+																	<h:outputText value="#{car.muninep.campo7}" />
+																</p:column>
+
+																<p:column headerText="Partida" width="20%">
+																	<h:outputText value="#{car.natgas.clvgas}" />
+																</p:column>
+
+																<p:column headerText="Fuente de Financiamiento"
+																	width="30%">
+																	<h:outputText
+																		value="#{car.fuentefGobierno.cuenta}#{car.fuentefGobierno.scta}#{car.fuentefGobierno.sscta}#{car.fuentefGobierno.ssscta}" />
+																</p:column>
+															</p:dataTable>
+														</p:panel>
+													</div>
+
+												</p:panel>
+											</p:tab>
+
+										</p:accordionPanel>
+									</p:fieldset>
+
+								</p:panel>
+
+								<p:panel visible="#{contratosMB.currentStep eq 3}"
+									style="border:none;">
+									<p:fieldset
+										legend="Elementos B&aacute;sicos de la Adquisici&oacute;n">
+										<div class="col-md-5 ui-noborder left-text block">
+											<p:outputLabel value="Plazo de Entrega:" for="plazoEntrega" />
+											<p:inputText id="plazoEntrega"
+												value="#{product.plazoEntrega}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-5 ui-noborder left-text block">
+											<p:outputLabel value="Lugar de Entrega:" for="lugarEntrega" />
+											<p:inputText id="lugarEntrega"
+												value="#{product.lugarEntrega}"
+												disabled="#{!contratosMB.editable}" />
+										</div>
+										<!-- <div class="col-md-2 ui-noborder left-text block">
+											<p:outputLabel value="Horario de Entrega:" for="horaEntrega" />
+											<p:inputText id="horaEntrega"
+												value="#{product.contrato.adquisicion.horarioDe} - #{product.contrato.adquisicion.horarioA}"
+												disabled="true">
+											</p:inputText>
+										</div> -->
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Condiciones de Entrega:"
+												for="condicionesEntrega" />
+											<p:inputText id="condicionesEntrega"
+												value="#{product.condicionesEntrega}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Calidad:" for="calidad" />
+											<p:inputText id="calidad" value="#{product.calidad}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Condiciones de Pago:"
+												for="condicionPago" />
+											<p:inputText id="condicionPago"
+												value="#{product.condicionesPago}"
+												disabled="#{!contratosMB.editable}" />
+										</div>
+										<!-- <div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Forma de Pago:" for="formaPago" />
+											<p:inputText id="formaPago"
+												value="#{product.contrato.adquisicion.formaPago.nombre}"
+												disabled="true">
+											</p:inputText>
+										</div> -->
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Vigencia de Precios:"
+												for="vigenciaPrecios" />
+											<p:inputText id="vigenciaPrecios"
+												value="#{product.vigenciaPrecios}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Anticipos e Intereses" for="anticipos" />
+											<p:inputText id="anticipos" value="#{product.anticipos}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Ajuste de Precios:" for="ajustePrecios" />
+											<p:inputText id="ajustePrecios"
+												value="#{product.ajustePrecios}"
+												disabled="#{!contratosMB.editable}" />
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Vigencia del Contrato:"
+												for="vigenciaContrato" />
+											<p:inputText id="vigenciaContrato"
+												value="#{product.vigenciaContrato}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel
+												value="Presentación y Devolución de Garantias:"
+												for="presentacionDevolucionGarantias" />
+											<p:inputText id="presentacionDevolucionGarantias"
+												value="#{product.presentacionDevolucionGarantias}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Garantía de Cumplimiento del Contrato:"
+												for="garantiaCumplimientoContrato" />
+											<p:inputText id="garantiaCumplimientoContrato"
+												value="#{product.garantiaCumplimientoContrato}"
+												disabled="#{!contratosMB.editable}" />
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel
+												value="Garantía Contra Defectos o Vicios Ocultos:"
+												for="garantiaContraDefectos" />
+											<p:inputText id="garantiaContraDefectos"
+												value="#{product.garantiaContraDefectos}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Devolución de Garantías:"
+												for="garantiaDevolucion" />
+											<p:inputText id="garantiaDevolucion"
+												value="#{product.devolucionGarantias}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Penas Convencionales y Sanciones:"
+												for="penasSanciones" />
+											<p:inputText id="penasSanciones"
+												value="#{product.penasSanciones}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-6 ui-noborder left-text block">
+											<p:outputLabel value="Observaciones:" for="observaciones" />
+											<p:inputText id="observaciones"
+												value="#{product.observaciones}"
+												disabled="#{!contratosMB.editable}" />
+										</div>
+									</p:fieldset>
+								</p:panel>
+								<!-- 
+								<p:panel visible="#{contratosMB.currentStep eq 4}">
+									<p:fieldset legend="ok">
+
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Nombre Propietario:"
+												for="nombrePropietario" />
+											<p:inputText id="nombrePropietario"
+												value="#{product.nombrePropietario}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Dictamen Adjudicación:"
+												for="dictamenAdjudicacion" />
+											<p:inputText id="dictamenAdjudicacion"
+												value="#{product.dictamenAjudicacion}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Garantia:" for="garantia" />
+											<p:inputText id="garantia" value="#{product.garantia}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Vigencia Presentación:"
+												for="vigenciaPresentacion" />
+											<p:inputText id="vigenciaPresentacion"
+												value="#{product.vigenciaPresentacion}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Teléfono Solicitante:"
+												for="telefonoSolicitante" />
+											<p:inputText id="telefonoSolicitante"
+												value="#{product.contrato.adquisicion.administrativo.telefono}"
+												disabled="true">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Fecha Presentación:"
+												for="fechaPresentacion" />
+											<p:inputText id="fechaPresentacion"
+												value="#{product.fechaPresentacion}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Lugar Presentación:"
+												for="lugarPresentacion" />
+											<p:inputText id="lugarPresentacion"
+												value="#{product.lugarPrestacion}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Selección Propuestas:"
+												for="seleccionPropuestas" />
+											<p:inputText id="seleccionPropuestas"
+												value="#{product.seleccionPropuestas}"
+												disabled="#{!contratosMB.editable}" />
+										</div>
+										<div class="col-md-3 ui-noborder left-text block">
+											<p:outputLabel value="Anticipos Intereses:"
+												for="anticiposIntereses" />
+											<p:inputText id="anticiposIntereses"
+												value="#{product.anticiposIntereses}"
+												disabled="#{!contratosMB.editable}">
+											</p:inputText>
+										</div>
+
+									</p:fieldset>
+								</p:panel>
+ -->
+								<p:panel visible="#{contratosMB.currentStep eq 4}"
+									style="border:none;">
+									<p:fieldset legend="Artículos">
+
+										<p:dataGrid var="car"
+											value="#{contratosMB.articulosContratosList}" columns="3"
+											layout="grid" id="cars"
+											emptyMessage="No hay Artículos Seleccionados">
+
+											<f:facet name="header">
+
+												<p:commandButton styleClass="glyphicon glyphicon-plus"
+													value="Agregar Artículos" id="withIcon"
+													oncomplete="PF('articuloDialog').show(), PF('articulosSourcesWdg').clearFilters();" />
+											</f:facet>
+
+											<p:panel header="#{car.articulo.descripcion}"
+												styleClass="col-centered row-centered">
+												<!-- col-md-3  -->
+												<p:panelGrid
+													styleClass="col-centered row-centered ui-noborder">
+													<!--  -->
+													<p:row>
+														<p:column style="text-align:right; font-weight: bold;">
+															<h:outputText value="Unidad de Medida:" />
+														</p:column>
+														<p:column style="text-align:left;">
+															<h:outputText value="#{car.articulo.unidadMedida}" />
+														</p:column>
+													</p:row>
+
+													<p:row>
+														<p:column style="text-align:right; font-weight: bold;">
+															<h:outputText value="Cantidad:" />
+														</p:column>
+														<p:column style="text-align:left;">
+															<h:outputText value="#{car.articulo.cantidad}" />
+														</p:column>
+													</p:row>
+
+													<p:row>
+														<p:column style="text-align:right; font-weight: bold;">
+															<h:outputText value="Precio:" />
+														</p:column>
+														<p:column style="text-align:left;">
+															<h:outputText value="#{car.precio}"
+																rendered="#{!contratosMB.editable}">
+																<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+															</h:outputText>
+															<pe:inputNumber value="#{car.precio}"
+																rendered="#{contratosMB.editable}" decimalPlaces="2"
+																decimalSeparator="." thousandSeparator="," minValue="0">
+																<p:ajax event="blur" update="@form"
+																	listener="#{contratosMB.calculaTotalProducto}" />
+															</pe:inputNumber>
+														</p:column>
+													</p:row>
+
+													<p:row>
+														<p:column style="text-align:right; font-weight: bold;">
+															<h:outputText value="% IVA:" />
+														</p:column>
+														<p:column style="text-align:left;">
+															<h:outputText value="#{car.iva}"
+																rendered="#{!contratosMB.editable}">
+																<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+															</h:outputText>
+															<pe:inputNumber value="#{car.iva}" minValue="0"
+																maxlength="100" rendered="#{contratosMB.editable}"
+																decimalPlaces="2" decimalSeparator="."
+																thousandSeparator=",">
+																<p:ajax event="blur" update="@form"
+																	listener="#{contratosMB.calculaTotalProducto}" />
+															</pe:inputNumber>
+														</p:column>
+													</p:row>
+
+													<p:row>
+														<p:column style="text-align:right;font-weight: bold;">
+															<h:outputText value="Total:" />
+														</p:column>
+														<p:column style="text-align:left;">
+															<h:outputText value="#{car.total}"
+																rendered="#{!contratosMB.editable}">
+																<f:convertNumber pattern="###,##0.00" locale="es_MX" />
+															</h:outputText>
+															<pe:inputNumber thousandSeparator=","
+																decimalSeparator="." decimalPlaces="2"
+																value="#{car.total}" rendered="#{contratosMB.editable}"
+																disabled="true" />
+														</p:column>
+													</p:row>
+
+													<p:row>
+														<p:column style="text-align:right;font-weight: bold;">
+															<h:outputText value="Observaciones:" />
+														</p:column>
+														<p:column style="text-align:left;">
+															<h:outputText value="#{car.observaciones}"
+																rendered="#{!contratosMB.editable}" />
+															<p:inputTextarea maxlength="500"
+																value="#{car.observaciones}"
+																rendered="#{contratosMB.editable}"></p:inputTextarea>
+														</p:column>
+													</p:row>
+
+												</p:panelGrid>
+											</p:panel>
+
+										</p:dataGrid>
+
+										<p:dialog header="Selección de Artículos"
+											widgetVar="articuloDialog" modal="true" showEffect="fade"
+											hideEffect="fade" resizable="false" width="1000" height="460">
+											<p:outputPanel id="panelArticulosSources" layout="block"
+												style="text-align:left">
+												<p:dataTable id="articulosDatatable" var="source"
+													value="#{contratosMB.articulosList}"
+													selection="#{contratosMB.articulosSelected}"
+													selectionMode="multiple" styleClass="et_datatable"
+													paginator="true" rows="10" rowKey="#{source.id}"
+													paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+													emptyMessage="No hay registros" rowIndexVar="rowIndex"
+													widgetVar="articulosSourcesWdg">
+													<p:column headerText="#" width="5%" exportable="true">
+														<h:outputText value="#{source.renglon}" />
+													</p:column>
+
+													<p:column headerText="Descripción" style="width:50%">
+														<h:outputText value="#{source.descripcion}" />
+													</p:column>
+
+													<p:column headerText="Unidad de Medida" width="15%">
+														<h:outputText value="#{source.unidadMedida}" />
+													</p:column>
+
+													<!-- <p:column headerText="Cantidad" style="width:15%">
+														<h:outputText value="#{source.cantidad}" />
+													</p:column>
+
+													<p:column headerText="Precio" style="width:15%">
+														<h:outputText value="#{source.precio}" />
+													</p:column> -->
+
+												</p:dataTable>
+												<center>
+													<p:panelGrid columns="3" layout="grid">
+														<p:column></p:column>
+														<p:column>
+															<p:row style="align:center">
+																<p:column>
+																	<p:commandButton value="Aceptar"
+																		actionListener="#{contratosMB.addArticles()}"
+																		oncomplete="PF('articuloDialog').hide();"
+																		style="padding: 5px; position: absolute; right: 50%;"
+																		update="form1:panelReporte" />
+																</p:column>
+																<p:column>
+																	<p:commandButton value="Cancelar"
+																		oncomplete="PF('articuloDialog').hide();"
+																		style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+																</p:column>
+															</p:row>
+														</p:column>
+														<p:column></p:column>
+													</p:panelGrid>
+												</center>
+											</p:outputPanel>
+										</p:dialog>
+
+									</p:fieldset>
+								</p:panel>
+
+								<div class="row steps-navigation">
+									<p:commandButton value="Anterior"
+										style="background: #8eb987 !important;border-color: #8eb987 !important; color: #000 !important; font-size: 11pt;"
+										icon=" ui-icon-triangle-1-w"
+										rendered="#{contratosMB.currentStep != 0}"
+										actionListener="#{contratosMB.prevStep()}"
+										update="form1:panelReporte">
+									</p:commandButton>
+									<p:commandButton value="Siguiente"
+										style="background: #8eb987 !important;border-color: #8eb987 !important; color: #000 !important; font-size: 11pt;"
+										icon=" ui-icon-triangle-1-e" iconPos="right"
+										rendered="#{contratosMB.currentStep != 4}"
+										actionListener="#{contratosMB.nextStep()}"
+										update="form1:panelReporte">
+									</p:commandButton>
+								</div>
+							</p:dataGrid>
+
+						</div>
+
+						<div class="right-contenedor">
+							<div>
+								<p:panel id="pnlBotonesCRUD"
+									styleClass="no-border row-centered panel-buttons seccion d-block">
+
+									<p:commandButton value="Salvar" icon="ui-icon-disk"
+										rendered="#{contratosMB.editable}" update="form1"
+										action="#{contratosMB.saveContrato()}" />
+									<!-- update=":form1:dataGrid pnlBotonesCRUD" rendered="#{contratosMB.editando}" -->
+									<p:commandButton value="Modificar" icon="ui-icon-pencil"
+										action="#{contratosMB.modificarContrato()}"
+										update="form1:panelReporte" />
+									<!-- update=":form1:dataGrid pnlBotonesCRUD" disabled="#{contratosMB.solicitudCaptured.id == null}"
+												rendered="#{!contratosMB.editando}" -->
+									<!--  -->
+									<!-- update=":form1:dataGrid pnlBotonesCRUD" rendered="#{contratosMB.editando}" -->
+									<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+										action="#{contratosMB.addNewContrato()}"
+										rendered="#{!contratosMB.editable}"
+										update="form1:panelReporte" />
+									<!-- update=":form1: pnlBotonesCRUD :form1:focusSolicitudes" disabled="#{contratosMB.editando}" -->
+									<p:commandButton value="Borrar" icon="ui-icon-trash"
+										onclick="PF('confirmFileDeleteMeta').show();" />
+									<!-- disabled="#{contratosMB.solicitudCaptured.id == null}" -->
+									<p:commandButton value="Cancelar " icon="ui-icon-circle-close"
+										action="#{contratosMB.cancelarContrato()}"
+										rendered="#{contratosMB.editable}" update="form1" />
+
+
+									<p:commandButton value="Solicitar Revisión"
+										icon="ui-icon-check" onclick="PF('modalRevisor').show()"
+										rendered="true" />
+
+									<p:commandButton value="Revisar Contrato" icon="ui-icon-check"
+										onclick="PF('modalReview').show()" rendered="true" />
+
+									<p:commandButton id="generateportepdf"
+										onclick="PF('modalPrint').show()" rendered="true"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()"
+										action="#{contratosMB.generatePDF}" value="Imprimir Contrato"
+										icon="ui-icon-print" update="inlinePdf" />
+
+									<p:commandButton value="Crear Convenio Modificatorio"
+										action="#{contratosMB.createConvenio()}"
+										icon="ui-icon-document" onclick="PF('modalConvenio').show()"
+										rendered="true" />
+									<!-- update="form1:inlinePdf, :form1:messagesEdit" -->
+
+									<!-- 
+									<p:commandButton value="Firmar Contrato" icon="ui-icon-contact"
+										onclick="PF('modalSignatures').show()" rendered="true" /> -->
+
+									<!-- <p:commandButton value="Firmar Contrato" icon="ui-icon-contact"
+										action="#{contratosMB.showFirmasRecepcion}" update=":formFRS"
+										onclick="PF('modalSignatures').show()" rendered="true" /> -->
+									<!-- update="formFR formDetallesSolicitudes inlinePdf" -->
+
+									<!-- <p:commandButton value="Firmas recepción"
+										icon="ui-icon-contact"
+										update="formFRS"
+										action="#{contratosMB.showFirmasRecepcion}" /> -->
+									<!--  formDetallesSolicitudes inlinePdf" -->
+								</p:panel>
+							</div>
+						</div>
+					</div>
+
+				</p:panel>
+			</h:form>
+
+
+			<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+				message="Desea eliminar el registro actual?" header="Confirmación"
+				severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{contratosMB.borrarContrato()}"
+					oncomplete="PF('confirmFileDeleteMeta').hide();" update="form1" />
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('confirmFileDeleteMeta').hide();"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+			</p:confirmDialog>
+			<h:form id="formUsuarios" styleClass="green">
+				<p:dialog header="Seleccione revisor" widgetVar="modalRevisor"
+					modal="true" height="300" width="600" showEffect="fade"
+					hideEffect="fade" resizable="true">
+					<p:dataTable id="usuarios" var="user" styleClass="et_datatable"
+						resizableColumns="true" widgetVar="tbUsuarios"
+						value="#{contratosMB.usuariosList}" lazy="true"
+						selectionMode="single" emptyMessage="No hay registros"
+						paginator="true" rows="10" rowKey="#{user.id}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:ajax event="rowDblselect" update=":form1,:formUsuarios"
+							listener="#{contratosMB.onDlClickTbUsers}"
+							oncomplete="PF('modalRevisor').hide();"></p:ajax>
+
+						<p:column headerText="Nombre" filterMatchMode="contains"
+							filterBy="#{user.nombre}" filterMaxLength="15">
+							<h:outputText value="#{user.nombre}" />
+						</p:column>
+					</p:dataTable>
+				</p:dialog>
+			</h:form>
+			<h:form id="formReview">
+				<p:dialog styleClass="green col-centered row-centered"
+					header="Revisión" widgetVar="modalReview" modal="true" height="320"
+					width="650" showEffect="fade" hideEffect="fade" resizable="true">
+
+					<p:panel styleClass="col-centered row-centered">
+
+						<h3 style="margin-top: 0px;">¿El contrato es correcto?</h3>
+
+						<h5 style="display: block ruby;">
+							<p:selectOneRadio id="correctos"
+								value="#{contratosMB.revison.correcto}" columns="1"
+								layout="grid">
+								<f:selectItem itemLabel="Si" itemValue="true" />
+								<f:selectItem itemLabel="No" itemValue="false" />
+							</p:selectOneRadio>
+						</h5>
+
+						<h4>Comentarios:</h4>
+						<p:inputTextarea rows="4" cols="33" maxlength="500"
+							value="#{contratosMB.revison.observaciones}" counter="display"
+							counterTemplate="Quedan {0} caracteres." />
+						<br />
+						<h:outputText id="display" />
+					</p:panel>
+
+					<p:panelGrid styleClass="ui-noborder" columns="3" layout="grid">
+						<p:column></p:column>
+						<p:column>
+							<p:row style="align:center">
+								<p:column>
+									<p:commandButton value="Guardar"
+										actionListener="#{contratosMB.saveReview()}"
+										oncomplete="PF('modalReview').hide();"
+										style="padding: 5px; position: absolute; right: 50%;"
+										update=":form1:panelReporte" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Cancelar"
+										oncomplete="PF('modalReview').hide();"
+										style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+								</p:column>
+							</p:row>
+						</p:column>
+						<p:column></p:column>
+					</p:panelGrid>
+
+				</p:dialog>
+			</h:form>
+
+			<h:form id="formConvenio">
+				<p:dialog styleClass="green col-centered row-centered"
+					header="Convenio Modificatorio" widgetVar="modalConvenio"
+					modal="true" height="150" width="650" showEffect="fade"
+					hideEffect="fade" resizable="true">
+
+					<div class="col-md-6 ui-noborder left-text block">
+						<p:outputLabel value="Fecha de Elaboración:"
+							for="fechaElaboracion" />
+						<p:inputText id="fechaElaboracion"
+							value="#{convenio.fechaElaboracion}"
+							disabled="#{contratosMB.convenioEdit}">
+						</p:inputText>
+					</div>
+					<div class="col-md-6 ui-noborder left-text block">
+						<p:outputLabel value="Importe del Convenio:" for="importeConvenio" />
+						<p:inputText id="importeConvenio" value="#{convenio.importe}"
+							disabled="#{contratosMB.convenioEdit}" />
+					</div>
+
+					<p:panelGrid styleClass="ui-noborder" columns="3" layout="grid">
+						<p:column></p:column>
+						<p:column>
+							<p:row>
+								<p:column style="align:center;">
+									<p:commandButton value="Guardar"
+										actionListener="#{contratosMB.saveConvenio()}"
+										oncomplete="PF('modalConvenio').hide();"
+										style="padding: 5px; position: absolute; right: 50%; margin-top: 20px;"
+										update=":form1:panelReporte" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Cancelar"
+										oncomplete="PF('modalConvenio').hide();"
+										style="padding: 5px; margin-left: 15px; position: absolute; right: 35%; margin-top: 20px;" />
+								</p:column>
+							</p:row>
+						</p:column>
+						<p:column></p:column>
+					</p:panelGrid>
+
+				</p:dialog>
+			</h:form>
+
+			<p:dialog styleClass="green col-centered row-centered"
+				id="modalPrint" header="Impresión del Contrato"
+				widgetVar="modalPrint" modal="true" height="410" width="1000"
+				showEffect="fade" hideEffect="fade" resizable="true">
+				<p:panel id="inlinePdf" style="border:0px"
+					visible="#{contratosMB.uuid ne null}">
+					<object type="application/pdf"
+						data="#{request.contextPath}/GetFileInline?uuid=#{contratosMB.uuid}&amp;filename=#{contratosMB.endFilename}"
+						height="380px" width="100%"> Tu browser no puede
+						desplegar el PDF. </object>
+				</p:panel>
+			</p:dialog>
+
+			<p:dialog styleClass="green col-centered row-centered"
+				id="firmasModal" header="Firmas del Contrato"
+				widgetVar="modalSignatures" modal="true" height="500" width="1000"
+				showEffect="fade" hideEffect="fade" resizable="true">
+
+				<!-- rendered="#{solicitudesAdquisicionesMB.panelRendered eq 3}" -->
+
+				<h:form id="formFRS">
+					<p:outputPanel id="panelFRS">
+
+						<p:messages id="msFRS" showDetail="true" closable="true"
+							showSummary="false" />
+						<p:dataGrid styleClass="ui-noborder" var="firma"
+							value="#{contratosMB.contratosFirmas}" columns="3"
+							paginator="false" layout="grid" rows="3" id="tableFirmasFR">
+							<p:panel header="Posicion de firma #{firma.posicion}"
+								style="text-align:center" styleClass="gray">
+								<h:panelGrid columns="2">
+									<h:panelGrid columns="1" styleClass="panel-buttons">
+										<h:outputText value="Estado de firma: #{firma.estado}" />
+										<p:commandButton value="Cambiar"
+											icon=" ui-icon-transferthick-e-w"
+											rendered="#{firma.estado ne 'Firmado'}"
+											styleClass="button-green no-padding"
+											onclick="PF('dialogFR').show()">
+											<f:setPropertyActionListener value="#{firma.posicion}"
+												target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+										</p:commandButton>
+										<!--  update="formFR" -->
+										<p:commandButton value="Firmar" icon=" ui-icon-key"
+											styleClass="button-green no-padding"
+											rendered="#{(firma.firma ne null) and (firma.firma.usuario.usuario eq solicitudesAdquisicionesMB.username) and (firma.estado ne 'Firmado')}"
+											onclick="PF('dialogFRFirmar').show()">
+											<!-- update=":form1:panelPrincipal formFR" -->
+											<f:setPropertyActionListener value="#{firma.posicion}"
+												target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+										</p:commandButton>
+										<p:commandButton value="Eliminar" icon="ui-icon-trash"
+											styleClass="button-green no-padding"
+											rendered="#{firma.firma ne null }"
+											onclick="PF('dialogFRDelete').show()">
+											<!-- update=":form1:panelPrincipal formFR" -->
+											<f:setPropertyActionListener value="#{firma.posicion}"
+												target="#{solicitudesAdquisicionesMB.firmaPosicion}" />
+										</p:commandButton>
+									</h:panelGrid>
+									<h:panelGrid columns="1" style="width:100%;height:100%">
+										<h:outputLabel value="Usuario: #{firma.firma.usuario.usuario}" />
+										<p:graphicImage value="../../tmp/#{firma.firma.nombreArchivo}"
+											style="border:1px solid gray;border-radius:10px; margin-left:5px;"
+											rendered="#{firma.firma ne null}" id="graphicImage"
+											width="200" height="100" cache="false">
+										</p:graphicImage>
+										<h:outputLabel rendered="#{firma.firmadoEl ne null}"
+											value="Firmado el :">
+											<p:outputLabel value="#{firma.firmadoEl}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:outputLabel>
+										</h:outputLabel>
+									</h:panelGrid>
+								</h:panelGrid>
+							</p:panel>
+						</p:dataGrid>
+
+					</p:outputPanel>
+				</h:form>
+
+			</p:dialog>
+			<p:confirmDialog widgetVar="dialogFRFirmar"
+				message="Esta seguro de firmar la solicitud actual?"
+				header="Confirmación" severity="alert">
+				<p:commandButton value="SI" label="SI"
+					style="margin-top:10px;padding:5px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+					actionListener="#{contratosMB.firmarSolicitud}"
+					oncomplete="PF('dialogFRFirmar').hide();" />
+				<!-- update=":formFR :formFRS" -->
+
+				<p:commandButton value="NO" label="NO"
+					style="margin-top:10px;padding:5px;"
+					onclick="PF('dialogFRFirmar').hide();"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+			</p:confirmDialog>
+
+			<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="../reports/indice.png"
+						style="margin-right: 12px; vertical-align: middle;" />
+					<h:outputText value="Por favor espere..."
+						style="white-space: nowrap;" />
+				</h:panelGrid>
+			</pe:blockUI>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

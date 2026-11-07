@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:remoteCommand name="findAcc"
+					actionListener="#{catalogAccountsIngresoMB.buscar()}"
+					update=":form1:messagesEdit,  :form1:display_1 :form1:objects"
+					onstart="PF('blockUIWidget').block();"
+					oncomplete="PF('blockUIWidget').unblock(); " />
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="panel" header="CLASIFICADOR POR RUBROS DE INGRESOS"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<h:panelGrid id="display_1" columns="6" cellpadding="4"
+						styleClass="col-centered">
+						<h:outputText value="CUENTA:" for="accountInput"
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+						<p:inputText id="accountInput" styleClass="form-control"
+							value="#{catalogAccountsIngresoMB.cuenta.cuenta}" maxlength="4"
+							validatorMessage="CUENTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,4})" for="accountInput"></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="SCTA:" for="saccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="saccountInput" styleClass="form-control"
+							value="#{catalogAccountsIngresoMB.cuenta.scuenta}" maxlength="15"
+							validatorMessage="SCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9a-zA-Z]{0,15})"
+								for="saccountInput"></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="SSCTA:" for="ssaccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="ssaccountInput" styleClass="form-control"
+							value="#{catalogAccountsIngresoMB.cuenta.sscuenta}"
+							maxlength="20" validatorMessage="SSCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,20})" for="ssaccountInput"></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="SSSCTA:" for="sssaccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="sssaccountInput" styleClass="form-control"
+							value="#{catalogAccountsIngresoMB.cuenta.ssscuenta}"
+							style="margin-top: 10px;" maxlength="4"
+							validatorMessage="SSSCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,4})" for="sssaccountInput"></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="SSSSCTA:" for="ssssaccountInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="ssssaccountInput" styleClass="form-control"
+							value="#{catalogAccountsIngresoMB.cuenta.sssscuenta}"
+							style="margin-top: 10px;" maxlength="4"
+							validatorMessage="SSSSCTA debe ser num&eacute;rico">
+							<f:validateRegex pattern="([0-9]{0,4})" for="ssssaccountInput "></f:validateRegex>
+						</p:inputText>
+
+						<h:outputText value="TITULO:" for="titleInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="titleInput" styleClass="form-control"
+							value="#{catalogAccountsIngresoMB.cuenta.nomcta}"
+							style="margin-top: 10px;" maxlength="250">
+						</p:inputText>
+
+						<p:outputPanel layout="block" style="text-align:center">
+							<br />
+							<p:commandButton value="Buscar" style="padding: 5px;" id="search"
+								onmousedown="jQuery('.ui-paginator-first').click();"
+								oncomplete="findAcc();" />
+							<p:commandButton value="Limpiar" id="clean"
+								style="padding: 5px; margin-left: 15px; position: absolute; "
+								update=":form1:messagesEdit, :form1:display_1, :form1:accountInput"
+								immediate="true"
+								actionListener="#{catalogAccountsIngresoMB.reset}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:accountInput').value=''; document.getElementById('form1:saccountInput').value=''; document.getElementById('form1:ssaccountInput').value='';  document.getElementById('form1:sssaccountInput').value=''; document.getElementById('form1:ssssaccountInput').value=''; document.getElementById('form1:titleInput').value='';" />
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+				<div class="table-responsive table-bordered table-condensed">
+					<p:dataTable id="objects" var="object" widgetVar="tbCuentas"
+						value="#{catalogAccountsIngresoMB.cuentas}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						editable="true" paginator="true" lazy="true" rows="16"
+						resizableColumns="true" scrollable="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<f:facet name="header">MANTENIMIENTO AL CLASIFICADOR POR RUBROS DE INGRESOS</f:facet>
+						<p:column headerText="Cuenta" visible="false" width="50"
+							exportable="true">
+							<h:outputText value="#{object.cuenta}" />
+						</p:column>
+
+						<p:column headerText="Cuenta" exportable="false" style="width:10%"
+							width="30">
+							<h:outputText value="#{object.cuenta}" />
+						</p:column>
+
+						<p:column headerText="Scta" visible="false" width="60"
+							exportable="true">
+							<h:outputText
+								value="#{object.scuenta.length()==0?'':'\''.concat(object.scuenta)}" />
+						</p:column>
+
+						<p:column headerText="Scta" exportable="false" width="60">
+							<h:outputText value="#{object.scuenta}" />
+						</p:column>
+
+						<p:column headerText="Sscta" visible="false" width="60"
+							exportable="true">
+							<h:outputText
+								value="#{object.sscuenta.length()==0?'':'\''.concat(object.sscuenta)}" />
+						</p:column>
+
+						<p:column headerText="Sscta" exportable="false" width="60">
+							<h:outputText value="#{object.sscuenta}" />
+						</p:column>
+
+
+						<p:column headerText="Ssscta" visible="false" width="50"
+							exportable="true">
+							<h:outputText
+								value="#{object.ssscuenta.length()==0?'':'\''.concat(object.ssscuenta)}" />
+						</p:column>
+
+						<p:column headerText="Ssscta" exportable="false" width="50">
+							<h:outputText value="#{object.ssscuenta}" />
+						</p:column>
+
+						<p:column headerText="Sssscta" visible="false" width="50"
+							exportable="true">
+							<h:outputText
+								value="#{object.sssscuenta.length()==0?'':'\''.concat(object.sssscuenta)}" />
+						</p:column>
+
+						<p:column headerText="Sssscta" exportable="false" width="50">
+							<h:outputText value="#{object.sssscuenta}" />
+						</p:column>
+
+						<p:column headerText="T&iacute;tulo" visible="false" width="165"
+							exportable="true">
+							<h:outputText value="#{object.nomcta}" />
+						</p:column>
+
+						<p:column headerText="T&iacute;tulo" exportable="false"
+							width="165">
+							<h:outputText value="#{object.nomcta}" />
+						</p:column>
+
+						<p:column headerText="Saldo Ini." visible="false" width="60"
+							style="align-text:rigth;" exportable="true">
+							<h:outputText value="#{object.salini}">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Saldo Ini." exportable="false" width="80">
+							<h:outputText value="#{object.salini}" style="float:right;">
+								<f:convertNumber pattern="###,###,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Ult. niv." visible="false" width="60"
+							exportable="true">
+							<h:outputText value="#{object.nivcta}" />
+						</p:column>
+
+						<p:column headerText="Ult. niv." exportable="false" width="40">
+							<center>
+								<h:outputText value="#{object.nivcta}" />
+							</center>
+						</p:column>
+
+						<p:column headerText="Nat." visible="false" width="40"
+							exportable="true">
+							<h:outputText value="#{object.stacta}" />
+						</p:column>
+
+						<p:column headerText="Nat." exportable="false" width="40">
+							<h:outputText value="#{object.stacta}" />
+						</p:column>
+
+						<p:column headerText="Nivcta" visible="false" width="40"
+							exportable="true">
+							<h:outputText value="#{object.xnicta}" />
+						</p:column>
+						<p:column headerText="Nivcta" exportable="false" width="40">
+							<h:outputText value="#{object.xnicta}" />
+						</p:column>
+						<p:column headerText="Nota" visible="false" width="40"
+							exportable="true">
+							<h:outputText value="#{object.notcta}" />
+						</p:column>
+						<p:column headerText="Nota" exportable="false" width="40">
+							<h:outputText value="#{object.notcta}" />
+						</p:column>
+						<f:facet name="footer">
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:graphicImage value="pdf.png" width="24" />
+								<p:fileDownload value="#{catalogAccountsIngresoMB.filePdf}" />
+							</h:commandLink>
+						</f:facet>
+					</p:dataTable>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

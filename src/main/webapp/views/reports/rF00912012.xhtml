@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Avance Presupuestal Poderes Capitulo"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="7" styleClass="col-centered ui-noborder">
+						<h:outputText value="Mes: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{rF00912012MB.mes.mes}">
+							<f:selectItems value="#{rF00912012MB.listMes}" var="item"
+								itemValue="#{item.mes}" itemLabel="#{item.mes}" />
+						</p:selectOneMenu>
+						<h:outputText value="Poder: " for="idPoder" />
+						<p:selectOneMenu id="idPoder" size="18" editable="false"
+							value="#{rF00912012MB.numPoder}">
+							<f:selectItems value="#{rF00912012MB.listPoder}" var="item"
+								itemValue="#{item.idPoder} #{item.descripcion}"
+								itemLabel="#{item.idPoder} - #{item.descripcion}" />
+						</p:selectOneMenu>
+
+
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+
+							<!-- 									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="csv.png" width="24" />
+										<p:fileDownload value="#{rF00912012MB.fileCsv}" />
+									</h:commandLink>
+									-->
+
+							<!-- 	<p:commandButton value="Vista Previa" id="preView"
+								actionListener="#{rF00912011MB.preView}" icon="ui-icon-zoomout"
+								update=":form1:preViewTxt" onclick="PF('preViewTxtWg').show();" /> -->
+							<!-- <h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+								<p:fileDownload value="#{rF00912012MB.fileTxt}" />
+							</h:commandLink> -->
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF00912012MB.createFilePdfInline}"
+								value="Vista Previa"
+								update="form1:inlinePdf, :form1:growlReportador">
+							</p:commandButton>
+							<p:commandButton value="correcto" id="txt" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:fileDownload value="#{rF00912012MB.fileTxt}" />
+							</p:commandButton>
+
+							<!-- <h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								id="downLoad" actionListener="#{rF00912012MB.downLoadFile}"
+								title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+								<p:fileDownload value="#{rF00912012MB.fileTxt}" />
+							</h:commandLink> -->
+							<!--  <p:commandButton value="Correcto" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);"  
+								actionListener="#{rF00912012MB.downLoadFile}"
+								icon="ui-icon-arrowthick-1-s">
+								<p:fileDownload value="#{rF00912012MB.fileTxt}" />
+							</p:commandButton>   -->
+
+
+
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{rF00912012MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{rF00912012MB.uuid}&amp;filename=#{rF00912012MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+
+
+
+
+
+				</p:panel>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body style="background-color: #E8ECED;">
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogMatrixIndicatorsMB.onPageLoad}"
+					update=":form1:display_1, :form1:objects" />
+				<p:remoteCommand name="consultProgramStructure"
+					actionListener="#{catalogMatrixIndicatorsMB.consultProgramStructure}"
+					onstart="PF('programsDT').clearFilters();"
+					oncomplete="PF('catalogProgramsDlg').show()"
+					update=":form1:programs" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<div class="ui-grid">
+					<div class="ui-grid-row">
+						<p:panel id="panel" header="Matriz de Indicadores"
+							styleClass="ui-grid-col-8 green col-centered row-centered shadow-panel">
+							<div class="ui-grid-col-6">
+								<p:panelGrid columns="3" layout="grid"
+									styleClass="showcase-text-align-center ui-noborder">
+
+									<h:outputText value="Nombre de Indicador" for="nameInput"
+										styleClass="control-label" />
+
+									<h:outputText value="Nivel" for="nivelInput"
+										styleClass="control-label" />
+
+									<h:outputText value="Programa" for="programaInput"
+										styleClass="control-label" />
+
+									<p:inputText id="nameInput" styleClass="form-control"
+										value="#{catalogMatrixIndicatorsMB.beanFind.nomind}"
+										maxlength="400"
+										validatorMessage="El campo Nombre de Indicador solo permite valores alfanum&eacute;ricos">
+										<f:validateRegex
+											pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+											for="nameInput" />
+										<p:ajax event="keyup"
+											update=":form1:messagesEdit, :form1:objects"
+											listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
+									</p:inputText>
+
+									<p:inputText id="nivelInput" maxlength="2"
+										styleClass="form-control"
+										value="#{catalogMatrixIndicatorsMB.beanFind.nivel}"
+										validatorMessage="El campo Nivel solo permite valores NF, NP, NC o NA">
+										<f:validateRegex pattern="^(N|n|NF|NP|NC|NA|nf|np|nc|na)$"
+											for="nivelInput" />
+										<p:ajax event="keyup"
+											update=":form1:messagesEdit, :form1:objects"
+											listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
+									</p:inputText>
+
+									<p:inputText id="programaInput" styleClass="form-control"
+										value="#{catalogMatrixIndicatorsMB.beanFind.programa}"
+										maxlength="8"
+										validatorMessage="El campo solo permite valores numéricos">
+										<f:validateRegex pattern="^\s*([0-9])*\s*$"
+											for="programaInput" />
+										<p:ajax event="keyup"
+											update=":form1:messagesEdit, :form1:objects"
+											listener="#{catalogMatrixIndicatorsMB.findValuesCatalog}" />
+									</p:inputText>
+
+								</p:panelGrid>
+
+								<p:outputPanel id="display_1" layout="block"
+									style="text-align:center">
+
+									<p:commandButton value="Buscar" style="padding: 5px;"
+										update=":form1:messagesEdit, :form1:objects"
+										actionListener="#{catalogMatrixIndicatorsMB.findValuesCatalog}"
+										onstart="PF('blockUIWidget').block()"
+										oncomplete="PF('blockUIWidget').unblock()" />
+
+									<p:commandButton value="Limpiar"
+										style="padding: 5px; margin-left: 15px;"
+										update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+										actionListener="#{catalogMatrixIndicatorsMB.findAllValuesCatalog}"
+										onstart="PF('blockUIWidget').block()" immediate="true"
+										oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:nameInput').value='';document.getElementById('form1:nivelInput').value='';document.getElementById('form1:programaInput').value='';" />
+
+								</p:outputPanel>
+							</div>
+
+							<div class="ui-grid-col-2" style="margin-left: 5%;">
+								<p:panel header="Tipo Indicador"
+									styleClass="col-centered row-centered shadow-panel">
+									<h:outputText value="E - Estrat&eacute;gico" />
+									<br />
+									<br />
+									<h:outputText value="G - Gesti&oacute;n" />
+									<br />
+									<br />
+								</p:panel>
+							</div>
+							<div class="ui-grid-col-2" style="margin-left: 5%;">
+								<p:panel header="Frecuencia"
+									styleClass="ui-grid-col-12 green col-centered row-centered shadow-panel">
+									<h:outputText value="M - Mensual" />
+									<br />
+									<h:outputText value="T - Trimestral" />
+									<br />
+									<h:outputText value="S - Semestral" />
+									<br />
+									<h:outputText value="A - Anual" />
+								</p:panel>
+							</div>
+						</p:panel>
+
+
+						<!-- <div class="ui-grid-col-6" style="right: 0%; position: absolute;">
+							<p:panel id="panelLabels"
+								styleClass="green col-centered row-centered shadow-panel"
+								style="width:70%;">
+								<h:outputText value="Tipo de Indicador"
+									style="padding-left: 30px;  color:red;" />
+								<br />
+								<h:outputText value="E-Estrat&eacute;gico"
+									style="padding-left: 30px; " />
+								<br />
+								<h:outputText value="G-Gesti&oacute;n"
+									style="padding-left: 30px; " />
+
+							</p:panel>
+						</div>
+						<div class="ui-grid-col-6" style="right: 0%; position: absolute;">
+							<p:panel id="panelLabels1"
+								styleClass="green col-centered row-centered shadow-panel"
+								style="width:70%;">
+
+								<h:outputText value="Frecuencia"
+									style="padding-left: 30px; margin-top: 10px; color:red;" />
+								<br />
+								<h:outputText value="M-Mensual"
+									style="padding-left: 30px; margin-top: 10px;" />
+								<br />
+								<h:outputText value="T-Trimestral"
+									style="padding-left: 30px; margin-top: 10px;" />
+								<br />
+								<h:outputText value="S-Semestral"
+									style="padding-left: 30px; margin-top: 10px;" />
+								<br />
+								<h:outputText value="A-Anual"
+									style="padding-left: 30px; margin-top: 10px;" />
+							</p:panel>
+						</div> -->
+					</div>
+				</div>
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED; ">
+					<center>
+						<p:commandButton value="Nuevo Registro"
+							update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+							actionListener="#{catalogMatrixIndicatorsMB.insertRow}"
+							oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+					</center>
+				</p:panel>
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogMatrixIndicatorsMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single"
+					selection="#{catalogMatrixIndicatorsMB.rowSelected}"
+					rowKey="#{object.id}">
+
+					<f:facet name="header">Matriz de Indicadores</f:facet>
+					<p:ajax event="rowEditInit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden')});" />
+					<p:ajax event="rowEdit"
+						listener="#{catalogMatrixIndicatorsMB.onRowEdit}"
+						update=":form1:messagesEdit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogMatrixIndicatorsMB.onRowCancel}"
+						update=":form1:messagesEdit"
+						onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+
+
+					<p:column headerText="Programa" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.programa}" />
+					</p:column>
+
+					<p:column headerText="Programa" exportable="false" style="width:8%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.programa}" />
+							</f:facet>
+							<f:facet name="input">
+
+								<div class="ui-grid ui-grid-responsive">
+									<div class="ui-grid-row">
+										<div class="ui-grid-col-11">
+											<p:inputText id="programa" value="#{object.programa}"
+												style="width:100%" maxlength="8"
+												validatorMessage="El campo Programa solo permite valores alfanum&eacute;ricos"
+												required="true"
+												requiredMessage="El campo Programa es requerido"
+												onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+
+												<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+													for="programa" />
+											</p:inputText>
+										</div>
+										<div class="ui-grid-col-2" align="center">
+											<p:commandLink id="searchprograma"
+												styleClass="glyphicon glyphicon-search"
+												onclick="consultProgramStructure(); return false;"
+												style="width:18px;height:18px;" />
+										</div>
+									</div>
+
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nivel" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nivel}" />
+					</p:column>
+
+					<p:column headerText="Nivel" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nivel}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nivel" value="#{object.nivel}"
+									style="width:100%" maxlength="2"
+									onkeyup="this.value=this.value.toUpperCase();"
+									validatorMessage="El campo Nivel solo permite valores NF, NP, NC o NA"
+									required="true" requiredMessage="El campo Nivel es requerido"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+									<f:validateRegex pattern="^(NF|NP|NC|NA)$" for="nivel" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Consec." visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.consec}">
+							<f:convertNumber pattern="0000" />
+						</h:outputText>
+
+					</p:column>
+
+					<p:column headerText="Consec." exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.consec}">
+									<f:convertNumber pattern="0000" />
+								</h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="consec" value="#{object.consec}"
+									required="true" style="width:100%" maxlength="4"
+									converterMessage="Consec. debe ser num&eacute;rico"
+									validatorMessage="Consec. debe ser mayor a cero"
+									requiredMessage="Consec. debe ser num&eacute;rico"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+									<f:convertNumber type="number" for="consec" />
+									<f:validateDoubleRange minimum="1" for="consec" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre Indicador" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nomind}" />
+					</p:column>
+
+					<p:column headerText="Nombre Indicador" exportable="false"
+						style="width:40%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nomind}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nomind" value="#{object.nomind}"
+									style="width:100%" maxlength="400" required="true"
+									validatorMessage="El campo Nombre Indicador solo permite valores alfanum&eacute;ricos"
+									converterMessage="El campo Nombre Indicador solo permite valores alfanum&eacute;ricos"
+									requiredMessage="El campo Nombre Indicador solo permite valores alfanum&eacute;ricos"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+										for="nomind" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Instrumento de Indicador" exportable="false"
+						style="width:20%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.instrumento}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="instrumento" value="#{object.instrumento}"
+									style="width:100%" maxlength="400" required="true"
+									validatorMessage="El campo Instrumento de Indicador solo permite valores alfanum&eacute;ricos"
+									converterMessage="El campo Instrumento de Indicador solo permite valores alfanum&eacute;ricos"
+									requiredMessage="El campo Instrumento de Indicador solo permite valores alfanum&eacute;ricos"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+										for="instrumento" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Tipo Indicador" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.tipo}" />
+					</p:column>
+
+					<p:column headerText="Tipo Indicador" exportable="false"
+						style="width:7%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.tipo}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="tipo" value="#{object.tipo}" style="width:100%"
+									onkeyup="this.value=this.value.toUpperCase();" maxlength="1"
+									required="true"
+									validatorMessage="El campo Tipo Indicador solo permite: E &oacute; G"
+									converterMessage="El campo Tipo Indicador solo permite: E &oacute; G"
+									requiredMessage="El campo Tipo Indicador solo permite: E &oacute; G"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+									<f:validateRegex pattern="^\s*([E]|[G]*)\s*$" for="tipo" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Frecuencia" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.frecuencia}" />
+					</p:column>
+
+					<p:column headerText="Frecuencia" exportable="false"
+						style="width:6%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.frecuencia}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="frecuencia" value="#{object.frecuencia}"
+									style="width:100%" maxlength="1" required="true"
+									onkeyup="this.value=this.value.toUpperCase();"
+									validatorMessage="El campo Frecuencia solo permite: M, T, S, A"
+									requiredMessage="El campo Frecuencia solo permite: M, T, S, A"
+									converterMessage="El campo Frecuencia solo permite: M, T, S, A"
+									onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+									<f:validateRegex pattern="[MTSA]$" for="tipo" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="C&oacute;digo" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.codigo}" />
+					</p:column>
+
+					<p:column headerText="C&oacute;digo" exportable="false"
+						style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.codigo}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="codigo" value="#{object.codigo}"
+									style="width:100%" maxlength="26" disabled="true">
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Borrar" style="width:5%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogMatrixIndicatorsMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:5%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMatrixIndicatorsMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogMatrixIndicatorsMB.fileXls}"
+								disabled="#{empty catalogMatrixIndicatorsMB.list}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMatrixIndicatorsMB.list}">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogMatrixIndicatorsMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMatrixIndicatorsMB.list}"
+							actionListener="#{catalogMatrixIndicatorsMB.getFileCsvPl}">
+							<p:graphicImage value="csv.png" width="24" />
+
+							<!-- <p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="MatrizIndicadores" pageOnly="false" /> -->
+
+							<p:fileDownload value="#{catalogMatrixIndicatorsMB.csvByPl}" />
+
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogMatrixIndicatorsMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogMatrixIndicatorsMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<p:commandButton id="hideButton2"
+					actionListener="#{catalogMatrixIndicatorsMB.showSuccesDelete}"
+					update=":form1:messagesEdit, :form1:objects" ajax="false"
+					style="visibility: hidden;" />
+
+				<p:commandButton id="hideButton3"
+					actionListener="#{catalogMatrixIndicatorsMB.showSuccesDelete()}"
+					update=":form1:messagesEdit, :form1:objects" ajax="false"
+					style="visibility: hidden;" />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar"
+							update=":form1:objects, :form1:messagesEdit"
+							actionListener="#{catalogMatrixIndicatorsMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+				<p:dialog header="Programas" widgetVar="catalogProgramsDlg"
+					resizable="false" width="780" height="500" showEffect="clip"
+					hideEffect="clip" modal="true">
+					<p:outputPanel id="panelCatalogPrograms" layout="block"
+						style="text-align:left">
+						<p:dataTable id="programs" var="program"
+							value="#{catalogMatrixIndicatorsMB.programs}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogMatrixIndicatorsMB.programSelected}"
+							rowKey="#{program.clvfun}" emptyMessage="No hay registros"
+							widgetVar="programsDT">
+
+							<p:ajax event="rowDblselect"
+								update=":form1:objects, :form1:focusTable"
+								listener="#{catalogMatrixIndicatorsMB.onProgramStructureRowDblClckSelect}"
+								oncomplete="PF('catalogProgramsDlg').hide();"></p:ajax>
+
+							<p:column headerText="Programa" style="width:20%"
+								filterMaxLength="8" filterMatchMode="contains"
+								filterBy="#{program.clvfun}">
+								<h:outputText value="#{program.clvfun}" />
+							</p:column>
+
+							<p:column headerText="Nombre" width="80%"
+								filterMatchMode="contains" filterBy="#{program.nompro}">
+								<h:outputText value="#{program.nompro}" />
+							</p:column>
+
+						</p:dataTable>
+						<center>
+
+							<p:panelGrid columns="3" layout="grid">
+								<p:column></p:column>
+								<p:column>
+									<p:row style="align:center">
+										<p:column>
+											<p:commandButton value="Aceptar"
+												actionListener="#{catalogMatrixIndicatorsMB.changeProgramStructure}"
+												oncomplete="PF('catalogProgramsDlg').hide();"
+												style="padding: 5px;" />
+										</p:column>
+										<p:column>
+											<p:commandButton value="Cancelar"
+												actionListener="#{catalogMatrixIndicatorsMB.activateRowEdit}"
+												oncomplete="PF('catalogProgramsDlg').hide();"
+												style="padding: 5px; margin-left: 15px;" />
+										</p:column>
+
+									</p:row>
+								</p:column>
+								<p:column></p:column>
+							</p:panelGrid>
+						</center>
+					</p:outputPanel>
+				</p:dialog>
+
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

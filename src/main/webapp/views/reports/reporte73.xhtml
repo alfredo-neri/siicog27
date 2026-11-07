@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Mov. del Mil del  Mes"
+					styleClass="green col-md-6 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<h:outputText value="Mes: " for="idMes"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+
+						<p:selectOneMenu id="idMes" value="#{reporte73MB.mes}">
+							<f:selectItems value="#{reporte73MB.listMes}" var="meses"
+								itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+						</p:selectOneMenu>
+						<h:outputText value="Scta: " for="idscta"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+						<p:inputText id="idscta" size="15" maxlength="15"
+							value="#{reporte73MB.scta}" required="true"
+							requiredMessage="El campo Scta es obligatorio" />
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="XLS">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{reporte73MB.fileXls}" />
+							</h:commandLink> 
+
+							<p:commandButton
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								value="Correcto" ajax="false" icon="ui-icon-document">
+								<p:fileDownload value="#{reporte73MB.fileTxt}" />
+							</p:commandButton>
+
+						</p:panelGrid>
+					</p:panelGrid>
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

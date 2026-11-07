@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Servicios Públicos Básicos en Vivienda"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte134MB.listPm2311}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm0811Wdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+						<p:column>
+							<p:panelGrid id="idGrid1">
+								<p:row>
+									<p:column style="width : 28%; text-align: right;">
+										<h:outputText value="Semestre  " />
+									</p:column>
+									<p:column style="width: 30%; text-align: left;">
+										<p:outputLabel id="lblTrimestre" value="#{objects.semestral}"
+											rendered="#{reporte134MB.bLblsemestre}">
+											<f:convertNumber pattern="00" />
+										</p:outputLabel>
+										<p:selectOneMenu value="#{reporte134MB.semestre}"
+											id="comboTri" rendered="#{reporte134MB.bComboTri}">
+											<f:selectItems value="#{reporte134MB.listsemestre}" var="tri"
+												itemValue="#{tri}" itemLabel="#{tris}" />
+										</p:selectOneMenu>
+									</p:column>
+
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column />
+									<p:column>
+										<h:outputText value="Cantidad" />
+									</p:column>
+									<p:column colspan="2">
+										<h:outputText value="Observaciones" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: left;">
+										<h:outputText
+											value="1.- Total de viviendas en el Municipio : " />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.tvm}" id="lblAgua"
+											rendered="#{reporte134MB.bLbl}">
+											<pe:keyFilter for="lblAgua" mask="pint" />
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+
+										<pe:inputNumber value="#{objects.tvm}" id="txtAgua"
+											styleClass="input-number-small" decimalPlaces="0"
+											decimalSeparator="." thousandSeparator=","
+											maxValue="2147483646" minValue="-2147483647" maxlength="15"
+											rendered="#{reporte134MB.bTxt}" />
+
+									</p:column>
+									<p:column style="text-align: left;" colspan="2" rowspan="6">
+										<p:outputLabel id="lblObsAgua" value="#{objects.obsgral}"
+											rendered="#{reporte134MB.bLbl}" />
+										<p:inputTextarea rows="7" cols="40" id="txtObsAgua"
+											value="#{objects.obsgral}" rendered="#{reporte134MB.bTxt}" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: left;">
+										<p:outputLabel
+											value="2.- Numero de Viviendas que cuentan con servicios de:" />
+									</p:column>
+									<p:column />
+
+
+
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: left;">
+										<p:outputLabel value=" a) Agua Potable:" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.nvap}" id="lblMatrato"
+											rendered="#{reporte134MB.bLbl}">
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.nvap}" id="txtMaltrato"
+											styleClass="input-number-small" decimalPlaces="0"
+											decimalSeparator="." thousandSeparator=","
+											maxValue="2147483646" minValue="-2147483647" maxlength="15"
+											rendered="#{reporte134MB.bTxt}" />
+
+									</p:column>
+
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: left;">
+										<p:outputLabel value=" b) Calles Pavimentadas:" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.nvcp}" id="lblCalles"
+											rendered="#{reporte134MB.bLbl}">
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.nvcp}" id="txtCalles"
+											styleClass="input-number-small" decimalPlaces="0"
+											decimalSeparator="." thousandSeparator=","
+											maxValue="2147483646" minValue="-2147483647" maxlength="15"
+											rendered="#{reporte134MB.bTxt}" />
+
+									</p:column>
+
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: left;">
+										<p:outputLabel value=" c) Drenaje:" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.nvdre}" id="lblDrenage"
+											rendered="#{reporte134MB.bLbl}">
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.nvdre}" id="txtDreange"
+											styleClass="input-number-small" decimalPlaces="0"
+											decimalSeparator="." thousandSeparator=","
+											maxValue="2147483646" minValue="-2147483647" maxlength="15"
+											rendered="#{reporte134MB.bTxt}" />
+
+									</p:column>
+
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: left;">
+										<p:outputLabel value=" d) Recollecion de Basura:" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.nvrb}" id="lblBasura"
+											rendered="#{reporte134MB.bLbl}">
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.nvrb}" id="txtBausra"
+											styleClass="input-number-small" decimalPlaces="0"
+											decimalSeparator="." thousandSeparator=","
+											maxValue="2147483646" minValue="-2147483647" maxlength="15"
+											rendered="#{reporte134MB.bTxt}" />
+
+									</p:column>
+
+								</p:row>
+
+							</p:panelGrid>
+							<p:panelGrid id="buttons">
+								<p:commandButton value="Salvar"
+									actionListener="#{reporte134MB.save(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									rendered="#{reporte134MB.bVSave}" id="save" icon="ui-icon-disk" />
+								<p:commandButton value="Modificar" id="modificar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte134MB.modify(rowIndex)}"
+									icon="ui-icon-pencil" rendered="#{reporte134MB.bVModificar}"
+									disabled="#{reporte134MB.bBtnMoficar}" />
+								<p:commandButton value="Limpiar" id="reset"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte134MB.clean(rowIndex)}"
+									disabled="#{reporte134MB.bLbl}" icon="ui-icon-tag" />
+								<p:commandButton value="Adicionar" id="add"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte134MB.add(rowIndex)}"
+									icon="ui-icon-circle-plus" disabled="#{reporte134MB.bAdd}" />
+								<p:commandButton value="Borrar" id="borrar"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									disabled="#{reporte134MB.bBorrar}"
+									actionListener="#{reporte134MB.delete(rowIndex)}">
+									<p:confirm header="Confirmación"
+										message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton value="Cancelar" id="cancelar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte134MB.cancel(rowIndex)}"
+									icon="ui-icon-circle-close" disabled="#{reporte134MB.bLbl}" />
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="idGrid5"
+						styleClass="col-centered panelgrid-cell-noborder.ui-panelgrid">
+						<p:column>
+							<h:outputText value="Semestre a Consultar: " />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu value="#{reporte134MB.conTrim}" id="ctri">
+								<f:selectItems var="tri" value="#{reporte134MB.comboTri}"
+									itemValue="#{tri.semestral}" itemLabel="#{tri.semestral}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:commandButton value="Correcto" id="correcto"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								icon="ui-icon-circle-arrow-s"
+								update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+								actionListener="#{reporte134MB.createFilePdfInline}" />
+						</p:column>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte134MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte134MB.uuid}&amp;filename=#{reporte134MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

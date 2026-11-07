@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:commandButton rendered="false" id="download" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+
+					<p:fileDownload value="#{cargaIngresosMetasMB.file}" />
+				</p:commandButton>
+				<p:focus context="cntClave" />
+				<p:panel id="panel" header="Comparador de Presupuesto"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel">
+					<p:messages id="messages" showDetail="true" closable="true" />
+					<p:panelGrid columns="4"
+						styleClass="col-centered row-centered ui-noborder" id="cntClave">
+					</p:panelGrid>
+					<!-- <p:panelGrid columns="1"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:outputLabel value="Mes:" />
+						<p:outputLabel value="Numero" />
+						<p:selectOneMenu id="idMes" value="#{cargaIngresosMetasMB.mes}">
+							<f:selectItems value="#{cargaIngresosMetasMB.listMes}"
+								var="meses" itemValue="#{meses.mes}"
+								itemLabel="#{meses.descripcion}" />
+							<p:ajax event="change" update="idMes" />
+						</p:selectOneMenu>
+
+
+
+					</p:panelGrid> -->
+					<p:panelGrid columns="2"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:fileUpload
+							fileUploadListener="#{cargaIngresosMetasMB.handleFileUpload}"
+							mode="advanced" dragDropSupport="false"
+							update=":form1:messages, :form1:object totales errorsFile"
+							sizeLimit="1000000000000" accept=".csv"
+							allowTypes="/(\.|\/)(csv)$/"
+							invalidSizeMessage="Tamaño invalido de archivo."
+							invalidFileMessage="Tipo invalido de archivo."
+							cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+
+						</p:fileUpload>
+					</p:panelGrid>
+					<p:panelGrid columns="4" id="errorsFile"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:commandButton value="Descargar archivo de Errores" ajax="false"
+							rendered="#{not empty cargaIngresosMetasMB.fileError}">
+							<p:fileDownload value="#{cargaIngresosMetasMB.file}"></p:fileDownload>
+						</p:commandButton>
+					</p:panelGrid>
+					<p:panelGrid columns="4" id="totales"
+						styleClass="col-centered row-centered ui-noborder">
+
+					</p:panelGrid>
+					<p:panel
+						styleClass="green col-md-12 col-centered row-centered shadow-panel">
+
+
+						<p:dataTable id="object" var="detalle"
+							value="#{cargaIngresosMetasMB.listMestas}"
+							rowKey="#{detalle.index}" selectionMode="single" paginator="true"
+							lazy="true" rows="20" paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+							<f:facet name="header">
+                Datos Cargados
+            </f:facet>
+
+							<p:column headerText="Clave" style="width:3%">
+								<h:outputText value="#{detalle.tcIngresosPropio.clave}"
+									style="width:5%" />
+							</p:column>
+							<p:column headerText="Concepto"
+								style="width:15%;text-align: left; ">
+								<h:outputText value="#{detalle.tcIngresosPropio.nombre}"
+									style="width:5%" />
+							</p:column>
+							<!-- <p:column headerText="Total" style="width:7%">
+								<h:outputText value="#{detalle.autorizado1}" style="width:5%" />
+							</p:column> -->
+							<p:column headerText="Enero" style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado1}" style="width:5%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Febrero"
+								style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado2}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Marzo" style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado3}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Abril" style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado4}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Mayo" style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado5}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Junio" style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado6}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Julio" style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado8}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Agosto" style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado8}" style="width:20%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Septiembre"
+								style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado9}" style="width:3%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Octubre"
+								style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado10}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Noviembre"
+								style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado11}" style="width:7%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Diciembre"
+								style="width:7%;text-align: left; ">
+								<p:outputLabel value="#{detalle.autorizado12}" style="width:20%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Total" style="width:7%;text-align: left; ">
+								<p:outputLabel
+									value="#{detalle.autorizado1 + detalle.autorizado2 + detalle.autorizado3 + detalle.autorizado4 + detalle.autorizado5 + detalle.autorizado6 + detalle.autorizado7 + detalle.autorizado8 + detalle.autorizado9 + detalle.autorizado10 + detalle.autorizado11 + detalle.autorizado12 }"
+									style="width:20%">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<!--<p:panel >
+					  <h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+						title="TXT">
+						<p:graphicImage value="../reports/excel.png" width="24" />
+						<p:fileDownload value="#{cargaIngresosMetasMB.fileXls}" />
+					</h:commandLink
+					</p:panel>>-->
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Estado de Avance Presupuestal de Egresos Por Dependencia y Programa (Gráfico)"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="7" styleClass="col-centered ui-noborder">
+						<h:outputText value="Mes: " for="idMes"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+
+						<p:selectOneMenu id="idMes" value="#{rF009126GMB.mes}">
+							<f:selectItems value="#{rF009126GMB.listMes}" var="meses"
+								itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="Dependencia: " for="idClave" />
+						<p:selectOneMenu id="idClave" size="18" editable="false"
+							value="#{rF009126GMB.clave}">
+							<f:selectItems value="#{rF009126GMB.listClave}" var="xcatpros"
+								itemValue="#{xcatpros}" itemLabel="#{xcatpros.substring(0,6)}" />
+							<p:ajax listener="#{rF009126GMB.unionBox}"
+								update=":form1:idPrograma"></p:ajax>
+						</p:selectOneMenu>
+
+
+						<h:outputText value="Programa: " for="idPrograma"
+							rendered="#{rF009126GMB.bandera}" />
+						<p:selectOneMenu id="idPrograma" size="18" editable="false"
+							value="#{rF009126GMB.programa}" rendered="#{rF009126GMB.bandera}">
+							<f:selectItems value="#{rF009126GMB.listPrograma}"
+								var="programas"
+								itemValue="#{programas.clvfun}#{programas.clvfin}"
+								itemLabel="#{programas.clvfun}#{programas.clvfin}" />
+						</p:selectOneMenu>
+
+
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF009126GMB.viewPdf()}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador">
+							</p:commandButton>
+
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{rF009126GMB.fileXls}" />
+							</h:commandLink>
+						</p:panelGrid>
+					</p:panelGrid>
+
+
+
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{rF009126GMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{rF009126GMB.uuid}&amp;filename=#{rF009126GMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="firmasForm">
+
+				<p:panel header="Datos Impresión"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<p:fieldset>
+						<p:panelGrid styleClass="col-centered">
+							<p:row>
+								<p:column>
+									<p:outputLabel value="#{firmasMB.titulo}" />
+								</p:column>
+								<p:column>
+									<p:outputLabel value="#{firmasMB.firmas.campo1}"
+										rendered="#{firmasMB.bLbl}" />
+									<p:inputText size="50" maxlength="50"
+										value="#{firmasMB.firmas.campo1}" rendered="#{firmasMB.btxt}"
+										id="campo1" onkeyup="this.value=this.value.toUpperCase();">
+
+									</p:inputText>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="R.F.C." />
+								</p:column>
+								<p:column>
+									<p:outputLabel rendered="#{firmasMB.bLbl}"
+										value="#{firmasMB.firmas.campo2}" />
+									<p:inputText id="campo2" value="#{firmasMB.firmas.campo2}"
+										onkeyup="this.value=this.value.toUpperCase();"
+										rendered="#{firmasMB.btxt}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Año" />
+								</p:column>
+								<p:column>
+									<p:outputLabel value="#{firmasMB.firmas.campo3}"
+										rendered="#{firmasMB.bLbl}" />
+									<p:inputText value="#{firmasMB.firmas.campo3}" id="campo3"
+										disabled="true" rendered="#{firmasMB.btxt}">
+										<pe:keyFilter mask="pint" />
+									</p:inputText>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+					<p:panelGrid>
+						<p:commandButton value="Modificar" id="modificar"
+							actionListener="#{firmasMB.modify}"
+							rendered="#{firmasMB.bVModificar}" icon="ui-icon-pencil"
+							disabled="#{firmasMB.bModificar}" update=":firmasForm" />
+						<p:commandButton id="salvar1" rendered="#{firmasMB.bSave}"
+							actionListener="#{firmasMB.save}" value="Salvar"
+							icon="ui-icon-disk" update=":firmasForm" />
+						<p:commandButton value="Limpiar" id="limpiar1" resetValues="true"
+							icon="ui-icon-arrowreturnthick-1-s" update=":firmasForm"
+							actionListener="#{firmasMB.clean}"
+							disabled="#{firmasMB.bLimpiar}" />
+						<p:commandButton value="Cancelar" disabled="#{firmasMB.bCancel}"
+							icon="ui-icon-circle-close" actionListener="#{firmasMB.cancel}"
+							update=":firmasForm" />
+					</p:panelGrid>
+					<p:panelGrid styleClass="col-centered">
+						<p:row>
+							<p:column style="width: 5%;" />
+							<p:column>
+								<p:outputLabel value="LEYENDA (PUESTO)" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="NOMBRE (USUARIO)" />
+							</p:column>
+						</p:row>
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="1" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL1" value="#{firmasMB.firmas.l1}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL1" value="#{firmasMB.firmas.l1}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN1" value="#{firmasMB.firmas.n1}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN1" value="#{firmasMB.firmas.n1}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="2" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL2" value="#{firmasMB.firmas.l2}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL2" value="#{firmasMB.firmas.l2}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN2" value="#{firmasMB.firmas.n2}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN2" value="#{firmasMB.firmas.n2}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="3" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL3" value="#{firmasMB.firmas.l3}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL3" value="#{firmasMB.firmas.l3}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN3" value="#{firmasMB.firmas.n3}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN3" value="#{firmasMB.firmas.n3}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<p:outputLabel value="4" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL4" value="#{firmasMB.firmas.l4}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL4" value="#{firmasMB.firmas.l4}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN4" value="#{firmasMB.firmas.n4}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN4" value="#{firmasMB.firmas.n4}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<p:outputLabel value="5" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL5" value="#{firmasMB.firmas.l5}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL5" value="#{firmasMB.firmas.l5}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN5" value="#{firmasMB.firmas.n5}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN5" value="#{firmasMB.firmas.n5}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="6" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL6" value="#{firmasMB.firmas.l6}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL6" value="#{firmasMB.firmas.l6}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN6" value="#{firmasMB.firmas.n6}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN6" value="#{firmasMB.firmas.n6}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="7" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL7" value="#{firmasMB.firmas.l7}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL7" value="#{firmasMB.firmas.l7}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN7" value="#{firmasMB.firmas.n7}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN7" value="#{firmasMB.firmas.n7}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="8" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL8" value="#{firmasMB.firmas.l8}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL8" value="#{firmasMB.firmas.l8}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN8" value="#{firmasMB.firmas.n8}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN8" value="#{firmasMB.firmas.n8}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="9" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL9" value="#{firmasMB.firmas.l9}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL9" value="#{firmasMB.firmas.l9}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN9" value="#{firmasMB.firmas.n9}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN9" value="#{firmasMB.firmas.n9}" size="50"
+									onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="10" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL10" value="#{firmasMB.firmas.l10}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL10" value="#{firmasMB.firmas.l10}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN10" value="#{firmasMB.firmas.n10}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN10" value="#{firmasMB.firmas.n10}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="11" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL11" value="#{firmasMB.firmas.l11}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL11" value="#{firmasMB.firmas.l11}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN11" value="#{firmasMB.firmas.n11}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN11" value="#{firmasMB.firmas.n11}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="12" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL12" value="#{firmasMB.firmas.l12}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL12" value="#{firmasMB.firmas.l12}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN12" value="#{firmasMB.firmas.n12}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN12" value="#{firmasMB.firmas.n12}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="13" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL13" value="#{firmasMB.firmas.l13}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL13" value="#{firmasMB.firmas.l13}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN13" value="#{firmasMB.firmas.n13}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN13" value="#{firmasMB.firmas.n13}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="14" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL14" value="#{firmasMB.firmas.l14}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL14" value="#{firmasMB.firmas.l14}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN14" value="#{firmasMB.firmas.n14}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN14" value="#{firmasMB.firmas.n14}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="15" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL15" value="#{firmasMB.firmas.l15}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL15" value="#{firmasMB.firmas.l15}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN15" value="#{firmasMB.firmas.n15}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN15" value="#{firmasMB.firmas.n15}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="16" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL16" value="#{firmasMB.firmas.l16}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL16" value="#{firmasMB.firmas.l16}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN16" value="#{firmasMB.firmas.n16}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN16" value="#{firmasMB.firmas.n16}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="17" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL17" value="#{firmasMB.firmas.l17}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL17" value="#{firmasMB.firmas.l17}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN17" value="#{firmasMB.firmas.n17}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN17" value="#{firmasMB.firmas.n17}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="18" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL18" value="#{firmasMB.firmas.l18}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL18" value="#{firmasMB.firmas.l18}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN18" value="#{firmasMB.firmas.n18}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN18" value="#{firmasMB.firmas.n18}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="19" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL19" value="#{firmasMB.firmas.l19}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL19" value="#{firmasMB.firmas.l19}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN19" value="#{firmasMB.firmas.n19}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN19" value="#{firmasMB.firmas.n19}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="20" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL20" value="#{firmasMB.firmas.l20}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL20" value="#{firmasMB.firmas.l20}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN20" value="#{firmasMB.firmas.n20}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN20" value="#{firmasMB.firmas.n20}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="21" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL21" value="#{firmasMB.firmas.l21}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL21" value="#{firmasMB.firmas.l21}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN21" value="#{firmasMB.firmas.n21}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN21" value="#{firmasMB.firmas.n21}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="22" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL22" value="#{firmasMB.firmas.l22}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL22" value="#{firmasMB.firmas.l22}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN22" value="#{firmasMB.firmas.n22}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN22" value="#{firmasMB.firmas.n22}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="23" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL23" value="#{firmasMB.firmas.l23}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL23" value="#{firmasMB.firmas.l23}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN23" value="#{firmasMB.firmas.n23}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN23" value="#{firmasMB.firmas.n23}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="24" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL24" value="#{firmasMB.firmas.l24}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL24" value="#{firmasMB.firmas.l24}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN24" value="#{firmasMB.firmas.n24}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN24" value="#{firmasMB.firmas.n24}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="25" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL25" value="#{firmasMB.firmas.l25}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL25" value="#{firmasMB.firmas.l25}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN25" value="#{firmasMB.firmas.n25}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN25" value="#{firmasMB.firmas.n25}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="26" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL26" value="#{firmasMB.firmas.l26}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL26" value="#{firmasMB.firmas.l26}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN26" value="#{firmasMB.firmas.n26}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN26" value="#{firmasMB.firmas.n26}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="27" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL27" value="#{firmasMB.firmas.l27}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL27" value="#{firmasMB.firmas.l27}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN27" value="#{firmasMB.firmas.n27}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN27" value="#{firmasMB.firmas.n27}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="28" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL28" value="#{firmasMB.firmas.l28}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL28" value="#{firmasMB.firmas.l28}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN28" value="#{firmasMB.firmas.n28}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN28" value="#{firmasMB.firmas.n28}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="29" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL29" value="#{firmasMB.firmas.l29}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL29" value="#{firmasMB.firmas.l29}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN29" value="#{firmasMB.firmas.n29}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN29" value="#{firmasMB.firmas.n29}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="30" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL30" value="#{firmasMB.firmas.l30}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL30" value="#{firmasMB.firmas.l30}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN30" value="#{firmasMB.firmas.n30}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN30" value="#{firmasMB.firmas.n30}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="31" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL31" value="#{firmasMB.firmas.l31}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL31" value="#{firmasMB.firmas.l31}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN31" value="#{firmasMB.firmas.n31}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN31" value="#{firmasMB.firmas.n31}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="32" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL32" value="#{firmasMB.firmas.l32}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL32" value="#{firmasMB.firmas.l32}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN32" value="#{firmasMB.firmas.n32}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN32" value="#{firmasMB.firmas.n32}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="33" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL33" value="#{firmasMB.firmas.l33}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL33" value="#{firmasMB.firmas.l33}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN33" value="#{firmasMB.firmas.n33}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN33" value="#{firmasMB.firmas.n33}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="34" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL34" value="#{firmasMB.firmas.l34}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL34" value="#{firmasMB.firmas.l34}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN34" value="#{firmasMB.firmas.n34}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN34" value="#{firmasMB.firmas.n34}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="35" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL35" value="#{firmasMB.firmas.l35}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL35" value="#{firmasMB.firmas.l35}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN35" value="#{firmasMB.firmas.n35}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN35" value="#{firmasMB.firmas.n35}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="36" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL36" value="#{firmasMB.firmas.l36}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL36" value="#{firmasMB.firmas.l36}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN36" value="#{firmasMB.firmas.n36}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN36" value="#{firmasMB.firmas.n36}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row rendered="#{firmasMB.firmas.idsector eq 1}">
+							<p:column>
+								<p:outputLabel value="37" />
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblL37" value="#{firmasMB.firmas.l37}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtL37" value="#{firmasMB.firmas.l37}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+							<p:column>
+								<p:outputLabel id="lblN37" value="#{firmasMB.firmas.n37}"
+									rendered="#{firmasMB.bLbl}" />
+								<p:inputText id="txtN37" value="#{firmasMB.firmas.n37}"
+									size="50" onkeyup="this.value=this.value.toUpperCase();"
+									rendered="#{firmasMB.btxt}"></p:inputText>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid>
+						<p:commandButton value="Modificar" id="modificar1"
+							actionListener="#{firmasMB.modify}"
+							rendered="#{firmasMB.bVModificar}" icon="ui-icon-pencil"
+							disabled="#{firmasMB.bModificar}" update=":firmasForm" />
+						<p:commandButton id="salvar" rendered="#{firmasMB.bSave}"
+							actionListener="#{firmasMB.save}" value="Salvar"
+							icon="ui-icon-disk" update=":firmasForm" />
+						<p:commandButton value="Limpiar" id="limpiar" resetValues="true"
+							icon="ui-icon-arrowreturnthick-1-s" update=":firmasForm"
+							actionListener="#{firmasMB.clean}"
+							disabled="#{firmasMB.bLimpiar}" />
+						<p:commandButton value="Cancelar" disabled="#{firmasMB.bCancel}"
+							icon="ui-icon-circle-close" actionListener="#{firmasMB.cancel}"
+							update=":firmasForm" />
+					</p:panelGrid>
+
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

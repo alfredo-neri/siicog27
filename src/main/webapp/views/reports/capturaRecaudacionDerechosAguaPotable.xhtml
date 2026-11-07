@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:h="http://java.sun.com/jsf/html" 
+xmlns:ui="http://java.sun.com/jsf/facelets" 
+xmlns:f="http://java.sun.com/jsf/core" 
+xmlns:p="http://primefaces.org/ui" 
+xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<h:body>
+	    <ui:composition template="/WEB-INF/layout/layout.xhtml">
+	        <ui:define name="content">
+	            <script>
+	                $(document).ready(() => {
+	                    $(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align', 'center');
+	                    
+	                    /**
+	                	 * POSICIONA EL FOCUS EN EL ELEMENTO RECIBIDO. 
+	                	 * @param id
+	                	 * @returns
+	                	 */
+	                	focusEl = function(id){
+	                		if(id == '') return;
+	                		let el = $(PrimeFaces.escapeClientId(id));
+	                		let isFocusable = $(el).is(':focusable');
+	                		if(!isFocusable){
+	                			//search for focusable inside childrens
+	                			el = $(PrimeFaces.escapeClientId(id)+' :focusable');
+	                		}
+	                		$(el).focus(250);
+	                		//check if is focused
+	                		if(!$(el).hasClass('ui-state-focus')){
+	                			$(el).focus(250);
+	                		}
+	                	}	                    
+	                })
+	            </script>
+	            <style>
+	                .input-4 input{
+                        width: 4em;
+	                }
+	                .input-5 input{
+                        width: 5em;
+	                }
+	                .input-6 input{
+                        width: 6em;
+	                }
+	                .input-7 input{
+                        width: 7em;
+	                }
+	                .input-8 input{
+                        width: 8em;
+	                }
+	                .input-9 input{
+                        width: 9em;
+	                }
+	                .input-10 input{
+                        width: 10em;
+	                }
+	                .input-11 input{
+                        width: 11em;
+	                }
+	                .input-12 input{
+                        width: 12em;
+	                }
+	                .input-14 input{
+                        width: 14em;
+	                }
+	                .input-15 input{
+                        width: 15em;
+	                }
+	                .input-17 input{
+                        width: 17em;
+	                }
+	                .ui-panelgrid-cell {
+	                    padding: .2em !important;
+	                }
+	                
+	                span.calendar-small input {
+	                    width: 6em;
+	                }
+	                
+	                .calendar-small {
+	                    padding-right: 1em;
+	                }
+	                
+	                .headerBorder .ui-panel-titlebar{
+		         	    margin-top: -33px;
+					    background-color: transparent !important;
+					    border: none;
+					    text-align: center;
+					    font-size: 15px;
+			         }
+			         .headerTitle .ui-panel-titlebar{
+		         	    margin-top: -23px;
+					    background-color: transparent !important;
+					    border: none;
+					    text-align: center;
+					    font-size: 15px;
+			         }
+			         .headerBorder .ui-panel-title{
+			         	background-color: white;
+			         }
+			       	input[type=number]::-webkit-inner-spin-button, 
+					input[type=number]::-webkit-outer-spin-button { 
+					  -webkit-appearance: none; 
+					  margin: 0; 
+					}
+	            </style>
+	            <h:form id="form1" style="display: inline-block; margin-left: auto; margin-right: auto; ">
+	                <p:growl id="growlReportador" showDetail="true" sticky="true" autoUpdate="true"></p:growl>
+	                <p:panel id="panelReporte" header="Recaudación por Derechos de Agua Potable" style="height: 57em;" styleClass="green shadow-panel container">
+						<p:dataGrid id="dataGrid" var="entity"
+							value="#{capturaRecaudacionDerechosAguaPotableMB.masterList}"
+							styleClass="et_datatable col-md-12 no-border"
+							emptyMessage="Cargando información..." paginator="true" rows="1"
+							columns="1"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							widgetVar="dataGrid" paginatorPosition="bottom"
+							rowIndexVar="rowIndexCaptura">
+							
+							<p:ajax event="page" listener="#{capturaRecaudacionDerechosAguaPotableMB.cambiarPagina}"
+								process="dataGrid"
+								update="dataGrid form1:pnlBotonesCRUD" />
+								
+							<div class="row">
+								<div class="col-12 col-xs-12 col-sm-12 col-12-md col-lg-12 col-xs-12" style="text-align:center; text-align: -moz-center;" >
+								<p:panelGrid columns="2" styleClass="ui-noborder" style="height: 3em;">
+									<h:outputText value="Mes:"/>
+									<h:panelGroup style="width:4em;display:block;">
+										<h:outputText value="#{entity.mes}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:4em;display: block;"/>
+										<p:selectOneMenu editable="false" value="#{entity.mes}" styleClass="input-4" rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}"  disabled="#{entity.id != null}">
+											<f:selectItem itemValue="1" itemLabel="01" />
+											<f:selectItem itemValue="2" itemLabel="02" />
+											<f:selectItem itemValue="3" itemLabel="03" />
+											<f:selectItem itemValue="4" itemLabel="04" />
+											<f:selectItem itemValue="5" itemLabel="05" />
+											<f:selectItem itemValue="6" itemLabel="06" />
+											<f:selectItem itemValue="7" itemLabel="07" />
+											<f:selectItem itemValue="8" itemLabel="08" />
+											<f:selectItem itemValue="9" itemLabel="09" />
+											<f:selectItem itemValue="10" itemLabel="10" />
+											<f:selectItem itemValue="11" itemLabel="11" />
+											<f:selectItem itemValue="12" itemLabel="12" />
+										</p:selectOneMenu>
+									</h:panelGroup>
+								</p:panelGrid>
+								<h:panelGroup id="panel-filtros">
+									<p:panelGrid columns="2">
+									
+									<p:panelGrid styleClass="ui-noborder">
+											<h:outputText value="Ingreso Mensual del Año Actual" style="margin-top:1em;margin-left: 4em;display: inline-block;height: 2.8em;"/>
+										<p:row style="height: 3em;border-top: 1px solid #dddddd;">
+											<p:column>
+												<h:outputText value="No. de Tomas M:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block; text-align: left;">
+													<h:outputText value="#{entity.ntomasmen}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:13.8em;display: block;"/>
+													<p:inputText  value="#{entity.ntomasmen}" styleClass="" style="width:13.8em;" decimalPlaces="0"
+														decimalSeparator="" thousandSeparator="" minValue="0" maxlength="9"
+														maxValue="999999999" rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+														<pe:keyFilter mask="pint" />
+													</p:inputText>
+												</h:panelGroup>
+											</p:column>
+										</p:row>	
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Servicios de Agua:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.sagua}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.sagua}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>	
+										<p:row style="height: 3em;">		
+											<p:column>
+												<h:outputText value="Conexiones y Reconexiones:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.conexr}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.conexr}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>	
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Alcantarillado:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.alcant}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.alcant}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Drenaje:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.drenaje}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.drenaje}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Recargos:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.recargos}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.recargos}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Multas:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.multas}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.multas}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Gastos de Ejecucion:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.gtosejec}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.gtosejec}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Otros:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.otros}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.otros}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Indemnizaciones:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.indemni}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.indemni}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Recaudación Mensual"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.rdelmes}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.rdelmes}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Recaudación Acumulada:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.ralmes}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.ralmes}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid styleClass="ui-noborder">
+										<h:outputText value="Ingreso de Años Anteriores" style="margin-top:1em;margin-left: 9em;display: inline-block;height: 2.8em;"/>
+																				<p:row style="height: 3em;border-top: 1px solid #dddddd;">
+											<p:column>
+												<h:outputText value="No. de Tomas Antes:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block; text-align: left;">
+													<h:outputText value="#{entity.tomasantes}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:13.8em;display: block;"/>
+													<p:inputText  value="#{entity.tomasantes}" styleClass="" style="width:13.8em;" decimalPlaces="0"
+														decimalSeparator="" thousandSeparator="" minValue="0" maxlength="9"
+														maxValue="999999999" rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+														<pe:keyFilter mask="pint" />
+													</p:inputText>
+												</h:panelGroup>
+											</p:column>
+										</p:row>	
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Servicios de Agua:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.saguaa}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.saguaa}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>	
+										<p:row style="height: 3em;">		
+											<p:column>
+												<h:outputText value="Conexiones y Reconexiones:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.conexra}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.conexra}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>	
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Alcantarillado:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.alcanta}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.alcanta}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Drenaje:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.drenajea}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.drenajea}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Recargos:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.recargosa}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.recargosa}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Multas:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.multasa}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.multasa}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Gastos de Ejecucion:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.gtosejeca}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.gtosejeca}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Otros:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.otrosa}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.otrosa}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Indemnizaciones:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.indemnia}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.indemnia}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Recaudación"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.rdeaa}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.rdeaa}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+										<p:row style="height: 3em;">	
+											<p:column>
+												<h:outputText value="Recaudación Acumulada:"/>
+											</p:column>
+											
+											<p:column>
+												<h:panelGroup style="width:14em;display:block;">
+													<h:outputText value="#{entity.racumaa}" rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}" style="width:12em;display: block;"><f:convertNumber pattern="¤#,##0.00" currencySymbol=""/></h:outputText>
+													<pe:inputNumber value="#{entity.racumaa}" maxlength="9" style="width:12em;"
+														decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxValue="999999999"
+														rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}">
+													</pe:inputNumber>
+												</h:panelGroup>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									</p:panelGrid>
+								</h:panelGroup>	
+								</div>
+							</div>
+						</p:dataGrid>
+						<h:panelGroup id="pnlBotonesCRUD">
+									<p:commandButton value="Salvar" icon="ui-icon-disk"
+										style="padding: 5px; width:100px" action="#{capturaRecaudacionDerechosAguaPotableMB.salvar}"
+										update="dataGrid pnlBotonesCRUD" rendered="#{capturaRecaudacionDerechosAguaPotableMB.editando}"/>
+									<p:commandButton value="Modificar" icon="ui-icon-tag"
+										style="padding: 5px; width:100px" action="#{capturaRecaudacionDerechosAguaPotableMB.modificar}"
+										update="dataGrid pnlBotonesCRUD" disabled="#{capturaRecaudacionDerechosAguaPotableMB.selected.id == null}" 
+										rendered="#{!capturaRecaudacionDerechosAguaPotableMB.editando}"/>
+									<p:commandButton value="Limpiar" actionListener="#{capturaRecaudacionDerechosAguaPotableMB.reset}"
+										style="padding: 5px; width:100px" disabled="#{!capturaRecaudacionDerechosAguaPotableMB.editando}"
+										update="dataGrid pnlBotonesCRUD" icon="ui-icon-arrowreturnthick-1-n"/>
+									<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+										style="padding: 5px; width:100px" action="#{capturaRecaudacionDerechosAguaPotableMB.adicionar}"
+										update="dataGrid pnlBotonesCRUD" disabled="#{capturaRecaudacionDerechosAguaPotableMB.editando}"/>
+									<p:commandButton value="Borrar" icon="ui-icon-trash"
+										style="padding: 5px; width:100px"
+										onclick="PF('confirmFileDeleteMeta').show();" 
+										disabled="#{capturaRecaudacionDerechosAguaPotableMB.selected.id == null or capturaRecaudacionDerechosAguaPotableMB.editando}"/>
+									<p:commandButton value="Cancelar " icon="ui-icon-circle-close"
+										style="padding: 5px; width:100px" action="#{capturaRecaudacionDerechosAguaPotableMB.cancelar}"
+										disabled="#{!capturaRecaudacionDerechosAguaPotableMB.editando}"
+										update="dataGrid pnlBotonesCRUD" />
+								</h:panelGroup>
+	                </p:panel>
+	
+	                <pe:blockUI widgetVar="blockUIWidget" centerX="false">
+	                    <h:panelGrid columns="2">
+	                        <h:graphicImage value="indice.png" style="margin-right: 12px; vertical-align: middle;" />
+	                        <h:outputText value="Por favor espere..." style="white-space: nowrap;" />
+	                    </h:panelGrid>
+	                </pe:blockUI>
+			        <p:confirmDialog widgetVar="confirmFileDeleteMeta"
+						message="Desea eliminar el registro actual?"
+						header="Confirmación" severity="alert">
+						<p:commandButton value="SI" label="SI"
+							style="margin-top:10px;padding:5px;"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" 
+							actionListener="#{capturaRecaudacionDerechosAguaPotableMB.delete}" 
+							oncomplete="PF('confirmFileDeleteMeta').hide();"
+							update="dataGrid pnlBotonesCRUD"/>
+						<p:commandButton value="NO" label="NO"
+							style="margin-top:10px;padding:5px;"
+							onclick="PF('confirmFileDeleteMeta').hide();"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+					</p:confirmDialog>
+	            </h:form>
+	        </ui:define>
+	    </ui:composition>	    
+	</h:body>
+
+</html>

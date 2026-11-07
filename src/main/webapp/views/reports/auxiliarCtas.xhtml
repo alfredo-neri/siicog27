@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Auxiliar de Cuentas"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="12" styleClass="col-centered ui-noborder">
+						<div class="row">
+							<div class="col-md-2" />
+							<h:panelGrid columns="9" id="panel-filtros">
+								<h:panelGrid columns="1" columnClasses="text-left">
+									<h:outputText value="Cuenta" for="CuentaInput" />
+									<p:inputText id="CuentaInput" style="width: 4em;"
+										value="#{auxiliarCtasMB.cuenta}" maxlength="4" required="true"
+										requiredMessage="Ingrese la Cuenta">
+										<p:ajax event="change" process="@this form1:CuentaInput" />
+									</p:inputText>
+								</h:panelGrid>
+								<h:panelGrid columns="1" columnClasses="text-left">
+									<h:outputText value="Scta" for="SctaInput" />
+									<p:inputText id="SctaInput" style="width: 9em;"
+										value="#{auxiliarCtasMB.scta}" maxlength="10">
+										<p:ajax event="change" listener="#{auxiliarCtasMB.leftPad}"
+											update="form1:panel-filtros" />
+									</p:inputText>
+								</h:panelGrid>
+								<h:panelGrid columns="1" columnClasses="text-left">
+									<h:outputText value="Sscta" for="SsctaInput" />
+									<p:inputText id="SsctaInput" style="width: 14em;"
+										value="#{auxiliarCtasMB.sscta}" maxlength="15">
+										<p:ajax event="change" listener="#{auxiliarCtasMB.leftPad}"
+											update="form1:panel-filtros" />
+									</p:inputText>
+								</h:panelGrid>
+								<h:panelGrid columns="1" columnClasses="text-left">
+									<h:outputText value="Ssscta" for="SssctaInput" />
+									<p:inputText id="SssctaInput" style="width: 5em;"
+										value="#{auxiliarCtasMB.ssscta}" maxlength="4">
+										<p:ajax event="change" listener="#{auxiliarCtasMB.leftPad}"
+											update="form1:panel-filtros" />
+									</p:inputText>
+								</h:panelGrid>
+								<h:panelGrid columns="1" columnClasses="text-left">
+									<h:outputText value="Sssscta" for="SsssctaInput" />
+									<p:inputText id="SsssctaInput" style="width: 5em;"
+										value="#{auxiliarCtasMB.sssscta}" maxlength="3">
+										<p:ajax event="change" listener="#{auxiliarCtasMB.leftPad}"
+											update="form1:panel-filtros" />
+									</p:inputText>
+								</h:panelGrid>
+								<h:panelGrid columns="1" columnClasses="text-left">
+									<h:outputText value="Mes I." for="mesInputOri" />
+									<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+										value="#{auxiliarCtasMB.mes}">
+										<f:selectItems value="#{auxiliarCtasMB.listMeses}" var="m"
+											itemValue="#{m.periodo}" itemLabel="#{m.periodo}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+								<h:panelGrid columns="1" columnClasses="text-left">
+									<h:outputText value="Mes F." for="mesInputOri2" />
+									<p:selectOneMenu id="mesInputOri2" size="18" editable="false"
+										value="#{auxiliarCtasMB.mesF}">
+										<f:selectItems value="#{auxiliarCtasMB.listMeses}" var="m"
+											itemValue="#{m.periodo}" itemLabel="#{m.periodo}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+							</h:panelGrid>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{auxiliarCtasMB.fileXls}" />
+							</h:commandLink>
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								styleClass="btn btn-default" title="TXT" value="Correcto">
+								<p:fileDownload value="#{auxiliarCtasMB.filePdf}" />
+							</h:commandLink>
+						</div>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{auxiliarCtasMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{auxiliarCtasMB.uuid}&amp;filename=#{auxiliarCtasMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

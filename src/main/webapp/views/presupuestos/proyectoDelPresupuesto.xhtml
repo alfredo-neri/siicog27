@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1" enctype="multipart/form-data">
+				<p:growl id="msgs" showDetail="true" />
+
+				<p:panel id="panel" header="Proyecto del Presupuesto de Egresos"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel">
+					<p:fieldset style="margin-bottom:20px">
+						<p:panel id="head" styleClass="md-4 row-centered ui-noborder">
+
+							<p:commandButton value="Cargar Archivo"
+								rendered="#{proyectoPresupuestoEgresosMB.objDisabled}"
+								onclick="PF('wingetPasswor').show(); resetPass();" />
+							<p:fileUpload style="width:50%; display: inline-block;"
+								fileUploadListener="#{proyectoPresupuestoEgresosMB.handleFileUpload}"
+								mode="advanced" dragDropSupport="true"
+								update="msgs, :form1:head, :form1:object"
+								rendered="#{!proyectoPresupuestoEgresosMB.objDisabled}"
+								sizeLimit="10000000" fileLimit="3" uploadLabel="Cargar"
+								cancelLabel="Calcelar" label="Selecionar"
+								invalidFileMessage="Solo se permiten archivos CSV"
+								allowTypes="/(\.|\/)(csv)$/"
+								onstart="PF('blockUIWidget').block();"
+								oncomplete="PF('blockUIWidget').unblock(); refreshData();" />
+						</p:panel>
+
+						<p:dataTable id="object" var="objects" resizableColumns="true"
+							value="#{proyectoPresupuestoEgresosMB.anteproyectoList}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+							rowsPerPageTemplate="15,30,50" rows="15" paginator="true">
+
+							<f:facet name="header">
+								<p:commandButton id="toggler" type="button" value="Columnas"
+									style="float:center" />
+								<p:columnToggler datasource="object" trigger="toggler" />
+							</f:facet>
+
+							<p:column headerText="Clave">
+								<h:outputText value="#{objects.clave}" />
+							</p:column>
+
+							<p:column headerText="Programa">
+								<h:outputText value="#{objects.programa}" />
+							</p:column>
+
+							<p:column headerText="Partida">
+								<h:outputText value="#{objects.partida}" />
+							</p:column>
+
+							<p:column headerText="Enero" width="200px">
+								<h:outputText value="#{objects.autorizado1}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Febrero">
+								<h:outputText value="#{objects.autorizado2}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Marzo">
+								<h:outputText value="#{objects.autorizado3}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Abril">
+								<h:outputText value="#{objects.autorizado4}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Mayo">
+								<h:outputText value="#{objects.autorizado5}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Junio">
+								<h:outputText value="#{objects.autorizado6}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Julio">
+								<h:outputText value="#{objects.autorizado7}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Agosto">
+								<h:outputText value="#{objects.autorizado8}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Septiembre">
+								<h:outputText value="#{objects.autorizado9}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Octubre">
+								<h:outputText value="#{objects.autorizado10}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Noviembre">
+								<h:outputText value="#{objects.autorizado11}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Diciembre">
+								<h:outputText value="#{objects.autorizado12}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Total">
+								<h:outputText value="#{objects.autorizado13}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										maxIntegerDigits="15" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
+
+					</p:fieldset>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+				</p:panel>
+				<p:dialog id="panelValida" widgetVar="wingetPasswor"
+					header="Valida Password" modal="true" styleClass="green">
+					<p:panelGrid id="pgridpass" columns="2"
+						styleClass="green col-md-8 col-centered row-centered ui-noborder">
+						<h:outputText value="Password Administrador" />
+						<h:inputSecret id="validatePass"
+							value="#{proyectoPresupuestoEgresosMB.validaPass}"
+							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;} if(event.keyCode == 13){return false;}" />
+						<h:outputText value="" />
+						<p:commandButton value="Validar"
+							update=":form1:msgs, :form1:object, :form1:head"
+							actionListener="#{proyectoPresupuestoEgresosMB.validaPassword}"
+							oncomplete="PF('wingetPasswor').hide();document.getElementById('form1:validatePass').value=''; resetPass();" />
+					</p:panelGrid>
+
+				</p:dialog>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<script type="text/javascript">
+        function showStatus() {
+            PF('statusDialog').show();
+        }
+        function hideStatus() {
+            PF('statusDialog').hide();
+        }
+    </script>
+
+
+
+			<p:panel id="pCargaAutomatica"
+				header="Tabulador de sueldos Carga Automatica"
+				styleClass="green col-md-4 col-centered row-centered shadow-panel"
+				widgetVar="pCargaAutomatica">
+				<h:form id="form1" enctype="multipart/form-data">
+
+
+					<p:fileUpload
+						fileUploadListener="#{uploadFileMunicipalMB.handleFileUpload}"
+						mode="advanced" dragDropSupport="false" update="messages"
+						sizeLimit="100000" allowTypes="/(sueldos.)(csv)$/" accept=".csv"
+						label="Elegir" uploadLabel="Cargar" cancelLabel="Cancelar"
+						invalidFileMessage="Archivo incorrecto, solo permite archivos con el nombre: sueldos y la extensi&oacute;n .csv'">
+						<p:commandButton value="Borrar Masivamente"
+							actionListener="#{uploadFileMunicipalMB.borrar}"
+							update=":form1:messages" rendered="#{uploadFileMunicipalMB.userDetails.role.equalsIgnoreCase('ROL ADMINISTRADOR') }"/>
+					</p:fileUpload>
+					<p:growl id="messages" showDetail="true" />
+
+
+				</h:form>
+			</p:panel>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

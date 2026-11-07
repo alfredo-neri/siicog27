@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:remoteCommand name="updateObject" update=":form1:objects" />
+
+				<p:remoteCommand name="onload"
+					action="#{salaryScaleManualMB.onPageLoad}" autoRun="true"
+					update=":form1:display_1, :form1:objects" />
+
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel" header="B&uacute;squeda Tabulador de Sueldos"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<br />
+					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+
+						<h:outputText value="CvePuesto" for="keyInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px;" />
+						<p:inputText id="keyInput" styleClass="form-control"
+							value="#{salaryScaleManualMB.beanFind.cvepuesto}" maxlength="25"
+							validatorMessage="CvePuesto solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex
+								pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+								for="keyInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{salaryScaleManualMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Puesto Funcional" for="nameInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="nameInput" styleClass="form-control"
+							value="#{salaryScaleManualMB.beanFind.nompuesto}"
+							style="margin-top: 10px;" maxlength="150"
+							validatorMessage="Puesto Funcional solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex
+								pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+								for="nameInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{salaryScaleManualMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<p:outputPanel layout="block" style="text-align:center">
+
+							<br />
+
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								update=":form1:messagesEdit, :form1:objects"
+								actionListener="#{salaryScaleManualMB.findValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+							<p:commandButton value="Limpiar"
+								style="padding: 5px; margin-left: 15px;"
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+								actionListener="#{salaryScaleManualMB.findAllValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:panel>
+
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;"
+					styleClass="col-centered row-centered">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+						actionListener="#{salaryScaleManualMB.insertRow}"
+						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()}); 
+						$(function(){PrimeFaces.focus('objects:clvdgm');});"
+						onmousedown="jQuery('.ui-paginator-first').click();" />
+				</p:panel>
+
+				<p:focus context="objects:cvepuesto" id="focusTable" />
+
+				<p:dataTable id="objects" var="object"
+					value="#{salaryScaleManualMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10" rowsPerPageTemplate="5,10,15,20"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}"
+					selection="#{salaryScaleManualMB.rowSelected}"
+					widgetVar="sueldosWdg">
+
+					<f:facet name="header">Tabulador de Sueldos</f:facet>
+					<p:ajax event="rowEditInit"
+						listener="#{salaryScaleManualMB.onInitRowEdit}"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});
+					$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden')});" />
+
+					<p:ajax event="rowEdit" listener="#{salaryScaleManualMB.onRowEdit}"
+						update=":form1:messagesEdit, :form1:objects, " immediate="true"
+						onstart="PF('blockUIWidget').block();"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						 PF('blockUIWidget').unblock(); " />
+					<p:ajax event="rowEditCancel"
+						listener="#{salaryScaleManualMB.onRowCancel}"
+						update=":form1:messagesEdit, :form1:objects"
+						oncomplete="updateObject()"
+						onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+
+					<p:column headerText="CvePuesto" exportable="false"
+						style="width:22%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.cvepuesto}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="cvepuesto" value="#{object.cvepuesto}"
+									style="width:100%" maxlength="25" required="true"
+									requiredMessage="CvePuesto es requerido"
+									onkeyup="this.value=this.value.toUpperCase();"
+									validatorMessage="CvePuesto solo permite valores num&eacute;ricos sin espacios">
+
+									<f:validateRegex pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ])+$"
+										for="cvepuesto" />
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Puesto Funcional" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nompuesto}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nompuesto" value="#{object.nompuesto}"
+									style="width:100%" maxlength="150" required="true"
+									requiredMessage="Puesto Funcional es requerido"
+									onkeyup="this.value=this.value.toUpperCase();"
+									validatorMessage="Puesto Funcional solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex
+										pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+										for="nompuesto" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nivel" exportable="false" style="width:20%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nivel}">
+								</h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nivel" value="#{object.nivel}"
+									style="width:100%" maxlength="15"
+									onkeyup="this.value=this.value.toUpperCase();"
+									validatorMessage="Nivel solo permite valores num&eacute;ricos">
+									<f:validateRegex
+										pattern="s*([0-9a-zA-ZñÑ\-áéíóúÁÉÍÓÚ.^\/^\,^\s])+(\(s*([?0-9a-zA-ZñÑ\-áéíóúÁÉÍÓÚ.^\/^\,^\s])+\))?(s*([0-9a-zA-ZñÑ\-_áéíóúÁÉÍÓÚ.^\/^\,^\s])+)?"
+										for="nivel" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Confianza" exportable="false"
+						style="width:23%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nconfianza}" style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nconfianza" value="#{object.nconfianza}"
+									style="width:100%" maxlength="7"
+									validatorMessage="Confianza solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="#0" />
+									<pe:keyFilter for="nconfianza" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Sindicalizados" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nsindicalizados}"
+									style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nsindicalizados"
+									value="#{object.nsindicalizados}" style="width:100%"
+									maxlength="7"
+									validatorMessage="Sindicalizados solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="#0" />
+									<pe:keyFilter for="nsindicalizados" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Eventual" exportable="false"
+						style="width:27%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.neventual}" style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="neventual" value="#{object.neventual}"
+									style="width:100%" maxlength="7"
+									validatorMessage="Eventual solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="#0" />
+									<pe:keyFilter for="neventual" mask="pint"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Dietas" exportable="false" style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.dietas}" style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="dietas" value="#{object.dietas}"
+									style="width:100%" maxlength="12"
+									converterMessage="Dietas solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="dietas" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Sdo Base" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.sbase}" style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="sbase" value="#{object.sbase}"
+									style="width:100%" maxlength="12"
+									converterMessage="Sdo Base solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="sbase" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="SBaseEven" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.sbaseeven}" style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="sbaseeven" value="#{object.sbaseeven}"
+									style="width:100%" maxlength="12"
+									converterMessage="SBaseEven solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="sbaseeven" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Compensaci&oacute;n" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.compensacion}"
+									style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="compensacion" value="#{object.compensacion}"
+									style="width:100%" maxlength="12"
+									converterMessage="Compensaci&oacute;n solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="compensacion" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Gratificaci&oacute;n" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.gratificacion}"
+									style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="gratificacion" value="#{object.gratificacion}"
+									style="width:100%" maxlength="12"
+									converterMessage="Gratificaci&oacute;n solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="gratificacion" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Otras Percep" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.opercepciones}"
+									style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="opercepciones" value="#{object.opercepciones}"
+									style="width:100%" maxlength="12"
+									converterMessage="Otras Percep solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="opercepciones" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Aguinaldo" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.aguinaldo}" style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="aguinaldo" value="#{object.aguinaldo}"
+									style="width:100%" maxlength="12"
+									converterMessage="Aguinaldo solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="aguinaldo" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Aguinaldo Even" exportable="false"
+						style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.aguinaldoeven}"
+									style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="aguinaldoeven" value="#{object.aguinaldoeven}"
+									style="width:100%" maxlength="12"
+									converterMessage="Aguinaldo Even solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="aguinaldoeven" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="PrimaV" exportable="false" style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.pv}" style="float:right;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="pv" value="#{object.pv}" style="width:100%"
+									maxlength="12"
+									converterMessage="PrimaV Even solo permite valores num&eacute;ricos">
+									<f:convertNumber pattern="###,###,###0.00" />
+									<pe:keyFilter for="pv" mask="pnum"></pe:keyFilter>
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Borrar" style="width:15%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{salaryScaleManualMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:15%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+				</p:dataTable>
+				<p:commandButton id="hideButton3" onclick="updateObject();"
+					update=":form1:messagesEdit, :form1:objects"
+					style="visibility: hidden;" immediate="true" process="@parent" />
+
+				<br />
+				<br />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{salaryScaleManualMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" sticky="true" />
+				<p:panel
+					styleClass="green col-md-5 col-centered row-centered shadow-panel"
+					header="Indicadores Trimestral de Tiempo de Respuesta a Emergencias en Seguridad Pública - Captura Automática">
+					<p:panelGrid id="cargar" styleClass="col-centered row-centered ">
+						<h:outputText
+							value="Si existen datos serán eliminados del trimestre seleccionado"
+							style="color:red" />
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Trimestre:" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu
+									value="#{reporte108CargaAutomaticaMB.trimestre}" id="trimestre">
+									<f:selectItem itemValue="1" itemLabel="01" />
+									<f:selectItem itemValue="2" itemLabel="02" />
+									<f:selectItem itemValue="3" itemLabel="03" />
+									<f:selectItem itemValue="4" itemLabel="04" />
+									<p:ajax event="change" update="trimestre" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="2">
+								<p:fileUpload id="csv"
+									fileUploadListener="#{reporte108CargaAutomaticaMB.handleFileUpload}"
+									mode="advanced" dragDropSupport="false" update=":form1:msgs"
+									sizeLimit="100000" allowTypes="/(\.|\/)(csv)$/" accept=".csv"
+									label="Elegir" uploadLabel="Cargar" cancelLabel="Cancelar"
+									invalidFileMessage="Archivo incorrecto, solo permite archivos .csv'">
+
+								</p:fileUpload>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

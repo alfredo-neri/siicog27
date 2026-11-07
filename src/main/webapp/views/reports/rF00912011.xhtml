@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Estado de Avance Presupuestal de Egresos Por Secretaría"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="6" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Mes: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{rF00912011MB.mes}">
+							<f:selectItems value="#{rF00912011MB.listMes}" var="meses"
+								itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+						</p:selectOneMenu>
+						<h:outputText value="Secretaría: " for="idSecretaria" />
+						<p:selectOneMenu id="idSecretaria" size="18" editable="false"
+							value="#{rF00912011MB.secretaria}">
+							<f:selectItems value="#{rF00912011MB.listCatdep}" var="secre"
+								itemValue="#{secre.clvdep}" itemLabel="#{secre.clvdep}" />
+						</p:selectOneMenu>
+
+
+
+
+
+
+						<!-- <p:panelGrid columns="4" styleClass="ui-noborder">
+
+							<h:commandLink  onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" " />
+								<p:fileDownload value="#{rF00912011MB.fileXls}" />
+							</h:commandLink>
+							
+							<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT" >
+										<p:graphicImage value="txt.png" width="24" " />
+										<p:fileDownload value="#{rF00912011MB.fileTxt}"/>
+									</h:commandLink> -->
+
+						<!-- 									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="csv.png" width="24" />
+										<p:fileDownload value="#{rF00912011MB.fileCsv}" />
+									</h:commandLink>
+									
+									
+									
+									 -->
+						<p:commandButton value="Vista Previa" id="preView"
+							actionListener="#{rF00912011MB.preView}" icon="ui-icon-zoomout"
+							update=":form1:preViewTxt" onclick="PF('preViewTxtWg').show();" />
+						<p:commandButton value="Correcto" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							icon="ui-icon-arrowthick-1-s"
+							actionListener="#{rF00912011MB.downLoadFile}">
+							<p:fileDownload value="#{rF00912011MB.fileTxt}" />
+						</p:commandButton>
+
+						<!--  <p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF00912011MB.createFilePdfInline}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton> 
+ -->
+
+					</p:panelGrid>
+
+
+					<!-- 
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{rF00912011MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{rF00912011MB.uuid}&amp;filename=#{rF00912011MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+ -->
+					<p:panelGrid>
+						<p:outputLabel rendered="#{rF00912011MB.bPreView}"
+							style="max-height: 400px; min-height: 400px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="270" id="preViewTxt"
+								style="font-family: monospace; font-size: 8pt;"
+								widgetVar="preViewTxtWg" rendered="#{rF00912011MB.bPreView}"
+								autoResize="true" readonly="true"
+								value="#{rF00912011MB.txtPreview}" />
+						</p:outputLabel>
+						<!-- <div id="divpreViewTxt"
+							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+
+						</div> -->
+					</p:panelGrid>
+				</p:panel>
+				<!-- <pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI> -->
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

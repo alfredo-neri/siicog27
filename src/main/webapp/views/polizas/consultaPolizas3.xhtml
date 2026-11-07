@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<f:metadata>
+					<f:viewAction action="#{polizaMantenimientoMB2.checkF5}"
+						onPostBack="true" />
+				</f:metadata>
+				<p:panel id="panel" header="Consulta de Polizas"
+					styleClass="green col-md-14 col-centered row-centered shadow-panel">
+					<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+					<p:focus context="objects" id="focusTable" />
+
+					<p:remoteCommand name="zeroCH"
+						actionListener="#{polizaMantenimientoMB2.defaultZero}"
+						update=":form1:objects" />
+					
+					<p:remoteCommand name="findAccName"
+						update=":form1:panel, :form1:objects"
+						actionListener="#{polizaMantenimientoMB2.findAccName}" />
+					<p:remoteCommand name="refresh" update="@form" />
+
+					<p:panelGrid id="pgrid1"
+						styleClass="green row-centered shadow-panel" style="width:100%;">
+						<p:row>
+							<p:column style="text-align: center;">
+								<h:outputText value="A&ntilde;o" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Tipo" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Mes" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Numero" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Fecha" />
+							</p:column>
+							<p:column colspan="2" style="text-align: center;">
+								<h:outputText value="Status" />
+							</p:column>
+							<p:column colspan="4" style="text-align: center;">
+								<h:outputText value="Concepto" />
+							</p:column>
+							<p:column>
+								<h:outputText value="Captur&oacute;:" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{polizaMantenimientoMB2.polien.cappol}"
+									id="cappol" size="10" maxlength="10" disabled="true" />
+							</p:column>
+							<p:column>
+								<h:outputText value="Capturando" />
+							</p:column>
+							<p:column>
+								<h:outputText
+									value="#{polizaMantenimientoMB2.userDetails.username}"
+									id="iduser" size="10" maxlength="10" disabled="true" />
+							</p:column>
+							<p:column>
+
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="#{polizaMantenimientoMB2.year}" id="year" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="idPomantenimiento"
+									value="#{polizaMantenimientoMB2.polien.tippol}">
+									<f:selectItems value="#{polizaMantenimientoMB2.lisCattpo}"
+										var="po" itemValue="#{po.tippol}" itemLabel="#{po.tippol}" />
+									<p:ajax event="change" update="idPomantenimiento"></p:ajax>
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="selectmespoliza"
+									value="#{polizaMantenimientoMB2.polien.mespol}" required="true">
+									<f:selectItems value="#{polizaMantenimientoMB2.listMeses}"
+										var="m" itemValue="#{m.mes}" itemLabel="#{m.mes}" />
+									<p:ajax event="change" update="selectmespoliza, messagesEdit"></p:ajax>
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<h:inputText value="#{polizaMantenimientoMB2.polien.conpol}"
+									id="lisconpol" size="4" maxlength="4"
+									onkeypress="if (event.keyCode == 13) {return false; }"
+									onchange="document.getElementById('form1:findpoliza').click();"
+									required="true"
+									converterMessage="Permite solo números mayores a cero"
+									validatorMessage="Permite solo números mayores a cero"
+									requiredMessage="Permite solo números mayores a cero">
+									<pe:keyFilter for="lisconpol" mask="pint"></pe:keyFilter>
+
+									<f:convertNumber pattern="0000" />
+
+
+								</h:inputText>
+							</p:column>
+
+							<p:column>
+
+								<p:calendar id="fecpol"
+									value="#{polizaMantenimientoMB2.polien.fecpol}" maxlength="10"
+									locale="es" size="10" pattern="dd/MM/yyyy" disabled="true"
+									maxdate="#{polizaMantenimientoMB2.maxDate}"
+									mindate="#{polizaMantenimientoMB2.minDate}">
+									<p:ajax event="dateSelect"
+										listener="#{polizaMantenimientoMB2.onDateSelect}"
+										update=":form1:fecpol"
+										oncomplete="PF('saveConfirmDateWdt').show();" />
+								</p:calendar>
+							</p:column>
+							<p:column>
+								<h:inputText value="#{polizaMantenimientoMB2.polien.stapol}"
+									id="stapol" size="1" maxlength="1" disabled="true" />
+							</p:column>
+							<p:column>
+								<h:inputText value="#{polizaMantenimientoMB2.polien.staafe}"
+									id="staafe" size="1" maxlength="1" disabled="true" />
+							</p:column>
+
+							<p:column rowspan="2" colspan="4">
+								<h:inputTextarea
+									value="#{polizaMantenimientoMB2.polien.polclv1}" rows="1"
+									id="concepto" cols="50" disabled="true">
+									<p:ajax event="blur" oncomplete="PF('saveConfirmWdt').show();"></p:ajax>
+								</h:inputTextarea>
+							</p:column>
+							<p:column>
+
+							</p:column>
+							<p:column>
+								<p:commandButton value="Buscar" id="findpoliza"
+									actionListener="#{polizaMantenimientoMB2.findPolice}"
+									update=":form1:panel, :form1:objects" icon="ui-icon-search" />
+							</p:column>
+							<p:column colspan="3">
+								<p:commandButton value="Primero" id="primero"
+									actionListener="#{polizaMantenimientoMB2.firstHead}"
+									disabled="#{polizaMantenimientoMB2.bloqueaBoton}"
+									update=":form1:objects, :form1:panel" icon="ui-icon-seek-first" />
+								<p:commandButton value="Anterior" id="anterior"
+									update=":form1:objects, :form1:panel"
+									actionListener="#{polizaMantenimientoMB2.previusHead}"
+									icon="ui-icon-seek-prev" />
+								<p:commandButton value="Siguiente" id="siguiente"
+									actionListener="#{polizaMantenimientoMB2.nextHead}"
+									update=":form1:panel, :form1:objects" icon="ui-icon-seek-next" />
+
+
+								<p:commandButton value="Ultimo" id="ultimo"
+									update=":form1:objects, :form1:panel"
+									actionListener="#{polizaMantenimientoMB2.lastHead}"
+									icon="ui-icon-seek-end" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:dataTable id="objects" binding="#{table}" var="object"
+						value="#{polizaMantenimientoMB2.listPolide}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						editable="#{polizaMantenimientoMB2.editableTable}"
+						selectionMode="single" rowKey="#{object.index}" scrollRows="20"
+						scrollable="true" scrollHeight="560"
+						style="margin-bottom:10px; padding: 0px 10px !important;"
+						selection="#{polizaMantenimientoMB2.polideSelect}"
+						widgetVar="polizasWdg">
+
+
+						<p:ajax event="rowSelect"
+							listener="#{polizaMantenimientoMB2.onRowSelect}"
+							update=":form1:pgrid2, :form1:nomcta, :form1:polclv1"></p:ajax>
+
+						<p:column headerText="#" style="width:4%">
+							<h:outputText value="#{object.renpol}" id="renglon">
+								<f:convertNumber pattern="#" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Cuenta" style="width:5%">
+
+							<h:outputText value="#{object.cuenta}" />
+
+
+						</p:column>
+
+						<p:column headerText="Scta" style="width:10%">
+
+							<h:outputText value="#{object.scta}" />
+
+						</p:column>
+
+						<p:column headerText="Sscta" style="width:14%">
+
+							<h:outputText value="#{object.sscta}" />
+
+						</p:column>
+
+						<p:column headerText="Ssscta" style="width:8%">
+
+							<h:outputText value="#{object.ssscta}" />
+
+						</p:column>
+
+						<p:column headerText="Sssscta" style="width:8%">
+
+							<h:outputText value="#{object.sssscta}" />
+
+						</p:column>
+
+						<p:column headerText="Concepto"
+							style="width:50%; text-align: left !important;">
+
+							<h:outputText value="#{object.concep}"
+								style="text-align: left !important;" />
+
+						</p:column>
+
+						<p:column headerText="RefPol" style="width:5%">
+
+							<h:outputText value="#{object.refpol}">
+								<f:convertNumber pattern="#" />
+							</h:outputText>
+
+						</p:column>
+
+						<p:column headerText="Dn" style="width:4%">
+
+							<h:outputText value="#{object.dn}" />
+
+						</p:column>
+
+						<p:column headerText="Cargo" style="width:12%">
+
+							<h:outputText value="#{object.canpol}" style="float:right;">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</h:outputText>
+
+						</p:column>
+
+						<p:column headerText="Abono" style="width:12%">
+
+							<h:outputText value="#{object.canpolh}" style="float:right;">
+								<f:convertNumber pattern="###,###,##0.00" type="number" />
+							</h:outputText>
+
+						</p:column>
+
+						<p:column headerText="Cuenta Adicional" style="width:5%">
+
+							<h:outputText value="#{object.cuenta1}" />
+
+						</p:column>
+
+
+					</p:dataTable>
+					<p:commandButton id="hideButton"
+						actionListener="#{polizaMantenimientoMB2.updateViewRowsAutoGenerated}"
+						update=":form1:messagesEdit, :form1:panel, :form1:objects, :form1:rowid, :form1:sumac, :form1:sumac, :form1:sumaa, :form1:sumaA8000, :form1:sumaB8000"
+						style="visibility: hidden;"
+						oncomplete="jQuery('div.ui-datatable-scrollable-body').scrollTop(jQuery('div.ui-datatable-scrollable-body').prop('scrollHeight'));" />
+
+					<p:panelGrid id="pgrid2" columns="6"
+						styleClass="green shadow-panel" style="width:100%;">
+						<h:outputText value="Nombre Concepto:" />
+						<h:inputText value="#{polizaMantenimientoMB2.nomSelectedConcept}"
+							id="polclv1" size="110" maxlength="100" disabled="true" />
+
+						<h:outputLabel value="" />
+
+						<h:outputText value="Suma:" />
+						<h:inputText value="#{polizaMantenimientoMB2.polien.cdebe}"
+							id="sumaa" disabled="true" size="15" maxlength="15"
+							style="text-align:right;">
+							<f:convertNumber pattern="###,###,##0.00" type="number" />
+						</h:inputText>
+						<h:inputText id="sumac"
+							value="#{polizaMantenimientoMB2.polien.chaber}" size="15"
+							maxlength="15" disabled="true" style="text-align:right;">
+							<f:convertNumber pattern="###,###,##0.00" type="number" />
+						</h:inputText>
+
+
+
+						<h:outputText value="Nombre Cuenta:" />
+						<h:inputText value="#{polizaMantenimientoMB2.nomSelectedAcc}"
+							id="nomcta" size="110" maxlength="80" disabled="true" />
+
+						<h:outputText value="" />
+						<h:outputText value="Suma 8000:" />
+						<h:inputText value="#{polizaMantenimientoMB2.polien.ctc600}"
+							id="sumaA8000" disabled="true" size="15" maxlength="15"
+							style="text-align:right;">
+							<f:convertNumber pattern="###,###,##0.00" type="number" />
+
+						</h:inputText>
+						<h:inputText value="#{polizaMantenimientoMB2.polien.cta600}"
+							id="sumaB8000" disabled="true" size="15" maxlength="15"
+							style="text-align:right;">
+							<f:convertNumber pattern="###,###,##0.00" type="number" />
+
+						</h:inputText>
+
+
+					</p:panelGrid>
+					<p:panelGrid id="pgrid3" columns="12"
+						styleClass="green row-centered shadow-panel" style="width:100%;">
+						<p:commandButton value="Primero" id="firstRow"
+							icon="ui-icon-seek-first"
+							actionListener="#{polizaMantenimientoMB2.changeFirstRow}"
+							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" />
+						<p:commandButton value="Anterior" id="prevRow"
+							icon="ui-icon-seek-prev"
+							actionListener="#{polizaMantenimientoMB2.changePrevRow}"
+							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" />
+						<p:commandButton value="Siguiente" id="nextRow"
+							icon="ui-icon-seek-next"
+							actionListener="#{polizaMantenimientoMB2.changeNextRow}"
+							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" />
+						<p:commandButton value="Ultimo" id="lastRow"
+							icon="ui-icon-seek-end"
+							actionListener="#{polizaMantenimientoMB2.changeEndRow()}"
+							update=":form1:objects, :form1:pgrid2, :form1:nomcta, :form1:polclv1" />
+
+						<h:outputText value="Renglon:" />
+						<h:inputText value="#{polizaMantenimientoMB2.renglon}" id="rowid"
+							maxlength="4"
+							onkeypress="if((!this.value || 0 === this.value.length) ){ if( event.keyCode == 9 || event.keyCode == 13){return false;}}if (event.keyCode == 13){document.getElementById('form1:hideButtonRow').click(); return false}">
+							<pe:keyFilter for="rowid" mask="pint"></pe:keyFilter>
+						</h:inputText>
+						<p:commandButton id="hideButtonRow" update=":form1:objects"
+							actionListener="#{polizaMantenimientoMB2.changeRow}"
+							style="visibility: hidden;" />
+						<p:commandButton value="Polizas Incorrectas" id="wrongbuton"
+							actionListener="#{polizaMantenimientoMB2.cleanWronPolicies}"
+							oncomplete="PF('wrongPoli').show();"
+							update=":form1:wrongP, :form1:wrongTable, :form1:pgridWrongs, :form1:wrongmes"
+							icon="ui-icon-closethick" />
+						<p:commandButton value="Imprimir Poliza" id="impresion"
+							style="margin-left: 47%; padding: 1px;"
+							actionListener="#{polizaMantenimientoMB2.buttonAction}"
+							icon="ui-icon-print" oncomplete="PF('impPoliza').show();"
+							update=":form1:imPoliza, :form1:pdfContent" />
+
+						<p:commandButton value="Poliza Digitalizada" id="digitalizada"
+							actionListener="#{polizaMantenimientoMB2.findDigitalPoli}"
+							update=":form1:img, :form1:graphicImage, :form1:panel"
+							process=":form1:graphicImage" icon="icon-file-image" ajax="false" />
+
+					</p:panelGrid>
+
+
+
+
+					<p:dialog header="Imprimir Poliza" id="imPoliza"
+						widgetVar="impPoliza" width="800" height="500">
+						<p:media id="pdfContent"
+							value="#{polizaMantenimientoMB2.filePdfPath}" width="100%"
+							height="500" player="pdf">
+						</p:media>
+					</p:dialog>
+
+
+					<p:dialog header="P&oacute;lizas Incorrectas" widgetVar="wrongPoli"
+						id="wrongP" width="800" height="405">
+						<p:messages id="messages" showDetail="true" autoUpdate="true"
+							closable="true" />
+						<center>
+							<p:panelGrid columns="3" id="pgridWrongs">
+								<h:outputText value="Mes:" />
+								<h:inputText value="#{polizaMantenimientoMB2.me}" id="wrongmes"
+									size="2" maxlength="2" />
+								<p:commandButton value="Buscar" id="wserach"
+									icon="ui-icon-search"
+									actionListener="#{polizaMantenimientoMB2.findWrongPolicy}"
+									update=":form1:wrongTable" />
+							</p:panelGrid>
+							<p:dataTable id="wrongTable" var="object2"
+								value="#{polizaMantenimientoMB2.listIncorrectas}"
+								styleClass="et_datatable" emptyMessage="No hay registros"
+								editable="true" paginator="true" rows="10"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column headerText="Tipo" width="5%">
+									<center>
+										<h:outputText value="#{object2.tippol}"
+											style="text-align:center;" />
+									</center>
+								</p:column>
+								<p:column headerText="Mes" width="5%">
+									<center>
+										<h:outputText value="#{object2.mespol}" />
+									</center>
+								</p:column>
+								<p:column headerText="N&uacute;mero" width="5%">
+									<center>
+										<h:outputText value="#{object2.conpol}" />
+									</center>
+								</p:column>
+								<p:column headerText="Suma  Debe" width="10%">
+									<h:outputText value="#{object2.sdebe}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Suma Haber" width="10%">
+									<h:outputText value="#{object2.shaber}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Cargo 8000" width="10%">
+									<h:outputText value="#{object2.ctc6000}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Abono 8000" width="10%">
+									<h:outputText value="#{object2.cta6000}" style="float:right;">
+										<f:convertNumber pattern="###,###,##0.00" type="number" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</center>
+					</p:dialog>
+
+					<p:dialog id="img" widgetVar="digitalPoliza" height="500"
+						dynamic="true" modal="true" width="800"
+						header="Poliza Digitalizada">
+						<p:graphicImage value="#{imagesPoliza.image}"
+							rendered="#{polizaMantenimientoMB2.imageId >0}" id="graphicImage"
+							width="700" height="500" cache="false">
+							<f:param name="id" value="#{polizaMantenimientoMB2.imageId}" />
+						</p:graphicImage>
+					</p:dialog>
+				</p:panel>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

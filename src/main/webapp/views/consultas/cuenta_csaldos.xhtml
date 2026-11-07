@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<h:form id="form1">
+				<p:remoteCommand name="onload" update=":form1:objects"
+					onstart="PF('blockUIWidget').block();"
+					oncomplete="PF('blockUIWidget').unblock();PF('tbCuentas').selectRow(0);" />
+				<p:remoteCommand name="updateMsg" update=":form1:messagesEdit"
+					actionListener="#{consultaCuentasMB.validateStatus}" />
+				<p:remoteCommand name="findAcc"
+					actionListener="#{consultaCuentasMB.findValuesCatalog}"
+					update=":form1:messagesEdit,  :form1:display_1"
+					onstart="PF('blockUIWidget').block();"
+					oncomplete="PF('blockUIWidget').unblock(); PF('tbCuentas').selectRow(0);updateMsg();" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel" header="Consulta de Cuentas"
+					styleClass="green col-md-12  row-centered shadow-panel">
+					<h:panelGrid id="display_1" styleClass="row-centered" columns="3"
+						cellpadding="0">
+						<h:panelGrid id="display_11" columns="4" cellpadding="2"
+							styleClass="col-centered">
+							<h:outputText value="Cta:" for="accountInput"
+								style="padding-left: 10px; padding-right: 10px;"
+								styleClass="control-label" />
+							<p:inputText id="accountInput"
+								value="#{consultaCuentasMB.cuentaDataModel.beanFind.cuenta}"
+								maxlength="4" validatorMessage="CUENTA debe ser num&eacute;rico"
+								style=" width: 60px;">
+								<f:validateRegex pattern="([0-9]{0,4})" for="accountInput"></f:validateRegex>
+							</p:inputText>
+
+							<h:outputText value="Scta:" for="saccountInput"
+								styleClass="control-label"
+								style="padding-left: 10px; padding-right: 10px;" />
+							<p:inputText id="saccountInput"
+								value="#{consultaCuentasMB.cuentaDataModel.beanFind.scuenta}"
+								maxlength="15" validatorMessage="SCTA debe ser num&eacute;rico"
+								style=" width: 130px;">
+								<f:validateRegex pattern="([0-9a-zA-Z]{0,15})"
+									for="saccountInput"></f:validateRegex>
+							</p:inputText>
+						</h:panelGrid>
+						<h:panelGrid id="display_12" columns="6" cellpadding="2"
+							styleClass="col-centered">
+							<h:outputText value="Sscta:" for="ssaccountInput"
+								styleClass="control-label"
+								style="padding-left: 10px; padding-right: 10px; " />
+							<p:inputText id="ssaccountInput"
+								value="#{consultaCuentasMB.cuentaDataModel.beanFind.sscuenta}"
+								maxlength="20" validatorMessage="SSCTA debe ser num&eacute;rico"
+								style=" width: 180px;">
+								<f:validateRegex pattern="([0-9]{0,20})" for="ssaccountInput"></f:validateRegex>
+							</p:inputText>
+
+							<h:outputText value="Ssscta:" for="sssaccountInput"
+								styleClass="control-label"
+								style="padding-left: 10px; padding-right: 10px;" />
+							<p:inputText id="sssaccountInput"
+								value="#{consultaCuentasMB.cuentaDataModel.beanFind.ssscuenta}"
+								style="width: 60px;" maxlength="4"
+								validatorMessage="SSSCTA debe ser num&eacute;rico">
+								<f:validateRegex pattern="([0-9]{0,4})" for="sssaccountInput"></f:validateRegex>
+							</p:inputText>
+							<h:outputText value="Sssscta:" for="ssssaccountInput"
+								styleClass="control-label"
+								style="padding-left: 10px; padding-right: 10px; margin-top: 10px;" />
+							<p:inputText id="ssssaccountInput"
+								value="#{consultaCuentasMB.cuentaDataModel.beanFind.sssscuenta}"
+								style="width: 60px;" maxlength="3"
+								validatorMessage="SSSSCTA debe ser num&eacute;rico">
+								<f:validateRegex pattern="([0-9]{0,3})" for="ssssaccountInput "></f:validateRegex>
+							</p:inputText>
+						</h:panelGrid>
+						<h:panelGrid id="display_13" columns="4" cellpadding="2">
+
+							<h:outputText value="Nombre" for="titleInput"
+								styleClass="control-label"
+								style="padding-left: 10px; padding-right: 10px;" />
+							<p:inputText id="titleInput"
+								value="#{consultaCuentasMB.cuentaDataModel.beanFind.nomcta}"
+								style="" maxlength="250">
+							</p:inputText>
+
+							<h:outputText value="Mes:" for="mesInput"
+								styleClass="control-label"
+								style="padding-left: 10px; padding-right: 10px; " />
+							<p:inputText id="mesInput" value="#{consultaCuentasMB.mes}"
+								style="width: 60px;" maxlength="250">
+								<p:ajax event="blur" update="mesInput"></p:ajax>
+							</p:inputText>
+						</h:panelGrid>
+						<h:panelGrid id="display_14" columns="2" cellpadding="4">
+							<h:outputText value="" styleClass="control-label"
+								style="padding-left: 10px; padding-right: 10px;" />
+							<p:commandButton value="Selecci&oacute;n"
+								style="margin-top: 10px;" id="search"
+								onmousedown="jQuery('.ui-paginator-first').click();"
+								oncomplete="findAcc();" />
+						</h:panelGrid>
+						<h:panelGrid id="display_15" columns="1" cellpadding="4">
+							<h:outputText
+								value="Despues de introducir la informaci&oacute;n de la cuenta o del nombre y del mes oprima Selecci&oacute;n dos veces"
+								style="margin-top: 10px;" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+				<p:focus context="objects" id="focusTable" />
+
+				<div class="table-responsive table-bordered table-condensed">
+					<p:dataTable id="objects" var="object" widgetVar="tbCuentas"
+						value="#{consultaCuentasMB.cuentaDataModel}"
+						styleClass="et_datatable col-centered"
+						emptyMessage="La cuenta no existe" editable="false"
+						paginator="true" lazy="true" rows="12" resizableColumns="true"
+						scrollable="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selectionMode="single"
+						selection="#{consultaCuentasMB.cuentaDataModel.selected}"
+						rowKey="#{object.id}">
+						<p:ajax event="rowSelect"
+							listener="#{consultaCuentasMB.onRowSelect}"
+							update=":form1:panelSumas, :form1:messagesEdit"></p:ajax>
+						<p:ajax event="page" oncomplete="PF('blockUIWidget').unblock();"
+							onstart="PF('blockUIWidget').block();"
+							listener="#{consultaCuentasMB.update}" />
+
+						<p:column headerText="Cuenta" width="5%">
+							<h:outputText value="#{object.cuenta}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="Scta" width="10%">
+							<h:outputText value="#{object.scuenta}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="Sscta" width="15%">
+							<h:outputText value="#{object.sscuenta}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="Ssscta" width="5%">
+							<h:outputText value="#{object.ssscuenta}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="Sssscta" width="5%">
+							<h:outputText value="#{object.sssscuenta}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="Nombre" width="60%">
+							<h:outputText value="#{object.nomcta}" />
+						</p:column>
+
+					</p:dataTable>
+				</div>
+				<br />
+				<h:outputText
+					value="Seleccione un renglón para ver su informaci&oacute;n"
+					style="padding-left: 30px; padding-right: 30px; font-size:14px;"
+					styleClass="control-label" />
+				<br />
+				<p:panel id="panelSumas"
+					styleClass="col-md-6 col-centered row-centered shadow-panel">
+					<h:panelGrid id="display_sumas" columns="4" cellpadding="2"
+						styleClass="col-centered">
+
+						<h:outputText value="Nivcta:" for="nivctaInput"
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+						<p:inputText id="nivctaInput"
+							style="margin-rigth: 70px; width: 60px; text-align: right;"
+							value="#{consultaCuentasMB.nivcta}" maxlength="4" disabled="true">
+						</p:inputText>
+
+						<h:outputText value="Saldo Incial:" for="saldoInitInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="saldoInitInput"
+							value="#{consultaCuentasMB.saldoInicial}" maxlength="20"
+							disabled="true" style="text-align: right;">
+							<f:convertNumber pattern="#,###,###,##0.00" />
+						</p:inputText>
+
+						<h:outputText value=" "
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+						<h:outputText value=" "
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+						<h:outputText value="Cargos:" for="cargosInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="cargosInput" value="#{consultaCuentasMB.cargos}"
+							maxlength="20" style="margin-top: 10px; text-align: right;"
+							disabled="true">
+							<f:convertNumber pattern="#,###,###,##0.00" />
+						</p:inputText>
+
+						<h:outputText value=" "
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+						<h:outputText value=" "
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+
+						<h:outputText value="Abonos:" for="abonosInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="abonosInput" value="#{consultaCuentasMB.abonos}"
+							style="margin-top: 10px; text-align: right;" maxlength="20"
+							disabled="true">
+							<f:convertNumber pattern="#,###,###,##0.00" />
+						</p:inputText>
+
+						<h:outputText value=" "
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+						<h:outputText value=" "
+							style="padding-left: 30px; padding-right: 30px;"
+							styleClass="control-label" />
+
+						<h:outputText value="Saldo Final:" for="saldoFinalInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="saldoFinalInput"
+							value="#{consultaCuentasMB.saldoFinal}"
+							style="margin-top: 10px; text-align: right;" maxlength="20"
+							disabled="true">
+							<f:convertNumber pattern="#,###,###,##0.00" />
+						</p:inputText>
+
+					</h:panelGrid>
+				</p:panel>
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

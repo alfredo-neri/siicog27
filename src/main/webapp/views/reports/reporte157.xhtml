@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="panelReporte"
+					header="Tasa de Crecimiento de Usuarios Registrados en el Padr&oacute;n de Agua"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:panelGrid id="grid1" styleClass="col-centered">
+						<p:row>
+							<p:column style="width : 20%; text-align: right;" />
+							<p:column style="width : 20%; text-align: right;">
+								<p:outputLabel value="Anual" />
+							</p:column>
+							<p:column style="width : 60%; text-align: left;">
+								<p:outputLabel id="anual" value="#{reporte157MB.anual}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column />
+							<p:column>
+								<p:outputLabel value="Cantidad"></p:outputLabel>
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Observaciones"></p:outputLabel>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="text-align: right;">
+								<p:outputLabel
+									value="N&uacute;mero de tomas inscritas al inicio del periodo 01 de Enero #{reporte157MB.anual}:" />
+							</p:column>
+							<p:column style="text-align: left;">
+								<p:outputLabel id="lblNumpolarm"
+									value="#{reporte157MB.pm4711.ntinsini}"
+									rendered="#{reporte157MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numpolarm" decimalPlaces="0"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte157MB.pm4711.ntinsini}"
+									rendered="#{reporte157MB.bTxt}" maxValue="999999999"
+									emptyValue="zero" />
+							</p:column>
+							<p:column style="text-align: left;">
+								<p:outputLabel id="lblObspolarm"
+									value="#{reporte157MB.pm4711.obsntinsini}"
+									rendered="#{reporte157MB.bLbl}" />
+								<p:inputTextarea id="obspolarm" rows="2" cols="80" maxlength="350"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte157MB.pm4711.obsntinsini}"
+									rendered="#{reporte157MB.bTxt}" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column style="text-align: right;">
+								<p:outputLabel
+									value="N&uacute;mero de tomas inscritas al final del periodo 31 de Diciembre #{reporte157MB.anual}:"></p:outputLabel>
+							</p:column>
+							<p:column style="text-align: left;">
+								<p:outputLabel id="lblNumtotpol"
+									value="#{reporte157MB.pm4711.ntinsfin}"
+									rendered="#{reporte157MB.bLbl}">
+									<f:convertNumber pattern="###,##0" />
+								</p:outputLabel>
+								<pe:inputNumber id="numtotpol" decimalPlaces="0"
+									value="#{reporte157MB.pm4711.ntinsfin}"
+									rendered="#{reporte157MB.bTxt}" maxValue="999999999"
+									emptyValue="zero"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}" />
+							</p:column>
+							<p:column style="text-align: left;">
+								<p:outputLabel id="lblObstotpol"
+									value="#{reporte157MB.pm4711.obsntinsfin}"
+									rendered="#{reporte157MB.bLbl}" />
+								<p:inputTextarea id="Obstotpol" rows="2" cols="80" maxlength="350"
+									onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}"
+									value="#{reporte157MB.pm4711.obsntinsfin}"
+									rendered="#{reporte157MB.bTxt}" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid id="buttons">
+						<p:commandButton value="Salvar"
+							actionListener="#{reporte157MB.save}"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							rendered="#{reporte157MB.bVSave}" id="save" icon="ui-icon-disk" />
+						<p:commandButton value="Modificar" id="modificar"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte157MB.modify}" icon="ui-icon-pencil"
+							rendered="#{reporte157MB.bVModificar}"
+							disabled="#{reporte157MB.bBtnMoficar}" />
+						<p:commandButton value="Limpiar" id="reset"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte157MB.clean}"
+							disabled="#{reporte157MB.bLbl}" icon="ui-icon-tag" />
+						<p:commandButton value="Adicionar" id="add"
+							update=":form1:panelReporte, :form1:messagesEdit"
+							actionListener="#{reporte157MB.add}" icon="ui-icon-circle-plus"
+							disabled="#{reporte157MB.bAdd}" />
+						<p:commandButton value="Borrar" id="borrar" icon="ui-icon-trash"
+							update=":form1:panelReporte, :form1:messagesEdit, :form1:inlinePdf"
+							disabled="#{reporte157MB.bBorrar}"
+							actionListener="#{reporte157MB.delete}" >
+							<p:confirm header="Confirmación"
+								message="¿Desea Eliminar este Registro?" icon="ui-icon-alert" />
+						</p:commandButton>
+						<p:commandButton value="Cancelar" id="cancelar"
+							update=":form1:panelReporte, :form1:messagesEdit, :form1:grid1"
+							actionListener="#{reporte157MB.cancel}"
+							icon="ui-icon-circle-close" disabled="#{reporte157MB.bLbl}" />
+					</p:panelGrid>
+					<p:panelGrid id="gridreport">
+						<p:commandButton id="generateportepdf" icon="ui-icon-circle-check"
+							onstart="PF('blockUIWidget').block()"
+							action="#{reporte157MB.createFilePdfInline}" value="Correcto"
+							oncomplete="PF('blockUIWidget').unblock(); $(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '64em');"
+							update="form1:inlinePdf :form1:messagesEdit" style="padding:2px;">
+						</p:commandButton>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte157MB.uuid ne null}">
+						<object type="application/pdf" style="margin-top: 1em;"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte157MB.uuid}&amp;filename=#{reporte157MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

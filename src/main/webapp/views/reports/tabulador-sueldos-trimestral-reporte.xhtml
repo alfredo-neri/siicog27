@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1" enctype="multipart/form-data">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+				<p:panel id="pDigitaliza"
+					header="Reporte informaci&oacute;n de Tabulador de Sueldos"
+					styleClass="green col-md-12 col-centered row-centered shadow-panel"
+					widgetVar="pCargaAutomatica">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<h:outputText value="Trimestre: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{tabuladorSueldosTrimestralMB.trimestre}">
+							<f:selectItems
+								value="#{tabuladorSueldosTrimestralMB.listTrimestre}"
+								var="trimestre" itemValue="#{trimestre}"
+								itemLabel="#{trimestre}" />
+						</p:selectOneMenu>
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							actionListener="#{tabuladorSueldosTrimestralMB.createFilePdfInline}"
+							value="Correcto" update="form1:inlinePdf, :form1:growl">
+						</p:commandButton>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							title="EXCEL">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{tabuladorSueldosTrimestralMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							title="TXT">
+							<p:graphicImage value="txt.png" width="24" />
+							<p:fileDownload value="#{tabuladorSueldosTrimestralMB.fileTxt}" />
+						</h:commandLink>
+
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{tabuladorSueldosTrimestralMB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{tabuladorSueldosTrimestralMB.uuid}&amp;filename=#{tabuladorSueldosTrimestralMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

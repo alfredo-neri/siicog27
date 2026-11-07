@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+			<h:form id="form1">
+				<p:remoteCommand name="onload" action="#{polizaCopiarMB.onPageLoad}"
+					autoRun="true"
+					update=":form1:display_1, :form1:display_2, :form1:display_3, :form1:correct" />
+				<p:remoteCommand name="validatePass"
+					actionListener="#{polizaCopiarMB.validatePass}"
+					update="messagesEdit,form1:claveInput, form1:mesInputOri, form1:tipoInputOri, form1:polizaIniInputOri, form1:mesInputDest, form1:tipoInputDest, form1:polizaIniInputDest, form1:correct, :form1:focusPolizaIniInputOri" />
+				<p:panel id="panel" header="P&oacute;liza Negativa"
+					style="width:80%;"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<br />
+					<h:panelGrid id="display_1" columns="14" cellpadding="20"
+						layout="grid">
+						<div class="ui-g">
+							<div class="ui-g-1">
+								<h:outputText value="Clave: " for="claveInput"
+									style="padding-left: 55px; padding-right: 10px; margin-top: 30px;" />
+								<p:password id="claveInput" maxlength="12" size="12"
+									value="#{polizaCopiarMB.cvePass}"
+									onkeypress="if (event.keyCode == 13) {validatePass(); return false; }"
+									disabled="#{!polizaCopiarMB.render}">
+
+								</p:password>
+								<p:commandButton id="passButton" value="Validar Password"
+									onclick="validatePass(); return false; "
+									disabled="#{!polizaCopiarMB.render}"></p:commandButton>
+							</div>
+
+						</div>
+					</h:panelGrid>
+					<br />
+					<p:focus context="polizaIniInputOri" id="focusPolizaIniInputOri"
+						for="polizaIniInputOri" />
+					<p:panel id="panelOri" header="POLIZA ORIGINAL" style="width:90%;"
+						styleClass="green col-md-8 col-centered row-centered ">
+						<br />
+						<h:panelGrid id="display_2" columns="14" cellpadding="20"
+							layout="grid" styleClass="col-centered">
+							<div class="ui-g">
+								<div class="ui-g-1">
+									<h:outputText value="Mes: " for="mesInputOri"
+										style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+									<p:selectOneMenu id="mesInputOri"
+										value="#{polizaCopiarMB.tcMes}"
+										disabled="#{polizaCopiarMB.render}">
+										<f:selectItems value="#{polizaCopiarMB.listMes}" var="item"
+											itemValue="#{item.mes}" itemLabel="#{item.mes}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-2">
+									<h:outputText value="Tipo: " for="tipoInputOri"
+										style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+									<p:selectOneMenu id="tipoInputOri"
+										value="#{polizaCopiarMB.cattpo}"
+										disabled="#{polizaCopiarMB.render}">
+										<f:selectItems value="#{polizaCopiarMB.lisCattpo}"
+											var="itemTpo" itemValue="#{itemTpo.tippol}"
+											itemLabel="#{itemTpo.tippol}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-2">
+									<h:outputText value="No. P&oacute;liza: "
+										for="polizaIniInputOri"
+										style="padding-left: 30px; padding-right: 10px; margin-top: 10px;" />
+									<p:inputText id="polizaIniInputOri" maxlength="6" size="8"
+										disabled="#{polizaCopiarMB.render}" required="true"
+										requiredMessage="El campo POLIZA ORIGINAL - No. P&oacute;liza es requerido"
+										value="#{polizaCopiarMB.oriConpol}">
+										<pe:keyFilter for="polizaIniInputOri" mask="pint"></pe:keyFilter>
+										<f:convertNumber pattern="000000" />
+										<p:ajax event="blur" update="polizaIniInputOri"></p:ajax>
+									</p:inputText>
+								</div>
+
+							</div>
+						</h:panelGrid>
+					</p:panel>
+
+					<br />
+					<p:panel id="panelDest" header="POLIZA DESTINO" style="width:90%;"
+						styleClass="green col-md-8 col-centered row-centered ">
+						<br />
+						<h:panelGrid id="display_3" columns="14" cellpadding="20"
+							layout="grid" styleClass="col-centered">
+							<div class="ui-g">
+								<div class="ui-g-1">
+									<h:outputText value="Mes: " for="mesInputDest"
+										style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+									<p:selectOneMenu id="mesInputDest"
+										value="#{polizaCopiarMB.tcMesDest}"
+										disabled="#{polizaCopiarMB.render}">
+										<f:selectItems value="#{polizaCopiarMB.listMes}" var="item"
+											itemValue="#{item.mes}" itemLabel="#{item.mes}" />
+										<p:ajax listener="#{polizaCopiarMB.findConpol}"
+											update=":form1:polizaIniInputDest"></p:ajax>
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-2">
+									<h:outputText value="Tipo: " for="tipoInputDest"
+										style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+									<p:selectOneMenu id="tipoInputDest"
+										value="#{polizaCopiarMB.cattpoDest}"
+										disabled="#{polizaCopiarMB.render}">
+										<f:selectItems value="#{polizaCopiarMB.lisCattpo}"
+											var="itemTpo" itemValue="#{itemTpo.tippol}"
+											itemLabel="#{itemTpo.tippol}" />
+										<p:ajax listener="#{polizaCopiarMB.findConpol}"
+											update=":form1:polizaIniInputDest"></p:ajax>
+									</p:selectOneMenu>
+								</div>
+								<div class="ui-g-2">
+									<h:outputText value="No. P&oacute;liza: "
+										for="polizaIniInputDest"
+										style="padding-left: 30px; padding-right: 10px; margin-top: 10px;" />
+									<p:inputText id="polizaIniInputDest" maxlength="6" size="8"
+										required="true"
+										requiredMessage="El campo POLIZA DESTINO - No. P&oacute;liza es requerido"
+										disabled="true" value="#{polizaCopiarMB.destConpol}">
+										<f:convertNumber pattern="000000" />
+										<pe:keyFilter for="polizaIniInputDest" mask="pint"></pe:keyFilter>
+									</p:inputText>
+								</div>
+
+							</div>
+						</h:panelGrid>
+					</p:panel>
+
+					<p:outputPanel layout="block" style="text-align:center"
+						id="blockButtonsFind">
+						<br />
+
+						<p:commandButton id="correct" value="Correcto"
+							style="padding: 5px;" disabled="#{polizaCopiarMB.render}"
+							actionListener="#{polizaCopiarMB.buttonNegativeAction}"
+							onstart="PF('blockUIWidget').block();"
+							oncomplete="PF('blockUIWidget').unblock();" ajax="true"
+							update=":messagesEdit" />
+
+					</p:outputPanel>
+
+				</p:panel>
+				<br />
+				<br />
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Reportes de Indicadores Semestral de Elementos de Seguridad Pública Capacitados en Manejo de Armas de Fuego"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte132MB.listPm0811}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm0811Wdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+						<p:column>
+							<p:panelGrid id="idGrid1">
+								<p:row>
+									<p:column style="width : 35%; text-align: right;">
+										<h:outputText value="Semestre  " />
+									</p:column>
+									<p:column style="width: 30; text-align: left;">
+										<p:outputLabel id="lblTrimestre" value="#{objects.semestral}"
+											rendered="#{reporte132MB.bLblsemestre}">
+											<f:convertNumber pattern="00" />
+										</p:outputLabel>
+										<p:selectOneMenu value="#{reporte132MB.semestre}"
+											id="comboTri" rendered="#{reporte132MB.bComboTri}">
+											<f:selectItems value="#{reporte132MB.listsemestre}" var="tri"
+												itemValue="#{tri}" itemLabel="#{tris}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column />
+
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column />
+									<p:column>
+										<h:outputText value="Cantidad" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Observaciones" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText
+											value="Número de elementos de seguridad pública capacitados en manejor de armas de fuego : " />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.nspc}" id="lblAgua"
+											rendered="#{reporte132MB.bLbl}">
+
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+
+										<pe:inputNumber value="#{objects.nspc}" id="txtAgua"
+											rendered="#{reporte132MB.bTxt}" decimalSeparator=""
+											decimalPlaces="0" emptyValue="zero"
+											onkeypress="if (event.keyCode == 13) {return false;}">
+										</pe:inputNumber>
+
+									</p:column>
+									<p:column style="text-align: left;">
+										<!-- <p:outputLabel id="lblObsAgua" value="#{objects.obsnspc}"
+											rendered="#{reporte132MB.bLbl}" /> -->
+										<p:inputTextarea rows="8" cols="57" id="txtObsAgua"
+											maxlength="349" value="#{objects.obsnspc}"
+											disabled="#{reporte132MB.bLbl}"
+											onkeypress="if (event.keyCode == 13) {return false;}" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel value="Total de elementos de seguridad pública" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.tesp}" id="lblPoblacion"
+											rendered="#{reporte132MB.bLbl}">
+											<pe:keyFilter for="lblAgua" mask="pint" />
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+
+
+										<pe:inputNumber value="#{objects.tesp}" id="txtPoblacion"
+											rendered="#{reporte132MB.bTxt}" decimalSeparator=""
+											decimalPlaces="0" emptyValue="zero"
+											onkeypress="if (event.keyCode == 13) {return false;}">
+
+										</pe:inputNumber>
+
+									</p:column>
+
+									<p:column style="text-align: left;">
+										<!-- <p:outputLabel id="lblObsPoblacion" value="#{objects.obstesp}"
+											rendered="#{reporte132MB.bLbl}" /> -->
+
+										<p:inputTextarea id="txtObsPoblacion" rows="8" cols="57"
+											maxlength="349" value="#{objects.obstesp}"
+											disabled="#{reporte132MB.bLbl}"
+											onkeypress="if (event.keyCode == 13) {return false;}" />
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+							<p:panelGrid id="buttons">
+								<p:commandButton value="Salvar"
+									actionListener="#{reporte132MB.save(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									rendered="#{reporte132MB.bVSave}" id="save" icon="ui-icon-disk" />
+								<p:commandButton value="Modificar" id="modificar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte132MB.modify(rowIndex)}"
+									icon="ui-icon-pencil" rendered="#{reporte132MB.bVModificar}"
+									disabled="#{reporte132MB.bBtnMoficar}" />
+								<p:commandButton value="Limpiar" id="reset"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte132MB.clean(rowIndex)}"
+									disabled="#{reporte132MB.bLbl}" icon="ui-icon-tag" />
+								<p:commandButton value="Adicionar" id="add"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte132MB.add(rowIndex)}"
+									icon="ui-icon-circle-plus" disabled="#{reporte132MB.bAdd}" />
+								<p:commandButton value="Borrar" id="borrar"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									disabled="#{reporte132MB.bBorrar}"
+									actionListener="#{reporte132MB.delete(rowIndex)}">
+									<p:confirm header="Confirmación"
+										message="Desea eliminar el registro actual?"
+										icon="ui-icon-alert" />
+
+								</p:commandButton>
+
+
+								<p:commandButton value="Cancelar" id="cancelar"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte132MB.cancel(rowIndex)}"
+									icon="ui-icon-circle-close" disabled="#{reporte132MB.bLbl}">
+
+
+								</p:commandButton>
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="idGrid5">
+						<h:outputText value="Semestre a Consultar: " />
+						<p:selectOneMenu value="#{reporte132MB.conTrim}" id="ctri">
+							<f:selectItems var="tri" value="#{reporte132MB.comboTri}"
+								itemValue="#{tri.semestral}" itemLabel="#{tri.semestral}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Correcto" id="correcto"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							icon="ui-icon-circle-arrow-s"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							actionListener="#{reporte132MB.createFilePdfInline}" />
+
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte132MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte132MB.uuid}&amp;filename=#{reporte132MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="SI" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="NO" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

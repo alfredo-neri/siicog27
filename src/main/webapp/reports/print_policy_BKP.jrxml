@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.1  -->
+<!-- 2016-06-24T10:53:06 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Polizas_Reportjrxml" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7e0db011-9766-4d94-9b77-93585809692b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="gemdb"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="pTipoPoliza" class="java.lang.String">
+		<parameterDescription><![CDATA[Tipo de Poliza]]></parameterDescription>
+		<defaultValueExpression><![CDATA['C']]></defaultValueExpression>
+	</parameter>
+	<parameter name="pNumPolMin" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pNumPolMax" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pMesPol" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Mes de la Poliza]]></parameterDescription>
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pathImage" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+	CATTPO.TIPNOM,
+	POLIEN.CLVPOL,
+	POLIEN.FECPOL,
+	POLIEN.STAPOL,
+	POLIEN.STAAFE,
+	POLIEN.TIPPOL,
+	POLIEN.MESPOL,
+	POLIEN.CONPOL,
+	POLIEN.CAPPOL,
+	POLIEN.POLCLV1,
+	POLIDE.RENPOL,
+	POLIDE.CUENTA,
+	POLIDE.SCTA,
+	POLIDE.SSCTA,
+	POLIDE.SSSCTA,
+	POLIDE.SSSSCTA,
+	POLIDE.REFPOL,
+	POLIDE.DN,
+	POLIDE.CONCEP,
+	POLIDE.CANPOL,
+     POLIDE.CANPOLH,
+     POLIFL.RENPOL,
+     POLIFL.CLVFLU,
+     POLIFL.CANFLU   
+FROM POLIDE
+INNER JOIN CATTPO ON  POLIDE.TIPPOL=CATTPO.TIPPOL
+	INNER JOIN POLIEN ON 
+	 POLIEN.MESPOL = POLIDE.MESPOL 
+	 AND POLIDE.TIPPOL = POLIEN.TIPPOL 
+	 AND POLIDE.CONPOL = POLIEN.CONPOL
+	 LEFT JOIN POLIFL ON
+ 	POLIDE.MESPOL = POLIFL.MESPOL 
+	 AND POLIDE.TIPPOL = POLIFL.TIPPOL 
+	 AND POLIDE.CONPOL = POLIFL.CONPOL
+	 AND POLIDE.RENPOL = POLIFL.RENPOL
+where 1=1 
+AND  POLIEN.TIPPOL =$P{pTipoPoliza} 
+AND POLIEN.MESPOL= $P{pMesPol} 
+AND 	POLIEN.CONPOL >= $P{pNumPolMin}  AND POLIEN.CONPOL <= $P{pNumPolMax}
+ORDER BY POLIEN.CLVPOL,POLIEN.MESPOL,POLIEN.TIPPOL,POLIEN.CONPOL]]>
+	</queryString>
+	<field name="TIPNOM" class="java.lang.String"/>
+	<field name="CLVPOL" class="java.lang.String"/>
+	<field name="FECPOL" class="java.lang.String"/>
+	<field name="STAPOL" class="java.lang.String"/>
+	<field name="STAAFE" class="java.lang.String"/>
+	<field name="TIPPOL" class="java.lang.String"/>
+	<field name="MESPOL" class="java.lang.Integer"/>
+	<field name="CONPOL" class="java.lang.Integer"/>
+	<field name="CAPPOL" class="java.lang.String"/>
+	<field name="POLCLV1" class="java.lang.String"/>
+	<field name="RENPOL" class="java.math.BigDecimal"/>
+	<field name="CUENTA" class="java.lang.String"/>
+	<field name="SCTA" class="java.lang.String"/>
+	<field name="SSCTA" class="java.lang.String"/>
+	<field name="SSSCTA" class="java.lang.String"/>
+	<field name="SSSSCTA" class="java.lang.String"/>
+	<field name="REFPOL" class="java.math.BigDecimal"/>
+	<field name="DN" class="java.lang.String"/>
+	<field name="CONCEP" class="java.lang.String"/>
+	<field name="CANPOL" class="java.math.BigDecimal"/>
+	<field name="CANPOLH" class="java.math.BigDecimal"/>
+	<field name="COLUMN_22" class="java.math.BigDecimal"/>
+	<field name="CLVFLU" class="java.math.BigDecimal"/>
+	<field name="CANFLU" class="java.math.BigDecimal"/>
+	<sortField name="TIPPOL"/>
+	<sortField name="CONPOL"/>
+	<sortField name="MESPOL"/>
+	<variable name="SumHaber" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByPoliz" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANPOLH}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.valueOf(0)]]></initialValueExpression>
+	</variable>
+	<variable name="SumDebe" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByPoliz" calculation="Sum">
+		<variableExpression><![CDATA[$F{CANPOL}]]></variableExpression>
+	</variable>
+	<group name="GroupByPoliz" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{CLVPOL}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="34">
+				<textField>
+					<reportElement x="0" y="0" width="752" height="13" uuid="58c0b0c1-b639-4d94-ae8d-48e95dc552ba"/>
+					<textFieldExpression><![CDATA[$F{POLCLV1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="490" y="5" width="62" height="11" uuid="462a8bab-fe63-40a2-af70-173338ab5731"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[TOTAL POLIZA:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="650" y="5" width="81" height="11" uuid="ebbadd5e-cbf9-40f8-b5b2-459f13eb89d2"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{SumHaber}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="560" y="5" width="83" height="13" uuid="382453d5-2784-4c66-9290-ab64d780c4fe"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{SumDebe}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Group_FlujoEfectivo">
+		<groupExpression><![CDATA[$F{RENPOL}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<printWhenExpression><![CDATA[new Boolean($F{RENPOL}!= null)]]></printWhenExpression>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="11">
+				<printWhenExpression><![CDATA[new Boolean($F{CANFLU} != null)]]></printWhenExpression>
+				<textField>
+					<reportElement x="235" y="0" width="100" height="11" uuid="6ffc2269-6a7d-476f-9c29-61357da3f21b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CLVFLU}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="326" y="-1" width="100" height="11" uuid="ec8cc673-85da-4dd5-9e62-2604300ab4d6">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CANFLU}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="170" y="1" width="69" height="10" uuid="2e3bd6c3-aa9e-43b4-bb17-2177c5a5ff5b"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Flujo de Efectivo:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch">
+			<image>
+				<reportElement x="20" y="5" width="39" height="35" uuid="8ba2e6be-7ff5-4479-8c62-714f90671a42"/>
+				<imageExpression><![CDATA["/img/"+$P{pathImage}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="10" width="12" height="14" uuid="79d03005-486f-42d0-80d5-78cf57376493"/>
+				<textFieldExpression><![CDATA[$F{TIPPOL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="10" width="13" height="14" uuid="37742b70-b76d-471f-8fb2-c096a2d02cd9"/>
+				<textFieldExpression><![CDATA[$F{CONPOL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="56" y="10" width="14" height="14" uuid="113220b7-6dd6-44ff-b886-687c8af1c35b"/>
+				<textFieldExpression><![CDATA[$F{STAPOL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="10" width="12" height="14" uuid="46fd68c1-4ca7-4947-85f3-3e72107e8cc8"/>
+				<textFieldExpression><![CDATA[$F{STAAFE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="10" width="61" height="16" uuid="b2769604-fa04-4742-80bf-443f3b2834fc"/>
+				<textFieldExpression><![CDATA[$F{FECPOL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="22" width="80" height="20" uuid="61e4827e-0fc6-4ce3-9de7-087685e89f3d"/>
+				<textFieldExpression><![CDATA[$F{CAPPOL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="10" width="668" height="20" uuid="3904fa10-acc5-4ad1-8085-25d47702c369"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA["POLIZAS DE " + $F{TIPNOM}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="30" height="13" uuid="75446d17-9758-4d55-8571-79ab2bb022d9"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REN]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-4" y="15" width="754" height="1" uuid="90f1fac5-5b1f-437b-a389-db982b8f9e83"/>
+			</line>
+			<staticText>
+				<reportElement x="82" y="0" width="62" height="16" uuid="4dc4cbb2-cc66-4abb-a2a8-378d3548cba8"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SCTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="31" y="1" width="50" height="15" uuid="191d4aaf-4fae-44fc-9ff0-87081134c040"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="0" width="86" height="16" uuid="367c1f8e-51a3-44c6-b91a-06bc0642c136"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SSCTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="1" width="98" height="15" uuid="28e1aa20-f0a0-4692-a4b7-46bc6b4eba60"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SSSCTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="328" y="1" width="62" height="15" uuid="93bc87d7-319d-4631-afa4-8bd2fb6f7438"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SSSSCTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="391" y="0" width="169" height="14" uuid="759899e9-8557-4dff-a91a-0fc4cebcc708"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONCEPTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="560" y="0" width="80" height="16" uuid="3001d941-b15e-4715-86ac-b6b37b75bde0"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEBE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="641" y="0" width="100" height="15" uuid="81bc56dc-c888-4e07-8117-c73d4e930da7"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[HABER]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="-51" width="754" height="1" uuid="5d803629-aaa3-4af9-a587-67ba57190f81"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField>
+				<reportElement x="0" y="0" width="31" height="9" uuid="e8a8ab8a-5e6c-4562-8f9e-b05daf35b616">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RENPOL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="0" width="83" height="9" uuid="a3d4292a-0971-4536-90d4-df2ef0af7ee8"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SSCTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="0" width="98" height="9" uuid="9980aad9-0fdd-44d7-8b31-2d1d3706826c"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SSSCTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="337" y="0" width="54" height="9" uuid="90661c04-62b0-4cd7-8163-d2127aa71808"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SSSSCTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="391" y="0" width="169" height="9" uuid="6a6b5b51-fb55-4365-bf24-a84306313140"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONCEP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="560" y="1" width="83" height="9" uuid="0e06f599-1f3e-4bd5-bd14-85eff10ffed5"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CANPOL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="650" y="0" width="83" height="9" uuid="41d624ba-d728-45dd-867b-e1b4193c077a"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CANPOLH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="0" width="62" height="9" uuid="b932db88-4af7-4f3a-8e4e-69a40e18c106"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SCTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="31" y="-1" width="51" height="9" uuid="6808f7a0-9f32-4838-ba41-f040f2195c29"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="25" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="662" y="0" width="54" height="12" uuid="85487521-79fd-4793-9389-4fb925314b92"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="716" y="0" width="43" height="12" uuid="5d3fab35-1278-4c55-899d-7a95dde9b941"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of  " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/YYY">
+				<reportElement x="640" y="11" width="100" height="11" uuid="51e88e47-950b-4e7d-a325-3a649c6367ae"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="45" splitType="Stretch"/>
+	</summary>
+</jasperReport>

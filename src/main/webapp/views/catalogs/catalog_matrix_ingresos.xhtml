@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Matriz de Ingresos"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:focus context="ctrlPanel" />
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder"
+						id="ctrlPanel">
+						<h:outputText value="Tipo Matriz: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{catalogMatrixIngresosMB.tipoMatriz}">
+							<f:selectItem itemLabel="Ingresos Devengados"
+								itemValue="D"></f:selectItem>
+							<f:selectItem itemLabel="Ingresos Recaudados"
+										  itemValue="R"></f:selectItem>
+						</p:selectOneMenu>
+
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{catalogMatrixIngresosMB.generateMatriz}"
+								value="Correcto"
+								update="form1:growlReportador, :form1:objects"
+								styleClass="btn btn-default">
+							</p:commandButton>
+
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:dataTable id="objects" binding="#{table}" var="object"
+								 value="#{catalogMatrixIngresosMB.listMatrizIngresos}" styleClass="et_datatable green"
+								 emptyMessage="No hay registros" editable="true" paginator="true"
+								 rows="15"
+								 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								 selectionMode="single" rowKey="#{object.id}">
+
+						<f:facet name="header">
+							<h:outputText value="#{catalogMatrixIngresosMB.titleTable}" />
+						</f:facet>
+
+						<p:column headerText="Consecutivo" width="7%">
+							<h:outputText value="#{object.consecutivo}" />
+						</p:column>
+						<p:column headerText="Tipo - CRI" width="7%">
+							<h:outputText value="#{object.tipoCri}" />
+						</p:column>
+						<p:column headerText="Concepto del Tipo de Ingreso - CRI">
+							<h:outputText value="#{object.concepto}" />
+						</p:column>
+						<p:column headerText="Características">
+							<h:outputText value="#{object.caracteristicas}" />
+						</p:column>
+						<p:column headerText="Medio de Recaudación o Percepción" rendered="#{catalogMatrixIngresosMB.tipoMatriz eq 'R'}">
+							<h:outputText value="#{object.medioRecaudacion}" />
+						</p:column>
+						<p:column headerText="Cargo" width="6%">
+							<h:outputText value="#{object.cargo}" />
+						</p:column>
+						<p:column headerText="Cuenta Cargo">
+							<h:outputText value="#{object.cuentaCargo}" />
+						</p:column>
+						<p:column headerText="Abono" width="6%">
+							<h:outputText value="#{object.abono}" />
+						</p:column>
+						<p:column headerText="Cuenta Abono">
+							<h:outputText value="#{object.cuentaAbono}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form">
+				<p:growl id="msgs" showDetail="true" sticky="true" />
+				<p:remoteCommand id="remote" name="remote"
+					actionListener="#{tabuladorSueldosTrimestralMB.loadTabulador}"
+					update="form:objects" />
+				<p:panel id="pDigitaliza" header="Tabulador de Sueldos Carga Manual"
+					styleClass="green col-md-12 col-centered shadow-panel row-centered"
+					widgetVar="pCargaAutomatica">
+					<p:panelGrid
+						styleClass="green col-md-12 col-centered row-centered ui-noborder"
+						columns="5">
+						<p:outputLabel value="Puesto" />
+						<p:outputLabel value="Nivel Salarial" />
+						<p:outputLabel value="No. Plaza" />
+						<p:outputLabel value="Categoria Confianza" />
+						<p:outputLabel value="Categoria Sindicalizada" />
+
+						<p:inputText id="txtPuesto"
+							value="#{tabuladorSueldosTrimestralMB.puesto}" />
+
+						<p:inputText id="txtnivelSalarial"
+							value="#{tabuladorSueldosTrimestralMB.nivelSalarial}" />
+						<p:inputText id="txtNoPlaza"
+							value="#{tabuladorSueldosTrimestralMB.noPlaza}" />
+						<p:inputText id="txtCategoira"
+							value="#{tabuladorSueldosTrimestralMB.categoira}" />
+						<p:inputText id="txtCatSindicalizada"
+							value="#{tabuladorSueldosTrimestralMB.catSindicalizada}" />
+					</p:panelGrid>
+					<p:panelGrid
+						styleClass="green col-md-12 col-centered row-centered ui-noborder"
+						columns="5">
+						<p:commandButton value="Nuevo Registro"
+							actionListener="#{tabuladorSueldosTrimestralMB.addNewElement}"
+							update="form:objects" id="addNew" />
+						<p:commandButton value="Buscar"
+							actionListener="#{tabuladorSueldosTrimestralMB.predicateFilters}"
+							update="form:objects" id="buscar" />
+						<p:commandButton value="Refresacar" onclick="remote()"
+							id="refresh" />
+						<p:commandButton value="Limpiar"
+							actionListener="#{tabuladorSueldosTrimestralMB.limpiar}"
+							oncomplete="remote()"
+							update="form:objects, form:txtPuesto, :form:txtnivelSalarial, form:txtNoPlaza, :form:txtCategoira, form:txtCatSindicalizada"
+							id="clear" />
+						<p:commandButton value="Eliminar Todo"
+							actionListener="#{tabuladorSueldosTrimestralMB.deleteAll}"
+							oncomplete="remote()"
+							update="form:objects, form:txtPuesto, :form:txtnivelSalarial, form:txtNoPlaza, :form:txtCategoira, form:txtCatSindicalizada"
+							id="deleteAll" />
+					</p:panelGrid>
+
+					<p:dataTable id="objects" var="object"
+						value="#{tabuladorSueldosTrimestralMB.dataModeler}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						editable="true" paginator="true" rows="10" scrollable="true"
+						lazy="true" scrollHeight="200" scrollWidth="900" frozenColumns="5"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selectionMode="single" rowKey="#{object.id}"
+						selection="#{tabuladorSueldosTrimestralMB.selected}"
+						widgetVar="sueldosWdg">
+
+						<p:ajax event="rowEdit"
+							listener="#{tabuladorSueldosTrimestralMB.onRowEdit}"
+							oncomplete="remote()" update=":form:msgs, form:objects" />
+						<p:ajax event="rowEditCancel"
+							listener="#{tabuladorSueldosTrimestralMB.onRowCancel}"
+							update=":form:msgs, form:objects" />
+						<p:column headerText="Borrar" style="width:15%" exportable="false">
+							<p:commandLink update=":form:objects" oncomplete="remote()"
+								actionListener="#{tabuladorSueldosTrimestralMB.deleteById(object.id)}"
+								image="ui-icon ui-icon-close" title="Delete">
+
+
+								<h:outputText styleClass="ui-icon ui-icon-close" />
+
+							</p:commandLink>
+						</p:column>
+						<p:column style="width:5rem" exportable="false">
+							<p:rowEditor />
+						</p:column>
+						<p:column headerText="Puesto Funcional" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.puestoFuncional}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="pustoFuncional"
+										value="#{object.puestoFuncional}" style="width:100%"
+										required="true"
+										requiredMessage="El campo Puesto Funcional es Obligatorio" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Nivel Salarial" style="width:3rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.nivelSalarial}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="nivelSalarial" value="#{object.nivelSalarial}"
+										onkeyup="this.value=this.value.toUpperCase();" required="true"
+										requiredMessage="El campo Nivel Salarial es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="No. Plaza" style="width:4rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.noPlaza}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="noPlaza" value="#{object.noPlaza}"
+										required="true"
+										requiredMessage="El campo No Plaza es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Categoria Confianza" style="width:5rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.categoriaConfianza}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="catConfianza" required="true"
+										requiredMessage="El campo Categoria Confianza es Obligatorio"
+										value="#{object.categoriaConfianza}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Categoria Sindicalizado" style="width:5rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.categoriaSindicalizado}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="catSindicalizado" required="true"
+										requiredMessage="El campo Categoria Sindicalizado es Obligatorio"
+										value="#{object.categoriaSindicalizado}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Categoria Eventual" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.categoriaEventual}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="catEventual" required="true"
+										requiredMessage="El campo Categoria Eventual es Obligatorio"
+										value="#{object.categoriaEventual}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Dietas" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.dietas}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="dietas" value="#{object.dietas}"
+										required="true"
+										requiredMessage="El campo Dietas es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Haberes" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.haberes}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="haberes" value="#{object.haberes}"
+										required="true"
+										requiredMessage="El campo Haberes es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Sueldo Base" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sueldoBase}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="sueldoBase" required="true"
+										requiredMessage="El campo Sueldo Base es Obligatorio"
+										value="#{object.sueldoBase}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Sueldo Magisterio" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sueldoMagisterio}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="sueldoMagisterio" required="true"
+										requiredMessage="El campo Sueldo Magesterio es Obligatorio"
+										value="#{object.sueldoMagisterio}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Horas Clase" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.horasClase}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="horasClase" value="#{object.horasClase}"
+										required="true"
+										requiredMessage="El campo Horas Clase es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Carrera Magisterial" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.carreraMagisterial}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="carreraMagisterial" required="true"
+										requiredMessage="El campo Carrera Magisterial es Obligatorio"
+										value="#{object.carreraMagisterial}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Carrera Docente" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.carreraDocente}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="carreraDocente" required="true"
+										requiredMessage="El campo Carrera Docente es Obligatorio"
+										value="#{object.carreraDocente}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Laboral Extranjero" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.laboralExtranjero}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="laboralExtranjero" required="true"
+										requiredMessage="El campo Laboral Extranjero es Obligatorio"
+										value="#{object.laboralExtranjero}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Honorarios" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.honorarios}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="honorarios" value="#{object.honorarios}"
+										required="true"
+										requiredMessage="El campo Horarios es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Interinato" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.interinato}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="interinato" value="#{object.interinato}"
+										required="true"
+										requiredMessage="El campo Laboral Extranjero es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Personal Eventual" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.personalEventual}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="personalEventual" required="true"
+										requiredMessage="El campo Personal Eventual es Obligatorio"
+										value="#{object.personalEventual}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Medicos Residentes" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.medicosResidentes}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="medicosResidentes" required="true"
+										requiredMessage="El campo Medicos Residentes es Obligatorio"
+										value="#{object.medicosResidentes}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Servicio Social" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.servicioSocial}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="servicioSocial" required="true"
+										requiredMessage="El campo Servicio Social es Obligatorio"
+										value="#{object.servicioSocial}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Representante" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.representante}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="representante" value="#{object.representante}"
+										required="true"
+										requiredMessage="El campo Representante es Obligatorio"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Años de Servicio" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.aniosServicio}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="aniosServicio" value="#{object.aniosServicio}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Antigüedad" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.antiguedad}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="antiguedad" value="#{object.antiguedad}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Permanencia" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.permanencia}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="permanencia" value="#{object.permanencia}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Prima Vacacional" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.primaVacacional}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="primaVacacional"
+										value="#{object.primaVacacional}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Agüinaldo" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.aguinaldo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="aguinaldo" value="#{object.aguinaldo}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Agüinaldo Eventual" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.aguinaldoEventual}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="aguinaldoEventual"
+										value="#{object.aguinaldoEventual}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Vacaciones por Finiquito"
+							style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.vacacionesFiniquito}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="vacacionesFiniquito"
+										value="#{object.vacacionesFiniquito}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Prima Dominical" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.primaDominical}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="primaDominical"
+										value="#{object.primaDominical}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Horas Extraordinarias" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.horasExtraordinarias}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="horasExtraordinarias"
+										value="#{object.horasExtraordinarias}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Comprensasión" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.compensacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="compensacion" value="#{object.compensacion}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Servicios Especiales" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.serviciosEspeciales}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="serviciosEspeciales"
+										value="#{object.serviciosEspeciales}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Riesgo Profecional" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.riesgoProfesional}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="riesgoProfesional"
+										value="#{object.riesgoProfesional}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Retabulacion" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.retabulacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="retabulacion" value="#{object.retabulacion}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Gratificación" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.gratificacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="gratificacion" value="#{object.gratificacion}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Gratificación por Convenio"
+							style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.gratificacionConvenio}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="gratificacionConvenio"
+										value="#{object.gratificacionConvenio}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Gratificación Productividad"
+							style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.gratificacionProductiva}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="gratificacionProductiva"
+										value="#{object.gratificacionProductiva}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Labores Docentes" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.laboresDocente}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="laboresDocente"
+										value="#{object.laboresDocente}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Estudios Superiores" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.estudiosSuperiores}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="estudiosSuperiores"
+										value="#{object.estudiosSuperiores}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sobrehaberes" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sobrehaberes}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="sobrehaberes" value="#{object.sobrehaberes}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Tecnico Especial" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.tecnicoEspecial}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="tecnicoEspecial"
+										value="#{object.tecnicoEspecial}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Horarios Especiales" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.horariosEspeciales}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="horariosEspeciales"
+										value="#{object.horariosEspeciales}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Custodia de Valores" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.custodiaValores}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="custodiaValores"
+										value="#{object.custodiaValores}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Issste" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.isste}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="issste" value="#{object.isste}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Servicio de Salud" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.servicioSalud}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="servicioSalud" value="#{object.servicioSalud}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Solidario de Reparto" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.solidarioReparto}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="solidarioReparto"
+										value="#{object.solidarioReparto}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Capitalización Individual"
+							style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.capitalizacionIndividual}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="capitalizacionIndividual"
+										value="#{object.capitalizacionIndividual}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Issemym" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.issemym}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="issemym" value="#{object.issemym}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Riesgos de Trabajo" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.riesgoTrabajo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="riesgoTrabajo" value="#{object.riesgoTrabajo}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Vejez" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.vejez}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="vejez" value="#{object.vejez}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Fovissste" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.fovissste}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="fovissste" value="#{object.fovissste}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Ahorro para el Retiro" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.ahorroRetiro}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="ahorroRetiro" value="#{object.ahorroRetiro}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Seguros y Fianzas" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.segurosFianzas}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="segurosFianzas"
+										value="#{object.segurosFianzas}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Fondo para el Retiro" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.fondoRetiro}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="fondoRetiro" value="#{object.fondoRetiro}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Separación Individualizado"
+							style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.separacionIndividual}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="separacionIndividual"
+										value="#{object.separacionIndividual}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+
+						<p:column headerText="Accidentes de Trabajo" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.accidenteTrabajo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="accidenteTrabajo"
+										value="#{object.accidenteTrabajo}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sueldos y Salarios Caidos"
+							style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sueldoSalarioCaidos}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="sueldoSalarioCaidos"
+										value="#{object.sueldoSalarioCaidos}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Jubilación" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.jubilacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="jubilacion" value="#{object.jubilacion}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Trabajadores Sindicalizados"
+							style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.trabajadoresSindicalizados}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="trabajadoresSindicalizados"
+										value="#{object.trabajadoresSindicalizados}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Civicos Económicos" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.civicosEconomicos}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="civicosEconomicos"
+										value="#{object.civicosEconomicos}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Magisterio" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.magisterio}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="magisterio"
+										value="#{object.civicosEconomicos}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Servidor Publico" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.servidorPublico}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="servidorPublico"
+										value="#{object.servidorPublico}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Estudios de Postgrado" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.estudiosPostgrado}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="estudiosPostgrado"
+										value="#{object.estudiosPostgrado}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Derivados de Convenio" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.derivadoConvenio}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="derivadoConvenio"
+										value="#{object.derivadoConvenio}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sendicalizado" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.sidicalizados}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="sidicalizados" value="#{object.sidicalizados}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Becas" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.becas}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="becas" value="#{object.becas}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+
+
+						<p:column headerText="Profesionalización" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.profesionalizacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="profesionalizacion"
+										value="#{object.profesionalizacion}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Tesis" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.tesis}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="tesis" value="#{object.tesis}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Seguro de Vida" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.seguroVida}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="seguroVida" value="#{object.seguroVida}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Viaticos" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.viaticos}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="viaticos" value="#{object.viaticos}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Diferencial de Escuela" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.diferenciaEscuelas}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="diferenciaEscuelas"
+										value="#{object.diferenciaEscuelas}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Despensa" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.despensa}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="despensa" value="#{object.despensa}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Seguridad Social" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.seguridadSocial}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="seguridadSocial"
+										value="#{object.seguridadSocial}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Reconocimiento" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.reconocimiento}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="reconocimiento"
+										value="#{object.reconocimiento}" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Puntualidad" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.puntualidad}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="puntualidad" value="#{object.puntualidad}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Recompesas" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.recompensas}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="recompensas" value="#{object.recompensas}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Total" style="width:15rem">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.total}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="totales" value="#{object.total}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</ui:define>
+		<style>
+.ui-datatable-frozenlayout-left {
+	width: 100%;
+}
+
+.ui-datatable-frozenlayout-right {
+	width: 100%;
+}
+</style>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<script type="text/javascript">
+		        function showStatus() {
+		            PF('statusDialog').show();
+		        }
+		        function hideStatus() {
+		            PF('statusDialog').hide();
+		        }
+		    </script>
+			<p:panel id="pDigitaliza"
+				header="Importar informaci&oacute;n para integraci&oacute;n del Presupuesto de Egresos"
+				styleClass="green col-md-5 col-centered shadow-panel"
+				widgetVar="pCargaAutomatica">
+				<h:form id="uploadForm" enctype="multipart/form-data">
+					<h:panelGrid columns="2" style="margin-bottom:10px"
+						cellpadding="10">
+						<h:panelGrid columns="1" style="margin-bottom:10px"
+							cellpadding="5">
+							<p:outputLabel for="organismo"
+								value="Seleccione una Opci&oacute;n" />
+							<p:selectOneRadio id="organismo"
+								value="#{edoAnalitoEgrePIntegradoImpMB.organismo}" layout="grid"
+								columns="1" required="true"
+								requiredMessage="Favor de seleccionar una opci&oacute;n de organismo">
+								<f:selectItem itemLabel="Ayuntamiento" itemValue="0" />
+								<f:selectItem itemLabel="Organismo de Agua" itemValue="2" />
+								<f:selectItem itemLabel="Dif Municipal" itemValue="3" />
+								<f:selectItem itemLabel="Organismo del Deporte" itemValue="4" />
+								<p:ajax event="change" update="organismo"></p:ajax>
+							</p:selectOneRadio>
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" style="margin-bottom:10px"
+							styleClass="row-centered col-centered " cellpadding="10">
+							<h:outputLabel
+								value="Seleccione el Mes y presione el bot&oacute;n Correcto" />
+							<h:panelGrid columns="2" style="margin-bottom:10px"
+								cellpadding="5">
+								<p:outputLabel for="mes" value="Mes a exportar " />
+								<p:selectOneMenu id="mes"
+									value="#{edoAnalitoEgrePIntegradoImpMB.mes}">
+									<f:selectItem itemLabel="01" itemValue="01" />
+									<f:selectItem itemLabel="02" itemValue="02" />
+									<f:selectItem itemLabel="03" itemValue="03" />
+									<f:selectItem itemLabel="04" itemValue="04" />
+									<f:selectItem itemLabel="05" itemValue="05" />
+									<f:selectItem itemLabel="06" itemValue="06" />
+									<f:selectItem itemLabel="07" itemValue="07" />
+									<f:selectItem itemLabel="08" itemValue="08" />
+									<f:selectItem itemLabel="09" itemValue="09" />
+									<f:selectItem itemLabel="10" itemValue="10" />
+									<f:selectItem itemLabel="11" itemValue="11" />
+									<f:selectItem itemLabel="12" itemValue="12" />
+									<p:ajax event="change" update="mes"></p:ajax>
+								</p:selectOneMenu>
+							</h:panelGrid>
+						</h:panelGrid>
+					</h:panelGrid>
+
+
+					<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+
+					<p:panelGrid id="grid" columns="2"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:outputLabel value="Seleccione un archivo:"></p:outputLabel>
+						<!-- 						10 MB   fileLimit="2"-->
+						<p:fileUpload
+							fileUploadListener="#{edoAnalitoEgrePIntegradoImpMB.handleFileUpload}"
+							mode="advanced" dragDropSupport="false" update="growl, downloadError"
+							sizeLimit="10000000" accept=".csv,.txt"
+							allowTypes="/(\.|\/)(csv|txt)$/"
+							invalidSizeMessage="Tamaño invalido de archivo."
+							invalidFileMessage="Tipo invalido de archivo."
+							cancelLabel="Cancelar" label="Elegir" uploadLabel="Correcto" />
+						<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+							draggable="false" closable="false">
+							<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+						</p:dialog>
+						<p:commandButton value="Descargar archivo de Errores" ajax="false"
+							style="margin-top:10px;padding:5px;" id="downloadError"
+							onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)"
+							disabled="#{empty edoAnalitoEgrePIntegradoImpMB.errorFileName}">
+							<p:fileDownload
+								value="#{edoAnalitoEgrePIntegradoImpMB.retrieveErrorDocument( edoAnalitoEgrePIntegradoImpMB.errorFileName )}"></p:fileDownload>
+						</p:commandButton>
+					</p:panelGrid>
+				</h:form>
+			</p:panel>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

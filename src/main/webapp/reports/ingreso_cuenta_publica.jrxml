@@ -1,0 +1,1000 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ingreso_cuenta_publica" pageWidth="1200" pageHeight="595" orientation="Landscape" columnWidth="1200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9f461168-69b2-46da-b19c-66de97583e52">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="data base 24"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="totalAutorizado" class="java.math.BigDecimal"/>
+	<parameter name="totalAmpliacion" class="java.math.BigDecimal"/>
+	<parameter name="totalReduccion" class="java.math.BigDecimal"/>
+	<parameter name="totalAutoFinal" class="java.math.BigDecimal"/>
+	<parameter name="totalAautorizado" class="java.math.BigDecimal"/>
+	<parameter name="totalPreEjercido" class="java.math.BigDecimal"/>
+	<parameter name="totalVariacionIncial" class="java.math.BigDecimal"/>
+	<parameter name="totalVariacionModi" class="java.math.BigDecimal"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT CASE
+           WHEN SUBSTR(T2.CUENTA,1,1) <= '5' THEN
+               1
+           ELSE
+               2
+       END PRINCIPAL,
+       CASE
+          WHEN SUBSTR(T2.CUENTA,1,1) <= '4' THEN
+              1
+          WHEN SUBSTR(T2.CUENTA,1,1) = '5' THEN
+              2
+          ELSE
+              3
+       END SGRUPO,
+       DECODE(SUBSTR(T2.CUENTA,1,1), '1', 1, '2', 2, '3' ,3 , '4', 4, '5', 5, '6', 6) SSGRUPO,
+       T2.CUENTA,
+       T2.NOMCTA,
+       T2.AUTORIZADO,
+       T2.AMPLIACION,
+       T2.REDUCCION,
+       T2.AUTO_FINAL,
+       DECODE(T2.CUENTA, '3400', FN_GET_PRESUPUESTO_EJERCIDO_4311,T2.PRES_EJERCIDO) PRES_EJERCIDO,
+       T2.VARIACION_INICIAL,
+       T2.VARIACION_MODIFICADO
+    FROM (
+SELECT  * FROM (
+VALUES ('1000', 'Impuestos sobre Erogaciones', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('1100', 'Impuestos sobre Tenencia', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('1200', 'Otros Impuestos y Accesorios', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('2000', 'Derechos', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('2100', 'Sector Central', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('2110', 'Organismos Auxiliares', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('3100', 'Aportaciones de Mejoras', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('3200', 'Productos', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('3300', 'Aprovechamientos', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('3400', 'Ingresos Financie', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+        ('4000', 'Aportaciones y Cuotas de Seguridad Social', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('5100', 'Participaciones Federales', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('5200', 'Fondos de Aportaciones Ramo 33', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('5300', 'Otros Apoyos Federales', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('6100', 'Generación de ADEFAS', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
+       ('6200', 'Financiamientos', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00)
+                )
+AS TEMP (CUENTA, NOMCTA, AUTORIZADO, AMPLIACION, REDUCCION, AUTO_FINAL, PRES_EJERCIDO, VARIACION_INICIAL, VARIACION_MODIFICADO)
+UNION ALL
+SELECT
+       DECODE(T1.CUENTA, '4399', '4200', '4100') CUENTA,
+       DECODE(T1.CUENTA, '4399', 'Ingreso por Venta de Bienes y Servicios', 'Transferencias, Asignaciones, Subsidio y Otras Ayudas') NOMCTA,
+       SUM(T1.AUTORIZADO) AUTORIZADO,
+       SUM(T1.CARGOS)  AMPLIACION,
+       SUM(T1.ABONOS)  REDUCCION,
+       SUM(T1.AUTORIZADO + T1.CARGOS - T1.ABONOS) AUTO_FINAL,
+       SUM(T1.ABONOS - T1.CARGOS) PRES_EJERCIDO,
+      SUM( (T1.ABONOS - T1.CARGOS) + T1.AUTORIZADO) VARIACION_INICIAL,
+      SUM( (T1.AUTORIZADO + T1.CARGOS - T1.ABONOS) - (T1.ABONOS - T1.CARGOS)) VARIACION_MODIFICADO
+    FROM(
+SELECT SUBSTR(CU.SCTA,12,4) CUENTA,
+       CU.NOMCTA,
+       CU.SALINI AUTORIZADO,
+       CU.CARGOS_1 + CU.CARGOS_2 + CU.CARGOS_3 + CU.CARGOS_4 + CU.CARGOS_5 + CU.CARGOS_6 + CU.CARGOS_7 + CU.CARGOS_8 + CU.CARGOS_9 + CU.CARGOS_10 + CU.CARGOS_11 + CU.CARGOS_12 CARGOS,
+       CU.ABONOS_1 + CU.ABONOS_2 + CU.ABONOS_3 + CU.ABONOS_4 + CU.ABONOS_5 + CU.ABONOS_6 + CU.ABONOS_7 + CU.ABONOS_8 + CU.ABONOS_9 + CU.ABONOS_10 + CU.ABONOS_11 + CU.ABONOS_12 ABONOS
+     FROM CUENTA CU
+WHERE CU.CUENTA IN ('8150', '8140', '8110')
+  --AND CU.SALINI <> 0
+  AND SCTA IN( '000000000004399', '000000000004223')
+  AND CU.SSCTA = ''
+  ) T1
+GROUP BY 1,2, T1.CUENTA
+    ) T2
+ORDER BY 1, 2,3,4 ASC]]>
+	</queryString>
+	<field name="PRINCIPAL" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PRINCIPAL"/>
+		<property name="com.jaspersoft.studio.field.label" value="PRINCIPAL"/>
+	</field>
+	<field name="SGRUPO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="SGRUPO"/>
+		<property name="com.jaspersoft.studio.field.label" value="SGRUPO"/>
+	</field>
+	<field name="SSGRUPO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="SSGRUPO"/>
+		<property name="com.jaspersoft.studio.field.label" value="SSGRUPO"/>
+	</field>
+	<field name="CUENTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CUENTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="CUENTA"/>
+	</field>
+	<field name="NOMCTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NOMCTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="NOMCTA"/>
+	</field>
+	<field name="AUTORIZADO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="AUTORIZADO"/>
+		<property name="com.jaspersoft.studio.field.label" value="AUTORIZADO"/>
+	</field>
+	<field name="AMPLIACION" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="AMPLIACION"/>
+		<property name="com.jaspersoft.studio.field.label" value="AMPLIACION"/>
+	</field>
+	<field name="REDUCCION" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="REDUCCION"/>
+		<property name="com.jaspersoft.studio.field.label" value="REDUCCION"/>
+	</field>
+	<field name="AUTO_FINAL" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="AUTO_FINAL"/>
+		<property name="com.jaspersoft.studio.field.label" value="AUTO_FINAL"/>
+	</field>
+	<field name="PRES_EJERCIDO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="PRES_EJERCIDO"/>
+		<property name="com.jaspersoft.studio.field.label" value="PRES_EJERCIDO"/>
+	</field>
+	<field name="VARIACION_INICIAL" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="VARIACION_INICIAL"/>
+		<property name="com.jaspersoft.studio.field.label" value="VARIACION_INICIAL"/>
+	</field>
+	<field name="VARIACION_MODIFICADO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="VARIACION_MODIFICADO"/>
+		<property name="com.jaspersoft.studio.field.label" value="VARIACION_MODIFICADO"/>
+	</field>
+	<variable name="autorizadoFinal" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{AUTORIZADO}.add($F{AMPLIACION}).subtract($F{REDUCCION})]]></variableExpression>
+	</variable>
+	<variable name="ssAutorizado" class="java.math.BigDecimal" resetType="Group" resetGroup="SSUB_GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{AUTORIZADO}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="sAutorizado" class="java.math.BigDecimal" resetType="Group" resetGroup="SUB_GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{AUTORIZADO}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="autorizado" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{AUTORIZADO}]]></variableExpression>
+	</variable>
+	<variable name="porcentaTotal" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new BigDecimal("100.00")]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal("100.00")]]></initialValueExpression>
+	</variable>
+	<variable name="ssAmpliacion" class="java.math.BigDecimal" resetType="Group" resetGroup="SSUB_GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{AMPLIACION}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="sAmpliacion" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{AMPLIACION}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="sRuduccion" class="java.math.BigDecimal" resetType="Group" resetGroup="SUB_GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{REDUCCION}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="ssRuduccion" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{REDUCCION}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="ssAutorizadoFinal" class="java.math.BigDecimal" resetType="Group" resetGroup="SUB_GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{AUTORIZADO}.add($F{AMPLIACION}).subtract($F{REDUCCION})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="sAutorizadoFinal" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{AUTORIZADO}.add($F{AMPLIACION}).subtract($F{REDUCCION})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="porAutoFinal" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{AUTORIZADO}.add($F{AMPLIACION}).subtract($F{REDUCCION})]]></variableExpression>
+	</variable>
+	<variable name="porSAutoFinal" class="java.math.BigDecimal" resetType="Group" resetGroup="SUB_GRUPO">
+		<variableExpression><![CDATA[$P{totalAutoFinal}.divide($P{totalAutoFinal}).multiply(new BigDecimal("100.00"))]]></variableExpression>
+	</variable>
+	<group name="GRUPO">
+		<groupExpression><![CDATA[$F{PRINCIPAL}]]></groupExpression>
+		<groupHeader>
+			<band height="10">
+				<textField>
+					<reportElement x="0" y="0" width="349" height="10" uuid="f002aa55-b3c8-4239-841a-f99148ec8b57">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PRINCIPAL}== 1 ? "Ordinarios" :  "Extraordinarios"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="349" y="0" width="100" height="10" uuid="08545414-4ab9-4975-9e75-345e3748ec09">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} ==1 ? $P{totalAutorizado} : ""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0.0">
+					<reportElement x="449" y="0" width="22" height="10" uuid="bbdd9b12-6718-4901-9b61-a409674fd1e3">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO}== 1 ? $P{totalAutorizado}.multiply(new BigDecimal("100")).divide($P{totalAutorizado}):""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+					<reportElement x="471" y="0" width="100" height="10" uuid="8e7082a4-0703-4211-836e-0ced151a4c94">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} ==1 ? $P{totalAmpliacion} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+					<reportElement x="571" y="0" width="100" height="10" uuid="2889cded-7237-430f-9d96-c0abff6437ab">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1 ? $P{totalReduccion} :""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="671" y="0" width="100" height="10" uuid="0d31821d-74cf-4f55-9017-8ab09b615fe0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1 ? $P{totalAutoFinal} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="771" y="0" width="22" height="10" uuid="911d609b-7d38-4b94-88da-1d8acf33ffb0">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1? $P{totalAutoFinal}.multiply(new BigDecimal("100.00")).divide($P{totalAutoFinal}) :""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="793" y="0" width="100" height="10" uuid="6760a7fe-a766-4066-a4a0-f1e7db66e29f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1 ? $P{totalPreEjercido} : ""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.0">
+					<reportElement x="893" y="0" width="22" height="10" uuid="42a46cf1-ed2e-4b02-bad7-0f8746e80965">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1 ? $P{totalPreEjercido}.multiply(new BigDecimal("100.00")).divide($P{totalPreEjercido}) :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+					<reportElement x="915" y="0" width="100" height="10" uuid="5bdbd51b-9ec4-4e27-84ab-5fc6e20856b5">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1? $P{totalVariacionIncial} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+					<reportElement x="1037" y="0" width="100" height="10" uuid="5541d219-41c5-4247-9ee0-4db557f3d453">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1 ? $P{totalVariacionModi} :""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.0">
+					<reportElement x="1015" y="0" width="22" height="10" uuid="36538f17-81ef-4a48-bc50-ab7cbe50ad68">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1 ? $P{totalVariacionIncial}.multiply(new BigDecimal("10.00")).divide( $P{totalVariacionIncial}) : ""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0.0">
+					<reportElement x="1137" y="0" width="23" height="10" uuid="b61f1ccb-f576-452c-baaf-7218400a7b62">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO} == 1? $P{totalVariacionModi}.multiply(new BigDecimal("100.0")).divide($P{totalVariacionModi}):""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="SUB_GRUPO">
+		<groupExpression><![CDATA[$F{SGRUPO}]]></groupExpression>
+		<groupHeader>
+			<band height="10">
+				<textField>
+					<reportElement x="0" y="0" width="349" height="10" uuid="84dc4fe0-df5d-4a80-aa36-70bdad75f268">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SGRUPO}== 1 ? "Estatales" : $F{SGRUPO} ==2 ? "Federales" :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="349" y="0" width="100" height="10" uuid="34aa0470-83e7-4d0c-8b58-798a6ec5c67d">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? $P{totalAutorizado} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0.0">
+					<reportElement x="449" y="0" width="22" height="10" uuid="a7d8cc83-79af-460f-bf02-d84f0ae17642">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? $P{totalAutorizado}.multiply(new BigDecimal("100")).divide($P{totalAutorizado}):""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="471" y="0" width="100" height="10" uuid="7dbe449d-e22f-462b-aabe-e9c9dcc85214">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} ==1 ? $P{totalAmpliacion} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="571" y="0" width="100" height="10" uuid="f4913e0b-52d0-464c-8e54-f96bc1686bcc">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? $P{totalReduccion} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="671" y="0" width="100" height="10" uuid="c09c6355-21b3-4ae8-9490-5cb3019f3bcc">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1? $P{totalAutoFinal} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0.0">
+					<reportElement x="771" y="0" width="22" height="10" uuid="6e4dad39-858b-43fd-b6f5-b6be6c4cba03">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1? $P{totalAutoFinal}.multiply(new BigDecimal("100")).divide($P{totalAutoFinal}) :""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="793" y="0" width="100" height="10" uuid="8ff7e147-ec27-4dd6-9191-16d518df449a">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? $P{totalPreEjercido} : ""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0.0">
+					<reportElement x="893" y="0" width="22" height="10" uuid="6616cb7b-930e-4c64-b66d-45f3bee250f1">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? $P{totalPreEjercido}.multiply(new BigDecimal("100.00")).divide($P{totalPreEjercido}) :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="915" y="0" width="100" height="10" uuid="1a1972a4-e8ea-45a4-a468-020d6d8259cc">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1? $P{totalVariacionIncial} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="1037" y="0" width="100" height="10" uuid="38d22415-30c9-4e10-aae4-e59d76350b92">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? $P{totalVariacionModi} :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0.0">
+					<reportElement x="1015" y="0" width="22" height="10" uuid="09b16775-937d-49fc-a7c8-124438e8d3ab">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? $P{totalVariacionIncial}.multiply(new BigDecimal("10.00")).divide( $P{totalVariacionIncial}) : ""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0.0">
+					<reportElement x="1137" y="0" width="23" height="10" uuid="303b4a3c-058c-4d5b-a72e-f45661ab43ea">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1? $P{totalVariacionModi}.multiply(new BigDecimal("100.0")).divide($P{totalVariacionModi}):""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="SSUB_GRUPO">
+		<groupExpression><![CDATA[$F{SSGRUPO}]]></groupExpression>
+		<groupHeader>
+			<band height="10">
+				<textField>
+					<reportElement x="0" y="0" width="349" height="10" uuid="a01cda67-4511-4ee3-a3b1-ced5e8ad61d4">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SSGRUPO} == 1 ? "          - Tributarios" : $F{SSGRUPO} ==2 ? "         - No Tributarios" :""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SSUB_GRUPO" pattern="#,##0">
+					<reportElement x="349" y="0" width="100" height="10" uuid="99ad0034-205e-4648-8aa8-d5f393af8f81">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0">
+					<reportElement x="449" y="0" width="22" height="10" uuid="63cb1710-60f1-40bd-8c23-eb3bff947237">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="471" y="0" width="100" height="10" uuid="862b69bc-7860-4daa-ac32-d4c4c9af887a">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="571" y="0" width="100" height="10" uuid="8a10ad34-cf2d-405a-b6a9-773a58563f6d">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="671" y="0" width="100" height="10" uuid="c57a6212-0702-48df-8dab-e55b1af3824a">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0.0">
+					<reportElement x="771" y="0" width="22" height="10" uuid="86e19249-dbe4-4cd9-abcc-ae6db82c0bf0">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="793" y="0" width="100" height="10" uuid="691addd8-1bbc-4f48-8f06-837fd9dfebdb">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="893" y="0" width="22" height="10" uuid="fecc4eda-3369-4d07-aa41-b7a28fcce3ac">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="915" y="0" width="100" height="10" uuid="f2a7b10a-d1c2-4ec8-85b0-467c18878d8c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="1037" y="0" width="100" height="10" uuid="284e509a-0d6f-491e-abda-d507987ef225">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="1015" y="0" width="22" height="10" uuid="f511c6be-f315-452c-a8d1-5921b2e2f5e8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="1137" y="0" width="23" height="10" uuid="6da67de8-14a0-45c9-bebf-0763ee71b939">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="20">
+			<textField>
+				<reportElement x="0" y="0" width="349" height="10" uuid="33cfb3a9-1590-41ae-9e48-aea6d26a28ee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ingresos"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="349" height="10" uuid="80559883-7e09-48c0-810d-fc00cf1b2fee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["         Superávit Ejercicio Anterior "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Column" pattern="#,##0">
+				<reportElement x="349" y="0" width="100" height="10" uuid="2ca53a30-fac1-4aab-a513-7c4155922aa5"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalAutorizado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="449" y="0" width="22" height="10" uuid="86dea5e0-8264-43d9-aa55-87a5696b0b5a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new BigDecimal("100")]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="471" y="0" width="100" height="10" uuid="3bd60349-6197-4000-ad32-0eca9de5241f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalAmpliacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="571" y="0" width="100" height="10" uuid="6970c37e-384d-4ddd-8c99-cdf37dcaf905">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalReduccion}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0">
+				<reportElement x="349" y="10" width="100" height="10" uuid="9cb12fad-c1fa-40eb-bb56-1569d5923602">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0">
+				<reportElement x="449" y="10" width="22" height="10" uuid="a71d1578-80fa-4e22-894c-3ad11f929930">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0">
+				<reportElement x="471" y="10" width="100" height="10" uuid="da5a94b3-468f-4f62-ab73-43015fdb760c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0">
+				<reportElement x="571" y="10" width="100" height="10" uuid="2ac884ac-e83f-4487-8b53-cd365ee169dd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="GRUPO" pattern="#,##0">
+				<reportElement x="671" y="10" width="100" height="10" uuid="af76ce7f-aa59-400f-89aa-d7eb1c3bbdbe">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="671" y="0" width="100" height="10" uuid="f24c66d4-c4d3-4517-8ed9-9bb1a36c7638">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalAutoFinal}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0.0">
+				<reportElement x="771" y="0" width="22" height="10" uuid="52b2a85e-556e-4fa9-991e-7580cd29fac3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new BigDecimal("100.0")]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+				<reportElement x="771" y="10" width="22" height="10" uuid="0f76bb05-b445-4662-95f1-adf7e277f422">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="793" y="10" width="100" height="10" uuid="2074ba81-8fca-4fae-95e7-631daaa0800d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="793" y="0" width="100" height="10" uuid="d605182b-614c-4186-b6a2-b0069836f149">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalPreEjercido}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+				<reportElement x="893" y="10" width="22" height="10" uuid="635b664c-416b-4867-822e-3645fafebbd6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+				<reportElement x="893" y="0" width="22" height="10" uuid="9561fd27-2ccb-4b85-a94d-23c12b455073">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[100.0]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+				<reportElement x="1015" y="0" width="22" height="10" uuid="998b0489-dbe1-44c5-8f1e-e706bbbfecf0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[100.00]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+				<reportElement x="1015" y="10" width="22" height="10" uuid="27911a50-bc91-447b-b20c-bf8e811b3a9d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="915" y="10" width="100" height="10" uuid="7e01e3dc-1628-4879-8168-81126cbd4c5f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="915" y="0" width="100" height="10" uuid="09f23818-7611-438b-bc87-b76b917e005b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalVariacionIncial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="1037" y="10" width="100" height="10" uuid="db708f18-6d3b-4dee-b488-6f0cc42917c8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+				<reportElement x="1137" y="0" width="23" height="10" uuid="cf4660da-9fcd-4f69-9a4d-3779e6bcb33c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[100.00]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="SUB_GRUPO" pattern="#,##0">
+				<reportElement x="1137" y="10" width="23" height="10" uuid="d5b12ae7-98ba-428e-a052-68d8775f1358">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="1037" y="0" width="100" height="10" uuid="838f43bc-32a8-49cd-9e07-1dacb00bb66d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{totalVariacionModi}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="349" height="10" uuid="f68596ec-96da-4275-9377-a1f89b24d764">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SSGRUPO}<= 2 ? "                  " + $F{NOMCTA}: "         "+$F{NOMCTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="349" y="0" width="100" height="10" uuid="b1775701-878c-4854-8239-da54ea93863a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AUTORIZADO}.compareTo(BigDecimal.ZERO) != 0 ?$F{AUTORIZADO}: ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="471" y="0" width="100" height="10" uuid="d0802cdc-d24f-4fce-acf0-42be227121dc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AMPLIACION}.compareTo(BigDecimal.ZERO)!= 0?$F{AMPLIACION}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="571" y="0" width="100" height="10" uuid="88433d2c-6aaf-42ea-8d10-931977158f0d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REDUCCION}.compareTo(BigDecimal.ZERO)!= 0? $F{REDUCCION}: ""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="449" y="0" width="22" height="10" uuid="1145d4bb-0322-4935-805c-7f973b076641">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AUTORIZADO}.compareTo(BigDecimal.ZERO)!= 0 ? 
+$F{AUTORIZADO}.multiply($V{porcentaTotal}).divide($P{totalAutorizado}, 2, RoundingMode.HALF_UP):""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="671" y="0" width="100" height="10" uuid="c5ded7d9-bdbe-409d-8ccf-99ef5dc4d448">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AUTO_FINAL}.compareTo(BigDecimal.ZERO)!=0 ? $F{AUTO_FINAL}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="771" y="0" width="22" height="10" uuid="28c6906e-c0fc-4f4e-b42d-cb5b475570b4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{porAutoFinal}.compareTo(BigDecimal.ZERO)!= 0 ?$V{porAutoFinal}.multiply(new BigDecimal("100")).divide($P{totalAutoFinal}, 2, RoundingMode.HALF_UP):""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="793" y="0" width="100" height="10" uuid="8a96b1aa-e288-4ac5-873d-5c3a28fe03e1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRES_EJERCIDO}.compareTo(BigDecimal.ZERO)!=0 ? $F{PRES_EJERCIDO}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="893" y="0" width="22" height="10" uuid="94379b40-5687-41af-b678-e8f175913981">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{porAutoFinal}.compareTo(BigDecimal.ZERO)!= 0 ?$V{porAutoFinal}.multiply(new BigDecimal("100")).divide($P{totalAutoFinal}, 2, RoundingMode.HALF_UP):""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="915" y="0" width="100" height="10" uuid="cfef4464-046d-4ad7-931d-dfc37186c1d8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VARIACION_INICIAL}.compareTo(BigDecimal.ZERO)!=0 ?$F{VARIACION_INICIAL} :""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="1015" y="0" width="22" height="10" uuid="b47bc993-5a1c-4ddf-a091-3c87d5babbb0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{porAutoFinal}.compareTo(BigDecimal.ZERO)!= 0 ?$V{porAutoFinal}.multiply(new BigDecimal("100")).divide($P{totalAutoFinal}, 2, RoundingMode.HALF_UP):""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="1137" y="0" width="23" height="10" uuid="341cf2ff-c5b3-47e0-a2d4-e8ce27e8a24b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{porAutoFinal}.compareTo(BigDecimal.ZERO)!= 0 ?$V{porAutoFinal}.multiply(new BigDecimal("100")).divide($P{totalAutoFinal}, 2, RoundingMode.HALF_UP):""]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="1037" y="0" width="100" height="10" uuid="6ac19b13-81e6-4086-978d-1e4b61feace4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VARIACION_MODIFICADO}.compareTo(BigDecimal.ZERO)!=0 ?$F{VARIACION_INICIAL} :""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

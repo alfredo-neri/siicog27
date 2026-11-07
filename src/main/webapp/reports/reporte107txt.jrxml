@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-01-15T00:02:52 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte107txt" pageWidth="841" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="841" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="545c03b2-b019-4127-8016-4abb62b4e94a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Proyecto DB2"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="4"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="13.948"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="TRIMESTRE" class="java.lang.Integer"/>
+	<parameter name="SECTOR" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ANO" class="java.lang.Integer"/>
+	<parameter name="CLAVE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT I.PERIODO, I.CVEIND, I.CLVFUN, P.DENUNCIAS, P.ACUDEN, P.OBSDEN, P.POBLACION, P.OBSPOB
+	FROM PM0311 P
+	JOIN INDICADORES I ON I.IDSECTOR =P.IDSECTOR
+	WHERE P.TRIMESTRE = $P{TRIMESTRE}
+	AND P.IDSECTOR = $P{SECTOR}
+	AND I.CVEIND=8]]>
+	</queryString>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="CVEIND" class="java.lang.Integer"/>
+	<field name="CLVFUN" class="java.lang.String"/>
+	<field name="DENUNCIAS" class="java.lang.Integer"/>
+	<field name="ACUDEN" class="java.lang.Integer"/>
+	<field name="OBSDEN" class="java.lang.String"/>
+	<field name="POBLACION" class="java.lang.Integer"/>
+	<field name="OBSPOB" class="java.lang.String"/>
+	<variable name="REPORTE_TXT" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(0,1)+"\"":"\"\"")
++"|"+(($P{CLAVE}!= null)?"\""+$P{CLAVE}.substring(1,4)+"\"":"\"\"")
++"|"+(($P{ANO}!= null)?$P{ANO}:"")
++"|" +(($F{PERIODO}!= null)?$F{PERIODO}:"") 
++"|" +(($P{TRIMESTRE}!= null)?$P{TRIMESTRE}:"") +"|"+
+(($P{TRIMESTRE} == 1) ? "31/03/"+$P{ANO}.toString().substring(2) : (
+	($P{TRIMESTRE} == 2) ? "30/06/"+$P{ANO}.toString().substring(2)	: (
+		($P{TRIMESTRE} == 3) ? "30/09/"+$P{ANO}.toString().substring(2)	: (
+			($P{TRIMESTRE} == 4) ? "31/12/"+$P{ANO}.toString().substring(2)	:""
+
+		)
+	)
+))
++"|\""+(($F{CVEIND}!= null)?$F{CVEIND}: "")+"\"|\""
++(($F{CLVFUN}!= null)?$F{CLVFUN}:"")
++"\"|"+(($F{DENUNCIAS}!= null)?$F{DENUNCIAS}:"")
++"|"+(($F{ACUDEN}!= null)?$F{ACUDEN}:"")
++"|"+(($F{POBLACION}!= null)?$F{POBLACION}:"")
++"|\""+(($F{OBSDEN}!= null)?$F{OBSDEN}:"")
++"|\""+(($F{OBSPOB}!= null)?$F{OBSPOB}:"")+"\""]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="841" height="19" uuid="6e04cf5e-a3bf-422a-9277-19b099ae278a"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORTE_TXT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

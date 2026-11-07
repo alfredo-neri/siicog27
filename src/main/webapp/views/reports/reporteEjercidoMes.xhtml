@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header=" Ejercido al mes "
+					styleClass="green col-md-6 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="10" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Mes Inicial: " for="mesInputIni" />
+						<p:selectOneMenu id="mesInputIni" size="18" editable="false"
+							value="#{reporteEjercidoMesMB.mesIni}">
+							<f:selectItems value="#{reporteEjercidoMesMB.listmesIni}"
+								var="mesIni" itemValue="#{mesIni.mes}" itemLabel="#{mesIni.mes}" />
+							<p:ajax event="change"
+								listener="#{reporteEjercidoMesMB.onChangeValidaMeses}"
+								update=":form1:growlReportador" />
+						</p:selectOneMenu>
+
+						<h:outputText value="Mes Final: " for="mesInputFin" />
+						<p:selectOneMenu id="mesInputFin" size="18" editable="false"
+							value="#{reporteEjercidoMesMB.mesFin}">
+							<f:selectItems value="#{reporteEjercidoMesMB.listmesFin}"
+								var="mesFin" itemValue="#{mesFin.mes}" itemLabel="#{mesFin.mes}" />
+							<p:ajax event="change"
+								listener="#{reporteEjercidoMesMB.onChangeValidaMeses}"
+								update=":form1:growlReportador" />
+
+						</p:selectOneMenu>
+
+						<h:outputText value="Partida Inicial: " for="partidaIniInput" />
+						<p:inputText id="partidaIniInput"
+							value="#{reporteEjercidoMesMB.partidaIni}" maxlength="4" size="4"
+							required="true"
+							requiredMessage="La partida Inicial es obligatoria">
+							<pe:keyFilter regEx="/[\d]/" />
+						</p:inputText>
+
+						<h:outputText value="Partida Final: " for="partidaFinInput" />
+						<p:inputText id="partidaFinInput"
+							value="#{reporteEjercidoMesMB.partidaFin}" maxlength="4" size="4"
+							required="true" requiredMessage="La partida Final es obligatoria">
+							<pe:keyFilter regEx="/[\d]/" />
+						</p:inputText>
+
+
+
+
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+
+							<!-- <h:commandLink  onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" />
+								<p:fileDownload value="#{reporteEjercidoMesMB.fileXls}" />
+							</h:commandLink>
+							-->
+							<!-- <h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+								<p:fileDownload value="#{reporteEjercidoMesMB.fileTxt}" />
+							</h:commandLink>
+ -->
+							<!-- 									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="csv.png" width="24" />
+										<p:fileDownload value="#{reporteEjercidoMesMB.fileCsv}" />
+									</h:commandLink>
+									
+									
+									
+									 -->
+
+
+							<!--  <p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								actionListener="#{reporteEjercidoMesMB.downLoadFile}" value="Correcto"
+								update=":form1:growlReportador"
+								styleClass="btn btn-default">
+								<p:fileDownload value="#{reporteEjercidoMesMB.fileTxt}"/>
+							</p:commandButton> -->
+
+						</p:panelGrid>
+						<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+
+							<p:commandButton value="Correcto" ajax="false" id="correcto"
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								actionListener="#{reporteEjercidoMesMB.downLoadFile}"
+								update=":form1:growlReportador" icon="ui-icon-arrowthick-1-s">
+								<p:fileDownload value="#{reporteEjercidoMesMB.fileTxt}" />
+							</p:commandButton>
+						</p:panelGrid>
+
+					</p:panelGrid>
+
+					<p:panelGrid>
+
+						<p:outputLabel rendered="#{reporteEjercidoMesMB.bPreView}"
+							style="height: 400px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="200" id="preViewTxt"
+								style="font-family:monospace;font-size:8pt;" readonly="true"
+								widgetVar="preViewTxtWg"
+								rendered="#{reporteEjercidoMesMB.bPreView}" autoResize="true"
+								value="#{reporteEjercidoMesMB.txtPreview}" />
+						</p:outputLabel>
+
+						<!-- <div id="divpreViewTxt"
+							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+
+						</div> -->
+					</p:panelGrid>
+
+
+					<!-- <p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporteEjercidoMesMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporteEjercidoMesMB.uuid}&amp;filename=#{reporteEjercidoMesMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+					 -->
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

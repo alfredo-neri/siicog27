@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean" value="#{estadoCuentaCorteDiaMB}"></ui:param>
+		<ui:define name="content">
+			<script>
+				$(document).ready(()=>{
+					$(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align','center');
+				})
+			</script>
+
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto; ">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte" header="Estados de Cuenta Corte Por Día"
+					styleClass="green shadow-panel" style="width: 83em;">
+					<div class="row">
+						<div class="col-9 col-xs-9 col-sm-9 col-9-md col-lg-9 col-xs-9">
+							<p:panelGrid id="panel-filtros" styleClass="ui-noborder">
+
+								<p:row>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<h:outputText value="Cuenta" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Scta" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Sscta" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Ssscta" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Sssscta" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Mes" />
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+
+
+								</p:row>
+								<p:row>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+									<p:column>
+										<p:inputText id="CuentaInput" style="width: 4em;"
+											value="#{bean.cuenta.cuenta}" maxlength="4">
+											<p:ajax event="change" process="@this form1:CuentaInput" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:inputText id="SctaInput" style="width: 10em;"
+											value="#{bean.cuenta.scuenta}" maxlength="15">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:inputText id="SsctaInput" style="width: 14em;"
+											value="#{bean.cuenta.sscuenta}" maxlength="20">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:inputText id="SssctaInput" style="width: 5em;"
+											value="#{bean.cuenta.ssscuenta}" maxlength="4">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:inputText id="SsssctaInput" style="width: 5em;"
+											value="#{bean.cuenta.sssscuenta}" maxlength="3">
+											<p:ajax event="change" listener="#{bean.leftPad}"
+												update="form1:panel-filtros" />
+										</p:inputText>
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="mesInputOri" editable="false"
+											value="#{bean.mes}" style="">
+											<f:selectItem itemValue="1" itemLabel="01" />
+											<f:selectItem itemValue="2" itemLabel="02" />
+											<f:selectItem itemValue="3" itemLabel="03" />
+											<f:selectItem itemValue="4" itemLabel="04" />
+											<f:selectItem itemValue="5" itemLabel="05" />
+											<f:selectItem itemValue="6" itemLabel="06" />
+											<f:selectItem itemValue="7" itemLabel="07" />
+											<f:selectItem itemValue="8" itemLabel="08" />
+											<f:selectItem itemValue="9" itemLabel="09" />
+											<f:selectItem itemValue="10" itemLabel="10" />
+											<f:selectItem itemValue="11" itemLabel="11" />
+											<f:selectItem itemValue="12" itemLabel="12" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:spacer></p:spacer>
+									</p:column>
+
+
+								</p:row>
+								<p:row>
+
+									<p:column colspan="11">
+										<h:panelGroup styleClass="pull-right"
+											style="margin-right: 1.5em;">
+											<p:commandButton value="Vista Previa" id="preView"
+												actionListener="#{bean.preView}"
+												update=":form1:preViewTxt,:form1:growlReportador"
+												onclick="PF('preViewTxtWg').show();" />
+											<p:commandButton id="correcto" ajax="false" value="Correcto"
+												onclick="PrimeFaces.monitorDownload(start, stop);"
+												actionListener="#{bean.downLoadFile}"
+												update=":form1:growlReportador">
+												<p:fileDownload value="#{bean.fileTxt}" />
+											</p:commandButton>
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</div>
+					</div>
+					<p:panelGrid>
+						<p:outputLabel rendered="#{bean.bPreView}"
+							style="height: 300px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="230" id="preViewTxt" autoResize="true"
+								readonly="true" widgetVar="preViewTxtWg"
+								style="font-family: monospace !important"
+								rendered="#{bean.bPreView}" value="#{bean.txtPreview}" />
+						</p:outputLabel>
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

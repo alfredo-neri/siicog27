@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Archivo TXT de la Ficha Técnica de Seguimiento de Indicadores"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+						<h:outputText value="Trimestre" />
+						<p:selectOneMenu id="idtrim"
+							value="#{txtFichaSeguimientoMB.trimestre}">
+							<f:selectItem itemValue="1" itemLabel="01" />
+							<f:selectItem itemValue="2" itemLabel="02" />
+							<f:selectItem itemValue="3" itemLabel="03" />
+							<f:selectItem itemValue="4" itemLabel="04" />
+						</p:selectOneMenu>
+						<p:commandButton id="generareportetxt" value="Generar Archivo TXT"
+							actionListener="#{txtFichaSeguimientoMB.downLoadFile}"
+							ajax="false" styleClass="btn btn-default"
+							update=":form1:growlReportador"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()">
+							<p:fileDownload value="#{txtFichaSeguimientoMB.fileTxt}" />
+						</p:commandButton>
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<description>
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Validaciones al archivo de egresos
+		+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	</description>
+
+
+	<bean id="edoAIPresupIntegraCsvValidator"
+		class="com.gem.sistema.load.fileupload.validators.impl.CsvFileValidatorImpl">
+		<property name="noTokensByLine" value="8"></property>
+		<property name="lineToStart" value="1"></property>
+		<property name="skipFail" value="true"></property>
+		<property name="separator" value=","></property>
+		<property name="errorSeparator" value=","></property>
+		<property name="validators">
+			<util:list
+				value-type="com.gem.sistema.load.fileupload.validators.FieldValidator">
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: la clave de entidad no cumple con el formato" />
+					<property name="index" value="0" />
+					<property name="fieldName" value="Entidad" />
+					<property name="pattern" value="^[0-9]{4}$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: La Cuenta no cumple con el formato" />
+					<property name="index" value="1" />
+					<property name="fieldName" value="Cuenta" />
+					<property name="pattern" value="^[0-9]{4}$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternPermitBlankFieldValidator">
+					<property name="messageError" value="%1$s :: La Scta no cumple con el formato" />
+					<property name="index" value="2" />
+					<property name="fieldName" value="Scta" />
+					<property name="pattern" value="(^$)|(^[0-9]{10}$)" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternPermitBlankFieldValidator">
+					<property name="messageError" value="%1$s :: La Sscta no cumple con el formato" />
+					<property name="index" value="3" />
+					<property name="fieldName" value="Sscta" />
+					<property name="pattern" value="^$|^[0-9]{15}$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternPermitBlankFieldValidator">
+					<property name="messageError" value="%1$s :: La Ssscta no cumple con el formato" />
+					<property name="index" value="4" />
+					<property name="fieldName" value="Ssscta" />
+					<property name="pattern" value="^$|^[0-9]{4}$" />
+				</bean>
+				<bean
+					class="com.gem.sistema.load.fileupload.validators.field.PatternPermitBlankFieldValidator">
+					<property name="messageError" value="%1$s :: La Sssscta no cumple con el formato" />
+					<property name="index" value="5" />
+					<property name="fieldName" value="Sssscta" />
+					<property name="pattern" value="^$|^[0-9]{3}$" />
+				</bean>
+
+				<bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: Cargo de ingreso no valido" />
+					<property name="index" value="6" />
+					<property name="fieldName" value="Cargo" />
+					<property name="pattern" value="^^[0-9]+(\.[0-9]{1,2})?$" />
+				</bean>
+				
+				<bean class="com.gem.sistema.load.fileupload.validators.field.PatternFieldValidator">
+					<property name="messageError" value="%1$s :: Cargo de ingreso no valido" />
+					<property name="index" value="7" />
+					<property name="fieldName" value="Cargo" />
+					<property name="pattern" value="^^[0-9]+(\.[0-9]{1,2})?$" />
+				</bean>
+
+			</util:list>
+
+		</property>
+	</bean>
+
+
+
+</beans>

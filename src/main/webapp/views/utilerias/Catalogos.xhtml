@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+				<p:panel header="Administración de Tablas"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+					<p:tabView id="tabs">
+						<p:tab title="Tablas">
+							<p:commandButton style="display: none;" id="hiddenUpdate"
+								name="hiddenUpdate"
+								actionListener="#{catalogosTablasMB.refreshData}"
+								update=":form1:msgs, :form1:tabs:object, :form1:tabs:banderaEdit, form1:tabs:add" />
+							<p:inputText id="banderaEdit" type="hidden"
+								value="#{catalogosTablasMB.bEdition}" />
+							<p:remoteCommand id="lasPage" name="lastPage"
+								oncomplete="activeRow(#{catalogosTablasMB.listTablas.size()})"
+								update=":form1:tabs:object" />
+							<p:commandButton value="Adicionar" id="add" icon="ui-icon-tag"
+								disabled="#{catalogosTablasMB.bAdicionar}"
+								onclick="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});"
+								actionListener="#{catalogosTablasMB.addElement}"
+								update=":form1:tabs:object, :form1:tabs:banderaEdit, form1:tabs:add" />
+
+							<p:dataTable id="object" var="objects"
+								value="#{catalogosTablasMB.dataModelTcTabla.listT}"
+								binding="#{table}" emptyMessage="No hay registros"
+								paginator="true" rows="20"
+								selection="#{catalogosTablasMB.dataModelTcTabla.selected}"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+								widgetVar="balanceWdg" rowKey="#{objects.id}" editable="true"
+								rowIndexVar="rowIndex">
+
+								<p:ajax event="rowEdit"
+									listener="#{catalogosTablasMB.onRowEdit}"
+									update=":form1:msgs, :form1:tabs:object, :form1:tabs:banderaEdit, form1:tabs:add"
+									oncomplete="jQuery('#form1\\\\:tabs:hiddenUpdate').click();" />
+
+								<p:ajax event="rowEditInit"
+									disabled="#{catalogosTablasMB.bAdicionar}"
+									listener="#{catalogosTablasMB.onInitRowEdit}"
+									oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')}); jQuery('#form1\\\\:tabs:add').click();"
+									update=" form1:tabs:add" />
+								<p:ajax event="rowEditCancel"
+									listener="#{catalogosTablasMB.refreshData}"
+									update=":form1:msgs, form1:tabs:add" />
+								<p:ajax event="page" onstart="PF('blockUIWidget').block();"
+									update=":form1:tabs:object"
+									oncomplete="PF('blockUIWidget').unblock();lastPage();" />
+								<p:column headerText="Nombre de la Tabla" style="width:30%">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{objects.nombre}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="nombre" value="#{objects.nombre}">
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Descripción de la Tabla" style="width:70%">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{objects.descripcion}">
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="rp"
+												onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:tabs:object span.ui-icon-check').last().click(); return false; } "
+												value="#{objects.descripcion}" style="width:100%">
+												<p:ajax event="blur" update="rp" />
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column style="width:5%">
+									<p:rowEditor />
+								</p:column>
+								
+							</p:dataTable>
+						</p:tab>
+						<p:tab title="Etiquetas">
+							<p:commandButton style="display: none;" id="hiddenUpdateEtiq"
+								name="hiddenUpdate"
+								actionListener="#{catalogosTablasMB.refreshData}"
+								update=":form1:msgs, :form1:tabs:objectEtiq, :form1:tabs:banderaEditEtiq, form1:tabs:addEtiq" />
+							<p:inputText id="banderaEditEtiq" type="hidden"
+								value="#{catalogosTablasMB.bEdition}" />
+							<p:remoteCommand id="lasPageEtiq" name="lastPage"
+								oncomplete="activeRow(#{catalogosTablasMB.listTablas.size()})"
+								update=":form1:tabs:objectEtiq" />
+							<p:commandButton value="Adicionar" id="addEtiq" icon="ui-icon-tag"
+								disabled="#{catalogosTablasMB.bAdicionar}"
+								onclick="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});"
+								actionListener="#{catalogosTablasMB.addElement}"
+								update=":form1:tabs:objectEtiq, :form1:tabs:banderaEditEtiq, form1:tabs:addEtiq" />
+
+							<p:dataTable id="objectEtiq" var="objects"
+								value="#{catalogosTablasMB.dataModelTcTabla.listT}"
+								binding="#{table}" emptyMessage="No hay registros"
+								paginator="true" rows="20"
+								selection="#{catalogosTablasMB.dataModelTcTabla.selected}"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+								widgetVar="balanceWdg" rowKey="#{objects.id}" editable="true"
+								rowIndexVar="rowIndex">
+
+								<p:ajax event="rowEdit"
+									listener="#{catalogosTablasMB.onRowEdit}"
+									update=":form1:msgs, :form1:tabs:objectEtiq, :form1:tabs:banderaEditEtiq, form1:tabs:addEtiq"
+									oncomplete="jQuery('#form1\\\\:tabs:hiddenUpdateEtiq').click();" />
+
+								<p:ajax event="rowEditInit"
+									disabled="#{catalogosTablasMB.bAdicionar}"
+									listener="#{catalogosTablasMB.onInitRowEdit}"
+									oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')}); jQuery('#form1\\\\:tabs:addEtiq').click();"
+									update=" form1:tabs:addEtiq" />
+								<p:ajax event="rowEditCancel"
+									listener="#{catalogosTablasMB.refreshData}"
+									update=":form1:msgs, form1:tabs:addEtiq" />
+								<p:ajax event="page" onstart="PF('blockUIWidget').block();"
+									update=":form1:tabs:objectEtiq"
+									oncomplete="PF('blockUIWidget').unblock();lastPage();" />
+								<p:column headerText="Nombre de la Tabla" style="width:30%">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{objects.nombre}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="etiqueta" value="#{objects.nombre}">
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Descripción de la Tabla" style="width:70%">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{objects.descripcion}">
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="rp1"
+												onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:tabs:objectEtiq span.ui-icon-check').last().click(); return false; } "
+												value="#{objects.descripcion}" style="width:100%">
+												<p:ajax event="blur" update="rp1" />
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column style="width:5%">
+									<p:rowEditor />
+								</p:column>
+								
+							</p:dataTable>
+						
+						</p:tab>
+						<p:tab title="Tabla - Etiquetas">
+							<h:panelGrid columns="2" cellpadding="10">
+								<p:graphicImage name="demo/images/godfather/godfather3.jpg" />
+								<h:outputText
+									value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. 
+                    Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
+							</h:panelGrid>
+						</p:tab>
+					</p:tabView>
+
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

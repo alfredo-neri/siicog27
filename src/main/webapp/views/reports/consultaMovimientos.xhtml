@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean" value="#{consultaMovimientosMB}"></ui:param>
+		<ui:define name="content">
+			<script>
+				$(document).ready(()=>{
+					$(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align','center');
+				})
+			</script>
+			<style>
+span.input-number-small input {
+	width: 50%;
+}
+
+th.header-pull-left {
+	text-align: left !important;
+}
+
+th.header-pull-left span {
+	margin-left: -10px;;
+}
+
+.headerBorder .ui-panel-titlebar {
+	margin-top: -26px;
+	background-color: transparent !important;
+	border: none;
+	text-align: center;
+	font-size: 15px;
+}
+
+.headerBorder .ui-panel-title {
+	background-color: white;
+}
+
+td.text-left {
+	padding-left: 10px;
+}
+
+table.ui-selectoneradio {
+	width: 10em;
+}
+
+table.ui-selectoneradio tr:nth-child(3) label {
+	margin-left: -10px !important;
+}
+
+table.ui-selectoneradio tr:nth-child(4) label {
+	margin-left: -24px !important;
+}
+
+table.ui-selectoneradio label {
+	margin-left: -17px;
+}
+
+.ui-panelgrid-cell {
+	padding: 0px;
+}
+</style>
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto; ">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte" header="Consulta de movimientos"
+					style="height: 40em;" styleClass="green shadow-panel container">
+					<div class="col-md-12">
+						<div class="row">
+							<h:panelGrid columns="1" id="panel-filtros" style="">
+								<p:panelGrid styleClass="ui-noborder">
+									<p:row>
+										<p:column>
+											<h:outputText value="Cuenta" />
+										</p:column>
+										<p:column>
+											<h:outputText value="Scta" />
+										</p:column>
+										<p:column>
+											<h:outputText value="Sscta" />
+										</p:column>
+										<p:column>
+											<h:outputText value="Ssscta" />
+										</p:column>
+										<p:column>
+											<h:outputText value="Sssscta" />
+										</p:column>
+										<p:column>
+											<h:outputText value="Mes" />
+										</p:column>
+										<p:column>
+											<p:spacer></p:spacer>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>
+											<p:inputText id="CuentaInput" style="width: 4em;"
+												value="#{bean.polide.cuenta}" maxlength="4">
+												<p:ajax event="change" process="@this form1:CuentaInput" />
+											</p:inputText>
+										</p:column>
+										<p:column>
+											<p:inputText id="SctaInput"
+												style="width: 10em;text-transform: uppercase;"
+												value="#{bean.polide.scta}" maxlength="15">
+												<p:ajax event="change" listener="#{bean.leftPad}"
+													update="form1:panel-filtros" />
+											</p:inputText>
+										</p:column>
+
+										<p:column>
+											<p:inputText id="SsctaInput"
+												style="width: 14em;text-transform: uppercase;"
+												value="#{bean.polide.sscta}" maxlength="20">
+												<p:ajax event="change" listener="#{bean.leftPad}"
+													update="form1:panel-filtros" />
+											</p:inputText>
+										</p:column>
+
+										<p:column>
+											<p:inputText id="SssctaInput"
+												style="width: 5em;text-transform: uppercase;"
+												value="#{bean.polide.ssscta}" maxlength="4">
+												<p:ajax event="change" listener="#{bean.leftPad}"
+													update="form1:panel-filtros" />
+											</p:inputText>
+										</p:column>
+
+										<p:column>
+											<p:inputText id="SsssctaInput"
+												style="width: 5em;text-transform: uppercase;"
+												value="#{bean.polide.sssscta}" maxlength="3">
+												<p:ajax event="change" listener="#{bean.leftPad}"
+													update="form1:panel-filtros" />
+											</p:inputText>
+										</p:column>
+
+										<p:column>
+											<p:selectOneMenu id="mesInputOri" editable="false"
+												value="#{bean.polide.mespol}" style="">
+												<f:selectItem itemValue="1" itemLabel="01" />
+												<f:selectItem itemValue="2" itemLabel="02" />
+												<f:selectItem itemValue="3" itemLabel="03" />
+												<f:selectItem itemValue="4" itemLabel="04" />
+												<f:selectItem itemValue="5" itemLabel="05" />
+												<f:selectItem itemValue="6" itemLabel="06" />
+												<f:selectItem itemValue="7" itemLabel="07" />
+												<f:selectItem itemValue="8" itemLabel="08" />
+												<f:selectItem itemValue="9" itemLabel="09" />
+												<f:selectItem itemValue="10" itemLabel="10" />
+												<f:selectItem itemValue="11" itemLabel="11" />
+												<f:selectItem itemValue="12" itemLabel="12" />
+											</p:selectOneMenu>
+										</p:column>
+
+									</p:row>
+
+
+									<p:row>
+										<p:column>
+											<p:commandButton id="generateportepdf"
+												onstart="PF('blockUIWidget').block()"
+												action="#{bean.buscar}" value="Selección"
+												update="form1:datos, :form1:growlReportador"
+												styleClass="btn btn-default" style="margin-right: -2.5em;">
+											</p:commandButton>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</h:panelGrid>
+						</div>
+						<p:spacer />
+						<div class="row">
+							<p:dataTable id="datos" var="item" value="#{bean.lista}"
+								selectionMode="single" selection="#{bean.selected}"
+								rowKey="#{item}" styleClass="et_datatable"
+								emptyMessage="No hay registros" scrollable="true"
+								scrollHeight="310">
+
+								<p:column headerText="Número" width="5%">
+									<h:outputText value="#{item.conpol}" />
+								</p:column>
+								<p:column headerText="Tipo" width="5%">
+									<h:outputText value="#{item.tippol}" />
+								</p:column>
+								<p:column headerText="Renglon" width="5%">
+									<h:outputText value="#{item.renpol}">
+										<f:convertNumber pattern="¤#,###.0" currencySymbol="" />
+									</h:outputText>
+
+								</p:column>
+								<p:column headerText="Concepto" width="40%">
+									<h:outputText value="#{item.concep}" />
+								</p:column>
+								<p:column headerText="Debe" width="10%">
+									<h:outputText value="#{item.canpol}">
+										<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Haber" width="10%">
+									<h:outputText value="#{item.canpolh}">
+										<f:convertNumber pattern="¤#,##0.00" currencySymbol="" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Stapol" width="5%">
+									<h:outputText value="#{item.stapol}" />
+								</p:column>
+								<p:column headerText="Staafe" width="5%">
+									<h:outputText value="#{item.staafe}" />
+								</p:column>
+								<p:column headerText="Cappol" width="10%">
+									<h:outputText value="#{item.cappol}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

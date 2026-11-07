@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Evaluar el Desempeño Mensual del GEM, en la Transferencia de los Recursos a los Municipios"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+					<p:dataTable id="object" var="objects"
+						value="#{reporte50MB.listpm5611}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1" selection="#{reporte50MB.selectPm5611}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm5611Wdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+
+						<p:column>
+							<p:panelGrid columns="4">
+
+								<p:column>
+									<h:outputText value="Mensual" />
+								</p:column>
+								<p:column>
+									<p:outputLabel id="idMensual" value="#{objects.mensual}"
+										rendered="#{reporte50MB.bLblMensula}">
+										<f:convertNumber pattern="00" />
+									</p:outputLabel>
+									<!-- <p:inputText value="#{objects.mensual}" id="mensual" size="2"
+										disabled="#{reporte50MB.bMensual}" maxlength="2"
+										onkeypress="if(event.keyCode == 27) {return false;} if (event.keyCode == 13) {return false;}">
+										<p:ajax event="blur"
+											listener="#{reporte50MB.findMonth(objects.mensual, rowIndex)}"
+											update=":form1:object, :form1:messagesEdit, :form1:object:mensual"></p:ajax>
+										<pe:keyFilter for="mensual" mask="pint"></pe:keyFilter>
+
+										<f:convertNumber pattern="00" /> -->
+									<p:selectOneMenu id="idmesCon" size="18"
+										rendered="#{reporte50MB.bMensul}"
+										value="#{reporte50MB.tcMes.mes}">
+										<f:selectItems value="#{reporte50MB.listTcMes}" var="mes"
+											itemValue="#{mes.mes}" itemLabel="#{mes.mes}" />
+										<p:ajax event="change"
+											listener="#{reporte50MB.findMonth(rowIndex)}" update="mes" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<h:inputText value="#{objects.mes}" id="mes" disabled="true" />
+								</p:column>
+								<p:column />
+								<p:column />
+								<p:column colspan="2">
+									<h:outputText value="FISM" />
+								</p:column>
+								<p:column />
+								<p:column colspan="2">
+									<h:outputText value="FORTAMUNDF" />
+								</p:column>
+
+								<p:column>
+									<h:outputText value="#Cta Bancaria" />
+
+								</p:column>
+								<p:column>
+
+									<p:inputText value="#{objects.ncbfism}" id="ncbfism"
+										disabled="#{reporte50MB.bReset}" maxlength="10">
+										<pe:keyFilter  regEx="/[0-9]{1,10}/"  />
+									</p:inputText>
+								</p:column>
+								<p:column>
+								
+								
+									<h:outputText value="#Cta Bancaria" />
+								</p:column>
+								<p:column>
+
+									<!-- <pe:inputNumber value="#{objects.ncbfor}" id="ncbfor"
+										disabled="#{reporte50MB.bReset}" maxValue="9999999999"
+										converter="#{Doube}" maxlength="10" decimalPlaces="0"
+										decimalSeparator="" thousandSeparator="">
+
+									</pe:inputNumber> -->
+									<p:inputText value="#{objects.ncbfor}" id="ncbfor"
+										disabled="#{reporte50MB.bReset}" maxlength="10" size="20"  >
+										<pe:keyFilter for="ncbfor" regEx="/[0-9]{1,10}/" mask="pint" />
+									</p:inputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="Monto Ministrado" />
+								</p:column>
+								<p:column>
+									<p:inputText value="#{objects.mminfism}" id="mminfism"
+										disabled="#{reporte50MB.bReset}">
+										<f:convertNumber pattern="###,###,##0.00" type="number"  for="mminfor" />
+										<pe:keyFilter for="mminfism"  mask="pnum" />
+									</p:inputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="Monto Ministrado" />
+								</p:column>
+								<p:column>
+								
+								
+									<p:inputText value="#{objects.mminfor}" id="mminfor"
+										disabled="#{reporte50MB.bReset}">
+										<f:convertNumber pattern="###,###,##0.00" type="number"  for="mminfor" />
+										<pe:keyFilter for="mminfor"  mask="pnum" />
+									</p:inputText>
+								
+								
+								</p:column>
+								<p:column>
+									<h:outputText value="Fecha de Deposito" />
+								</p:column>
+								<p:column>
+									<p:calendar id="fecpol" showOn="button" locale="es"
+										disabled="#{reporte50MB.bReset}" size="6" pattern="dd/MM/yyyy"
+										mask="true"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										value="#{objects.fecdep}"
+										converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+										<p:ajax event="dateSelect" update="fecpol" />
+										<p:ajax event="change" update="fecpol" />
+									</p:calendar>
+
+								</p:column>
+								<p:column>
+									<h:outputText value="Fecha de Deposito" />
+								</p:column>
+								<p:column>
+									<p:calendar id="fecdepfor" showOn="button" locale="es"
+										disabled="#{reporte50MB.bReset}" size="6" pattern="dd/MM/yyyy"
+										mask="true"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										value="#{objects.fecdepfor}"
+										converterMessage="La fecha debe ser en fomato de dd/MM/aaaa">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+										<p:ajax event="dateSelect" update="fecdepfor" />
+										<p:ajax event="change" update="fecdepfor" />
+									</p:calendar>
+
+								</p:column>
+								<p:column>
+									<h:outputText value="Observaciones" />
+								</p:column>
+								<p:column>
+									<h:inputTextarea value="#{objects.obsfism}" id="obsfism"
+										cols="25" rows="5" disabled="#{reporte50MB.bReset}"
+										onkeyup="this.value=this.value.toUpperCase();maximo(this,350);if(event.keyCode == 13) return false;"
+										onkeypress="if(event.keyCode == 13){ return false; } " />
+								</p:column>
+								<p:column>
+									<h:outputText value="Observaciones" />
+								</p:column>
+								<p:column>
+									<h:inputTextarea value="#{objects.obsfor}" id="obsfor"
+										cols="25" rows="5" disabled="#{reporte50MB.bReset}"
+										onkeyup="this.value=this.value.toUpperCase();maximo(this,350);if(event.keyCode == 13) return false;"
+										onkeypress="if(event.keyCode == 13){ return false; }" />
+								</p:column>
+							</p:panelGrid>
+							<p:panelGrid id="buttons">
+								<p:commandButton value="Modificar" id="modificar"
+									actionListener="#{reporte50MB.modify(rowIndex)}"
+									rendered="#{reporte50MB.bVisible}"
+									update=":form1:idPanel, :form1:messagesEdit, :form1:object"
+									icon="ui-icon-tag" disabled="#{reporte50MB.bBorrar}" />
+								<p:commandButton value="Salvar" id="salvar"
+									actionListener="#{reporte50MB.save(rowIndex)}"
+									update=":form1:idPanel, :form1:messagesEdit, :form1:object, :form1:idmesReporte"
+									icon="ui-icon-disk" rendered="#{reporte50MB.bBtnModify}" />
+								<p:commandButton value="Limpiar" label="Reset" id="reset"
+									actionListener="#{reporte50MB.clean(rowIndex)}"
+									update=":form1:idPanel, :form1:messagesEdit, :form1:object"
+									icon="ui-icon-arrowrefresh-1-e"
+									disabled="#{reporte50MB.bReset}" />
+								<p:commandButton value="Adicionar" id="adicionar"
+									disabled="#{reporte50MB.bAdicionar}"
+									actionListener="#{reporte50MB.add(rowIndex)}"
+									update=":form1:idPanel, :form1:messagesEdit, :form1:object"
+									icon="ui-icon-circle-plus" />
+								<p:commandButton value="Borrar" id="borrar"
+									actionListener="#{reporte50MB.delete(rowIndex)}"
+									update=":form1:idPanel, :form1:messagesEdit, :form1:object, :form1:idmesReporte"
+									icon="ui-icon-trash" disabled="#{reporte50MB.bBorrar}">
+									<p:confirm header="Confirmación"
+										message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton value="Cancelar"
+									disabled="#{reporte50MB.bReset}" id="cancelar"
+									actionListener="#{reporte50MB.cancel}"
+									update=":form1:idPanel, :form1:messagesEdit, :form1:object"
+									icon="ui-icon-circle-close" />
+							</p:panelGrid>
+						</p:column>
+
+					</p:dataTable>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+					<p:panelGrid id="pgrid2" columns="4"
+						styleClass="col-centered row-centered">
+						<h:outputText value="Mes a Consultar" for="idmesCon" />
+						<p:selectOneMenu id="idmesReporte" size="18"
+							value="#{reporte50MB.mes}">
+							<f:selectItems value="#{reporte50MB.lisReports}" var="mes"
+								itemValue="#{mes.mensual}" itemLabel="#{mes.mensual}" />
+						</p:selectOneMenu>
+
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{reporte50MB.generatePdf}" value="Correcto"
+							icon="ui-icon-arrowthick-1-s"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit">
+
+						</p:commandButton>
+
+						<p:commandButton value="Genera Archivo TXT" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							icon="ui-icon-arrowthick-1-s">
+							<p:fileDownload value="#{reporte50MB.txt}" />
+
+						</p:commandButton>
+
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte50MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte50MB.uuid}&amp;filename=#{reporte50MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+			</h:form>
+			<script>
+function maximo(campo,limite){
+if(campo.value.length>=limite){
+campo.value=campo.value.substring(0,limite);
+ }
+}
+</script>
+			<!-- <script type="text/javascript">
+			      function mostrarMes( index) {
+			    	  var motnh = new Array("ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE");
+			    	  var valueMonth = $("#form1\\:\\object\\:"+index+"\\:mensual").val();
+			    	  alert("month::: " + valueMonth);
+			    	  var i = 0;
+			    	  if(valueMonth >= 1) {
+				    	 /*  for(i = 0; i < motnh.length; i++) {
+				    		  if(valueMonth == i) {
+				    			  $("#form1\\:\\object\\:"+index+"\\:mes").val(motnh[i]);
+					    	  }
+					    	  break;
+					      } */
+				    	  
+				      }
+				  }
+			</script> -->
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

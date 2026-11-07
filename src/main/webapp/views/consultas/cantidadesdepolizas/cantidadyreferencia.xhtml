@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="frmconsultacantidadreferencia">
+				<p:remoteCommand name="onload"
+					action="#{cantidadesPolizaCantidadReferenciaBean.onPageLoad}"
+					update="panel" />
+				<p:panel id="panel" header="Cantidad y Referencia"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="3" styleClass="noBorders">
+						<h:panelGroup>
+							<h:outputText value="Cantidad:" styleClass="backgroudHeader" />
+						&nbsp;
+						<pe:inputNumber id="cantidad"
+								value="#{cantidadesPolizaCantidadReferenciaBean.cantidad}"
+								decimalPlaces="2" decimalSeparator="" thousandSeparator=""
+								maxlength="9">
+								<p:ajax event="change" update="consulTable, idConcepto"
+									listener="#{cantidadesPolizaCantidadReferenciaBean.mostrarTablaActualizada}" />
+							</pe:inputNumber>
+						</h:panelGroup>
+						<h:panelGroup>
+							<h:outputText value="Referencia" styleClass="backgroudHeader" />
+						&nbsp;
+						
+						<pe:inputNumber id="referencia"
+								value="#{cantidadesPolizaCantidadReferenciaBean.referencia}"
+								decimalPlaces="0" decimalSeparator="." thousandSeparator=","
+								maxlength="9">
+								<p:ajax event="change" update="consulTable, idConcepto"
+									listener="#{cantidadesPolizaCantidadReferenciaBean.mostrarTablaActualizada}" />
+							</pe:inputNumber>
+						</h:panelGroup>
+						<h:outputText
+							value="Despues de seleccionar la cantidad y la referencia se mostrarán los resultados cuando se cumplan las condiciones"></h:outputText>
+					</p:panelGrid>
+
+					<p:dataTable id="consulTable" var="var" resizableColumns="true"
+						value="#{cantidadesPolizaCantidadReferenciaBean.listaGeneral}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="10"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="widget" paginatorPosition="top" rowIndexVar="rowIndex"
+						selectionMode="single"
+						selection="#{cantidadesPolizaCantidadReferenciaBean.rowSelected}"
+						rowKey="#{var.id}" scrollable="true" scrollWidth="98%">
+
+						<p:ajax event="rowSelect"
+							listener="#{cantidadesPolizaCantidadReferenciaBean.onRowSelect}"
+							update="frmconsultacantidadreferencia"></p:ajax>
+
+						<p:column headerText="Cta" style="width:6%">
+							<h:outputText value="#{var.cuenta}" />
+						</p:column>
+						<p:column headerText="Scta" style="width:13%">
+							<h:outputText value="#{var.scta}" />
+						</p:column>
+						<p:column headerText="Sscta" style="width:16%">
+							<h:outputText value="#{var.sscta}" />
+						</p:column>
+						<p:column headerText="Ssscta" style="width:6%">
+							<h:outputText value="#{var.ssscta}" />
+						</p:column>
+						<p:column headerText="Sssscta" style="width:6%">
+							<h:outputText value="#{var.sssscta}" />
+						</p:column>
+						<p:column headerText="Cargos" style="width:8%">
+							<h:outputText value="#{var.canpol}">
+								<f:convertNumber type="currency" currencySymbol=" " />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Abonos" style="width:8%">
+							<h:outputText value="#{var.canpolh}">
+								<f:convertNumber type="currency" currencySymbol=" " />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="No" style="width:6%">
+							<h:outputText value="#{var.conpol}" />
+						</p:column>
+						<p:column headerText="Tipo" style="width:5%">
+							<h:outputText value="#{var.tippol}" />
+						</p:column>
+						<p:column headerText="Mes" style="width:5%">
+							<h:outputText value="#{var.mespol}" />
+						</p:column>
+						<p:column headerText="Renglón" style="width:6%">
+							<h:outputText value="#{var.renpol}" />
+						</p:column>
+						<p:column headerText="Ref" style="width:8%">
+							<h:outputText value="#{var.refpol}">
+								<f:convertNumber integerOnly="true" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Cap" style="width:8%">
+							<h:outputText value="#{var.userid}" />
+						</p:column>
+						<p:column headerText="Fecha" style="width:8%">
+							<h:outputText value="#{var.fecpol}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid columns="2" styleClass="noBorders"
+						columnClasses="column20,column80" style="width:100%">
+						<h:outputText value="Concepto:" />
+						<h:inputText id="idConcepto"
+							value="#{cantidadesPolizaCantidadReferenciaBean.concepto}"
+							disabled="true" style="width:50%" />
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:panel id="panel"
+					header="Consulta de Flujos de Efectivo Incorrectos"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:messages id="msg" showDetail="true" closable="true"
+						autoUpdate="true" />
+					<p:dialog id="modal" modal="true" widgetVar="statusDialog"
+						header="Extrayendo Información de la Base de Datos"
+						draggable="false" closable="false" resizable="false">
+						<p:graphicImage name="/images/ajaxloadingbar.gif" />
+					</p:dialog>
+					<p:remoteCommand id="rmObject" name="rmObject"
+						update=":form1:object, :form1:msg"
+						actionListener="#{flujosIncorrectosMB.findAll}" />
+					<p:panelGrid columns="3" id="pg"
+						styleClass="green col-md-5 col-centered row-centered shadow-panel ui-noborder">
+						<p:outputLabel>Mes:</p:outputLabel>
+						<p:selectOneMenu id="mes" value="#{flujosIncorrectosMB.month}">
+							<f:selectItems value="#{flujosIncorrectosMB.listMont}" var="item"
+								itemValue="#{item}" itemLabel="#{item}" />
+
+						</p:selectOneMenu>
+						<p:commandButton value="Buscar" id="buscar"
+							actionListener="#{flujosIncorrectosMB.findAll}" onstart="start()"
+							oncomplete="stop()" update=":form1:object" />
+					</p:panelGrid>
+					<p:panelGrid columns="1" id="pg1"
+						styleClass="green col-md-9 col-centered row-centered shadow-panel">
+						<p:dataTable id="object" var="objects"
+							value="#{flujosIncorrectosMB.listIncorrectos}"
+							emptyMessage="No hay registros" rowKey="#{object.index}"
+							scrollable="true" paginator="true" lazy="true" rows="10"
+							paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							style="margin-bottom:10px; padding: 0px 10px !important;"
+							widgetVar="polizasWdg" rowIndexVar="index">
+
+							<p:column headerText="Tipo" style="width:10%">
+								<p:outputLabel value="#{objects.tippo}" />
+							</p:column>
+							<p:column headerText="Mes" style="width:10%">
+								<p:outputLabel value="#{objects.mespol}" />
+							</p:column>
+							<p:column headerText="Consecutivo" style="width:15%">
+								<p:outputLabel value="#{objects.conpol}" />
+							</p:column>
+							<p:column headerText="Renglon" style="width:15%">
+								<p:outputLabel value="#{objects.renpol}" />
+							</p:column>
+							<p:column headerText="Cargo/Abono" style="width:30%">
+								<p:outputLabel value="#{objects.ca}">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Cantidad Flujo" style="width:30%">
+								<p:outputLabel value="#{objects.canflu}">
+									<f:convertNumber pattern="###,###,##0.00" type="number" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Evento" style="width:20%">
+								<p:commandButton icon="ui-icon-document"
+									actionListener="#{flujosIncorrectosMB.findByCount(objects)}"
+									onstart="PF('dlgCount').show();" update=":form1:pgCount" />
+								<p:commandButton icon="ui-icon-trash"
+									actionListener="#{flujosIncorrectosMB.delete(objects)}"
+									onstart="rmObject();start()" oncomplete="stop()" />
+							</p:column>
+						</p:dataTable>
+					</p:panelGrid>
+
+
+					<p:dialog id="dlgCount" widgetVar="dlgCount"
+						header="Detalle de la Cuenta Con Flujo de Efectivo Incorrecto"
+						modal="true" styleClass="green">
+						<p:panelGrid columns="11" id="pgCount"
+							styleClass="green col-md-10 col-centered row-centered ui-noborder ">
+							<p:outputLabel value="Usuario" />
+							<p:outputLabel value="Cuenta" />
+							<p:outputLabel value="Scta" />
+							<p:outputLabel value="Sscta" />
+							<p:outputLabel value="Ssscta" />
+							<p:outputLabel value="Ssssscta" />
+							<p:outputLabel value="Tipo" />
+							<p:outputLabel value="Mes" />
+							<p:outputLabel value="Consecutivo" />
+							<p:outputLabel value="Renglon" />
+							<p:outputLabel value="Cargo/Abono" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.usuario}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.cuenta}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.scta}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.sscta}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.ssscta}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.sssscta}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.tippo}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.mespol }" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.conpol}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.renpol}" />
+							<p:outputLabel
+								value="#{flujosIncorrectosMB.flujoefectivoIncorrecto.ca}" />
+
+						</p:panelGrid>
+					</p:dialog>
+				</p:panel>
+			</h:form>
+			<script type="text/javascript">
+			    function start() {
+			        PF('statusDialog').show();
+			     }
+			 
+			     function stop() {
+			         PF('statusDialog').hide();
+			     }
+           </script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

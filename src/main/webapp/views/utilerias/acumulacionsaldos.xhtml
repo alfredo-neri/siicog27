@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="acumulacionsaldos">
+				<p:panel id="panel" header="Acumulacion de saldos"
+					styleClass="green col-md-6 col-centered row-centered shadow-panel">
+					<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+					<p:panelGrid id="gridPass" columns="2"
+						styleClass="green col-md-5 col-centered row-centered shadow-panel">
+
+						<p:password id="pass" value="#{acumulacionSaldosMB.password}"
+							required="true" disabled="#{!acumulacionSaldosMB.bDisable}"
+							requiredMessage="El campo del password es requerido" />
+						<p:commandButton value="validar" id="validar"
+							disabled="#{!acumulacionSaldosMB.bDisable}"
+							update=":acumulacionsaldos:growl, :acumulacionsaldos:pass, :acumulacionsaldos:correcto, validar"
+							actionListener="#{acumulacionSaldosMB.validatePassword}" />
+					</p:panelGrid>
+
+					<p:commandButton value="Correcto" ajax="true" id="correcto"
+						action="#{acumulacionSaldosMB.process}"
+						disabled="#{acumulacionSaldosMB.bDisable}"
+						onstart="PF('blockUIWidget').block();"
+						oncomplete="PF('blockUIWidget').unblock();"
+						update=":acumulacionsaldos:growl, :acumulacionsaldos:pass, :acumulacionsaldos:correcto, :acumulacionsaldos: validar" />
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+				<p:commandButton style="display: none;" id="hiddenUpdate"
+					name="hiddenUpdate"
+					actionListener="#{balancePresupuestarioMB.refreshData}"
+					update=":form1:msgs, :form1:object, :form1:banderaEdit, form1:add, form1:buscar, form1:trimestre" />
+				<p:inputText id="banderaEdit" type="hidden"
+					value="#{balancePresupuestarioMB.bEdition}" />
+				<p:remoteCommand id="lasPage" name="lastPage"
+					oncomplete="activeRow(#{balancePresupuestarioMB.listBalancepre.size()})"
+					update=":form1:object" />
+
+
+				<p:panel id="panel" header="Balance Presupuestario"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:fieldset style="margin-bottom:20px">
+						<p:panelGrid id="idForm"
+							styleClass="col-centered row-centered ui-noborder">
+							<p:row>
+								<p:column style="text-align: right;">
+									<p:outputLabel value="Trimestre: " />
+								</p:column>
+								<p:column style="text-align: left;">
+									<p:selectOneMenu id="trimestre"
+										disabled="#{balancePresupuestarioMB.bAdicionar}"
+										value="#{balancePresupuestarioMB.trimestre}">
+										<f:selectItems
+											value="#{balancePresupuestarioMB.listTrimestres}" var="trim"
+											itemLabel="#{trim.periodo}" itemValue="#{trim.periodo}" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column>
+									<p:commandButton value="Buscar" id="buscar"
+										disabled="#{balancePresupuestarioMB.bAdicionar}"
+										update=":form1:object, :form1:msgs"
+										actionListener="#{balancePresupuestarioMB.refreshData}"
+										icon="ui-icon-search" />
+								</p:column>
+								<p:column>
+									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										title="EXCEL">
+										<p:graphicImage value="excel.png" width="24" />
+										<p:fileDownload value="#{balancePresupuestarioMB.fileXls}" />
+									</h:commandLink>
+								</p:column>
+								<p:column>
+									<p:commandButton id="generateportepdf" value="Correcto"
+										ajax="false"
+										onclick="PrimeFaces.monitorDownload(start, stop);">
+										<p:fileDownload value="#{balancePresupuestarioMB.filePdf}" />
+									</p:commandButton>
+								</p:column>
+								<p:column>
+									<p:commandButton id="generateporteTxt" value="Archivo TXT"
+										ajax="false"
+										onclick="PrimeFaces.monitorDownload(start, stop);">
+										<p:fileDownload value="#{balancePresupuestarioMB.txtFile}" />
+									</p:commandButton>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="6">
+
+									<p:commandButton value="Adicionar" id="add" icon="ui-icon-tag"
+										disabled="#{balancePresupuestarioMB.bAdicionar}"
+										onclick="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});"
+										actionListener="#{balancePresupuestarioMB.addElement}"
+										update=":form1:object, :form1:banderaEdit, form1:add, form1:buscar, form1:trimestre, form1:object:deleteRow" />
+
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:dataTable id="object" var="objects"
+							value="#{balancePresupuestarioMB.dataModelBalancepre.listT}"
+							binding="#{table}" emptyMessage="No hay registros"
+							paginator="true" rows="20"
+							selection="#{balancePresupuestarioMB.dataModelBalancepre.selected}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							widgetVar="balanceWdg" rowKey="#{objects.id}" editable="true"
+							rowIndexVar="rowIndex">
+
+							<p:ajax event="rowEdit"
+								listener="#{balancePresupuestarioMB.onRowEdit}"
+								update=":form1:msgs, :form1:object, :form1:banderaEdit, form1:add, form1:buscar, form1:trimestre, form1:object:deleteRow"
+								oncomplete="jQuery('#form1\\\\:hiddenUpdate').click();" />
+
+							<p:ajax event="rowEditInit"
+								disabled="#{balancePresupuestarioMB.bAdicionar}"
+								listener="#{balancePresupuestarioMB.onInitRowEdit}"
+								oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')}); jQuery('#form1\\\\:add').click();"
+								update=" form1:add, form1:buscar, form1:trimestre, form1:object:deleteRow" />
+							<p:ajax event="rowEditCancel"
+								listener="#{balancePresupuestarioMB.refreshData}"
+								update=":form1:msgs, form1:add, form1:buscar, form1:trimestre" />
+							<p:ajax event="page" onstart="PF('blockUIWidget').block();"
+								update=":form1:object"
+								oncomplete="PF('blockUIWidget').unblock();lastPage();" />
+							<p:column headerText="Trimestre" style="width:7%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.trimestre}" />
+									</f:facet>
+									<f:facet name="input">
+										<pe:inputNumber id="trim" value="#{objects.trimestre}"
+											decimalPlaces="0"
+											converterMessage="Solo permite numeros del 1 al 4">
+										</pe:inputNumber>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Consecutivo" style="width:10%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.consecutivo}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText maxlength="6" size="6" id="consecutivo"
+											value="#{objects.consecutivo}" style="width:100%">
+											<pe:keyFilter mask="pint" for="consecutivo" />
+											<p:ajax event="blur" update="consecutivo" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Concepto" style="width:30%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.concepto}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="concepto" value="#{objects.concepto}"
+											onkeyup="this.value=this.value.toUpperCase();"
+											style="width:100%">
+											<p:ajax event="blur" update="concepto" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Estimado / Aprobado" style="width:17%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.ea}">
+											<f:convertNumber pattern="¤#,##0.00" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="input">
+										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+											minValue="-999999999999999.99" maxValue="999999999999999.99"
+											decimalSeparator="." id="ea" value="#{objects.ea}"
+											style="width:100%">
+											<p:ajax event="blur" update="ea" />
+										</pe:inputNumber>
+
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Devengado" style="width:17%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.devengado}">
+											<f:convertNumber pattern="¤#,##0.00" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="input">
+										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+											decimalSeparator="." id="devengado"
+											minValue="-999999999999999.99" maxValue="999999999999999.99"
+											value="#{objects.devengado}" style="width:100%">
+											<p:ajax event="blur" update="devengado" />
+										</pe:inputNumber>
+
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Recaudado / Pagado" style="width:17%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.rp}">
+											<f:convertNumber pattern="¤#,##0.00" />
+										</h:outputText>
+									</f:facet>
+									<f:facet name="input">
+										<pe:inputNumber decimalPlaces="2" thousandSeparator=","
+											decimalSeparator="." id="rp" minValue="-999999999999999.99"
+											maxValue="999999999999999.99"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:object span.ui-icon-check').last().click(); return false; } "
+											value="#{objects.rp}" style="width:100%">
+											<p:ajax event="blur" update="rp" />
+										</pe:inputNumber>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column style="width:5%">
+								<p:rowEditor />
+							</p:column>
+							<p:column headerText="Borrar" exportable="false" width="6%">
+								<p:commandLink id="deleteRow"
+									actionListener="#{balancePresupuestarioMB.delete(rowIndex)}"
+									oncomplete="jQuery('#form1\\\\:hiddenUpdate').click();"
+									update=":form1:msgs, :form1:object, form1:add, form1:buscar, form1:trimestre"
+									image="ui-icon ui-icon-close" title="Delete">
+									<p:confirm header="Confirmación"
+										message="¿Desea eliminar éste registro?" icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{object}"
+										target="#{balancePresupuestarioMB.dataModelBalancepre.selected}" />
+									<h:outputText styleClass="ui-icon ui-icon-close" />
+
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+
+					</p:fieldset>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Si" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+
+				</p:panel>
+			</h:form>
+			<script type="text/javascript">
+			     
+					 function activeRow(index) {
+						 var bEdition =  $('#form1\\:banderaEdit').val();
+						 
+						 if(bEdition == "true") {
+							 var rows = 20;
+							 var size = index;
+							 var indexOf = (size % rows);
+							
+						      jQuery('#form1\\:object span.ui-icon-pencil').eq(indexOf).each(function(){jQuery(this).click()});
+						 }
+					 }
+			    
+			</script>
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

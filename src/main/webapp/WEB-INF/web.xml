@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+ <!-- <param-value>/WEB-INF/spring/applicationContext-security.xml</param-value> -->
+ <context-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value>/WEB-INF/spring/applicationContext.xml</param-value>
+ </context-param>
+ <context-param>
+  <param-name>javax.faces.CONFIG_FILES</param-name>
+  <param-value>/WEB-INF/faces-config.xml</param-value>
+ </context-param>
+ <context-param>
+  <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+  <param-value>true</param-value>
+ </context-param>
+ <context-param>
+  <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+  <param-value>true</param-value>
+ </context-param>
+ <context-param>
+  <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+  <param-value>true</param-value>
+ </context-param>
+ <context-param>
+  <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+  <param-value>true</param-value>
+ </context-param>
+ <context-param>
+  <param-name>javax.faces.PROJECT_STAGE</param-name>
+  <param-value>Production</param-value>
+ </context-param>
+ <context-param>
+  <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+  <param-value>server</param-value>
+ </context-param>
+ <context-param>
+  <param-name>primefaces.THEME</param-name>
+  <param-value>bootstrap</param-value>
+ </context-param>
+ <context-param>
+  <param-name>primefaces.UPLOADER</param-name>
+  <param-value>native</param-value>
+ </context-param>
+ <!-- <filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+		<init-param>
+			<param-name>thresholdSize</param-name>
+			<param-value>51200</param-value>
+		</init-param>
+		<init-param>
+			<param-name>uploadDirectory</param-name>
+			<param-value>/tmp</param-value>
+		</init-param>
+	</filter> -->
+ <filter>
+  <filter-name>PrimeFaces FileUpload Filter</filter-name>
+  <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+  <init-param>
+   <param-name>thresholdSize</param-name>
+   <param-value>10485760</param-value>
+  </init-param>
+  <init-param>
+   <param-name>uploadDirectory</param-name>
+   <param-value>/tmp</param-value>
+  </init-param>
+ </filter>
+ <filter>
+  <filter-name>springSecurityFilterChain</filter-name>
+  <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+ </filter>
+ <filter-mapping>
+  <filter-name>PrimeFaces FileUpload Filter</filter-name>
+  <servlet-name>Faces Servlet</servlet-name>
+ </filter-mapping>
+ <filter-mapping>
+  <filter-name>springSecurityFilterChain</filter-name>
+  <url-pattern>/*</url-pattern>
+  <dispatcher>FORWARD</dispatcher>
+  <dispatcher>REQUEST</dispatcher>
+  <!-- mandatory to allow the managed bean to forward the request to the filter -->
+ </filter-mapping>
+ <listener>
+  <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+ </listener>
+ <listener>
+  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+ </listener>
+ <listener>
+  <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+ </listener>
+ <!-- listener para la unisesion -->
+ <listener>
+  <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+ </listener>
+ <!--
+
+<filter>
+	<filter-name>customResourceFilter</filter-name>
+	<filter-class>net.bull.javamelody.CustomResourceFilter</filter-class>
+	<init-param>
+		<param-name>monitoring.css</param-name>
+		<param-value>/styles/monitoring.css</param-value>
+	</init-param>
+</filter>
+<filter-mapping>
+	<filter-name>customResourceFilter</filter-name>
+	<url-pattern>/monitoring</url-pattern>
+</filter-mapping>
+
+<filter>
+	<filter-name>monitoring</filter-name>
+	<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+	<init-param>
+		<param-name>storage-directory</param-name>
+		<param-value>logs/monitoring</param-value>
+	</init-param>
+	<init-param>
+		<param-name>url-exclude-pattern</param-name>
+		<param-value>(/images/.*|/js/.*|/styles/.*)</param-value>
+	</init-param>	
+	<init-param>
+            <param-name>disabled</param-name>
+            <param-value>true</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+	<filter-name>monitoring</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+<listener>
+	<listener-class>net.bull.javamelody.SessionListener</listener-class>
+</listener>
+-->
+ <servlet>
+  <servlet-name>Faces Servlet</servlet-name>
+  <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+  <load-on-startup>1</load-on-startup>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>Faces Servlet</servlet-name>
+  <url-pattern>*.xhtml</url-pattern>
+ </servlet-mapping>
+ <session-config>
+  <session-timeout>30</session-timeout>
+ </session-config>
+ <welcome-file-list>
+  <welcome-file>login.xhtml</welcome-file>
+ </welcome-file-list>
+ <error-page>
+  <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+  <location>/expiredSession.xhtml</location>
+ </error-page>
+ <error-page>
+  <exception-type>java.lang.Exception</exception-type>
+  <location>/errorPage.xhtml</location>
+ </error-page>
+ <error-page>
+  <exception-type>java.lang.NullPointerException</exception-type>
+  <location>/errorPage.xhtml</location>
+ </error-page>
+ <error-page>
+  <exception-type>java.lang.Throwable</exception-type>
+  <location>/errorPage.xhtml</location>
+ </error-page>
+</web-app>

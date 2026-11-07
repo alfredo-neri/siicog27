@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+				table.no-border td[class*=col-] {
+					border-width: 0 !important;
+				}
+				span.input-number-small input{
+					width:6em;
+					margin-left:4px;
+				}
+			</style>
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto; text-align: left;">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte" style="text-align: center;"
+					header="Eficacia en la Atención de Asesorías Jurídicas Familiares para lograr Conciliación"
+					styleClass="green col-md-9 col-md-offset-2 shadow-panel">
+					<div class="row">
+
+						<p:panel styleClass="col-md-12 no-border" style="text-align: center;">
+							<p:dataGrid id="dataGrid" var="entity"
+								value="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.masterList}"
+								styleClass="et_datatable col-md-12 no-border"
+								emptyMessage="Cargando información..." paginator="true" rows="1"
+								columns="1"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+								widgetVar="dataGrid" paginatorPosition="bottom"
+								rowIndexVar="rowIndexCaptura">
+								<p:ajax event="page" listener="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.cambiarPagina}"
+									process="dataGrid"
+									update="dataGrid form1:mesInputOri form1:pnlBotonesCRUD" />
+								<p:panelGrid style="width: 100%;">
+									<p:row>
+										<p:column rowspan="3">
+											<h:outputText
+												value="Número de Conciliaciones alcanzadas para evitar juicios" />
+										</p:column>
+										<p:column styleClass="col-md-2" style="height:52px;">
+											<h:panelGrid columns="2" style="height:46px; margin-left: 15px">
+												<h:outputText value="Trimestre:"/>
+												<h:outputText value="#{entity.trimestre}" style="margin-left: 18px;"
+												rendered="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando or entity.id  > 0}"/>
+												<p:selectOneMenu size="18" editable="false"
+													value="#{entity.trimestre}" style="width: 3.5em; margin-top: 1.5px;" rendered="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando and entity.id  == null}">
+													<f:selectItems value="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.selectableTrimesters}" var="mes" itemValue="#{mes}" itemLabel="#{mes}" />
+												</p:selectOneMenu>
+											</h:panelGrid>
+										</p:column>
+										<p:column styleClass="col-md-7" />
+									</p:row>
+
+									<p:row>
+										<p:column>
+											<h:outputText value="Cantidad:" />
+										</p:column>
+										<p:column style="width:399px;">
+											<h:outputText value="Observaciones:" />
+										</p:column>
+									</p:row>
+
+									<p:row>
+										<p:column style="height:52px;">
+											<h:outputText value="#{entity.conca}"
+												rendered="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" />
+											<pe:inputNumber  value="#{entity.conca}" styleClass="input-number-small" decimalPlaces="0"
+												decimalSeparator="." thousandSeparator="," maxlength="9"  maxValue="2147483646" minValue="-2147483647"
+												rendered="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" /> 
+										</p:column>
+										<p:column>
+											<h:outputText value="#{entity.obsconca}"
+												rendered="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" />
+											<p:inputText value="#{entity.obsconca}"   maxlength="350"
+												rendered="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" />
+										</p:column>
+									</p:row>
+
+									<p:row>
+										<p:column style="height:52px;">
+											<h:outputText
+												value="Total de asesorías jurídicas proporcionadas(susceptibles de conciliación)" />
+										</p:column>
+										<p:column >
+											<h:outputText value="#{entity.ajp}"
+												rendered="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" />
+											<pe:inputNumber value="#{entity.ajp}" styleClass="input-number-small"
+												decimalPlaces="0" decimalSeparator="." thousandSeparator="," maxlength="9" maxValue="2147483646" minValue="-2147483647"
+												rendered="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" />
+										</p:column>
+										<p:column>
+											<h:outputText value="#{entity.obsajp}"
+												rendered="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" />
+											<p:inputText value="#{entity.obsajp}"  maxlength="350"
+												rendered="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}" />
+										</p:column>
+									</p:row>
+									
+									<p:row>
+										<p:column />
+										<p:column />
+										<p:column />
+									</p:row>
+								</p:panelGrid>
+							</p:dataGrid>
+							<p:panelGrid styleClass="col-md-12">
+								<h:panelGroup id="pnlBotonesCRUD">
+									<p:commandButton value="Salvar" icon="ui-icon-disk"
+										style="padding: 5px; width:100px" action="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.salvar}"
+										update="dataGrid pnlBotonesCRUD" rendered="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}"/>
+									<p:commandButton value="Modificar" icon="ui-icon-tag"
+										style="padding: 5px; width:100px" action="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.modificar}"
+										update="dataGrid pnlBotonesCRUD" disabled="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.selected.id == null}" 
+										rendered="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}"/>
+									<p:commandButton value="Limpiar" actionListener="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.reset}"
+										style="padding: 5px; width:100px" disabled="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}"
+										update="dataGrid pnlBotonesCRUD" icon="ui-icon-arrowreturnthick-1-n"/>
+									<p:commandButton value="Adicionar" icon="ui-icon-circle-plus"
+										style="padding: 5px; width:100px" action="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.adicionar}"
+										update="dataGrid pnlBotonesCRUD" disabled="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}"/>
+									<p:commandButton value="Borrar" icon="ui-icon-trash"
+										style="padding: 5px; width:100px"
+										onclick="PF('confirmFileDeleteMeta').show();" 
+										disabled="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.selected.id == null or eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}"/>
+									<p:commandButton value="Cancelar " icon="ui-icon-circle-close"
+										style="padding: 5px; width:100px" action="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.cancelar}"
+										disabled="#{!eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.editando}"
+										update="dataGrid pnlBotonesCRUD" />
+								</h:panelGroup>
+							</p:panelGrid>
+						</p:panel>
+						<div class="row">
+							<p:panel styleClass="col-md-12">
+								<h:panelGroup styleClass="pull-right"
+									style="margin-bottom: 0.5em;">
+									<h:panelGrid columns="4" style="margin-right:14px;">
+										<h:outputText value="Trimestre" for="mesInputOri" />
+										<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+											value="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.trimestre}" style="width: 5em; margin-top: 1.5px;">
+											<f:selectItem itemValue="1" itemLabel="01" />
+											<f:selectItem itemValue="2" itemLabel="02" />
+											<f:selectItem itemValue="3" itemLabel="03" />
+											<f:selectItem itemValue="4" itemLabel="04" />
+										</p:selectOneMenu>
+										<p:spacer />
+										<p:commandButton id="generateportepdf"
+											onstart="PF('blockUIWidget').block()"
+											action="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.createFilePdfInline}" value="Correcto"
+											oncomplete="PF('blockUIWidget').unblock(); $(PrimeFaces.escapeClientId('form1:panelReporte')).css('height', '64em');"
+											update="form1:inlinePdf :form1:growlReportador"
+											style="padding:2px;">
+										</p:commandButton>
+									</h:panelGrid>
+								</h:panelGroup>
+
+							</p:panel>
+						</div>
+						<p:panel id="inlinePdf" style="border:0px"
+							visible="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.uuid ne null}">
+
+							<object type="application/pdf" style="margin-top: 1em;"
+								data="#{request.contextPath}/GetFileInline?uuid=#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.uuid}&amp;filename=#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.endFilename}"
+								height="380px" width="100%"> Tu browser no puede
+								desplegar el PDF. </object>
+
+						</p:panel>
+					</div>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+				<p:confirmDialog widgetVar="confirmFileDeleteMeta"
+					message="Desea eliminar el registro actual?"
+					header="Confirmación" severity="alert">
+					<p:commandButton value="SI" label="SI"
+						style="margin-top:10px;padding:5px;"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" 
+						actionListener="#{eficaciaAtencionAsesoriasJuridicasFamParaLograrConciliacionMB.delete}" 
+						oncomplete="PF('confirmFileDeleteMeta').hide();"
+						update="dataGrid pnlBotonesCRUD"/>
+					<p:commandButton value="NO" label="NO"
+						style="margin-top:10px;padding:5px;"
+						onclick="PF('confirmFileDeleteMeta').hide();"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:commandButton style="display: none" id="downTxt" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{comparativoEgresosProgramaMB.fileTxt}" />
+				</p:commandButton>
+
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Comparativo Egresos  Global Programa"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+
+					<p:panelGrid columns="9" styleClass="col-centered ui-noborder">
+
+
+						<h:outputText value="Mes: " for="mesInputOri" />
+
+						<p:selectOneMenu id="idMes"
+							value="#{comparativoEgresosProgramaMB.mes}">
+							<f:selectItems value="#{comparativoEgresosProgramaMB.listMes}"
+								var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+						</p:selectOneMenu>
+
+
+
+
+						<h:outputText value="Programa: " for="ProgramaInputOri" />
+
+						<p:selectOneMenu id="idPro"
+							value="#{comparativoEgresosProgramaMB.programa}">
+							<f:selectItems
+								value="#{comparativoEgresosProgramaMB.listPrograma}"
+								var="programa" itemValue="#{programa.clvpro}"
+								itemLabel="#{programa.clvpro}" />
+							<p:ajax event="change"
+								listener="#{comparativoEgresosProgramaMB.updateNom}"
+								update=":form1:nompro"></p:ajax>
+						</p:selectOneMenu>
+
+
+						<h:outputText value="No.Firmas: " for="FirmasInputOri" />
+						<p:selectOneMenu id="idFirmas"
+							value="#{comparativoEgresosProgramaMB.nfirmas}">
+							<f:selectItems
+								value="#{comparativoEgresosProgramaMB.listNFirmas}"
+								var="nfirmas" itemValue="#{nfirmas}" itemLabel="#{nfirmas}" />
+						</p:selectOneMenu>
+
+
+
+
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							title="TXT">
+							<p:graphicImage value="txt.png" width="24" />
+							<p:fileDownload
+								value="#{comparativoEgresosProgramaMB.downloadTxt()}" />
+						</h:commandLink>
+
+
+						<p:commandButton id="generareportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{comparativoEgresosProgramaMB.viewPdf()}"
+							value="Vista Previa"
+							update="form1:inlinePdf, :form1:growlReportador"
+							styleClass="btn btn-default">
+						</p:commandButton>
+
+
+					</p:panelGrid>
+					
+
+					<p:inputText id="nompro"
+						value="#{comparativoEgresosProgramaMB.nomPro}" disabled="true"
+						size="70" />
+
+
+
+
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{comparativoEgresosProgramaMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{comparativoEgresosProgramaMB.uuid}&amp;filename=#{comparativoEgresosProgramaMB.endFilename}"
+							height="380px" width="100%"> </object>
+
+					</p:panel>
+
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

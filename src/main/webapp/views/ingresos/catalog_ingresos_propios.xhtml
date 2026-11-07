@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:remoteCommand name="onload"
+					action="#{catalogIngresosPropiosMB.onPageLoad}"
+					update=":form1:display_1, :form1:objects" />
+
+
+				<p:panel id="panel"
+					header="Consulta al Cat&aacute;logo de Ingresos Propios"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel"
+					style="width:80%">
+					<br />
+					<h:panelGrid id="display_1" columns="2" cellpadding="4"
+						styleClass="col-centered row-centered">
+
+						<p:outputLabel value="Clave de ingreso" for="keyInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px;padding-right: 30px; margin-top:-10px;" />
+						<p:inputText id="keyInput" styleClass="form-control"
+							value="#{catalogIngresosPropiosMB.beanFind.clave}" maxlength="10"
+							validatorMessage="La clave solo puede ser numerica">
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogIngresosPropiosMB.findValuesCatalog}" />
+						</p:inputText>
+
+
+						<p:outputLabel value="Nombre del ingreso" for="nameInput"
+							styleClass="control-label"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 15px;" />
+						<p:inputText id="nameInput" styleClass="form-control"
+							value="#{catalogIngresosPropiosMB.beanFind.nombre}"
+							style="margin-top: 10px;" maxlength="150"
+							validatorMessage="El campo Nombre de ingreso solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ,_-]*)\s*$"
+								for="nameInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogIngresosPropiosMB.findValuesCatalog}" />
+						</p:inputText>
+						<p:commandButton value="Buscar"
+							style="padding: 5px;margin-left:30px;"
+							update=":form1:messagesEdit, :form1:objects"
+							actionListener="#{catalogIngresosPropiosMB.findValuesCatalog}"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()" />
+
+						<p:commandButton value="Limpiar"
+							style="padding: 5px; margin-left: 35px;margin-top:12px;"
+							update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+							actionListener="#{catalogIngresosPropiosMB.findAllValuesCatalog}"
+							immediate="true" onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:keyInput').value='';document.getElementById('form1:nameInput').value='';" />
+					</h:panelGrid>
+
+					<pe:blockUI widgetVar="blockUIWidget">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="indice.png"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Please wait..." style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+
+					<br />
+					<p:panel id="panelButton"
+						style="width:100%; background-color: #E8ECED;"
+						styleClass="col-centered row-centered">
+						<p:commandButton value="Nuevo Registro" style="color: green;"
+							update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+							actionListener="#{catalogIngresosPropiosMB.insertRow}"
+							styleClass="ui-button-success"
+							onclick="PF('dependenciesWdg').clearFilters();"
+							oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});
+							$(function(){PrimeFaces.focus('objects:nomdep');});" />
+					</p:panel>
+					<p:messages id="messagesEdit" showDetail="true" closable="true" />
+					<p:focus context="objects" id="focusTable" />
+
+					<p:dataTable id="objects" binding="#{table}" var="object"
+						value="#{catalogIngresosPropiosMB.list}"
+						styleClass="et_datatable col-centered row-centered green shadown-panel"
+						emptyMessage="No hay registros" editable="true" paginator="true"
+						rows="5"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selectionMode="single" rowKey="#{object.id}"
+						selection="#{catalogIngresosPropiosMB.rowSelected}"
+						filteredValue="#{catalogIngresosPropiosMB.filteredList}"
+						widgetVar="dependenciesWdg" style="width:100%">
+						<f:facet name="header">Cat&aacute;logo de Áreas</f:facet>
+						<p:ajax event="rowEditInit"
+							oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')}); 
+								$('a[id$=deleteRow]').each(function(){$(this).css('visibility','hidden')});
+							$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden'); $(this).css('pointer-events', 'none');});" />
+						<p:ajax event="rowEdit"
+							listener="#{catalogIngresosPropiosMB.onRowEdit}"
+							update=":form1:messagesEdit"
+							oncomplete="if (!args.validationFailed){$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+							                                        $('a[id$=deleteRow]').each(function(){$(this).css('visibility','visible')});
+							                                        $('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible');});} 
+							            else {
+							            $('a[id$=deleteRow]').each(function(){$(this).css('visibility','hidden')});
+							}" />
+						<p:ajax event="rowEditCancel"
+							listener="#{catalogIngresosPropiosMB.onRowCancel}"
+							update=":form1:messagesEdit"
+							oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:hideButton4').click();"
+							onstart="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible');});
+							$('a[id$=deleteRow]').each(function(){$(this).css('visibility','visible')});
+							$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible');});" />
+
+
+						<p:column headerText="Clave" visible="false" width="0"
+							style="aling:center" exportable="true">
+							<p:outputLabel value="#{object.clave}" style="aling:center" />
+						</p:column>
+
+						<p:column headerText="Clave" exportable="false" style="width:30px">
+							<p:outputLabel value="#{object.clave}" style="aling:center" />
+						</p:column>
+
+						<p:column headerText="Nombre" visible="false" width="0"
+							exportable="true">
+							<p:outputLabel value="#{object.nombre}" />
+						</p:column>
+
+						<p:column headerText="Nombre" exportable="false"
+							style="width:180px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:outputLabel value="#{object.nombre}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="nomdep" value="#{object.nombre}"
+										style="width:100%" maxlength="150" required="true"
+										requiredMessage="El campo Nombre es requerido"
+										validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos"
+										onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+										<f:validateRegex
+											pattern="^\s*([0-9a-zA-ZñÑ_-áéíóúÁÉÍÓÚ.^\/^\,^\s])*\s*$"
+											for="nomdep" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Eliminar" exportable="false" width="10%">
+							<p:commandLink id="deleteRow"
+								update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+								oncomplete="PF('confirmDeleteDlg').show()"
+								image="ui-icon ui-icon-close" title="Delete">
+
+								<f:setPropertyActionListener value="#{object}"
+									target="#{catalogIngresosPropiosMB.beanSelected}" />
+								<h:outputText styleClass="ui-icon ui-icon-close" />
+
+							</p:commandLink>
+						</p:column>
+
+						<p:column headerText="Editar" exportable="false" width="10%">
+							<p:rowEditor />
+						</p:column>
+					</p:dataTable>
+
+					<p:commandButton id="hideButton2"
+						update=":form1:messagesEdit, :form1:objects"
+						actionListener="#{catalogIngresosPropiosMB.showSuccesMessage()}"
+						onstart="PF('blockUIWidget').block()"
+						oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+						style="visibility: hidden;" />
+
+					<p:commandButton id="hideButton3"
+						update=":form1:messagesEdit, :form1:objects"
+						actionListener="#{catalogIngresosPropiosMB.showErrorMessage()}"
+						onstart="PF('blockUIWidget').block()"
+						oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+						style="visibility: hidden;" />
+
+					<p:commandButton id="hideButton4"
+						update=":form1:messagesEdit, :form1:objects"
+						actionListener="#{catalogIngresosPropiosMB.showCancelEdition()}"
+						onstart="PF('blockUIWidget').block()"
+						oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+						style="visibility: hidden;" />
+
+					<br />
+					<br />
+
+					<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+						resizable="false" width="400" height="90" showEffect="clip"
+						hideEffect="clip" modal="true">
+						<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+							style="padding-left: 30px; padding-right: 30px;" />
+						<br />
+						<br />
+						<p:outputPanel id="panelDelete" layout="block"
+							style="text-align:center">
+							<p:commandButton value="Aceptar"
+								update=":form1:messagesEdit, :form1:objects"
+								actionListener="#{catalogIngresosPropiosMB.delete}"
+								oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+							<p:commandButton value="Cancelar"
+								onclick="PF('confirmDeleteDlg').hide()" type="button"
+								style="padding: 5px; margin-left: 15px;" />
+						</p:outputPanel>
+					</p:dialog>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"> <h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+
+				<p:panel id="panelReporte"
+					header="Balanza de Comprobación Trimestral"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="9" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Trimestre: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{balanzaDetalladaTrimestralMB.trimestre}">
+							<f:selectItems value="#{balanzaDetalladaTrimestralMB.listMeses}" var="mes"
+								itemValue="#{mes.periodo}" itemLabel="#{mes.periodo}" />
+						</p:selectOneMenu>
+						
+						<h:outputText value="CuentaInical:" for="CuentaInicialInput" />
+						<p:inputText id="CuentaInicialInput"
+							value="#{balanzaDetalladaTrimestralMB.ctaInical}" maxlength="4" size="4">
+							<pe:keyFilter regEx="/[\d]/" />
+						</p:inputText>
+						<h:outputText value="Cuenta Final:"  />
+						<p:inputText 
+							value="#{balanzaDetalladaTrimestralMB.ctaFinal}" maxlength="4" size="4">
+							<pe:keyFilter regEx="/[\d]/" />
+						</p:inputText>
+						
+						<h:outputText value="Nivel: " for="nivelInputOri" />
+						<p:selectOneMenu id="nivelInputOri" size="18" editable="false"
+							value="#{balanzaDetalladaTrimestralMB.nivel}">
+							<f:selectItem itemValue="1" itemLabel="1" />
+							<f:selectItem itemValue="2" itemLabel="2" />
+							<f:selectItem itemValue="3" itemLabel="3" />
+							<f:selectItem itemValue="4" itemLabel="4" />
+							<f:selectItem itemValue="5" itemLabel="5" />
+						</p:selectOneMenu>
+						
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+							<p:commandButton value="Correcto" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:fileDownload value="#{balanzaDetalladaTrimestralMB.fileXls}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body> </html>

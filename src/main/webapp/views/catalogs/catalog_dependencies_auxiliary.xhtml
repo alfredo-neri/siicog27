@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload" 
+					action="#{catalogDependenciesAuxiliaryMB.onPageLoad}"
+					autoRun="true" update=":form1:display_1, :form1:objects" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" /> 
+
+				<p:panel id="panel"
+					header=" Cat&aacute;logo de Dependencias Auxiliares Administrativas"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+					<br />
+					<h:panelGrid id="display_1" columns="2" cellpadding="4">
+
+						<h:outputText value="Clave: " for="keyInput"
+							style="padding-left: 30px; padding-right: 30px;" /> 
+						<p:inputText id="keyInput"
+							value="#{catalogDependenciesAuxiliaryMB.beanFind.clave}"
+							maxlength="3"
+							validatorMessage="Clave solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+								for="keyInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"  
+								listener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Nombre: " for="nameInput"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 30px;" />
+						<p:inputText id="nameInput"
+							value="#{catalogDependenciesAuxiliaryMB.beanFind.nombre}"
+							style="margin-top: 10px;" maxlength="200"
+							validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+								for="nameInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<p:outputPanel layout="block" style="text-align:center">
+							<br />
+							<br />
+
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								update=":form1:messagesEdit, :form1:objects, :form1:panel"
+								actionListener="#{catalogDependenciesAuxiliaryMB.findValuesCatalog}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+
+							<p:commandButton value="Limpiar" immediate="true"
+								style="padding: 5px; margin-left: 15px;"
+								update=":form1:messagesEdit, :form1:objects, :form1:display_1, :form1:panel"
+								actionListener="#{catalogDependenciesAuxiliaryMB.findAllValuesCatalog}"
+								onstart="PF('blockUIWidget').block()" 
+								oncomplete="PF('blockUIWidget').unblock(); document.getElementById('form1:keyInput').value=''; document.getElementById('form1:nameInput').value=''" />
+
+						</p:outputPanel>
+					</h:panelGrid>
+				</p:panel>
+
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+				<br />
+				<br />
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+						actionListener="#{catalogDependenciesAuxiliaryMB.insertRow}"
+						style="margin-left: 50%; padding: 5px;"
+						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+				</p:panel>
+
+				<p:focus context="objects" id="focusTable" />   
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogDependenciesAuxiliaryMB.list}"
+					styleClass="et_datatable" emptyMessage="No hay registros"
+					editable="true" paginator="true" rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}">
+
+					<f:facet name="header">Cat&aacute;logo de Dependencias Auxiliares Administrativas</f:facet>
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogDependenciesAuxiliaryMB.onRowEdit}"
+						update=":form1:messagesEdit" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogDependenciesAuxiliaryMB.onRowCancel}"
+						update=":form1:messagesEdit" />
+
+					<p:column headerText="Clave" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.clave}" />
+					</p:column>
+
+					<p:column headerText="Clave" exportable="false" style="width:5%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clave}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="clave" value="#{object.clave}"
+									style="width:100%" maxlength="3" required="true"
+									onkeyup="this.value = this.value.toUpperCase();"
+									requiredMessage="Clave es requerido"
+									validatorMessage="Clave solo permite valores alfanum&eacute;ricos y debe tener una longitud de 3">
+
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+										for="clave" />
+									<f:validateLength minimum="3" maximum="3" />
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nombre}" />
+					</p:column>
+
+					<p:column headerText="Nombre" exportable="false" style="width:85%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nombre}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nombre" value="#{object.nombre}"
+									style="width:100%" maxlength="200" required="true" requiredMessage="El Nombre de la Dependencia es obligatorio."
+									validatorMessage="Nombre solo permite valores alfanum&eacute;ricos">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+										for="nombre" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Borrar" style="width:5%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogDependenciesAuxiliaryMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:5%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="csv.png" width="24" />
+							<!--
+							<p:dataExporter encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="DependenciasAuxiliaresAdm" pageOnly="false" />
+								-->
+							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.csvFile}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogDependenciesAuxiliaryMB.file}" />
+						</h:commandLink>
+
+
+					</f:facet>
+
+				</p:dataTable>
+
+
+
+				<br />
+				<br />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar"
+							update=":form1:objects, :form1:messagesEdit"
+							actionListener="#{catalogDependenciesAuxiliaryMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

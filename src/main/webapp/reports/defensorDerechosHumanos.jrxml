@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="defensorDerechosHumanos" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="04883281-39d9-46a6-9eb9-bef1a5c2af65">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="pN31" class="java.lang.String"/>
+	<parameter name="pL31" class="java.lang.String"/>
+	<parameter name="dia" class="java.lang.Integer"/>
+	<parameter name="mes" class="java.lang.String"/>
+	<parameter name="anio" class="java.lang.Integer"/>
+	<parameter name="imagen" class="java.lang.String"/>
+	<parameter name="municipioName" class="java.lang.String"/>
+	<parameter name="semestre" class="java.lang.Integer"/>
+	<parameter name="listMeses" class="java.lang.List">
+		<defaultValueExpression><![CDATA[Arrays.asList("Enero","Febreo","Marzo","Abril")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT T1.ID_ROW,
+       T1.FECHA,
+       T1.TITULO,
+       T1.ESTUDIOS,
+       SEMESTRE
+      FROM(SELECT VAL.ID_ROW,
+ 		          MAX(DECODE(ETI.NOMBRE, 'SEMESTRE',VAL.VALOR)) SEMESTRE,
+		          MAX(DECODE(ETI.NOMBRE, 'FECHAING',TO_DATE(VAL.VALOR, 'DD/MM/YYYY'))) FECHA,
+		          MAX(DECODE(ETI.NOMBRE, 'TITULO'  ,VAL.VALOR)) TITULO,
+  		          MAX(DECODE(ETI.NOMBRE, 'ESTUDIOS',VAL.VALOR)) ESTUDIOS	
+                 FROM TC_TABLAS TAB
+		         INNER JOIN TR_ETIQ_TABLAS ETAB 
+		              ON TAB.ID=ETAB.ID_TABLA  
+		         INNER JOIN TC_ETIQUETAS ETI  
+		              ON ETAB.ID_ETIQUETA=ETI.ID
+		         INNER JOIN TC_VALORES VAL
+		              ON ETAB.ID=VAL.ID_ETIQ_TABLA 
+           WHERE TAB.ID=2  
+           GROUP BY VAL.ID_ROW
+           ) T1
+WHERE T1.SEMESTRE = $P{semestre}]]>
+	</queryString>
+	<field name="ID_ROW" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ID_ROW"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="TC_VALORES"/>
+	</field>
+	<field name="FECHA" class="java.util.Date">
+		<property name="com.jaspersoft.studio.field.label" value="FECHA"/>
+	</field>
+	<field name="TITULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TITULO"/>
+	</field>
+	<field name="ESTUDIOS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ESTUDIOS"/>
+	</field>
+	<field name="SEMESTRE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SEMESTRE"/>
+	</field>
+	<pageHeader>
+		<band height="115" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="70" width="80" height="20" uuid="8a4d324a-2593-4218-a351-f20953cfe4f8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MUNICIPIO:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="90" width="390" height="20" uuid="f222fd01-78aa-4c7a-9116-c19ad00c8fd9"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["AL " +$P{dia} +" DE " +$P{mes} +"  DEL "+$P{anio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="60" y="0" width="632" height="60" uuid="732f97a4-3e13-4566-88c2-6b66c4db36be"/>
+				<box>
+					<pen lineWidth="1.25"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="2.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTO DE INFORMACIÓN QUE ALIMENTA EL INDICADOR DE CONPETENCIA LABORAL DEL DEFENSOR MUNICIPAL DE DERECHOS HUMANOS]]></text>
+			</staticText>
+			<image onErrorType="Blank">
+				<reportElement x="0" y="0" width="60" height="60" uuid="574a030d-682f-460b-9695-4ec270d2160d"/>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="70" width="672" height="20" uuid="a17b5367-1536-45f0-a6c0-8a7260e4e1fa"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{municipioName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="340" y="90" width="290" height="20" uuid="678d2f61-8e96-4c71-808b-41a93cdd8990"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FECHA DE INGRESO AL CARGO: "]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd &apos;de&apos; MMMM &apos;de&apos; yyyy">
+				<reportElement x="630" y="90" width="120" height="20" uuid="83b67b48-2012-40c2-af70-457acdd0050f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="120" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="50" uuid="8819a610-0fa2-43c8-b9c4-2df0c5401b4d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="140" height="50" uuid="7134c92f-8393-4850-9036-5f568fa095b5"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[RESPUESTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="412" height="120" uuid="308c258b-f093-4bc9-a588-4a0e5173f295"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="200" height="70" uuid="280c952b-1fd6-4338-a2f0-d5349558d51a"/>
+				<box padding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[Favor de identificar si cuenta con los siguientes aspectos de evaluación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="50" width="70" height="70" uuid="b5b54154-6fee-4ff3-8b23-5a93cb7d7180"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[SI	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="50" width="70" height="70" uuid="c72ff925-3a35-4a5c-be45-09091f3e75f3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[NO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="109" splitType="Stretch">
+			<staticText>
+				<reportElement x="340" y="0" width="412" height="50" uuid="7ca0ac13-7bbb-425d-a51d-afe4802b5f8e"/>
+				<box padding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[Remitir copia legible del mismo ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="50" width="412" height="59" uuid="e826b40c-6cd5-4373-921b-64c367a0e4e3"/>
+				<box padding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[Adjuntar a este formato la documentación que avale haber cursado estudios especializados en materia de Derechos Humanos ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="50" uuid="678f2e80-562b-4f3f-a84d-cf00cbb1bbdc"/>
+				<box padding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[Titulo de licenciatura ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="200" height="59" uuid="739c872a-2a1a-4e52-896f-1a70a73fa48a"/>
+				<box padding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[Estudios especializados en materia de Derechos Humanos]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="0" width="70" height="50" uuid="5dd9dcc5-d2bf-450b-ac10-32ba64d7e107"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TITULO}.equals( "1" )? "X":""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="270" y="0" width="70" height="50" uuid="de0a9717-fe9a-467a-93d9-4a5e3456cb24"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TITULO}.equals( "0" )? "X":""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="50" width="70" height="59" uuid="eb29047e-9328-4b72-90d8-0a0b0b54a7ee"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ESTUDIOS}.equals( "1" )? "X":""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="270" y="50" width="70" height="59" uuid="f6dca40f-094f-41f0-b791-5c5f6919c0fa"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ESTUDIOS}.equals( "0" )? "X":""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="60" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="272" y="0" width="209" height="40" uuid="68425e23-b781-4b04-a1f9-e37738327a52"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pL31}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="272" y="40" width="209" height="20" uuid="afaf960b-52db-41bf-aec9-4b41c38062f7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pN31}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="752" height="50" uuid="f37f8534-4fd2-4353-8bca-e7e628a7861d"/>
+				<box padding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA: Deberá remitir en fotocopia simple evidencia de la Constancia de no Inhabilitación, el certificado de No Antecedentes, Nombramiento del servido publico que ocupa el cargo referido.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<h:form id="consultafacturas">
+				<p:panel id="panel" header="Consulta de facturas de pólizas"
+					styleClass="green col-md-8 col-centered row-centered shadow-panel">
+
+					<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+
+					<p:panelGrid columns="7" id="viewer" styleClass="col-centered row-centered" style="width:100%">
+            <f:facet name="header">
+							<p:panel rendered="#{consultaFacturaPolizaMB.filename ne null}">
+							<object type="application/pdf"
+								data="#{request.contextPath}/pfs?name=#{consultaFacturaPolizaMB.filename}"
+								height="380px" width="100%"> Tu browser no puede desplegar el PDF. </object>
+							</p:panel>
+            </f:facet>
+
+            <h:outputText value="Mes:" />
+            <p:selectOneMenu  value="#{consultaFacturaPolizaMB.month}" style="width:50px">
+              <f:selectItems value="#{consultaFacturaPolizaMB.months}" var="month" itemLabel="#{month.id}" itemValue="#{month.id}" />
+            </p:selectOneMenu>
+
+            <h:outputText value="Tipo:" />
+            <p:selectOneMenu  value="#{consultaFacturaPolizaMB.type}" style="width:50px">
+              <f:selectItem itemLabel="C" itemValue="C" />
+              <f:selectItem itemLabel="D" itemValue="D" />
+              <f:selectItem itemLabel="E" itemValue="E" />
+              <f:selectItem itemLabel="I" itemValue="I" />
+            </p:selectOneMenu>
+            <h:outputText value="N&uacute;m, de poliza:" />
+						<p:inputMask maxlength="8" size="9" value="#{consultaFacturaPolizaMB.numPoliza}">
+              <pe:keyFilter regEx="/[0-9_]/i" />
+            </p:inputMask>
+						<p:commandButton value="Correcto" ajax="true" update="panel" actionListener="#{consultaFacturaPolizaMB.process}"/>
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

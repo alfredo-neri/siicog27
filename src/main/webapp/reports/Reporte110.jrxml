@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2017-05-16T18:11:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte110" pageWidth="842" pageHeight="545" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d3f25208-e0c7-46de-9564-caef89e1b077">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMUSER"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="SECTOR" class="java.lang.Integer"/>
+	<parameter name="TRIMESTRE" class="java.lang.Integer"/>
+	<parameter name="NoFIRMAS" class="java.lang.Integer"/>
+	<parameter name="imagen" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{imagen}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CAMPO1" class="java.lang.String"/>
+	<parameter name="CLAVE" class="java.lang.String"/>
+	<parameter name="ANO_EMP" class="java.lang.String"/>
+	<parameter name="N4" class="java.lang.String"/>
+	<parameter name="L4" class="java.lang.String"/>
+	<parameter name="N5" class="java.lang.String"/>
+	<parameter name="L5" class="java.lang.String"/>
+	<parameter name="N3" class="java.lang.String"/>
+	<parameter name="L3" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT p.atendidas, p.programadas, p.obsaten, p.obsprog,
+f.campo1, f.n4, f.l4, f.n5, f.l5, f.l3, f.n3, c.clave, c.anoemp
+FROM pm2111 p
+JOIN firmas f ON p.idsector = f.idsector
+JOIN conctb C ON  p.idsector = c.idsector
+WHERE p.idsector =   $P{SECTOR}
+AND p.trimestre = $P{TRIMESTRE}
+ORDER BY trimestre]]>
+	</queryString>
+	<field name="ATENDIDAS" class="java.lang.Integer"/>
+	<field name="PROGRAMADAS" class="java.lang.Integer"/>
+	<field name="OBSATEN" class="java.lang.String"/>
+	<field name="OBSPROG" class="java.lang.String"/>
+	<field name="CAMPO1" class="java.lang.String"/>
+	<field name="N4" class="java.lang.String"/>
+	<field name="L4" class="java.lang.String"/>
+	<field name="N5" class="java.lang.String"/>
+	<field name="L5" class="java.lang.String"/>
+	<field name="L3" class="java.lang.String"/>
+	<field name="N3" class="java.lang.String"/>
+	<field name="CLAVE" class="java.lang.String"/>
+	<field name="ANOEMP" class="java.lang.Integer"/>
+	<variable name="FECHA_HEADER" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[($P{TRIMESTRE} == 1) ? "DEL 1 DE ENERO AL 31 DE MARZO DE " + $P{ANO_EMP} :
+
+            ($P{TRIMESTRE} == 2) ? "DEL 1 DE ABRIL AL 30 DE JUNIO DE " + $P{ANO_EMP} :
+            ($P{TRIMESTRE} == 3) ? "DEL 1 DE JULIO AL 30 DE SEPTIEMBRE DE " + $P{ANO_EMP} :
+            ($P{TRIMESTRE} == 4) ? "DEL 1 DE OCTUBRE AL 31 DE DICIEMBRE DE " + $P{ANO_EMP} : ""]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="134" splitType="Stretch">
+			<staticText>
+				<reportElement x="84" y="6" width="718" height="30" uuid="c9f92ae3-9999-41f4-972f-1c6e42ba14b1"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[_____________________________________________________________________________________________________________]]></text>
+			</staticText>
+			<image onErrorType="Blank">
+				<reportElement x="19" y="6" width="60" height="56" uuid="f2bb0253-1c27-45b8-be46-9e7b9cfbf256"/>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="84" y="36" width="719" height="30" uuid="902899d7-3f28-4b2f-9c83-b482d6c4bc70"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTO DE INFORMACIÓN QUE ALIMENTA EL INDICADOR DE
+ATENCIÓN INTEGRAL A LA MADRE ADOLESCENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="31" y="76" width="238" height="15" uuid="0e892523-4af0-4911-959e-78b62bd49e3b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SISTEMA DESCENTRALIZADO MUNICIPAL DIF:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="274" y="76" width="177" height="15" uuid="238b707e-3fe7-4882-8830-89dc506cff64"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CAMPO1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="543" y="76" width="100" height="15" uuid="13c82e1c-1ff6-4561-9416-db02ff800697"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CLAVE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="499" y="76" width="37" height="15" uuid="a932661c-93f6-419b-a7e7-91f85a4a51af"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NÚM.]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="31" y="102" width="330" height="17" uuid="e20ded4b-beaa-45c6-ab45-73b1783e570b"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{FECHA_HEADER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="277" y="1" width="250" height="30" backcolor="#BDB9B9" uuid="c0e63da2-bd2e-4700-a993-5251b764dc03"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Opaque" x="27" y="1" width="250" height="30" backcolor="#BDB9B9" uuid="d098471c-a719-4908-88da-d1e2bc1ca45c"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="84" y="1" width="100" height="30" uuid="922a969f-a046-4e82-b3ab-7cda8ab91011"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTOS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="527" y="1" width="250" height="30" backcolor="#BDB9B9" uuid="baea101c-0a6e-42ec-b6ef-95260455e1c3"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="601" y="1" width="100" height="30" uuid="105244e8-49a1-4403-98e3-2f7e0df98086"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="1" width="143" height="30" uuid="d84c5e8c-9f91-4597-adec-14538e757a62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE TRIMESTRAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="203" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<rectangle>
+				<reportElement mode="Transparent" x="277" y="0" width="250" height="156" uuid="c6405ea8-3d16-47fa-9f44-3a2f2740085f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="527" y="0" width="250" height="156" uuid="70a61366-5aaf-4e5c-8fb5-df91b972bf1d"/>
+			</rectangle>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="379" y="44" width="100" height="20" uuid="ae41fa90-0841-433e-a8e4-8c629f881a13"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{ATENDIDAS} != null ) ? $F{ATENDIDAS} : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="379" y="96" width="100" height="20" uuid="d0cfd40e-80ed-4f94-a6b9-a1e6ce56d28f"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{PROGRAMADAS} != null ) ? $F{PROGRAMADAS}: 0]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="530" y="27" width="240" height="60" uuid="c6a71c8e-06b4-402c-ac06-6441d8ff7451"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{OBSATEN} != null ) ? $F{OBSATEN} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="530" y="96" width="240" height="51" uuid="ee4fdb06-0fbd-4be9-bafc-5db692d50560"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{OBSPROG} != null ) ? $F{OBSPROG} : ""]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="27" y="0" width="250" height="156" uuid="8a9d28b7-54de-4d15-ba3b-262916d0890d"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="40" y="27" width="211" height="53" uuid="2340e411-ca46-4b46-800d-9c492311592b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Número de madres adolescentes atendidas con acciones del DIF municipal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="96" width="221" height="30" uuid="fbe6a1de-b60b-43a7-8d30-2e2103ab7214">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Total de madres adolescentes programadas para atender por parte del DIF municipal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="173" width="775" height="30" uuid="49450a4d-41b8-4669-8ce6-5328aa18da3f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[NOTA: Madre adolescentes son las personas de 12 a 19 años de edad. Este Indicador es de carácter trimestral, se presenta en los meses de marzo, junio, septiembre y diciembre en archivo de texto plano .txt.]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="119" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="594" y="109" width="96" height="10" uuid="535528e8-70aa-4ea9-bf65-ddd4a1f6ae5a"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="474" y="109" width="116" height="10" uuid="44f478ff-0a2d-4442-a164-73e2859f1107"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[FECHA DE ELABORACIÓN:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="749" y="109" width="44" height="10" uuid="1e5848b5-2545-4c39-b911-63db4311770b"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="109" width="110" height="10" uuid="1b340f4f-aff2-44fe-8b91-fe8cad86d8e1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[OSFEPM/21/11]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="697" y="109" width="52" height="10" uuid="0ae28641-6b72-4e9d-b9f3-5867f6fdb021"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="84" y="21" width="194" height="45" uuid="44e93b16-a1cf-4dc4-b9b8-55f21c4dd237">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{N4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="84" y="68" width="194" height="30" uuid="e90954de-5c7d-4f9e-a771-3e724e8c67f9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{L4}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="474" y="68" width="194" height="30" uuid="ffa1c7c4-7b27-4365-bbb4-4b1a10a0a12d">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 3]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{L3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="474" y="21" width="194" height="45" uuid="099aade7-f396-4116-9616-50caa77424f6">
+					<printWhenExpression><![CDATA[$P{NoFIRMAS}>= 3]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{N3}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

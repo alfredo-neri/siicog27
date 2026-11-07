@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+
+				<p:commandButton style="display: none" id="downXls" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{rF00914MB.fileXls}" />
+				</p:commandButton>
+				<p:panel id="panelReporte"
+					header="Reporte de Balanza de Comprobación"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<h:outputText value="Mes: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{rF00914MB.mes}">
+							<f:selectItem itemValue="1" itemLabel="01" />
+							<f:selectItem itemValue="2" itemLabel="02" />
+							<f:selectItem itemValue="3" itemLabel="03" />
+							<f:selectItem itemValue="4" itemLabel="04" />
+							<f:selectItem itemValue="5" itemLabel="05" />
+							<f:selectItem itemValue="6" itemLabel="06" />
+							<f:selectItem itemValue="7" itemLabel="07" />
+							<f:selectItem itemValue="8" itemLabel="08" />
+							<f:selectItem itemValue="9" itemLabel="09" />
+							<f:selectItem itemValue="10" itemLabel="10" />
+							<f:selectItem itemValue="11" itemLabel="11" />
+							<f:selectItem itemValue="12" itemLabel="12" />
+						</p:selectOneMenu>
+						<h:outputText value="Cuentas con Saldo 0: " for="saldosInputOri" />
+						<p:selectOneMenu id="saldosInputOri" size="18" editable="false"
+							value="#{rF00914MB.saldo0}">
+							<f:selectItem itemValue="0" itemLabel="N" />
+							<f:selectItem itemValue="1" itemLabel="S" />
+						</p:selectOneMenu>
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+							<p:commandLink actionListener="#{rF00914MB.downloadXls}"
+								update=":form1:growlReportador, :form1:downXls" title="EXCEL">
+								<p:graphicImage value="excel.png" width="24" />
+
+							</p:commandLink>
+
+							<!-- 									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="csv.png" width="24" />
+										<p:fileDownload value="#{rF00914MB.fileCsv}" />
+									</h:commandLink>
+									-->
+							<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+								<p:fileDownload value="#{rF00914MB.fileTxt}" />
+							</h:commandLink>
+							<p:commandButton id="generareportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF00914MB.viewPdf}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{rF00914MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{rF00914MB.uuid}&amp;filename=#{rF00914MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

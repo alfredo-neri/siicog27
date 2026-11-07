@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean" value="#{conciliacion5000vs8000DetalleMB}"></ui:param>
+		<ui:define name="content">
+			<script>
+	                $(document).ready(() => {
+	                    $(PrimeFaces.escapeClientId('form1:panelReporte')).parents('.container-fluid:first').css('text-align', 'center');
+	                })
+	            </script>
+			<style>
+.input-small, span.input-small input {
+	width: 3.5em;
+}
+</style>
+			<h:form id="form1"
+				style="display: inline-block; margin-left: auto; margin-right: auto; ">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"
+					autoUpdate="true"></p:growl>
+				<p:panel id="panelReporte" header="Conciliación 5000 y 8000"
+					style="height: 26em;" styleClass="green shadow-panel container">
+					<div class="row">
+						<div
+							class="col-12 col-xs-12 col-sm-12 col-12-md col-lg-12 col-xs-12">
+							<p:panelGrid styleClass="ui-noborder col-centered row-centered"
+								id="panel-filtros">
+								<p:row>
+									<p:column>
+										<h:outputText value="Mes inicial" />
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="inputMesInicial" editable="false"
+											value="#{bean.mesInicial}">
+											<f:selectItem itemValue="1" itemLabel="01" />
+											<f:selectItem itemValue="2" itemLabel="02" />
+											<f:selectItem itemValue="3" itemLabel="03" />
+											<f:selectItem itemValue="4" itemLabel="04" />
+											<f:selectItem itemValue="5" itemLabel="05" />
+											<f:selectItem itemValue="6" itemLabel="06" />
+											<f:selectItem itemValue="7" itemLabel="07" />
+											<f:selectItem itemValue="8" itemLabel="08" />
+											<f:selectItem itemValue="9" itemLabel="09" />
+											<f:selectItem itemValue="10" itemLabel="10" />
+											<f:selectItem itemValue="11" itemLabel="11" />
+											<f:selectItem itemValue="12" itemLabel="12" />
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column>
+										<h:outputText value="Mes final" />
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="inputMesFinal" editable="false"
+											value="#{bean.mesFinal}">
+											<f:selectItem itemValue="1" itemLabel="01" />
+											<f:selectItem itemValue="2" itemLabel="02" />
+											<f:selectItem itemValue="3" itemLabel="03" />
+											<f:selectItem itemValue="4" itemLabel="04" />
+											<f:selectItem itemValue="5" itemLabel="05" />
+											<f:selectItem itemValue="6" itemLabel="06" />
+											<f:selectItem itemValue="7" itemLabel="07" />
+											<f:selectItem itemValue="8" itemLabel="08" />
+											<f:selectItem itemValue="9" itemLabel="09" />
+											<f:selectItem itemValue="10" itemLabel="10" />
+											<f:selectItem itemValue="11" itemLabel="11" />
+											<f:selectItem itemValue="12" itemLabel="12" />
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column>
+										<h:outputText value="Partida" />
+									</p:column>
+									<p:column>
+										<pe:inputNumber id="inputPartida" styleClass="input-small"
+											value="#{bean.partida}" maxlength="4" decimalPlaces="0"
+											decimalSeparator="" thousandSeparator="" maxValue="9999">
+										</pe:inputNumber>
+									</p:column>
+
+									<p:column>
+										<h:outputText value="Cuentas con saldo 0?" />
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="inputCuentasConSaldoCero" layout="grid"
+											columns="1" value="#{bean.cuentasConSaldoCero}"
+											required="true">
+											<f:selectItem itemLabel="S" itemValue="true" />
+											<f:selectItem itemLabel="N" itemValue="false" />
+										</p:selectOneMenu>
+									</p:column>
+
+									<p:column>
+										<p:commandButton id="generateportepdf"
+											onstart="PF('blockUIWidget').block()"
+											actionListener="#{bean.createFilePdfInlineValidate}"
+											value="Correcto"
+											update="form1:inlinePdf, :form1:growlReportador"
+											styleClass="btn btn-default">
+										</p:commandButton>
+										<h:commandLink
+											onclick="PrimeFaces.monitorDownload(start, stop);"
+											title="TXT">
+											<p:graphicImage value="txt.png" width="24" />
+											<p:fileDownload value="#{bean.fileTxt}" />
+										</h:commandLink>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<p:panel id="inlinePdf" style="border:0px"
+								visible="#{bean.uuid ne null}">
+
+								<object type="application/pdf" style="margin-top: 1em;"
+									data="#{request.contextPath}/GetFileInline?uuid=#{bean.uuid}&amp;filename=#{bean.endFilename}"
+									height="380px" width="100%"> Tu browser no puede
+									desplegar el PDF. </object>
+
+							</p:panel>
+						</div>
+					</div>
+				</p:panel>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<!-- p:remoteCommandcdebe
+					actionListener="#{consultaPolizaMB.findDigitalPoli}" name="findp"
+					update=":form1:graphicImage" / -->
+				<p:remoteCommand actionListener="#{consultaPolizaMB.onPegaLoad}"
+					autoRun="true" update=":form1:iduser" />
+				<p:panel id="panel" header="Consulta de P&oacute;lizas"
+					styleClass="green col-md-14 col-centered row-centered shadow-panel">
+					<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+					<center>
+						<p:panelGrid columns="11">
+							<h:outputText value="P&oacute;liza" id="lblPoliza" />
+							
+							<h:outputText value="Tipo" id="lblTio" />
+							<h:outputText value="Mes" id="lblMes" />
+							<h:outputText value="Numero" id="lblNumero" />
+
+							<h:outputText value="Fecha:" />
+							<h:inputText value="#{consultaPolizaMB.polien.feccap}"
+								id="fcaptura" disabled="true" size="10" maxlength="10" />
+							<h:outputText value="Status:" />
+							<h:inputText value="#{consultaPolizaMB.polien.stapol}"
+								id="stapol" size="2" maxlength="2" disabled="true" />
+							<h:inputText value="#{consultaPolizaMB.polien.staafe}"
+								id="staafe" size="2" maxlength="2" disabled="true" />
+							<h:outputText value="Capturo:" id="lblcapturo" />
+							<h:inputText value="#{consultaPolizaMB.polien.cappol}"
+								id="cappol" size="10" maxlength="10" disabled="true">
+								<f:convertNumber pattern="0000" />
+							</h:inputText>
+							<!-- Titulos  -->
+							<h:inputText value="#{consultaPolizaMB.year}" id="year" size="4"
+								maxlength="4" disabled="true" />
+							<p:selectOneMenu id="idPo"
+								value="#{consultaPolizaMB.polien.tippol}">
+								<f:selectItems value="#{consultaPolizaMB.lisCattpo}" var="po"
+									itemValue="#{po.tippol}" itemLabel="#{po.tippol}" />
+							</p:selectOneMenu>
+							<p:selectOneMenu id="selectmes"
+								value="#{consultaPolizaMB.polien.mespol}" required="true">
+								<f:selectItems value="#{consultaPolizaMB.listMes}" var="m"
+									itemValue="#{m.mes}" itemLabel="#{m.mes}" />
+							</p:selectOneMenu>
+							<p:inputText value="#{consultaPolizaMB.polien.conpol}"
+								id="lisconpol" size="4" maxlength="4">
+								<f:convertNumber pattern="0000" />
+							</p:inputText>
+							<p:commandButton value="Buscar" id="polizanumber"
+								actionListener="#{consultaPolizaMB.findPolice}"
+								update=":form1:panel, form1:objects, :form1:img, :form1:graphicImage"
+								icon="ui-icon-search" ajax="false" />
+							<h:outputText value="" />
+							<h:outputText value="Cargo" id="lblCargo" />
+							<h:inputText value="#{consultaPolizaMB.polien.cdebe}" id="cdebe"
+								size="10" maxlength="10" disabled="true"
+								style="text-align: right">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:inputText>
+							<h:outputText value="Abono" id="lblAbono" />
+							<h:inputText value="#{consultaPolizaMB.polien.chaber}"
+								id="chaber" size="10" maxlength="10" disabled="true"
+								style="text-align: right">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:inputText>
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<!-- Combos -->
+							<h:outputText value="" />
+							<h:outputText value="" />
+
+							<h:outputText value="Ctc8000" id="lblctc" />
+							<h:inputText value="#{consultaPolizaMB.polien.ctc600}"
+								id="ctc600" size="10" maxlength="10" disabled="true"
+								style="text-align: right">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:inputText>
+							<h:outputText value="Cta8000" />
+							<h:inputText value="#{consultaPolizaMB.polien.cta600}"
+								id="cta600" size="10" maxlength="10" disabled="true"
+								style="text-align: right">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:inputText>
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+
+
+						</p:panelGrid>
+					</center>
+					<p:dataTable id="objects" binding="#{table}" var="object"
+						value="#{consultaPolizaMB.listPolide}" styleClass="et_datatable"
+						emptyMessage="No hay registros" editable="true" paginator="true"
+						rows="10"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selectionMode="single" rowKey="#{object.renpol}"
+						widgetVar="dependenciesWdg">
+						<p:column headerText="#" style="width:2%">
+							<h:outputText value="#{object.renpol}">
+								<f:convertNumber pattern="#" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Cuenta" style="width:2%">
+							<p:commandLink id="idCuentaEvent" update=":form1:concuentas"
+								oncomplete="PF('cuentascon').show();"
+								actionListener="#{consultaPolizaMB.findCuentasPolizas(object.cuenta, object.scta, object.sscta, object.ssscta, object.sssscta)}">
+								<h:outputText value="#{object.cuenta}" />
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="Scta" style="width:3%">
+							<h:outputText value="#{object.scta}" />
+						</p:column>
+						<p:column headerText="Ssscta" style="width:4%">
+							<h:outputText value="#{object.sscta}" />
+						</p:column>
+						<p:column headerText="Sscta" style="width:2%">
+							<h:outputText value="#{object.ssscta}" />
+						</p:column>
+						<p:column headerText="Sssscta" style="width:3%">
+
+							<h:outputText value="#{object.sssscta}" />
+						</p:column>
+						<p:column headerText="Concepto"
+							style="width:20%;text-align: left !important;">
+
+							<h:outputText value="#{object.concep}"
+								style="text-align: left !important" />
+						</p:column>
+						<p:column headerText="RefPol" style="width:2%">
+
+							<h:outputText value="#{object.refpol}">
+								<f:convertNumber pattern="0.00" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Dn" style="width:2%">
+
+							<h:outputText value="#{object.dn}" />
+						</p:column>
+						<p:column headerText="Cargo" style="width:5%;align-text:rigth;">
+
+							<h:outputText value="#{object.canpol}" style="float:right;">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Abono" style="width:5%">
+
+							<h:outputText value="#{object.canpolh}" style="float: right;">
+								<f:convertNumber type="number" pattern="###,###,##0.00" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Cuenta Adicional" style="width:2%">
+
+							<h:outputText value="#{object.cuenta1}" />
+						</p:column>
+					</p:dataTable>
+					<center>
+						<p:panelGrid columns="4">
+							<h:outputText value="Concepto:" />
+							<h:inputText value="#{consultaPolizaMB.polien.polclv1}"
+								id="polclv1" size="70" maxlength="70" disabled="true" />
+
+
+							<h:outputText value="Capturado:" />
+							<h:inputText value="#{consultaPolizaMB.idUser}" id="iduser"
+								size="10" maxlength="10" disabled="true" />
+
+
+							<h:outputText value="Nombre Cuenta:" />
+							<h:inputText value="" id="ncuenta" disabled="true" size="70"
+								maxlength="70" />
+								
+
+							<h:outputText value="Renglon" />
+							<h:inputText value="#{consultaPolizaMB.renglo}" id="rowid"
+								size="4" maxlength="4">
+								<p:ajax event="keyup" update=":form1:objects, :form1:panel"
+									listener="#{consultaPolizaMB.findBybRow}" />
+							</h:inputText>
+						</p:panelGrid>
+						<p:panelGrid columns="4">
+							<p:commandButton value="Poliza Digitalizada" id="digitalizada"
+								actionListener="#{consultaPolizaMB.findDigitalPoli}"
+								update=":form1:img, :form1:graphicImage, :form1:panel"
+								icon="icon-file-image" />
+								
+
+							<!-- p:commandButton value="Poliza Digitalizada" id="digitalizada"
+								action="#{consultaPolizaMB.findDigitalPoli}" type="submit"
+								onclick="window.open('pupopPoliza.xhtml','','width=700,height=400,noresize,,status=no,directories=no,menubar=no,toolbar=no,scrollbars=no,location=no,resizable=no,titlebar=no')"
+								icon="icon-file-image" -->
+							<p:commandButton value="Imprimir Poliza"
+								style="margin-left: 47%; padding: 1px;"
+								update=":form1:pdfContent, :form1:imPoliza, :form1:messagesEdit"
+								actionListener="#{consultaPolizaMB.buttonAction}"
+								oncomplete="PF('impPoliza').show();" />
+
+							<!-- p:commandButton value="Imprimir Poliza" id="imprimir"
+								icon="icon-file-print"
+								actionListener="#{consultaPolizaMB.getReportPoli}"
+								onclick="PF('impPoliza').show();" update="pdfViewer" />-->
+							<p:commandButton value="Polizas Incorrectas" id="wrong"
+								onclick="PF('wrongPoli').show();" icon="ui-icon-closethick" />
+						</p:panelGrid>
+					</center>
+					<p:dialog id="img" widgetVar="digitalPoliza" height="500"
+						dynamic="true" modal="true" width="800"
+						header="Poliza Digitalizada">
+						<p:graphicImage value="#{imagesPoliza.image}"
+							rendered="#{consultaPolizaMB.imageId >0}" id="graphicImage"
+							width="700" height="500">
+							<f:param name="id" value="#{consultaPolizaMB.imageId}" />
+						</p:graphicImage>
+					</p:dialog>
+
+					<!--Lista de Polizas Incorrectas  -->
+					<p:dialog header="Polizas Incorrectas" widgetVar="wrongPoli"
+						id="wrongP" width="800" height="400">
+						<p:messages id="messages" showDetail="true" autoUpdate="true"
+							closable="true" />
+						<center>
+							<p:panelGrid columns="3">
+								<h:outputText value="Mes:" />
+								<h:inputText value="#{consultaPolizaMB.me}" id="wrongmes"
+									size="2" maxlength="2" />
+								<p:commandButton value="Buscar" id="wserach"
+									icon="icon-file-search"
+									actionListener="#{consultaPolizaMB.findWrongPolicy}"
+									update="wrongTable" />
+							</p:panelGrid>
+							<p:dataTable id="wrongTable" var="object2"
+								value="#{consultaPolizaMB.listIncorrectas}"
+								styleClass="et_datatable" emptyMessage="No hay registros"
+								editable="true" paginator="true" rows="10"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:column headerText="Tipo" style="with:5%">
+									<h:outputText value="#{object2.tippol}" />
+								</p:column>
+								<p:column headerText="Mes" style="with:5%">
+									<h:outputText value="#{object2.mespol}" />
+								</p:column>
+								<p:column headerText="N&uacute;mero" style="with:5%">
+									<h:outputText value="#{object2.conpol}" />
+								</p:column>
+								<p:column headerText="Cifra Control" style="with:5%">
+									<h:outputText value="#{object2.ccontro}" />
+								</p:column>
+								<p:column headerText="Suma  Debe" style="with:5%">
+									<h:outputText value="#{object2.sdebe}" />
+								</p:column>
+								<p:column headerText="Suma Haber" style="with:5%">
+									<h:outputText value="#{object2.shaber}" />
+								</p:column>
+								<p:column headerText="Abono 8000" style="with:5%">
+									<h:outputText value="#{object2.ctc6000}" />
+								</p:column>
+								<p:column headerText="Cargo 8000" style="with:5%">
+									<h:outputText value="#{object2.cta6000}" />
+								</p:column>
+							</p:dataTable>
+						</center>
+					</p:dialog>
+					<p:dialog header="Imprimir P&oacute;liza" id="imPoliza"
+						widgetVar="impPoliza" width="800" height="500">
+						<p:media id="pdfContent" value="#{consultaPolizaMB.filePdfPath}"
+							width="100%" height="500" player="pdf">
+						</p:media>
+					</p:dialog>
+					<p:dialog id="concuentas" widgetVar="cuentascon" width="800"
+						height="400" header="Consulta de Cuentas">
+						<p:dataTable id="tcuentas" var="object3"
+							value="#{consultaPolizaMB.listCuenta}" styleClass="et_datatable"
+							emptyMessage="No hay registros" editable="true" paginator="true"
+							rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+							<p:column headerText="Cuenta" style="with:5%">
+								<h:outputText value="#{object3.cuenta}" />
+							</p:column>
+
+							<p:column headerText="sCuenta" style="with:5%">
+								<h:outputText value="#{object3.scuenta}" />
+							</p:column>
+							<p:column headerText="ssCuenta" style="with:10%">
+								<h:outputText value="#{object3.sscuenta}" />
+							</p:column>
+
+							<p:column headerText="sssCuenta" style="with:5%">
+								<h:outputText value="#{object3.ssscuenta}" />
+							</p:column>
+							<p:column headerText="ssssCuenta" style="with:5%">
+								<h:outputText value="#{object3.sssscuenta}" />
+							</p:column>
+
+							<p:column headerText="Nombre Cuenta" style="with:10%">
+								<h:outputText value="#{object3.nomcta}" />
+							</p:column>
+						</p:dataTable>
+					</p:dialog>
+				</p:panel>
+
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

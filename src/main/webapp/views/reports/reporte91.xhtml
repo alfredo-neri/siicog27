@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Cuenta y partida al mes"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid styleClass="col-centered ui-noborder">
+						<p:row>
+							<p:column colspan="3">
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Inicial" />
+							</p:column>
+							<p:column style="text-align: center;">
+								<h:outputText value="Final" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Cuenta: " for="CuentaInput" />
+							</p:column>
+							<p:column>
+								<p:inputText id="CuentaInput" value="#{reporte91MB.cuenta}"
+									required="true"
+									requiredMessage="El campo Cuenta no debe de ir vacío"
+									maxlength="4" size="4">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="Partida(Nat. Gasto): "
+									for="PartidaInicialInput" />
+							</p:column>
+							<p:column>
+								<p:inputText id="PartidaInicialInput"
+									value="#{reporte91MB.partidaInicial}" maxlength="4" size="4"
+									required="true"
+									requiredMessage="El campo Partida Inicial no debe de ir vacío">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</p:column>
+							<p:column>
+								<p:inputText id="PartidaFinalInput"
+									value="#{reporte91MB.partidaFinal}" maxlength="4" size="4"
+									required="true"
+									requiredMessage="El campo Partida Final no debe de ir vacío">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</p:column>
+							<!--p:column>
+								<h:outputText value="Número de firmas en el reporte: "
+									for="numFirmasInput" />
+							</p:column>
+							< p:column>
+								<p:selectOneMenu id="numFirmasInput" size="5" editable="false"
+									value="#{reporte91MB.numFirmas}">
+									<f:selectItem itemValue="4" itemLabel="4" />
+									<f:selectItem itemValue="3" itemLabel="3" />
+									<f:selectItem itemValue="2" itemLabel="2" />
+									<f:selectItem itemValue="1" itemLabel="1" />
+									<f:selectItem itemValue="0" itemLabel="0" />
+								</p:selectOneMenu>
+							</p:column>
+							 -->
+						</p:row>
+						<p:row>
+							<p:column colspan="3" style="text-align: right;">
+								<h:outputText value="Mes: " for="mesInputOri" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="mesIniInput" size="18" editable="false"
+									value="#{reporte91MB.mesIni}">
+									<f:selectItem itemValue="1" itemLabel="01" />
+									<f:selectItem itemValue="2" itemLabel="02" />
+									<f:selectItem itemValue="3" itemLabel="03" />
+									<f:selectItem itemValue="4" itemLabel="04" />
+									<f:selectItem itemValue="5" itemLabel="05" />
+									<f:selectItem itemValue="6" itemLabel="06" />
+									<f:selectItem itemValue="7" itemLabel="07" />
+									<f:selectItem itemValue="8" itemLabel="08" />
+									<f:selectItem itemValue="9" itemLabel="09" />
+									<f:selectItem itemValue="10" itemLabel="10" />
+									<f:selectItem itemValue="11" itemLabel="11" />
+									<f:selectItem itemValue="12" itemLabel="12" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="mesFinInput" size="18" editable="false"
+									value="#{reporte91MB.mesFin}">
+									<f:selectItem itemValue="1" itemLabel="01" />
+									<f:selectItem itemValue="2" itemLabel="02" />
+									<f:selectItem itemValue="3" itemLabel="03" />
+									<f:selectItem itemValue="4" itemLabel="04" />
+									<f:selectItem itemValue="5" itemLabel="05" />
+									<f:selectItem itemValue="6" itemLabel="06" />
+									<f:selectItem itemValue="7" itemLabel="07" />
+									<f:selectItem itemValue="8" itemLabel="08" />
+									<f:selectItem itemValue="9" itemLabel="09" />
+									<f:selectItem itemValue="10" itemLabel="10" />
+									<f:selectItem itemValue="11" itemLabel="11" />
+									<f:selectItem itemValue="12" itemLabel="12" />
+								</p:selectOneMenu>
+							</p:column>
+							<!--  p:column colspan="0" style="text-align: center;"
+								styleClass="ui-noborder">
+								<p:commandButton value="Vista Previa" id="preView"
+									actionListener="#{reporte91MB.preView}" icon="ui-icon-zoomout"
+									update=":form1:preViewTxt" onclick="PF('preViewTxtWg').show();" />
+							</p:column> -->
+							<p:column colspan="0" style="text-align: center;"
+								styleClass="ui-noborder">
+								<p:commandButton value="Correcto" ajax="false"
+									onclick="PrimeFaces.monitorDownload(start, stop);"
+									icon="ui-icon-arrowthick-1-s"
+									actionListener="#{reporte91MB.downLoadFile}">
+									<p:fileDownload value="#{reporte91MB.fileTxt}" />
+								</p:commandButton>
+							</p:column>
+
+
+						</p:row>
+					</p:panelGrid>
+					<p:panelGrid>
+						<p:outputLabel rendered="#{reporte91MB.bPreView}"
+							style="height: 400px; width: 2200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="165" id="preViewTxt"
+								style="font-family: monospace; font-size: 8pt;"
+								widgetVar="preViewTxtWg" rendered="#{reporte91MB.bPreView}"
+								autoResize="true" readonly="true"
+								value="#{reporte91MB.txtPreview}" />
+						</p:outputLabel>
+						<!-- <div id="divpreViewTxt"
+							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+
+						</div> -->
+					</p:panelGrid>
+
+
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

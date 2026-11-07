@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<f:metadata>
+	<f:viewParam name="numeroFirmas" value="#{rEDOSITFINMB.numeroFirmas}" />
+</f:metadata>
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Reporte Estado de Situación Financiera"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:commandButton style="display: none" id="downXls" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);">
+						<p:fileDownload value="#{rEDOSITFINMB.fileXls}" />
+					</p:commandButton>
+					<p:commandButton style="display: none" id="downTxt" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);">
+						<p:fileDownload value="#{rEDOSITFINMB.fileTxt}" />
+					</p:commandButton>
+					<p:panelGrid columns="2" styleClass="col-centered ui-noborder"
+						rendered="#{rEDOSITFINMB.numeroFirmas==3}">
+						<p:selectBooleanCheckbox value="#{rEDOSITFINMB.acumulado}"
+							style="	display: flex;	align-items: center;	justify-items: center;"
+							itemLabel="Acumulado" />
+						<p:selectOneButton value="#{rEDOSITFINMB.tipoPeriodo}">
+							<f:selectItems value="#{rEDOSITFINMB.tiposPeridos}" var="p"
+								itemValue="#{p}" itemLabel="#{p}" />
+							<p:ajax event="change" listener="#{rEDOSITFINMB.changePeriodo}"
+								update="panelReporte" />
+						</p:selectOneButton>
+					</p:panelGrid>
+					<p:panelGrid columns="7" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Periodo: " for="trim"
+							rendered="#{rEDOSITFINMB.numeroFirmas==3 and (not empty rEDOSITFINMB.periodos)}" />
+
+						<p:selectOneMenu id="trim" editable="false"
+							converter="genericConverter"
+							rendered="#{rEDOSITFINMB.numeroFirmas==3 and (not empty rEDOSITFINMB.periodos)}"
+							value="#{rEDOSITFINMB.periodo}">
+							<f:selectItems value="#{rEDOSITFINMB.periodos}" var="p"
+								itemValue="#{p}" itemLabel="#{p.descripcion}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="Mes: " for="idMes"
+							rendered="#{rEDOSITFINMB.numeroFirmas==4}"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+
+						<p:selectOneMenu id="idMes" converter="genericConverter"
+							rendered="#{rEDOSITFINMB.numeroFirmas==4}"
+							value="#{rEDOSITFINMB.periodo}">
+							<f:selectItems value="#{rEDOSITFINMB.periodos}" var="p"
+								itemValue="#{p}" itemLabel="#{p.periodo} #{p.descripcion}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="Con Ctas de Orden (s/n): "
+							for="ordenInputOri" />
+						<p:selectOneMenu id="ordenInputOri" size="18" editable="false"
+							value="#{rEDOSITFINMB.orden}">
+							<f:selectItem itemValue="S" itemLabel="S" />
+							<f:selectItem itemValue="N" itemLabel="N" />
+						</p:selectOneMenu>
+
+						<p:panelGrid columns="3" styleClass="ui-noborder">
+
+							<p:commandLink title="EXCEL"
+								update=":form1:growlReportador, :form1:downXls"
+								actionListener="#{rEDOSITFINMB.downloadXls}">
+								<p:graphicImage value="excel.png" width="24" />
+
+							</p:commandLink>
+
+							<!-- 									<h:commandLink
+											onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+											<p:graphicImage value="csv.png" width="24" />
+											<p:fileDownload value="#{rEDOSITFINMB.fileCsv}" />
+										</h:commandLink>
+										 -->
+							<p:commandLink actionListener="#{rEDOSITFINMB.downloadTxt}"
+								update=":form1:growlReportador, :form1:downTxt" title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+
+							</p:commandLink>
+
+
+
+
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rEDOSITFINMB.viewPdf}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+
+
+
+
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{rEDOSITFINMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{rEDOSITFINMB.uuid}&amp;filename=#{rEDOSITFINMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

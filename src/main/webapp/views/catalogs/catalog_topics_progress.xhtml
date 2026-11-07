@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogTopicsProgressMB.onPageLoad}" 
+					update=":form1:objects" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<br />
+				<br />
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+						actionListener="#{catalogTopicsProgressMB.cleanInsertRow}"
+						style="margin-left: 50%; padding: 5px;"
+						oncomplete="PF('insertDialog').show();jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()});" />
+				</p:panel>
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogTopicsProgressMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}">
+
+					<f:facet name="header">Cat&aacute;logo de Temas de Desarrollo</f:facet>
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogTopicsProgressMB.onRowEdit}"
+						update=":form1:messagesEdit" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogTopicsProgressMB.onRowCancel}"
+						update=":form1:messagesEdit" />
+
+
+					<p:column visible="false" width="0" exportable="true">
+						<h:outputText value="#{object.cvetemas}" />
+					</p:column>
+
+					<p:column headerText="Cve Temas" exportable="false"
+						style="width:15%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.cvetemas}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{object.cvetemas}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column visible="false" width="0" exportable="true">
+						<h:outputText value="#{object.descripcion}" />
+					</p:column>
+
+					<p:column headerText="Descripci&oacute;n" exportable="false"
+						style="width:35%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.descripcion}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{object.descripcion}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column visible="false" width="0" exportable="true">
+						<h:outputText value="#{object.pe}" />
+					</p:column>
+
+					<p:column headerText="Plilar/Eje" exportable="false"
+						style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.pe}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{object.pe}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column visible="false" width="0" exportable="true">
+						<h:outputText value="#{object.nope}" />
+					</p:column>
+
+					<p:column headerText="No. Pilar/Eje" exportable="false"
+						style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nope}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{object.nope}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column visible="false" width="0" exportable="true">
+						<h:outputText value="#{object.tema}" />
+					</p:column>
+
+					<p:column headerText="Tema" exportable="false" style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.tema}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{object.tema}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Borrar" style="width:10%" exportable="false">
+						<p:commandLink
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogTopicsProgressMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:10%" exportable="false">
+						<p:rowEditor />
+					</p:column>
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="excel.png" width="24"
+								style="margin-left: 80%;" />
+							<p:dataExporter type="xls" target="objects"
+								fileName="TemasDesarrollo" pageOnly="false" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:dataExporter type="pdf" target="objects"
+								fileName="TemasDesarrollo" pageOnly="false" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="csv.png" width="24" />
+							<p:dataExporter  encoding="ISO-8859-1" type="csv" target="objects"
+								fileName="TemasDesarrollo" pageOnly="false" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogTopicsProgressMB.file}" />
+						</h:commandLink>
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<br />
+				<br />
+
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<h:outputText value="¿Esta seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+
+						<p:commandButton value="Aceptar" update=":form1:objects"
+							actionListener="#{catalogTopicsProgressMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+
+				<p:dialog header="Insertar" widgetVar="insertDialog"
+					resizable="false" width="400" height="300" showEffect="clip"
+					hideEffect="clip" modal="true">
+
+					<p:growl id="messagesInsertar" showDetail="true" sticky="true" />
+
+					<h:panelGrid id="display_4" columns="2" cellpadding="4"
+						style="margin:0 auto;">
+
+						<h:outputText value="Cve Temas"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 15px;" />
+						<p:inputText value="#{catalogTopicsProgressMB.bean.cvetemas}"
+							style="margin-top: 15px;" />
+
+						<h:outputText value="Descripci&oacute;n"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 15px;" />
+						<p:inputText value="#{catalogTopicsProgressMB.bean.descripcion}"
+							style="margin-top: 15px;" />
+
+						<h:outputText value="Pilar/Eje"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 15px;" />
+						<p:inputText value="#{catalogTopicsProgressMB.bean.pe}"
+							style="margin-top: 15px;" />
+
+						<h:outputText value="No. Pilar/Eje"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 15px;" />
+						<p:inputText value="#{catalogTopicsProgressMB.bean.nope}"
+							style="margin-top: 15px;" />
+
+						<h:outputText value="Tema"
+							style="padding-left: 30px; padding-right: 30px; margin-top: 15px;" />
+						<p:inputText value="#{catalogTopicsProgressMB.bean.tema}"
+							style="margin-top: 15px;" />
+
+					</h:panelGrid>
+					<p:outputPanel layout="block" style="text-align:center">
+						<br />
+						<br />
+						<p:commandButton value="Insertar"
+							update=":form1:objects, :form1:messagesInsertar"
+							actionListener="#{catalogTopicsProgressMB.save}"
+							oncomplete="PF('insertDialog').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('insertDialog').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

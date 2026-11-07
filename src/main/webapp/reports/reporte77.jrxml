@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2019-07-31T13:26:40 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ServiciosPersonalesAlMes" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="4ca13698-03c7-447c-bcf6-1447bbca18e9">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="alfredo"/>
+	<parameter name="pMes" class="java.lang.Integer"/>
+	<parameter name="pMesName" class="java.lang.String"/>
+	<parameter name="pYear" class="java.lang.Integer"/>
+	<parameter name="pSector" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT	SUBSTR(SCTA,1,3) GRUPO, 
+		SCTA, 
+		SUM((CANPOL) - (CANPOLH)) DIFERENCIA
+FROM POLIDE
+WHERE	ANOPOL = $P{pYear}
+	AND IDSECTOR = $P{pSector}
+	AND MESPOL <= $P{pMes} 
+	AND (SUBSTR(CUENTA,1,3) = '827' OR
+		 SUBSTR(CUENTA,1,3) = '825' OR
+		 SUBSTR(CUENTA,1,3) = '824'
+		 )
+	AND SUBSTR(SSSCTA,1,1) = '1'
+GROUP BY SCTA
+ORDER BY SCTA]]>
+	</queryString>
+	<field name="GRUPO" class="java.lang.String"/>
+	<field name="SCTA" class="java.lang.String"/>
+	<field name="DIFERENCIA" class="java.math.BigDecimal"/>
+	<variable name="vTotal" class="java.math.BigDecimal" resetType="Group" resetGroup="Group" calculation="Sum">
+		<variableExpression><![CDATA[$F{DIFERENCIA}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<group name="Group">
+		<groupExpression><![CDATA[$F{GRUPO}]]></groupExpression>
+		<groupFooter>
+			<band height="36">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<staticText>
+					<reportElement x="0" y="12" width="70" height="12" uuid="6e9251fe-a814-4459-b27a-6fee4a6cc7c6">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Monospaced" size="9"/>
+					</textElement>
+					<text><![CDATA[TOTAL]]></text>
+				</staticText>
+				<textField pattern="#,##0.00#">
+					<reportElement x="70" y="12" width="110" height="12" uuid="d0c4bc07-a6f7-4e54-acb3-087808a4f4f8">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font fontName="Monospaced" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{vTotal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="70" y="0" width="110" height="12" uuid="8019435f-f00d-4057-9149-29845de14ee3"/>
+					<textElement textAlignment="Center">
+						<font fontName="Monospaced" size="9"/>
+					</textElement>
+					<text><![CDATA[------------------------------]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="24" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="12" uuid="3b2ef1dc-56fc-4a6e-bb55-980c5dde7c80">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SERVICIOS PERSONALES AL MES DE " +$P{pMesName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField pattern="#,##0.00#">
+				<reportElement x="70" y="0" width="110" height="12" uuid="079a3a3e-9629-4e83-a425-2bb3f10955df">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIFERENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="70" height="12" uuid="0622747d-4ec8-49a2-ae94-caee26bfad5d"/>
+				<textElement>
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SCTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

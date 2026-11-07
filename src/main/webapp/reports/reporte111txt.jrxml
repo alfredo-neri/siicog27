@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2017-02-17T17:35:10 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte111_txt" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4c87e0e6-bf61-4cc1-b472-95c7bcb7ec1c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEMUSER"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="4"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="13.948"/>
+	<parameter name="TRIMESTRE" class="java.lang.Integer"/>
+	<parameter name="SECTOR" class="java.lang.Integer"/>
+	<parameter name="ANO" class="java.lang.Integer"/>
+	<parameter name="clave" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT TRIMESTRE, AGUA, POBLACION, ACUMAGUA, OBSAGUA, OBSPOB, ind.PERIODO, ind.cveind, ind.clvfun
+FROM PM2511 JOIN INDICADORES ind 
+ON ind.CVEIND=49
+	AND PM2511.IDSECTOR = IND.IDSECTOR
+WHERE PM2511.TRIMESTRE = $P{TRIMESTRE}
+AND PM2511.IDSECTOR = $P{SECTOR}]]>
+	</queryString>
+	<field name="TRIMESTRE" class="java.lang.Integer"/>
+	<field name="AGUA" class="java.math.BigDecimal"/>
+	<field name="POBLACION" class="java.lang.Integer"/>
+	<field name="ACUMAGUA" class="java.math.BigDecimal"/>
+	<field name="OBSAGUA" class="java.lang.String"/>
+	<field name="OBSPOB" class="java.lang.String"/>
+	<field name="PERIODO" class="java.lang.String"/>
+	<field name="CVEIND" class="java.lang.Integer"/>
+	<field name="CLVFUN" class="java.lang.String"/>
+	<variable name="REPORTE_TXT" class="java.lang.String">
+		<variableExpression><![CDATA[(($P{clave}!= null)?"\""+$P{clave}.substring(0,1)+"\"":"\"\"")
++"|"+(($P{clave}!= null)?"\""+$P{clave}.substring(1,4)+"\"":"\"\"")
++"|"+(($P{ANO}!= null)?$P{ANO}:"")
++"|" +(($F{PERIODO}!= null)?$F{PERIODO}:"") +"|"+
+(($P{TRIMESTRE}!= null)?$P{TRIMESTRE}:"") +"|"+
+(($P{TRIMESTRE} == 1) ? "31/03/"+$P{ANO}.toString().substring(2) : (
+	($P{TRIMESTRE} == 2) ? "30/06/"+$P{ANO}.toString().substring(2)	: (
+		($P{TRIMESTRE} == 3) ? "30/09/"+$P{ANO}.toString().substring(2)	: (
+			($P{TRIMESTRE} == 4) ? "31/12/"+$P{ANO}.toString().substring(2)	:""
+
+		)
+	)
+))
++"|\""+(($F{CVEIND}!= null)?$F{CVEIND}: "")+"\"|\""
++(($F{CLVFUN}!= null)?$F{CLVFUN}:"")
++"\"|"+(($F{AGUA}!= null)?$F{AGUA}.intValue():"")
++"|"+(($F{ACUMAGUA}!= null)?$F{ACUMAGUA}.intValue():"")
++"|"+(($F{POBLACION}!= null)?$F{POBLACION}:"")
++"|\""+(($F{OBSAGUA}!= null)?$F{OBSAGUA}:"")
++"|\""+(($F{OBSPOB}!= null)?$F{OBSPOB}:"")+"\""]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="800" height="30" uuid="fe52c42f-0566-44ed-9138-3c0515aa2e39"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORTE_TXT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

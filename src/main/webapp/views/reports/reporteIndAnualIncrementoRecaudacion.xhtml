@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean" value="#{reporteIndAnualIncrementoRecaudacionMB}"></ui:param>
+		<ui:define name="content">
+		
+	        
+			<h:form id="form1">
+				<p:remoteCommand name="onload"
+					action="#{bean.onPageLoad}"
+					update=":form1:arteCulturaTable" />
+					
+				<p:growl id="growlArteCultura" showDetail="false" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Incremento en la Recaudación"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					
+							<p:dataTable id="arteCulturaTable" var="artecultura"
+								value="#{bean.masterList}"
+								styleClass="et_datatable" emptyMessage="No hay registros"
+								paginator="true" rows="1"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+								widgetVar="programsWdg" paginatorPosition="top"
+								rowIndexVar="rowIndex">
+		
+								<p:ajax event="page"
+									listener="#{bean.cambiarPagina}"
+									process="arteCulturaTable"
+									update=":form1:arteCulturaTable"></p:ajax>
+		
+								<p:column>
+									<center>
+										<p:panelGrid columns="3" styleClass="noBorders" columnClasses="column20,column20,column60">
+											<h:outputLabel value=""></h:outputLabel>
+											<h:outputLabel value="Anual"></h:outputLabel>
+											<p:inputText id="anual" value="#{artecultura.anual}" size="7"
+												maxlength="4" disabled="true"/>
+		
+											<h:outputLabel value=""></h:outputLabel>
+											<h:outputLabel value="Cantidad"></h:outputLabel>
+											<h:outputLabel value="Observaciones" ></h:outputLabel>
+		
+											<h:outputLabel value="Recaudacion total anual (Ingresos ordinarios)"></h:outputLabel>
+											<pe:inputNumber id="canEveCult" value="#{artecultura.rta}" disabled="#{bean.camposDeshabilitados}"
+												decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxlength="13" />
+											<p:inputText id="obsEveCult"
+												value="#{artecultura.obsrta}"
+												size="80" disabled="#{bean.camposDeshabilitados}" maxlength="350" />
+											<h:outputLabel
+												value="Recaudación total del año anterior (Ingresos ordinarios)"></h:outputLabel>
+											<pe:inputNumber id="canEveCultAsistentes" value="#{artecultura.rtaa}" disabled="#{bean.camposDeshabilitados}"
+												decimalPlaces="2" decimalSeparator="." thousandSeparator="," maxlength="13" />												
+											<p:inputText id="obsEveCultAsistentes"
+												value="#{artecultura.obsrtaa}"
+												size="80"  disabled="#{bean.camposDeshabilitados}" maxlength="350" />
+										</p:panelGrid>
+		
+							<p:panel id="pnlBotones" styleClass="col-centered row-centered noBorders" >
+									<p:commandButton value="Salvar"
+										action="#{bean.salvar()}"
+										rendered="#{bean.botonVisibleSalvar}"
+										update="arteCulturaTable,form1:growlArteCultura,pnlBotones" icon="ui-icon-disk"></p:commandButton>
+									<p:commandButton value="Modificar"
+										action="#{bean.modificar()}"
+										rendered="#{bean.botonVisibleModificar}"
+										update="arteCulturaTable,form1:growlArteCultura,pnlBotones" icon="ui-icon-pencil"></p:commandButton>
+									<p:commandButton value="Limpiar"
+										action="#{bean.reset()}"
+										disabled="#{bean.botonDeshabilitadoReset}"
+										update="arteCulturaTable,form1:growlArteCultura,pnlBotones" icon="ui-icon-tag"></p:commandButton>
+									<p:commandButton value="Adicionar"
+										action="#{bean.adicionar()}"
+										disabled="#{bean.botonDeshabilitadoAdicionar}"
+										update="arteCulturaTable,form1:growlArteCultura,pnlBotones"
+										oncomplete="PF('programsWdg').getPaginator().setPage(PF('programsWdg').paginator.cfg.pageCount-1);" icon="ui-icon-circle-plus"></p:commandButton>
+									<p:commandButton value="Borrar"
+										onclick="PF('confirmFileDeleteDiseno').show();"
+										disabled="#{bean.botonDeshabilitadoBorrar}">
+										<p:confirmDialog widgetVar="confirmFileDeleteDiseno"
+											message="¿Desea borrar el registro actual?"
+											header="Confirmacion" severity="alert">
+											<p:commandButton value="SI" label="SI"
+												actionListener="#{bean.borrar()}"
+												onclick="PF('confirmFileDeleteDiseno').hide();"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update=":form1:arteCulturaTable, form1:growlArteCultura,pnlBotones" />
+											<p:commandButton value="NO" label="NO"
+												
+												onclick="PF('confirmFileDeleteDiseno').hide();"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update=":form1:arteCulturaTable, form1:growlArteCultura,pnlBotones" />
+										</p:confirmDialog>
+									</p:commandButton>
+									<p:commandButton value="Cancelar"
+										action="#{bean.cancelar()}" immediate="true"
+										disabled="#{bean.botonDeshabilitadoCancelar}"
+										update=":form1:arteCulturaTable, form1:growlArteCultura,pnlBotones" icon="ui-icon-circle-close"></p:commandButton>
+								</p:panel>
+									</center>
+								</p:column>
+							</p:dataTable>
+
+					<br/><br/>
+						<p:commandButton value="Correcto" id="correcto"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								icon="ui-icon-circle-arrow-s"
+								update="form1:inlinePdf, :form1:panelReporte, :form1:growlArteCultura"
+								actionListener="#{bean.createFilePdfInlineValidate}" />
+	
+						<p:panel id="inlinePdf" style="border:0px"
+							visible="#{bean.uuid ne null}">
+							<object type="application/pdf"
+								data="#{request.contextPath}/GetFileInline?uuid=#{bean.uuid}&amp;filename=#{bean.endFilename}"
+								height="380px" width="100%"> Tu browser no puede desplegar el PDF. </object>
+						</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="emisionFacturaElectronica" class="form-inline">
+				<p:panel id="main_panel" header="Comprobante Fiscal Digital"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+          <p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+					<br />
+          <p:panel id="panel_cfd" header="COMPROBANTE FISCAL DIGITAL"
+                   styleClass="green col-md-12 col-centered row-centered shadow-panel">
+            <div class="row">
+              <div class="col-md-3">
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="No certificado: "/>
+                <h:inputText value="#{emisionFacturaElectronica.noCertificado}" id="no_certificado" size="22" class="form-control"
+                maxlength="8"
+                disabled="#{emisionFacturaElectronica.cfdDisabled}" required="true"
+                requiredMessage="El campo No certificado es requerido"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Folio Inicial: "/>
+                <p:inputMask value="#{emisionFacturaElectronica.folioInicial}" size="22" id="folio_inicial" class="form-control" disabled="#{emisionFacturaElectronica.cfdDisabled}" required="true"
+                requiredMessage="El campo Folio Inicial es requerido">
+                  <pe:keyFilter regEx="/[0-9_]/i" />
+                </p:inputMask>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Folio Final: "/>
+                <p:inputMask value="#{emisionFacturaElectronica.folioFinal}" size="22" id="folio_final" class="form-control" disabled="#{emisionFacturaElectronica.cfdDisabled}" required="true"
+                requiredMessage="El campo Folio Final es requerido">
+                  <pe:keyFilter regEx="/[0-9_]/i" />
+                </p:inputMask>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="form-group col-md-2">
+                <h:outputText value="Serie: "/>
+                <h:inputText value="#{emisionFacturaElectronica.serie}" size="14" id="serie" class="form-control" disabled="#{emisionFacturaElectronica.cfdDisabled}" required="true"
+                maxlength="10"
+                requiredMessage="El campo Serie es requerido"/>
+              </div>
+              <div class="form-group col-md-2">
+                <h:outputText value="Folio: "/>
+                <p:inputMask value="#{emisionFacturaElectronica.folio}" size="14" id="folio" class="form-control" disabled="#{emisionFacturaElectronica.disabled}" required="true"
+                requiredMessage="El campo Folio es requerido">
+                  <pe:keyFilter regEx="/[0-9_]/i" />
+                </p:inputMask>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Tipo comprobante: "/>
+                <h:inputText value="#{emisionFacturaElectronica.tipoComprobante}" size="25" id="tipo_comprobante" class="form-control" disabled="#{emisionFacturaElectronica.disabled}" required="true"
+                maxlength="10"
+                requiredMessage="El campo Tipo comprobante es requerido"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Forma de Pago: "/>
+                <p:selectOneMenu id="forma_pago" value="#{emisionFacturaElectronica.formaDePago}" style="width: 125px" disabled="#{emisionFacturaElectronica.disabled}">
+                  <f:selectItem itemLabel="" itemValue=""/>
+                  <f:selectItem itemLabel="Pago en una sola exhibicion" itemValue="Pago en una sola exhibicion"/>
+                  <f:selectItem itemLabel="Pago en parcialidades" itemValue="Pago en parcialidades"/>
+                </p:selectOneMenu>
+              </div>
+              <div class="form-group col-md-2">
+                <h:outputText value="Fecha: "/>
+                <p:calendar value="#{emisionFacturaElectronica.fecha}" id="fecha"
+                            pattern="dd/MM/yyyy" mask="true" size="14"
+                            locale="es"
+                            disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+            </div>
+          </p:panel>
+          <br/>
+          <p:panel id="panel_de" header="DATOS DEL EMISOR"
+                   styleClass="green col-md-12 col-centered row-centered shadow-panel">
+            <div class="row">
+              <div class="form-group col-md-8">
+                <h:outputText value="Razón Social: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorRazonSocial}" size="70"
+                             id="e_razon_social" class="form-control"
+                             maxlength="80"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-4">
+                <h:outputText value="RFC: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorRFC}" size="23" id="e_rfc" class="form-control"
+                             maxlength="13"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <h:outputText value="Calle y Número: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorCalleNumero}"
+                             size="60" id="e_calle_numero"
+                             class="form-control"
+                             maxlength="60"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Ciudad: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorCiudad}"
+                             size="23" id="e_ciudad" class="form-control"
+                             maxlength="25"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Colonia: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorColonia}"
+                             size="23" id="e_colonia" class="form-control"
+                             maxlength="30"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="form-group col-md-3">
+                <h:outputText value="Delegación: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorDelegacion}"
+                             size="25" id="e_delegacion" class="form-control"
+                             maxlength="30"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Estado: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorEstado}"
+                             size="25" id="e_estado" class="form-control"
+                             maxlength="20"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="CP: "/>
+                <p:inputMask value="#{emisionFacturaElectronica.emisorCP}" size="25" id="e_cp" class="form-control" disabled="#{emisionFacturaElectronica.disabled}" mask="99999"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Pais: "/>
+                <h:inputText value="#{emisionFacturaElectronica.emisorPais}"
+                             size="25" id="e_pais" class="form-control"
+                             maxlength="10"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+            </div>
+          </p:panel>
+          <br/>
+          <p:panel id="panel_dr" header="DATOS DEL RECEPTOR"
+                   styleClass="green col-md-12 col-centered row-centered shadow-panel">
+            <div class="row">
+              <div class="form-group col-md-8">
+                <h:outputText value="Razón Social: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorRazonSocial}"
+                             maxlength="80"
+                             size="70" id="r_razon_social" class="form-control"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-4">
+                <h:outputText value="RFC: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorRFC}"
+                             size="23" id="r_rfc" class="form-control"
+                             maxlength="13"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <h:outputText value="Calle y Número: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorCalleNumero}"
+                             size="60" id="r_calle_numero" class="form-control"
+                             maxlength="60"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Ciudad: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorCiudad}"
+                             size="23" id="r_ciudad" class="form-control"
+                             maxlength="25"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Colonia: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorColonia}"
+                             size="23" id="r_colonia" class="form-control"
+                             maxlength="30"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="form-group col-md-3">
+                <h:outputText value="Delegación: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorDelegacion}"
+                             size="25" id="r_delegacion" class="form-control"
+                             maxlength="30"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Estado: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorEstado}"
+                             size="25" id="r_estado" class="form-control"
+                             maxlength="20"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="CP: "/>
+                <p:inputMask value="#{emisionFacturaElectronica.receptorCP}" size="25" id="r_cp" class="form-control" disabled="#{emisionFacturaElectronica.disabled}" mask="99999"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Pais: "/>
+                <h:inputText value="#{emisionFacturaElectronica.receptorPais}"
+                             size="25" id="r_pais" class="form-control"
+                             maxlength="10"
+                             disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+            </div>
+            <br/>
+          </p:panel>
+          <br/>
+          <p:panel id="panel_ctrl"
+                   styleClass="green col-md-12 col-centered row-centered shadow-panel">
+            <div class="row" style="margin-bottom: 10px">
+              <div class="form-group col-md-2">
+                <h:outputText value="Cantidad: " style="vertical-align:top;"/>
+                 <p:inputMask  value="#{emisionFacturaElectronica.cantidad}" size="8" id="r_cantidad" class="form-control" disabled="#{emisionFacturaElectronica.disabled}">
+                  <pe:keyFilter regEx="/[0-9_]/i" />
+                  <p:ajax event="change" listener="#{emisionFacturaElectronica.cantidadPrecioChanged}" update="r_importe" />
+                </p:inputMask>
+              </div>
+              <div class="form-group col-md-4">
+                <h:outputText value="Concepto: " style="vertical-align:top;"/>
+                <p:inputTextarea value="#{emisionFacturaElectronica.concepto}" rows="4" cols="40" id="r_concepto" class="form-control" disabled="#{emisionFacturaElectronica.disabled}"/>
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Precio Unitario: " style="vertical-align:top;"/>
+                <pe:inputNumber value="#{emisionFacturaElectronica.precioUnitario}" size="20" id="r_precio_unitario"
+                  disabled="#{emisionFacturaElectronica.disabled}"
+                  emptyValue="zero" decimalPlaces="2"
+                  decimalSeparator="." thousandSeparator="," maxlength="12">
+                  <p:ajax event="change" listener="#{emisionFacturaElectronica.cantidadPrecioChanged}" update="r_importe" />
+                </pe:inputNumber>
+
+
+              </div>
+              <div class="form-group col-md-3">
+                <h:outputText value="Importe: " style="vertical-align:top;"/>
+                <pe:inputNumber value="#{emisionFacturaElectronica.importe}" size="20" id="r_importe"
+                  disabled="true"
+                  emptyValue="zero" decimalPlaces="2"
+                  decimalSeparator="." thousandSeparator=","/>
+
+                <br/>
+                <br/>
+                <p:commandButton value="Ok" style="width: 230px; padding: 5px"
+                    ajax="false" styleClass="btn btn-default btn-lg"
+                    actionListener="#{emisionFacturaElectronica.addRecord}"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <p:commandButton value="Nuevo" style="width: 160px; padding:5px"
+                   ajax="false" styleClass="btn btn-default btn-lg"
+                   actionListener="#{emisionFacturaElectronica.newComm}"/>
+
+                <p:commandButton value="Guardar" style="width: 160px; padding:5px"
+                   ajax="false" styleClass="btn btn-default btn-lg" 
+                   actionListener="#{emisionFacturaElectronica.save}"/>
+
+                <button class="btn btn-default btn-lg" style="width: 160px">Ejecutar</button>
+              </div>
+              <div class="col-md-3" style="text-align: right">
+                <div class="form-group" style="margin-bottom:5px">
+                  <h:outputText value="Subtotal: "/>
+                  <pe:inputNumber value="#{emisionFacturaElectronica.subtotal}" size="20" id="r_subtotal"
+                    disabled="true"
+                    emptyValue="zero" decimalPlaces="2"
+                    decimalSeparator="." thousandSeparator=","/>
+                </div>
+                <div class="form-group" style="margin-bottom:5px">
+                  <h:outputText value="Iva: "/>
+                  <pe:inputNumber value="#{emisionFacturaElectronica.iva}" size="20" id="r_iva"
+                    disabled="true"
+                    emptyValue="zero" decimalPlaces="2"
+                    decimalSeparator="." thousandSeparator=","/>
+                </div>
+                <div class="form-group" style="margin-bottom:5px">
+                  <h:outputText value="Total: "/>
+                  <pe:inputNumber value="#{emisionFacturaElectronica.total}" size="20" id="r_total"
+                    disabled="true"
+                    emptyValue="zero" decimalPlaces="2"
+                    decimalSeparator="." thousandSeparator=","/>
+                </div>
+              </div>
+            </div>
+          </p:panel>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

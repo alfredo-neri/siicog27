@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Indicadores Mensual de Canalización de Recursos Municipales a Inversión Pública y Mantenimiento"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+						<p:panelGrid columns="2" styleClass="ui-noborder">
+							<h:outputText value="Mes: " for="idMes" />
+							<p:selectOneMenu id="idMes" value="#{reporte45MB.mes}">
+								<f:selectItems value="#{reporte45MB.listMes}" var="meses"
+									itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+								<p:ajax event="change" listener="#{reporte45MB.changeMes()}"
+									update=":form1:com3511, :form1:com3512, :form1:com3532, :form1:com6000, :form1:TotInPub, :form1:TotEgre"></p:ajax>
+							</p:selectOneMenu>
+						</p:panelGrid>
+						<p:panelGrid columns="2" styleClass="ui-noborder">
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="OBSERVACIONES" />
+							<h:outputText value="3511: " for="com3511:" />
+							<p:inputText id="com3511" value="#{reporte45MB.pm4411.obs1}"
+								maxlength="340">
+							</p:inputText>
+							<h:outputText value="3512: " for="com3512" />
+							<p:inputText id="com3512" value="#{reporte45MB.pm4411.obs2}"
+								maxlength="340">
+							</p:inputText>
+							<h:outputText value="3532: " for="com3532" />
+							<p:inputText id="com3532" value="#{reporte45MB.pm4411.obs3}"
+								maxlength="340">
+							</p:inputText>
+							<h:outputText value="6000: " for="com6000" />
+							<p:inputText id="com6000" value="#{reporte45MB.pm4411.obs4}"
+								maxlength="340">
+							</p:inputText>
+							<h:outputText value="Tot. Inv. Pub.:" for="ComTotInPub" />
+							<p:inputText id="TotInPub" value="#{reporte45MB.pm4411.obs5}"
+								maxlength="340">
+							</p:inputText>
+							<h:outputText value="Total Egresos: " for="comTotEgre" />
+							<p:inputText id="TotEgre" value="#{reporte45MB.pm4411.obs6}"
+								maxlength="340">
+							</p:inputText>
+							<h:outputText value="" />
+							<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{reporte45MB.viewPdf()}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador">
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte45MB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte45MB.uuid}&amp;filename=#{reporte45MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

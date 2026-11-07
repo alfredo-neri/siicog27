@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="saldosFinales">
+				<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+
+				<p:commandButton style="display: none" id="downTXT" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{creaSaldosFinalesMB.fileTxt}" />
+				</p:commandButton>
+				<p:panel id="panel" header="Genera Saldos Finales"
+					styleClass="green col-md-5 col-centered row-centered shadow-panel">
+
+					<h:panelGrid columns="5" styleClass="col-centered row-centered">
+						<p:commandButton value="Descargar"
+							onclick="PF('wingetPasswor').show(); resetPass();" />
+					</h:panelGrid>
+
+				</p:panel>
+
+				<p:dialog id="panelValida" widgetVar="wingetPasswor"
+					resizable="false" header="Valida Password" modal="true"
+					styleClass="green">
+
+					<p:panelGrid id="pgridpass" columns="2"
+						styleClass="green col-md-8 col-centered row-centered ui-noborder">
+						<h:outputText value="Password Administrador" />
+						<h:inputSecret id="validatePass"
+							value="#{creaSaldosFinalesMB.enteredPassword}"
+							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;} if(event.keyCode == 13){return false;}" />
+						<h:outputText value="" />
+						<p:commandButton value="Validar" update=":saldosFinales"
+							actionListener="#{creaSaldosFinalesMB.validaPassword}"
+							oncomplete="PF('wingetPasswor').hide(); resetPass();" />
+					</p:panelGrid>
+
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

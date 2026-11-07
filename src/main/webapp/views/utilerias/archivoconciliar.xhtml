@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<h:body>
+	  <ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+      <script type="text/javascript">
+        function showStatus() {
+          PF('statusDialog').show();
+        }
+        function hideStatus() {
+          PF('statusDialog').hide();
+          // rc();
+        }
+      </script>
+			<h:form id="archivoconciliar">
+			  <p:panel id="panel" header="Archivo para Conciliar"	styleClass="green col-md-6 col-centered row-centered shadow-panel">
+        <p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+				<h:panelGrid styleClass="col-centered row-centered">
+					<h:outputText value="Archivo para Conciliar" style="color:red"/><br/>
+				</h:panelGrid>
+				<h:panelGrid columns="7" styleClass="col-centered row-centered">
+					<h:panelGroup>
+						<h:outputText value="Cuenta: " ></h:outputText>
+						<p:inputMask maxlength="4" size="4" value="#{archivoConciliarMB.cta}">
+              <pe:keyFilter regEx="/[0-9_]/i" />
+            </p:inputMask>
+					</h:panelGroup>
+					&nbsp;&nbsp;
+					<h:panelGroup>
+						<h:outputText value="SCTA: " ></h:outputText>
+						<h:inputText size="15" maxlength="15" value="#{archivoConciliarMB.scta}"></h:inputText>
+					</h:panelGroup>
+					&nbsp;&nbsp;
+					<h:panelGroup>
+						<h:outputText value="SSCTA: " ></h:outputText>
+						<h:inputText size="20" maxlength="20" value="#{archivoConciliarMB.sscta}"></h:inputText>
+					</h:panelGroup>
+					&nbsp;&nbsp;
+					<h:panelGroup>
+						<h:outputText value="Del mes: " ></h:outputText>
+						<!-- <h:inputText size="4" value="#{archivoConciliarMB.month}"></h:inputText> -->
+            <p:selectOneMenu  value="#{archivoConciliarMB.month}" style="width:50px">
+              <f:selectItems value="#{archivoConciliarMB.months}" var="month" itemLabel="#{month.id}" itemValue="#{month.id}" />
+            </p:selectOneMenu>
+					</h:panelGroup>
+				</h:panelGrid>
+				<br/>
+				<h:panelGrid columns="8" styleClass="col-centered row-centered">
+					<h:outputText value="Archivo de salida: " ></h:outputText>
+					<h:inputText size="15" value="#{archivoConciliarMB.fileout}"></h:inputText>
+					&nbsp;&nbsp;&nbsp;
+					<h:outputText value="Archivo de carga: " ></h:outputText>
+					<h:inputText size="15" value="#{archivoConciliarMB.filecharge}"></h:inputText>
+				</h:panelGrid>
+				<br/><br/>
+					<h:panelGrid columns="5" styleClass="col-centered row-centered">
+            <p:dialog modal="true" widgetVar="statusDialog" header="Status"
+                      draggable="false" closable="false">
+              <p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+            </p:dialog>
+
+						<p:commandButton value="Correcto" style="padding: 5px;" ajax="false"
+              onclick="PrimeFaces.monitorDownload(showStatus, hideStatus)"
+              actionListener="#{archivoConciliarMB.process}"
+              id="download">
+              <p:fileDownload value="#{archivoConciliarMB.download}"/>
+            </p:commandButton>
+            <p:remoteCommand name="rc" actionListener="#{archivoConciliarMB.cleanFile}" />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+					</h:panelGrid>
+
+ 		      </p:panel>
+			</h:form>
+		</ui:define>
+	  </ui:composition>
+   </h:body>
+</html>

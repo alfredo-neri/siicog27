@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:param name="bean"
+			value="#{inventarioGeneralBienesMueblesCargaAutomaticaMB}" />
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Carga Autimatica de Bienes Muebles"
+					styleClass="green col-md-5 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="3" styleClass="col-centered ui-noborder">
+
+						<p:fileUpload fileUploadListener="#{bean.handleFileUpload}"
+							id="file" mode="advanced" dragDropSupport="false"
+							update="growlReportador, form1:file" sizeLimit="4000000"
+							fileLimit="1" allowTypes="/(bienesm.)(csv)$/" accept=".csv"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()" label="Seleccionar"
+							cancelLabel="Cancelar" uploadLabel="Cargar" />
+					</p:panelGrid>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+			<h:form id="form1">
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" var="object"
+					value="#{cmIngresoPresupInteMB.natgasDataModel}"
+					styleClass="et_datatable" emptyMessage="No hay registros"
+					editable="true" paginator="true" rows="10" lazy="true"
+					rowsPerPageTemplate="5,10,15,20"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="programsWdg" selectionMode="single"
+					selection="#{cmIngresoPresupInteMB.selectedNatgas}"
+					rowKey="#{object.id}">
+
+					<p:ajax event="rowSelect"
+						listener="#{cmIngresoPresupInteMB.onRowSelect}"
+						update=":formPartida" />
+
+					<f:facet name="header">Naturaleza de Gasto</f:facet>
+
+					<p:column headerText="ID" visible="false" styleClass="renglon">
+						<h:outputText value="#{object.id}" />
+					</p:column>
+
+
+					<p:column headerText="Clave" exportable="true"
+						styleClass="renglon" width="10%" style="text-align:center;">
+						<center>
+							<h:outputText value="#{object.clvgas}" />
+						</center>
+					</p:column>
+
+					<p:column headerText="Nombre" exportable="true"
+						styleClass="renglon">
+						<h:outputText value="#{object.nomgas}" />
+					</p:column>
+
+
+
+
+				</p:dataTable>
+			</h:form>
+
+
+			<h:form id="formPartida">
+				<br />
+				<center>
+				<p:outputLabel value="Partida" for="partida" />
+				
+					<p:inputText id="partida"
+						value="#{cmIngresoPresupInteMB.selectedIntegradoe.partida}"
+						readonly="true" disabled="true" />
+				</center>
+				<br />
+				<br />
+				<p:panel id="panelButton"
+					styleClass="col-centered row-centered shadow-panel"
+					style="background-color: #E8ECED;">
+					<center>
+						<p:panelGrid class="ui-noborder"
+							rendered="#{cmIngresoPresupInteMB.existenRegistros}">
+							<f:facet name="header">
+								<p:row>
+									<p:column style="font-weight: bold;">Mes</p:column>
+									<p:column style="font-weight: bold;">Ayuntamiento</p:column>
+									<p:column style="font-weight: bold;">Organismo de Agua</p:column>
+									<p:column style="font-weight: bold;">Dif Municipal</p:column>
+									<p:column style="font-weight: bold;">Organismo del deporte</p:column>
+								</p:row>
+							</f:facet>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Enero" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_1"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje11}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_1"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje11}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_1"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje11}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_1"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje11}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Febrero" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_2"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje12}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_2"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje12}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_2"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje12}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_2"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje12}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Marzo" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_3"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje13}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_3"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje13}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_3"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje13}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_3"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje13}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Abril" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_4"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje14}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_4"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje14}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_4"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje14}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_4"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje14}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Mayo" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_5"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje15}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_5"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje15}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_5"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje15}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_5"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje15}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Junio" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_6"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje16}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_6"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje16}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_6"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje16}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_6"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje16}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Julio" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_7"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje17}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_7"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje17}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_7"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje17}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_7"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje17}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Agosto" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_8"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje18}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_8"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje18}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_8"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje18}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_8"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje18}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Septiembre" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator=","  id="AYTTOTOEJE1_9"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje19}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_9"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje19}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_9"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje19}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_9"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje19}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Octubre" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_10"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje110}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_10"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje110}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_10"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje110}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_10"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje110}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Noviembre" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_11"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje111}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_11"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje111}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_11"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje111}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_11"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje111}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Diciembre" />
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AYTTOTOEJE1_12"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.ayttotoeje112}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="AGUATOEJE1_12"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.aguatoeje112}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DIFTOEJE1_12"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.diftoeje112}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+								<p:column>
+									<pe:inputNumber emptyValue="0.00" decimalPlaces="2" decimalSeparator="." thousandSeparator="," id="DEPORTETOEJE1_12"
+										value="#{cmIngresoPresupInteMB.selectedIntegradoe.deportetoeje112}"
+										maxlength="16"
+										readonly="#{!cmIngresoPresupInteMB.sonEditables}">
+										
+									</pe:inputNumber>
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+					</center>
+					<br />
+					<p:commandButton title="Click para salvar"
+						actionListener="#{cmIngresoPresupInteMB.actualizar}"
+						update=":formPartida,:messagesEdit"
+						disabled="#{!cmIngresoPresupInteMB.activarSalvar}" value="Salvar" />
+					<p:commandButton
+						title="Click para habilitar la modificacion del registro"
+						actionListener="#{cmIngresoPresupInteMB.modificar}"
+						update=":formPartida"
+						disabled="#{!cmIngresoPresupInteMB.activarModificar}"
+						value="Modificar" />
+					<p:commandButton
+						title="Click para regresar el registro a su estado original"
+						actionListener="#{cmIngresoPresupInteMB.reset}"
+						update=":formPartida"
+						disabled="#{!cmIngresoPresupInteMB.activarReset}" value="Reset" />
+					<p:commandButton title="Click para agregar un nuevo registro"
+						actionListener="#{cmIngresoPresupInteMB.adicionar}"
+						update=":formPartida"
+						disabled="#{!cmIngresoPresupInteMB.activarAdicionar}"
+						value="Adicionar" />
+					<p:commandButton
+						title="Click para borrar el registro actual[Esta opcion no puede deshacerse]"
+						actionListener="#{cmIngresoPresupInteMB.borrar(cmIngresoPresupInteMB.selectedIntegradoe.id)}"
+						update=":form1,:messagesEdit,:formPartida"
+						disabled="#{!cmIngresoPresupInteMB.activarBorrar}" value="Borrar" />
+					<p:commandButton
+						title="Click para cancelar la operacion de acualizacion e insercion de registro"
+						actionListener="#{cmIngresoPresupInteMB.cancel}"
+						update=":formPartida"
+						disabled="#{!cmIngresoPresupInteMB.activarCancelar}"
+						value="Cancelar" />
+				</p:panel>
+			</h:form>
+
+
+			<pe:tooltip global="true" />
+
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

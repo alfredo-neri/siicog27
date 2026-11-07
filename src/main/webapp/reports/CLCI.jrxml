@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CLCI" printOrder="Horizontal" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5ef3d49b-0cf7-4624-a3c6-046dd312f059">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixl"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="pImage" class="java.lang.String"/>
+	<parameter name="pLastDay" class="java.lang.Integer"/>
+	<parameter name="pMesName" class="java.lang.String"/>
+	<parameter name="pAnio" class="java.lang.Integer"/>
+	<parameter name="pMunicipioName" class="java.lang.String"/>
+	<parameter name="pNum" class="java.lang.String"/>
+	<parameter name="pDateIngreso" class="java.lang.String"/>
+	<parameter name="pL16" class="java.lang.String"/>
+	<parameter name="pN16" class="java.lang.String"/>
+	<parameter name="semestre" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT T1.CERTIFICACION,
+       T1.EXPERIENCIA,
+       T1.TITULO,
+       FECHAING
+      FROM (
+SELECT  TV.ID_ROW,
+        MAX(DECODE(TE.NOMBRE, 'SEMESTRE', TV.VALOR, NULL)) SEMESTRE,
+        MAX(DECODE(TE.NOMBRE, 'ID_REF', TV.VALOR, NULL)) ID_REF,
+        MAX(DECODE(TE.NOMBRE, 'ID_SECTOR', TV.VALOR, NULL)) ID_SECTOR,
+        MAX(DECODE(TE.NOMBRE, 'FECHAING', TV.VALOR, NULL)) FECHAING,
+        MAX(DECODE(TE.NOMBRE, 'CERTIFICACION', TV.VALOR, NULL)) CERTIFICACION,
+        MAX(DECODE(TE.NOMBRE, 'EXPERIENCIA', TV.VALOR, NULL)) EXPERIENCIA,
+        MAX(DECODE(TE.NOMBRE, 'TITULO', TV.VALOR, NULL)) TITULO
+    FROM TR_ETIQ_TABLAS AS ET
+        INNER JOIN TC_ETIQUETAS AS TE ON ET.ID_ETIQUETA = TE.ID
+        INNER JOIN TC_TABLAS AS TT ON ET.ID_TABLA = TT.ID
+        LEFT JOIN TC_VALORES AS TV ON ET.ID = TV.ID_ETIQ_TABLA
+WHERE 1=1
+    AND ET.STATUS = 1
+    AND TT.NOMBRE = 'PM3711'
+GROUP BY TV.ID_ROW
+) T1
+
+WHERE T1.SEMESTRE = $P{semestre}]]>
+	</queryString>
+	<field name="CERTIFICACION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CERTIFICACION"/>
+	</field>
+	<field name="EXPERIENCIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="EXPERIENCIA"/>
+	</field>
+	<field name="TITULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TITULO"/>
+	</field>
+	<field name="FECHAING" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FECHAING"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="144" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="ContainerBottom" x="60" y="0" width="630" height="60" uuid="139b7358-f6f2-4f7a-8d32-e6d5f2991867"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTO DE INFORMACIÓN QUE ALIMENTA EL INDICADOR DE COMPETENCIA LABORAL DEL CONTRALOR INTERNO MUNICIPAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="82" width="70" height="15" uuid="39eac025-a562-4517-bd7a-2f9fd4041c9b"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[MUNICIPIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="82" width="385" height="15" uuid="9cbaaa4b-6d2c-46b6-8394-5835b7c89fb1"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pMunicipioName}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" onErrorType="Blank">
+				<reportElement x="0" y="0" width="60" height="60" uuid="96d0271a-11b9-4c22-a8db-83c98af513d8"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{pImage}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="112" width="430" height="18" uuid="576c0d66-cebe-4c57-be63-4625736fbc93"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Al "+ $P{pLastDay} + " DE " + $P{pMesName} + " DE " + $P{pAnio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="543" y="83" width="40" height="15" uuid="100b09fa-731c-4d5a-afa9-94150d72022e"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[NÚM:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="586" y="83" width="90" height="15" uuid="56cca71a-4711-4dd8-a276-5d0793addf6f"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pNum}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="457" y="112" width="163" height="19" uuid="90665edc-8b10-4cb8-ae07-cafbd044098d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[FECHA DE INGRESO:]]></text>
+			</staticText>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement x="623" y="112" width="100" height="19" uuid="2c49c948-2506-4f9e-a6b2-9a89ed438506"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHAING}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="72">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="180" height="23" uuid="a4495bba-e676-45d1-b7a8-efed6bb691fb"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="0" width="100" height="40" uuid="c7689112-7ae6-46d0-b98d-902eaa017379"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[RESPUESTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="23" width="180" height="49" uuid="21682c05-55d4-408e-91a5-6ff45b00bcc5"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Favor de indentificar sicuenta con los siguientes aspectos de evaluació:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="40" width="50" height="32" uuid="680ce9a5-24e9-4e60-91de-cd3e573bd8bf"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[SI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="40" width="50" height="32" uuid="3680eeca-fb83-4a0f-a50e-65d8d42fed30"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="472" height="72" uuid="9159c6ce-d2e3-44a3-82d3-720c245a38e4"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="105">
+			<staticText>
+				<reportElement x="280" y="0" width="472" height="30" uuid="7b213e91-5865-4316-aeb5-7c69d4771906"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Remitir fotocopia legible del mismo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="30" width="472" height="30" uuid="07bff066-5c5b-4068-ad76-80b4ce6d2136"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Adjuntar a éste formato la documentación que avala la experiencia para ocupar el puesto. (Por ejemplo: Nombramiento en Administraciones Municipales anteriores).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="60" width="472" height="30" uuid="db674432-21c6-425b-9bc2-6d4e021effd7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Remitir fotocopia legible de la misma. Cabe señalar que, conformidad con el articulo 7 del Reglamento de la COCERTEM, la vigencia de la certificación en competencia laboral es de 3 años.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="180" height="30" uuid="50cf5a65-1482-4548-8da5-7da940a15150">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="21600bbe-b1ee-49a0-88df-f3595049b9e7"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Titulo Profesional en áreas júridicas, ecónomicas o caontable-administrativas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="180" height="30" uuid="e1162ce4-18f9-4a1f-972f-8d761081094b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="13f7e850-e6bf-4234-9fa1-bf8ec3f0f9fe"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Experirnecia minima de una año en la materia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="180" height="30" uuid="98ff1930-c37a-4b92-ae6c-b097a4ed14c3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="25d5e71b-f005-4fd0-9871-cfeb7a92fad0"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Certificacio en Competencia Laboral expedida por el Instituto Hcendario del Estado de México.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="0" width="50" height="30" uuid="025475da-7c0c-44dc-b650-40c11dbbfcea">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e94718b-4d84-4a26-8c81-3b4d976b983b"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TITULO}.equals("1")  ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="0" width="50" height="30" uuid="f98c2250-0daa-4e43-8f97-bc729a34a51e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e94718b-4d84-4a26-8c81-3b4d976b983b"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TITULO}.equals("0") ? "X" : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="30" width="50" height="30" uuid="3ef0fd53-3349-4209-9f2d-1c8172d2f365">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="962d9b2a-edb4-4c35-be4a-8a9dc4f41fce"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{EXPERIENCIA}.equals("1")?"X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="60" width="50" height="30" uuid="dae92b9f-63da-42f3-a4a6-29b9d91ecbc3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="223f9407-86ef-4148-a3f3-c259dae13300"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CERTIFICACION}.equals("1")?"X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="30" width="50" height="30" uuid="b8278fc9-93db-498d-9325-02f9096e012b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="962d9b2a-edb4-4c35-be4a-8a9dc4f41fce"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{EXPERIENCIA}.equals("0")?"X":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="60" width="50" height="30" uuid="2ff2be85-f0a6-44c1-9322-c134a0e20c65">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="223f9407-86ef-4148-a3f3-c259dae13300"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CERTIFICACION}.equals("0")?"X":""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="90">
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="9" width="168" height="40" uuid="aa787902-f4a0-400f-8905-c9c88aa26fca"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pL16}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="50" width="168" height="40" uuid="02b7ccbe-f1b5-4a89-8287-87319ea35542"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pN16}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="0" width="752" height="50" uuid="fd6f4897-9117-4180-893f-81b1eb824724"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[NOTA: Deberá remitir en fotocopia simple evidencia de la Constancia de No Inhabilitación,  el Certifdicado de No Antecedentes Penales, el Alta en ISSEMYM y el Nombramiento del servidor público que ocupa el cargo referido.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

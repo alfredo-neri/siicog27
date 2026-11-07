@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:commandButton style="display: none" id="downTxt" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{reporteFlujoEfectivoMB.fileTxt}" />
+				</p:commandButton>
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Flujos de Efectivo"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Mes: " for="mesInputOri" id="lblMesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{reporteFlujoEfectivoMB.mes}">
+							<f:selectItem itemValue="1" itemLabel="01" />
+							<f:selectItem itemValue="2" itemLabel="02" />
+							<f:selectItem itemValue="3" itemLabel="03" />
+							<f:selectItem itemValue="4" itemLabel="04" />
+							<f:selectItem itemValue="5" itemLabel="05" />
+							<f:selectItem itemValue="6" itemLabel="06" />
+							<f:selectItem itemValue="7" itemLabel="07" />
+							<f:selectItem itemValue="8" itemLabel="08" />
+							<f:selectItem itemValue="9" itemLabel="09" />
+							<f:selectItem itemValue="10" itemLabel="10" />
+							<f:selectItem itemValue="11" itemLabel="11" />
+							<f:selectItem itemValue="12" itemLabel="12" />
+							<p:ajax event="change" listener="#{reporteFlujoEfectivoMB.validateMonth}"
+								update=":form1:growlReportador" />
+						</p:selectOneMenu>
+
+						<p:commandButton value="Vista Previa" id="preView"
+							actionListener="#{reporteFlujoEfectivoMB.viewTxt()}"
+							icon="ui-icon-zoomout" update=":form1:preViewTxt"
+							onclick="PF('preViewTxtWg').show();" />
+
+					<!-- 	<p:commandButton value="Generar Archivo TXT" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							actionListener="#{reporteFlujoEfectivoMB.downLoadFile}">
+							<p:fileDownload value="#{reporteFlujoEfectivoMB.fileTxt}" />
+						</p:commandButton> -->
+						
+							<p:commandButton id="correcto"  value="Correcto"
+								actionListener="#{reporteFlujoEfectivoMB.downloadTxt}"
+								update=":form1:growlReportador, :form1:downTxt">
+							</p:commandButton>
+
+					</p:panelGrid>
+
+					<p:panelGrid>
+						<p:outputLabel rendered="#{reporteFlujoEfectivoMB.bPreView}"
+							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="130" id="preViewTxt"
+								style="font-family: monospace !important"
+								widgetVar="preViewTxtWg"
+								rendered="#{reporteFlujoEfectivoMB.bPreView}" autoResize="true"
+								readonly="true" value="#{reporteFlujoEfectivoMB.txtPreview}" />
+							<!-- 	<textarea rows="50" cols="140" style="font-family: monospace !important">
+							#{reporteFlujoEfectivoMB.txtPreview}
+							</textarea> -->
+						</p:outputLabel>
+						<!-- <div id="divpreViewTxt"
+							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+
+						</div> -->
+					</p:panelGrid>
+
+				</p:panel>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

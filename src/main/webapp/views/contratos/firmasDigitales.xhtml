@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+.file-upload>div {
+	background-color: white !important;
+}
+
+#container {
+	position: relative;
+}
+
+#imageView {
+	border: 1px solid slategrey;
+	border-radius: 10px;
+	background-color: lavender;
+	box-shadow: 3px 3px 3px darkgray;
+}
+</style>
+
+			<h:form id="form1" enctype="multipart/form-data">
+				<p:panel id="panelPrincipal" header="Firma digital"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:messages id="messages" showSummary="false" closable="true"
+						showDetail="true" />
+					<p:focus id="focus" />
+					<p:panelGrid columns="2"
+						styleClass="col-centered row-centered ui-noborder">
+						<p:panelGrid columns="1"
+							styleClass="col-centered row-centered ui-noborder ">
+							<p:panel id="panelDraw">
+								<p>Crea tu firma</p>
+								<div id="container">
+									<canvas id="imageView" width="450" height="220" />
+								</div>
+								<div id="result"></div>
+								<p:inputText id="hidden" value="#{firmasDigitalesMB.imgBase64}"
+									style="display:none;">
+								</p:inputText>
+								<input type="hidden" id="hidden" />
+								<p:commandButton value="Guardar" ajax="true"
+									onclick="PF('saveDrawDialog').show();" />
+								<p:commandButton value="Limpiar" onclick="limpiarCnvas()"
+									async="true" />
+							</p:panel>
+							<p:panel>
+								<p>Carga una imagen con tu firma</p>
+								<p:fileUpload id="fileCarga"
+									fileUploadListener="#{firmasDigitalesMB.handleFileUpload}"
+									mode="advanced" dragDropSupport="false" multiple="false"
+									update=":form1:messages fileCarga :form1:panelImg"
+									sizeLimit="10485760" fileLimit="1"
+									allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+									invalidSizeMessage="Tamaño invalido de archivo."
+									invalidFileMessage="Tipo invalido de archivo."
+									fileLimitMessage="Solo se permite un archivo a la vez"
+									cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar">
+								</p:fileUpload>
+							</p:panel>
+						</p:panelGrid>
+
+						<p:panel id="panelImg">
+							<h:outputText value="Nombre de usuario: " />
+							<h:outputText value="#{firmasDigitalesMB.usuario.usuario}" />
+							<br></br>
+							<p:graphicImage value="#{firmasDigitalesMB.imagenPath}"
+								rendered="#{firmasDigitalesMB.firma ne null}" id="graphicImage"
+								width="300" height="150" cache="false">
+							</p:graphicImage>
+						</p:panel>
+					</p:panelGrid>
+				</p:panel>
+				<p:confirmDialog widgetVar="saveDrawDialog"
+					message="Esta seguro de guardar la firma actual?"
+					header="Confirmación" severity="alert">
+					<p:commandButton value="SI" label="SI"
+						style="margin-top:10px;padding:5px;"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						onclick="guardarImg()" action="#{firmasDigitalesMB.saveCanvas}"
+						oncomplete="PF('saveDrawDialog').hide();"
+						update=":form1:panelImg :form1:messages" />
+					<p:commandButton value="NO" label="NO"
+						style="margin-top:10px;padding:5px;"
+						onclick="PF('saveDrawDialog').hide();"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+				</p:confirmDialog>
+			</h:form>
+			<script type="text/javascript">
+			// Keep everything in anonymous function, called on window load.
+			if (window.addEventListener) {
+			    window.addEventListener('load', function () {
+			        var canvas, context, tool;
+			        function init() {
+			            canvas = document.getElementById('imageView');
+			            if (!canvas.getContext) {
+			                alert('Error: no canvas.getContext!');
+			                return;
+			            }
+			            context = canvas.getContext('2d');
+			            if (!context) {
+			                alert('Error: failed to getContext!');
+			                return;
+			            }
+			            tool = new tool_pencil();
+			            canvas.addEventListener('mousedown', ev_canvas, false);
+			            canvas.addEventListener('mousemove', ev_canvas, false);
+			            canvas.addEventListener('mouseup', ev_canvas, false);
+			        }
+			        function tool_pencil() {
+			            var tool = this;
+			            this.started = false;
+			            this.mousedown = function (ev) {
+			                context.beginPath();
+			                context.moveTo(ev._x, ev._y);
+			                tool.started = true;
+			            };
+			            this.mousemove = function (ev) {
+			                if (tool.started) {
+			                    context.lineTo(ev._x, ev._y);
+			                    context.stroke();
+			                }
+			            };
+			            this.mouseup = function (ev) {
+			                if (tool.started) {
+			                    tool.mousemove(ev);
+			                    tool.started = false;
+			                }
+			            };
+			        }
+			        function ev_canvas(ev) {
+			            if (ev.layerX || ev.layerX == 0) { // Firefox
+			                ev._x = ev.layerX;
+			                ev._y = ev.layerY;
+			            } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+			                ev._x = ev.offsetX;
+			                ev._y = ev.offsetY;
+			            }
+			            var func = tool[ev.type];
+			            if (func) {
+			                func(ev);
+			            }
+			        }
+			        init();
+			    }, false);
+			}
+
+			const guardarImg = () => {
+			    canvas = document.getElementById('imageView');
+			    jQuery("[id$='hidden']").val(canvas.toDataURL());
+			    const context = canvas.getContext('2d');
+			    context.clearRect(0, 0, canvas.width, canvas.height);
+			}
+			const limpiarCnvas = () => {
+			    canvas = document.getElementById('imageView');
+			    const context = canvas.getContext('2d');
+			    context.clearRect(0, 0, canvas.width, canvas.height);
+			    jQuery("[id$='hidden']").val("");
+			}
+
+			</script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

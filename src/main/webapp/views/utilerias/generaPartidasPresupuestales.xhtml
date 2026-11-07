@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+		
+		
+    <h:outputScript library="js" name="gen_partidas_presupuestales.js" />
+			<h:form id="generaPartidasPresup">
+        <p:dialog modal="true" widgetVar="statusDialog" header="Status"
+                  draggable="false" closable="false"
+                  styleClass="green col-md-9 col-centered row-centered shadow-panel">
+          <p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+        </p:dialog>
+
+        <p:dialog id="resGrid" widgetVar="resGrid" modal="true" height="300" width="750"
+                  styleClass="green col-md-9 col-centered row-centered shadow-panel">
+          <p:inputText type="hidden" value="#{genPartPresMB.currentCatalog}" class="currentCatalog"/>
+
+          <p:dataTable var="item" widgetVar="item" value="#{genPartPresMB.catalogItems}"
+               selection="#{genPartPresMB.selectedItem}" rowKey="#{item.id}"
+               scrollable="true" scrollHeight="210">
+
+            <p:column selectionMode="single" style="text-align:center" width="10%"/>
+            <p:column headerText="clave" width="20%">
+              <h:outputText value="#{item.id}"/>
+            </p:column>
+
+            <p:column headerText="clvfun" width="20%" visible="#{genPartPresMB.showColumns}">
+              <h:outputText value="#{item.attrs['clvfun']}"/>
+            </p:column>
+
+            <p:column headerText="clvfin" width="20%" visible="#{genPartPresMB.showColumns}">
+              <h:outputText value="#{item.attrs['clvfin']}"/>
+            </p:column>
+
+            <p:column headerText="descripcion" width="60%">
+              <h:outputText value="#{item.name}"/>
+            </p:column>
+
+          </p:dataTable>
+            <br/>
+            <p:commandButton value="Ok" actionListener="#{genPartPresMB.guardarItem}" oncomplete="endModal()" update="searchFields, :generaPartidasPresup:programa, :generaPartidasPresup:partida"/>
+        </p:dialog>
+
+				<p:panel id="mainPanel" header="Genera Partidas Presupuestales"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+          <p:growl id="messagesEdit" showDetail="true" sticky="true" showSummary="true"/>
+
+					<h:panelGrid id="searchFields" columns="3" styleClass="col-centered row-centered">
+
+						<h:outputText value="&nbsp;" />
+						<h:outputText value="Claves" style="color:red" />
+						<h:outputText value="Nombres" style="color:red" />
+
+						<h:outputText value="Dependencia: " style="margin: 0 10px 0 0"></h:outputText>
+						<p:inputText id="dependencia" class="depclv helpable" style="margin: 5px 5px"
+                         a:data-node="dep" value="#{genPartPresMB.depId}" maxlength="10">
+                         <p:ajax event="change" listener="#{genPartPresMB.completeDep}" update="dependencia" oncomplete="validate()" />
+              			
+            			</p:inputText>
+						<h:inputText class="depname" size="50" style="margin: 0 5px" value="#{genPartPresMB.depDesc}" disabled="true"></h:inputText>
+
+						<h:outputText value="Programa: "></h:outputText>
+						<p:inputMask  id="programa" class="progclv helpable" a:data-node="prog" style="margin: 5px 5px"
+                         
+                         value="#{genPartPresMB.progId}" maxlength="15">
+              <pe:keyFilter regEx="/[0-9_]/i" />
+              <f:ajax event="blur" listener="#{genPartPresMB.validateProg}" render="mainPanel"/>
+            </p:inputMask>
+
+						<h:inputText class="progname" size="50" value="#{genPartPresMB.progDesc}" disabled="true"></h:inputText>
+
+						<h:outputText value="Partida: "></h:outputText>
+						<p:inputMask id="partida" class="partclv helpable" a:data-node="part" style="margin: 5px 5px"
+                         
+                         value="#{genPartPresMB.partId}" maxlength="4">
+              <pe:keyFilter regEx="/[0-9_]/i" />
+              <f:ajax event="blur" listener="#{genPartPresMB.validatePart}" render="mainPanel"/>
+            </p:inputMask>
+						<h:inputText class="partname" size="50" value="#{genPartPresMB.partDesc}" disabled="true"></h:inputText>
+					</h:panelGrid>
+
+					<br />
+					<h:panelGrid styleClass="col-centered row-centered">
+						<h:outputText
+							value="Para buscar alguna de las claves oprima el botón F1"
+							style="color:red" />
+					</h:panelGrid>
+					<br />
+					<br />
+
+					<h:panelGrid columns="5" styleClass="col-centered row-centered">
+						<p:commandButton value="Correcto" style="padding: 5px;" action="#{genPartPresMB.process}" ajax="true"
+            							update="mainPanel" onstart="PF('statusDialog').show()" 
+            							oncomplete="PF('statusDialog').hide()"/>
+						
+					</h:panelGrid>
+          <script type="text/javascript">
+            enableKPListener();
+          </script>
+				</p:panel>
+<p:remoteCommand id="valite" name="validate" actionListener="#{genPartPresMB.validateDep}" oncomplete="enableKPListener()" update="mainPanel" />
+        <p:remoteCommand name="searchDeps" update="resGrid" actionListener="#{genPartPresMB.searchDependencies}" oncomplete="rcCB('Depedencias')"/>
+        <p:remoteCommand name="getProgs" update="resGrid" actionListener="#{genPartPresMB.getPrograms}" oncomplete="rcCB('Programas')"/>
+        <p:remoteCommand name="getParts" update="resGrid" actionListener="#{genPartPresMB.getParts}" oncomplete="rcCB('Partidas')"/>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Avance Presupuestal Global por Dependencia"
+					styleClass="green col-md-5 col-centered row-centered shadow-panel">
+					<p:panelGrid columns="7" styleClass="col-centered ui-noborder">
+						<h:outputText value="Mes: " for="mesInputOri" />
+						<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+							value="#{reporteRF0091205TxtMB.mes}">
+							<f:selectItems value="#{reporteRF0091205TxtMB.listMes}" var="item"
+								itemValue="#{item.mes}" itemLabel="#{item.mes}" />
+						</p:selectOneMenu>
+						<h:outputText value="Dependencia: " for="idDependecia" />
+						<p:selectOneMenu id="idDependecia" size="18"
+							value="#{reporteRF0091205TxtMB.clvDep}" style="width:200px">
+							<f:selectItems value="#{reporteRF0091205TxtMB.listCatdep}"
+								var="depe" itemValue="#{depe.clvdep}"
+								itemLabel="#{depe.clvdep} #{depe.nomdep}" />
+						</p:selectOneMenu>
+						<h:outputText value="Num. Firmas: " for="numFirmas" />
+						<p:selectOneMenu id="numFirmas" size="18" editable="false"
+							value="#{reporteRF0091205TxtMB.nFirmas}">
+							<f:selectItem itemValue="0" itemLabel="00" />
+							<f:selectItem itemValue="1" itemLabel="01" />
+							<f:selectItem itemValue="2" itemLabel="02" />
+							<f:selectItem itemValue="3" itemLabel="03" />
+							<f:selectItem itemValue="4" itemLabel="04" />
+							
+						</p:selectOneMenu>
+						<p:panelGrid columns="4" styleClass="ui-noborder">
+
+							<!-- 									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="csv.png" width="24" />
+										<p:fileDownload value="#{rF005104MB.fileCsv}" />
+									</h:commandLink>
+									
+									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="TXT" >
+					 					<p:graphicImage value="txt.png" width="24" />
+										<p:fileDownload value="#{rF005104MB.fileTxt}"/>
+									</h:commandLink>
+									
+									 -->
+							<!-- <h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								id="downLoad" actionListener="#{reporteRF0091205TxtMB.downLoadFile}"
+								title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+								<p:fileDownload value="#{reporteRF0091205TxtMB.fileTxt}" />
+							</h:commandLink> -->
+							<p:commandButton value="txt" ajax="false"
+								onclick="PrimeFaces.monitorDownload(start, stop);"  actionListener="#{reporteRF0091205TxtMB.downLoadFile}"
+								icon="ui-icon-arrowthick-1-s">
+								<p:fileDownload value="#{reporteRF0091205TxtMB.fileTxt}" />
+							</p:commandButton>
+
+							<!-- <p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF005104MB.createFilePdfInline}" value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton> -->
+
+						</p:panelGrid>
+					</p:panelGrid>
+
+
+
+
+
+
+				</p:panel>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

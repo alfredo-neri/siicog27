@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<p:panel id="pEgresos" header="Crea Saldos Iniciales"
+				styleClass="green col-md-8 col-centered row-centered shadow-panel"
+				widgetVar="pEgresos">
+				<h:form id="uploadForm" enctype="multipart/form-data">
+					<p:growl id="growl" showDetail="true" sticky="true"></p:growl>
+
+					<!-- <p:panelGrid id="grid" columns="3" cellpadding="5" styleClass="col-centered row-centered">
+                <h:outputLabel for="archivo" value="Seleccione un archivo:" />
+    						<p:fileUpload id="archivo" value="#{creaSaldosInicialesMB.file}"
+    							mode="simple" skinSimple="true" required="true"
+    							sizeLimit="100000" allowTypes="/(\.|\/)(txt)$/" label="..." accept=".txt"/>
+
+              </p:panelGrid> -->
+
+					<!-- <p:commandButton type="button" value="Correcto" style="margin-top:10px;padding:5px;"
+    						onclick="PF('confirmFile').show();" /> -->
+
+					<p:fileUpload
+						fileUploadListener="#{creaSaldosInicialesMB.handleFileUpload}"
+						mode="advanced" dragDropSupport="false"
+						update=":uploadForm:growl, :uploadForm:downTxt"
+						sizeLimit="1000000000000" accept=".txt"
+						allowTypes="/(\.|\/)(txt)$/"
+						invalidSizeMessage="Tamaño invalido de archivo."
+						invalidFileMessage="Tipo invalido de archivo."
+						cancelLabel="Cancelar" label="Elegir" uploadLabel="Cargar" >
+						
+						</p:fileUpload>
+						<p:commandButton id="downTxt" ajax="false"
+								value="Descargar Archivo" disabled="#{!creaSaldosInicialesMB.btnDowload}"
+								onclick="PrimeFaces.monitorDownload(start, stop);">
+								<p:fileDownload value="#{creaSaldosInicialesMB.download}" />
+						</p:commandButton>
+
+				<!-- 	<p:confirmDialog widgetVar="confirmFile"
+						message="Este proceso puede tardar algunos minutos. Porfavor oprima aceptar y espere"
+						header="Confirmacion" severity="alert">
+						<p:commandButton value="Aceptar" ajax="false" label="Correcto"
+							style="margin-top:10px;padding:5px;"
+							actionListener="#{creaSaldosInicialesMB.upload}"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+							onclick="PF('confirmFile').hide();">
+							<p:fileDownload value="#{creaSaldosInicialesMB.download}" />
+						</p:commandButton>
+					</p:confirmDialog> -->
+
+
+					<p:dialog modal="true" widgetVar="statusDialog" header="Status"
+						draggable="false" closable="false">
+						<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
+					</p:dialog>
+				</h:form>
+			</p:panel>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

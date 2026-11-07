@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:commandButton style="display: none" id="downTxt" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{rF009127DepFMB.fileTxt}" />
+				</p:commandButton>
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte"
+					header="Estado de Avance Presupuestal de Egresos por Dependencia y Fuente de Financiamiento."
+					styleClass="green col-md-12 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="8" styleClass="col-centered ui-noborder">
+						<h:outputText value="Mes" id="idMes" />
+						<p:selectOneMenu id="idcomboMes" value="#{rF009127DepFMB.mes}">
+							<f:selectItems value="#{rF009127DepFMB.listTcMes}" var="meses"
+								itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+							<p:ajax event="change" listener="#{rF009127DepFMB.validateMonth}"
+								update=":form1:growlReportador" />
+						</p:selectOneMenu>
+						<h:outputText value="Dependencia: " for="idDependencia"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+
+						<p:selectOneMenu id="idDependencia"
+							value="#{rF009127DepFMB.xdepen}">
+							<f:selectItems value="#{rF009127DepFMB.listCatdep}" var="depe"
+								itemValue="#{depe.clvdep}" itemLabel="#{depe.clvdep}" />
+						</p:selectOneMenu>
+						<h:outputText value="Fuente de Financiamiento: " for="idPrograma"
+							style="padding-left: 30px; padding-right: 10px; margin-top: 30px;" />
+						<p:selectOneMenu id="idPrograma" value="#{rF009127DepFMB.xdire}"
+							style="width:150px">
+							<f:selectItems value="#{rF009127DepFMB.listFuentef}" var="xc"
+								itemValue="#{xc.liga} #{xc.nombref}"
+								itemLabel="#{xc.liga} #{xc.nombref}" />
+						</p:selectOneMenu>
+
+						<p:panelGrid columns="6" styleClass="ui-noborder">
+
+							<p:commandButton value="Vista Previa" id="preView"
+								actionListener="#{rF009127DepFMB.viewTxt}"
+								icon="ui-icon-zoomout" update=":form1:preViewTxt"
+								onclick="PF('preViewTxtWg').show();" />
+
+							<p:commandButton value="Correcto" id="correcto"
+								actionListener="#{rF009127DepFMB.downloadTxt}"
+								update=":form1:growlReportador" icon="ui-icon-document" />
+
+
+
+							<!-- 		<p:commandButton
+								onclick="PrimeFaces.monitorDownload(start, stop);"
+								value="Correcto" ajax="false" icon="ui-icon-document">
+								<p:fileDownload value="#{rF009127DepFMB.fileTxt}" />
+
+							</p:commandButton> -->
+
+							<!-- <h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="EXCEL" >
+										<p:graphicImage value="excel.png" width="24" />
+										<p:fileDownload value="#{rF009127DepFMB.fileXls}" />
+									</h:commandLink> -->
+
+							<!-- 									<h:commandLink
+										onclick="PrimeFaces.monitorDownload(start, stop);" title="CSV">
+										<p:graphicImage value="csv.png" width="24" />
+										<p:fileDownload value="#{rF009127DepFMB.fileCsv}" />
+									</h:commandLink>
+								-->
+							<!-- <h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="TXT">
+								<p:graphicImage value="txt.png" width="24" />
+								<p:fileDownload value="#{rF009127DepFMB.fileTxt}" />
+							</h:commandLink>
+
+ -->
+
+
+							<!-- 	<p:commandButton id="generateportepdf"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()"
+								action="#{rF009127DepFMB.createFilePdfInline}"
+								value="Correcto"
+								update="form1:inlinePdf, :form1:growlReportador"
+								styleClass="btn btn-default">
+							</p:commandButton> -->
+
+						</p:panelGrid>
+					</p:panelGrid>
+					<p:panelGrid />
+					<p:panelGrid>
+						<p:outputLabel rendered="#{rF009127DepFMB.bPreView}"
+							style="height: 400px; width: 2200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+							<p:inputTextarea cols="270" style="font-family:monospace;"
+								id="preViewTxt" widgetVar="preViewTxtWg"
+								rendered="#{rF009127DepFMB.bPreView}" autoResize="true"
+								readonly="true" value="#{rF009127DepFMB.txtPreview}" />
+						</p:outputLabel>
+						<!-- <div id="divpreViewTxt"
+							style="height: 600px; width: 1200px; overflow-x: scroll; overflow-y: scroll; padding-bottom: 10px;">
+
+						</div> -->
+					</p:panelGrid>
+
+
+					<!-- <p:panel id="inlinePdf" style="border:0px"
+						visible="#{rF009127DepFMB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{rF009127DepFMB.uuid}&amp;filename=#{rF009127DepFMB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+ -->
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<style>
+				.ui-accordion .ui-accordion-header.ui-state-default {
+					margin-bottom: 2px;
+					border: 1px solid #E5E5E5;
+					background-color: #b99056;
+					font-weight: bold;
+					color: #000;
+				}
+			</style>
+
+			<h:form id="form1">
+
+				<p:remoteCommand name="txt2" oncomplete="text3();"
+					actionListener="#{expInformationMB.downloadTxt2}" />
+				<p:remoteCommand name="text3" 
+					actionListener="#{expInformationMB.downloadTxt3}" />
+				<p:commandButton style="display: none" id="downTxt" ajax="false"
+					
+					onclick="PrimeFaces.monitorDownload(start, stop);txt2();">
+					<p:fileDownload value="#{expInformationMB.file1}" />
+
+
+				</p:commandButton>
+				<p:commandButton style="display: none" id="downTxt2" name="downTxt2"
+					ajax="false" oncomplete="text3()"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{expInformationMB.file2}" />
+				</p:commandButton>
+
+				<p:commandButton style="display: none" id="downTxt3" name="downTxt3"
+					ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{expInformationMB.file3}" />
+				</p:commandButton>
+				<p:growl id="growlReportador" showDetail="true" sticky="true"></p:growl>
+				<p:panel id="panelReporte" header="Exporta información"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+
+					<p:panelGrid columns="5" styleClass="col-centered ui-noborder">
+
+						<h:outputText value="Mes: " for="mesInputOri" id="lblMesInputOri" />
+						<p:selectOneMenu id="trimestre" value="#{expInformationMB.mes}">
+							<f:selectItems value="#{expInformationMB.listPeriodo}" var="trim"
+								itemLabel="#{trim.periodo}" itemValue="0#{trim.periodo}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+					<div class="card">
+						<p:accordionPanel widgetVar="basic" scrollIntoView="center">
+							<p:ajax event="tabChange" listener="#{expInformationMB.onChange}" />
+
+							<p:tab title="General" styleClass="green shadow-panel" id="general">
+								<p class="m-0">
+									<p:commandButton id="correcto" value="Correcto"
+													 actionListener="#{expInformationMB.downloadCuentaTxt}"
+													 update=":form1:growlReportador, :form1:downTxt">
+									</p:commandButton>
+								</p>
+							</p:tab>
+							<p:tab title="Cat&aacute;logo de Cuentas Contables" id="catalogoCuenta">
+								<p class="m-0">
+									<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+												   title="EXCEL">
+										<p:graphicImage value="excel.png" width="24" />
+										<p:fileDownload value="#{expInformationMB.fileXls}" />
+									</h:commandLink>
+									<p:commandButton id="generateportepdf2"
+													 onstart="PF('blockUIWidget').block()"
+													 oncomplete="PF('blockUIWidget').unblock()"
+													 action="#{expInformationMB.createFilePdfInline}" value="Correcto"
+													 update="form1:inlinePdf, :form1:growlReportador"
+													 styleClass="btn btn-default">
+									</p:commandButton>
+								</p>
+							</p:tab>
+							<p:tab title="Cat&aacute;logo de P&oacute;lizas Contables" id="catalogoPoliza">
+								<p class="m-0">
+									<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+												   title="EXCEL">
+										<p:graphicImage value="excel.png" width="24" />
+										<p:fileDownload value="#{expInformationMB.fileXls}" />
+									</h:commandLink>
+									<p:commandButton id="generateportepdf3"
+													 onstart="PF('blockUIWidget').block()"
+													 oncomplete="PF('blockUIWidget').unblock()"
+													 action="#{expInformationMB.createFilePdfInline}" value="Correcto"
+													 update="form1:inlinePdf, :form1:growlReportador"
+													 styleClass="btn btn-default">
+									</p:commandButton>
+								</p>
+							</p:tab>
+						</p:accordionPanel>
+					</div>
+					<p:panel id="inlinePdf" style="border:0px"
+							 visible="#{expInformationMB.uuid ne null}">
+						<object type="application/pdf"
+								data="#{request.contextPath}/GetFileInline?uuid=#{expInformationMB.uuid}&amp;filename=#{expInformationMB.endFilename}"
+								height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+										style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+									  style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

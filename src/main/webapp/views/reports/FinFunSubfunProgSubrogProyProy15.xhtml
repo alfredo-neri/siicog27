@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				
+				<p:commandButton style="display: none" id="downXls" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload
+						value="#{FinFunSubfunProgSubprogProyProy15MB.fileXls}" />
+				</p:commandButton>
+				<p:panel id="panel"
+					header="Estado de Avance Presupuestal de Egresos por Finalidad/Función/Subfunción/Programa/Subprograma/Proyecto/Proyecto 15 caracteres "
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:messages id="messagesEdit" showDetail="true" sticky="true" closable="true"/>
+					<p:focus context="tipo" />
+					<p:panelGrid styleClass="ui-noborder col-centered row-centered"
+						columns="4">
+						<h:outputText value="Tipo: " for="tipo" />
+						<h:outputText value="Mes: " for="mes" />
+						<h:outputText value="" />
+						<h:outputText value="" />
+						<p:selectOneMenu id="tipo" size="18" editable="false"
+							value="#{FinFunSubfunProgSubprogProyProy15MB.key}">
+							<f:selectItems
+								value="#{FinFunSubfunProgSubprogProyProy15MB.tipos}" var="t"
+								itemValue="#{t}" itemLabel="#{fn:substring(t,2,fn:length(t))}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu id="mes" size="18" editable="false"
+							value="#{FinFunSubfunProgSubprogProyProy15MB.mes}">
+							<f:selectItems
+								value="#{FinFunSubfunProgSubprogProyProy15MB.listTcMes}"
+								var="meses" itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+						</p:selectOneMenu>
+
+						<p:commandLink
+							actionListener="#{FinFunSubfunProgSubprogProyProy15MB.downloadXls}"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()" id="btnExcel"
+							update=":form1:messagesEdit, :form1:downXls" title="EXCEL">
+							<p:graphicImage value="excel.png" width="24" />
+						</p:commandLink>
+						<p:commandButton id="generateportepdf"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							action="#{FinFunSubfunProgSubprogProyProy15MB.generatePDF}"
+							value="Correcto" update="form1:inlinePdf, :form1:messagesEdit"
+							styleClass="btn btn-default">
+						</p:commandButton>
+					</p:panelGrid>
+
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{FinFunSubfunProgSubprogProyProy15MB.uuid ne null}">
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{FinFunSubfunProgSubprogProyProy15MB.uuid}&amp;filename=#{FinFunSubfunProgSubprogProyProy15MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+					</p:panel>
+				</p:panel>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

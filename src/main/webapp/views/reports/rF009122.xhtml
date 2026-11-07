@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:commandButton style="display: none" id="downTxt" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{rF009122MB.txt}" />
+				</p:commandButton>
+				<p:commandButton style="display: none" id="downXls" ajax="false"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{rF009122MB.excel}" />
+				</p:commandButton>
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:remoteCommand id="updateMsg" name="updateMsg"
+					actionListener="#{rF009122MB.validateData}"
+					update=":form1:messagesEdit" />
+				<p:commandButton style="display: none" id="downXlss" ajax="false"
+					actionListener="#{rF009122MB.downloadFile}"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload value="#{rF009122MB.excel}" />
+				</p:commandButton>
+				<p:panel id="panel"
+					header="Estado de Avance Presupuestal de Egresos por Finalidad"
+					styleClass="green col-md-6 col-centered row-centered shadow-panel">
+					<p:panelGrid styleClass="ui-noborder">
+						<p:row>
+							<p:column>
+								<h:outputText value="Mes: " for="mesInputOri" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="mesInputOri" size="18" editable="false"
+									value="#{rF009122MB.mes}">
+									<f:selectItems value="#{rF009122MB.listMes}" var="meses"
+										itemValue="#{meses.mes}" itemLabel="#{meses.mes}" />
+									<p:ajax event="change" listener="#{rF009122MB.validateMonth}"
+										update=":form1:messagesEdit" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<h:outputText value="Finalidad: " for="idFinalidad" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="idFinalidad" size="18" editable="false"
+									value="#{rF009122MB.xdire}">
+									<f:selectItems value="#{rF009122MB.listMuninep}" var="muninep"
+										itemValue="#{muninep.campo0} #{muninep.campo6}"
+										itemLabel="#{muninep.campo0} #{muninep.campo6}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<!-- 		<p:commandButton
+									onclick="PrimeFaces.monitorDownload(start, stop);"
+									value="Excel" rendered="#{rF009122MB.banderaC}"
+									update=":form1:messagesEdit" icon="ui-icon-document"
+									actionListener="#{rF009122MB.downloadFile}">
+									<p:fileDownload value="#{rF009122MB.excel}" />
+								</p:commandButton>
+
+
+								</p:commandButton> -->
+								<p:commandLink title="EXCEL" rendered="#{rF009122MB.banderaC}"
+									update=":form1:messagesEdit, :form1:downXls"
+									actionListener="#{rF009122MB.downloadXls}">
+									<p:graphicImage value="excel.png" width="24" />
+
+								</p:commandLink>
+								<p:commandLink actionListener="#{rF009122MB.downloadTxt}"
+									rendered="#{rF009122MB.banderaM}"
+									update=":form1:messagesEdit, :form1:downTxt" title="TXT">
+									<p:graphicImage value="txt.png" width="24" />
+
+								</p:commandLink>
+
+								<!-- <p:commandButton
+									onclick="PrimeFaces.monitorDownload(start, stop);"
+									value="Correcto" ajax="false" rendered="#{rF009122MB.banderaM}"
+									update=":form1:messagesEdit" icon="ui-icon-document">
+									<p:fileDownload value="#{rF009122MB.txt}" />
+								</p:commandButton> -->
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

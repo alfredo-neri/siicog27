@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:panel id="idPanel"
+					header="Reportes de Indicadores Trimestral de Denuncias Conciliadas"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:dataTable id="object" var="objects"
+						value="#{reporte112MB.listPm0411}" binding="#{table}"
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						paginator="true" rows="1"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="pm0411Wdg" paginatorPosition="top"
+						rowIndexVar="rowIndex">
+						<p:column>
+							<p:panelGrid id="idGrid1">
+								<p:row>
+									<p:column style="width : 35%; text-align: right;">
+										<h:outputText value="Trimestre:  " />
+									</p:column>
+									<p:column style="width: 30; text-align: left;">
+										<p:outputLabel id="lblTrimestre" value="#{objects.trimestre}"
+											rendered="#{reporte112MB.bLblTrimestre}">
+											<f:convertNumber pattern="00" />
+										</p:outputLabel>
+										<p:selectOneMenu value="#{reporte112MB.trimestre}"
+											id="comboTri" rendered="#{reporte112MB.bComboTri}">
+											<f:selectItems value="#{reporte112MB.listTrimestre}"
+												var="tri" itemValue="#{tri}" itemLabel="#{tris}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column />
+
+								</p:row>
+
+								<!--  -->
+
+								<p:row>
+									<p:column />
+									<p:column>
+										<h:outputText value="del Periodo" />
+									</p:column>
+									<p:column>
+										<h:outputText value="Observaciones" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<h:outputText value="Denuncias Conciliadas: " />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.dc}" id="lblAgua"
+											rendered="#{reporte112MB.bLbl}">
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.dc}" id="txtAgua" decimalPlaces="0" thousandSeparator=","
+											rendered="#{reporte112MB.bTxt}" maxValue="2147483647"/>
+											
+										
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel id="lblObsAgua" value="#{objects.obsdi}"
+											rendered="#{reporte112MB.bLbl}" />
+										<p:inputTextarea rows="1" cols="23" id="txtObsAgua"
+											onkeyup="this.value=this.value.toUpperCase();"
+											onkeypress="if (event.keyCode == 13) {return false;}"
+											value="#{objects.obsdi}" rendered="#{reporte112MB.bTxt}">
+											<p:ajax event="blur" update="lblObsAgua" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="text-align: right;">
+										<p:outputLabel value="Total de denuncias interpuestas" />
+									</p:column>
+									<p:column style="text-align: left;">
+										<p:outputLabel value="#{objects.di}" id="lblPoblacion" 
+											rendered="#{reporte112MB.bLbl}" >
+											<f:convertNumber pattern="###,###,##0" type="number" />
+										</p:outputLabel>
+										<pe:inputNumber value="#{objects.di}" id="txtPoblacion" decimalPlaces="0" thousandSeparator=","
+											rendered="#{reporte112MB.bTxt}" maxValue="2147483647" />
+									</p:column>
+
+									<p:column style="text-align: left;">
+										<p:outputLabel id="lblObsPoblacion" value="#{objects.obsdc}" 
+											rendered="#{reporte112MB.bLbl}" />
+
+										<p:inputTextarea id="txtObsPoblacion" rows="1" cols="23"
+											onkeyup="this.value=this.value.toUpperCase();"
+											onkeypress="if (event.keyCode == 13) {return false;}"
+											value="#{objects.obsdc}" rendered="#{reporte112MB.bTxt}" />
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+							<p:panelGrid id="buttons">
+								<p:commandButton value="Salvar"
+									actionListener="#{reporte112MB.save(rowIndex)}"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									rendered="#{reporte112MB.bVSave}" id="save" icon="ui-icon-disk" />
+								<p:commandButton value="Modificar" id="modificar"
+									update=":form1:object, :form1:messagesEdit, :form1:correcto"
+									actionListener="#{reporte112MB.modify(rowIndex)}"
+									icon="ui-icon-pencil" rendered="#{reporte112MB.bVModificar}"
+									disabled="#{reporte112MB.bBtnMoficar}" />
+								<p:commandButton value="Limpiar" id="reset"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte112MB.clean(rowIndex)}"
+									disabled="#{reporte112MB.bLbl}" icon="ui-icon-tag" />
+								<p:commandButton value="Adicionar" id="add"
+									update=":form1:object, :form1:messagesEdit"
+									actionListener="#{reporte112MB.add(rowIndex)}"
+									icon="ui-icon-circle-plus" disabled="#{reporte112MB.bAdd}" />
+								<p:commandButton value="Borrar" id="borrar"
+									update=":form1:object, :form1:messagesEdit, :form1:ctri"
+									disabled="#{reporte112MB.bBorrar}"
+									actionListener="#{reporte112MB.delete(rowIndex)}">
+									<p:confirm header="Confirmación"
+										message="¿Desea Eliminar el Registro?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:commandButton value="Cancelar" id="cancelar"
+									update=":form1:object, :form1:messagesEdit "
+									actionListener="#{reporte112MB.cancel(rowIndex)}"
+									icon="ui-icon-circle-close" disabled="#{reporte112MB.bLbl}" />
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="idGrid5">
+						<h:outputText value="Trimestre a Consultar: " />
+						<p:selectOneMenu value="#{reporte112MB.conTrim}" id="ctri"
+							disabled="#{reporte112MB.bReport}">
+							<f:selectItems var="tri" value="#{reporte112MB.comboTri}"
+								itemValue="#{tri.trimestre}" itemLabel="#{tri.trimestre}" />
+						</p:selectOneMenu>
+						<p:commandButton value="Correcto" id="correcto"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()"
+							icon="ui-icon-circle-arrow-s"
+							update="form1:inlinePdf, :form1:idPanel, :form1:messagesEdit"
+							actionListener="#{reporte112MB.createFilePdfInline}"
+							disabled="!#{reporte112MB.bReport}" />
+
+					</p:panelGrid>
+					<p:panel id="inlinePdf" style="border:0px"
+						visible="#{reporte112MB.uuid ne null}">
+
+						<object type="application/pdf"
+							data="#{request.contextPath}/GetFileInline?uuid=#{reporte112MB.uuid}&amp;filename=#{reporte112MB.endFilename}"
+							height="380px" width="100%"> Tu browser no puede
+							desplegar el PDF. </object>
+
+					</p:panel>
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

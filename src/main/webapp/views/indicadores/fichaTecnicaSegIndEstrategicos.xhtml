@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<p:growl id="growl" showDetail="true" sticky="true" />
+			<h:form id="formCaptura">
+				<p:panel id="panelPrincipal"
+					header="Ficha Técnica de Diseño y Seguimiento"
+					styleClass="green col-md-11 col-centered row-centered shadow-panel">
+
+					<p:panel id="panel" header="B&uacute;squeda"
+						styleClass="green col-md-4 col-centered row-centered shadow-panel">
+						<p:panelGrid style="text-align: right;" styleClass="noBorders">
+							<p:row>
+								<p:column>
+									<h:outputText value="Dependencia General:" />
+								</p:column>
+								<p:column>
+									<p:inputText id="generalSearch" styleClass="form-control"
+										value="#{fichaSeguimientoMB.generalSearch}" maxlength="3" />
+								</p:column>
+							</p:row>
+
+							<p:row>
+								<p:column>
+									<h:outputText value="Código de Indicador:" />
+								</p:column>
+								<p:column>
+									<p:inputText id="codigoSearch" styleClass="form-control"
+										value="#{fichaSeguimientoMB.codigoSearch}" maxlength="14" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+
+						<p:outputPanel layout="block" style="text-align:center">
+							<p:commandButton value="Buscar" style="padding: 5px;"
+								actionListener="#{fichaSeguimientoMB.search()}"
+								onstart="PF('blockUIWidget').block()"
+								oncomplete="PF('blockUIWidget').unblock()" />
+							<p:commandButton value="Limpiar"
+								style="padding: 5px; margin-left: 15px;"
+								actionListener="#{fichaSeguimientoMB.cleanSearch()}"
+								update=":formCaptura:fichasTable"
+								oncomplete="document.getElementById('formCaptura:codigoSearch').value='';document.getElementById('formCaptura:generalSearch').value='';" />
+
+						</p:outputPanel>
+					</p:panel>
+
+					<p:dataTable id="fichasTable" var="ficha" paginatorPosition="top"
+						value="#{fichaSeguimientoMB.listFichas}" styleClass="et_datatable"
+						emptyMessage="No hay Información para mostrar" paginator="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+						widgetVar="indWdg" rowIndexVar="rowIndexCaptura" rows="1">
+						<p:ajax event="page" update="formCaptura:fichasTable"
+							listener="#{fichaSeguimientoMB.changeFichaPage}" />
+						<p:column>
+							<center>
+
+								<p:panelGrid id="pnlBotonesHead" columns="5"
+									style="width:initial;" styleClass="noBorders">
+
+									<p:commandButton value="Salvar"
+										actionListener="#{fichaSeguimientoMB.saveFicha}"
+										rendered="#{fichaSeguimientoMB.editing}"
+										style="padding: 5px; width:100px" update="fichasTable,growl" />
+
+									<p:commandButton value="Modificar"
+										actionListener="#{fichaSeguimientoMB.editFicha}"
+										style="padding: 5px; width:100px"
+										rendered="#{!fichaSeguimientoMB.editing}"
+										update="fichasTable,growl" />
+
+									<p:commandButton value="Cancelar"
+										actionListener="#{fichaSeguimientoMB.cancelEdition}"
+										style="padding: 5px; width:100px"
+										rendered="#{fichaSeguimientoMB.editing}"
+										update="fichasTable,growl" />
+								</p:panelGrid>
+								<p:panel id="panelMenus" style="border:none">
+									<p:panelGrid
+										styleClass="col-md-11 col-centered row-centered noBorders">
+
+										<p:row>
+											<p:column
+												style="width:10%; text-align:right; font-weight: bold;">
+												<h:outputText value="Clave Dependencia:" />
+											</p:column>
+
+											<p:column style="width:15%;">
+												<p:inputText styleClass="form-control"
+													value="#{ficha.matrizNivel.matriz.dependencia.clave}"
+													readonly="true" />
+											</p:column>
+
+											<p:column style="width:75%;">
+												<h:inputText id="desDep"
+													value="#{ficha.matrizNivel.matriz.dependencia.nombre}"
+													styleClass="form-control" disabled="true" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column
+												style="width:10%; text-align:right; font-weight: bold;">
+												<h:outputText value="Clave Dependencia Auxiliar:" />
+											</p:column>
+
+											<p:column style="width:15%;">
+												<p:inputText styleClass="form-control"
+													value="#{ficha.matrizNivel.matriz.dependenciaAuxiliar.clave}"
+													readonly="true" />
+											</p:column>
+
+											<p:column style="width:75%;">
+												<h:inputText id="desDepAux"
+													value="#{ficha.matrizNivel.matriz.dependenciaAuxiliar.nombre}"
+													styleClass="form-control" disabled="true" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column
+												style="width:10%; text-align:right; font-weight: bold;">
+												<h:outputText value="Clave Programa:" />
+											</p:column>
+
+											<p:column style="width:15%;">
+												<p:inputText styleClass="form-control"
+													value="#{ficha.matrizNivel.matriz.proyecto.campo7}"
+													readonly="true" />
+											</p:column>
+
+											<p:column style="width:75%;">
+												<h:inputText id="desProgram"
+													value="#{ficha.matrizNivel.matriz.proyecto.campo6}"
+													disabled="true" styleClass="form-control" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column
+												style="width:10%; text-align:right; font-weight: bold;">
+												<h:outputText value="Clave Temas de Desarrollo:" />
+											</p:column>
+
+											<p:column style="width:15%;">
+												<p:inputText styleClass="form-control"
+													value="#{ficha.matrizNivel.matriz.tema.cvetemas}"
+													readonly="true" />
+											</p:column>
+
+											<p:column style="width:75%;">
+												<h:inputText id="desDesarrollo"
+													value="#{ficha.matrizNivel.matriz.tema.descripcion}"
+													styleClass="form-control input-sm" disabled="true" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column
+												style="width:10%; text-align:right; font-weight: bold;">
+												<h:outputText value="Código de Indicador:" />
+											</p:column>
+
+											<p:column style="width:15%;">
+												<p:inputText styleClass="form-control"
+													value="#{ficha.matrizNivel.nivel.indicador.codigo}"
+													readonly="true" />
+											</p:column>
+
+											<p:column style="width:75%;">
+												<h:inputText id="desIndicador"
+													value="#{ficha.matrizNivel.nivel.indicador.nomind}"
+													styleClass="form-control input-sm" disabled="true" />
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column
+												style="width:10%; text-align:right; font-weight: bold;">
+												<h:outputText value="Objetivo:" />
+											</p:column>
+
+											<p:column style="width:90%;" colspan="2">
+												<p:inputTextarea
+													value="#{ficha.matrizNivel.matriz.proyecto.campo8}"
+													disabled="true" styleClass="form-control" />
+											</p:column>
+										</p:row>
+
+									</p:panelGrid>
+								</p:panel>
+
+								<p:panel id="paneldatosDescripcion" style="border:none">
+
+									<p:panelGrid columns="3" styleClass="noBorders" cellpadding="2"
+										columnClasses="col-md-4,col-md-4,col-md-4">
+										<h:panelGroup>
+											<h:outputText value="Fórmula del Cálculo: " />
+											<p:inputTextarea style="width:100%;" cols="25" rows="5"
+												value="#{ficha.matrizNivel.nivel.formula}" readonly="true" />
+										</h:panelGroup>
+
+										<p:panelGrid columns="1">
+											<h:outputText value="Frecuencia: " />
+											<h:inputText value="#{ficha.matrizNivel.nivel.frecuencia}"
+												disabled="true" styleClass="form-control input-sm" />
+
+											<h:outputText value="Tipo: " />
+											<h:inputText value="#{ficha.matrizNivel.nivel.tipo}"
+												disabled="true" styleClass="form-control input-sm" />
+										</p:panelGrid>
+
+										<h:panelGroup>
+											<h:outputText value="Medios de Verificación: " />
+											<p:inputTextarea style="width:100%;" cols="25" rows="5"
+												value="#{ficha.matrizNivel.nivel.mediosVerificacion}"
+												readonly="true" />
+										</h:panelGroup>
+
+									</p:panelGrid>
+
+									<p:panelGrid columns="1" styleClass="noBorders" cellpadding="2"
+										columnClasses="col-md-2,col-md-10 ">
+
+										<h:outputText value="Interpretación: " />
+										<h:inputText value="#{ficha.interpretacion}"
+											styleClass="form-control input-sm"
+											disabled="#{!fichaSeguimientoMB.editing}" />
+
+									</p:panelGrid>
+
+									<p:panelGrid columns="3" styleClass="noBorders" cellpadding="2"
+										columnClasses="col-md-4,col-md-4,col-md-4">
+
+										<p:panelGrid>
+											<h:outputText value="Dimensión que Atiende: " />
+											<h:inputText value="#{ficha.dimension}"
+												styleClass="form-control input-sm"
+												disabled="#{!fichaSeguimientoMB.editing}" />
+										</p:panelGrid>
+
+										<p:panelGrid>
+											<h:outputText value="Ambito Geográfico: " />
+											<p:inputText value="#{ficha.ambito}"
+												disabled="#{!fichaSeguimientoMB.editing}"
+												styleClass="form-control input-sm">
+												<pe:keyFilter mask="pint" />
+											</p:inputText>
+										</p:panelGrid>
+
+										<p:panelGrid>
+											<h:outputText value="Cobertura: " />
+											<h:inputText value="#{ficha.cobertura}"
+												disabled="#{!fichaSeguimientoMB.editing}"
+												styleClass="form-control input-sm" />
+										</p:panelGrid>
+
+										<p:panelGrid>
+											<h:outputText value="Factor de Comparación: " />
+											<br />
+											<pe:inputNumber value="#{ficha.factor}" emptyValue="zero"
+												decimalPlaces="2" decimalSeparator="." thousandSeparator=","
+												maxlength="15" disabled="#{!fichaSeguimientoMB.editing}" />
+
+										</p:panelGrid>
+
+										<p:panelGrid>
+											<h:outputText value="Descripción del Factor: " />
+											<h:inputText value="#{ficha.descripcionFactor}"
+												disabled="#{!fichaSeguimientoMB.editing}"
+												styleClass="form-control input-sm" />
+										</p:panelGrid>
+									</p:panelGrid>
+
+									<p:panelGrid columns="1" styleClass="noBorders" cellpadding="2"
+										columnClasses="col-md-2,col-md-10 ">
+
+										<h:outputText value="Descripción de Resultados: " />
+										<h:inputText value="#{ficha.descripcionResultados}"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											styleClass="form-control input-sm" />
+
+										<h:outputText value="Evaluación del Indicador: " />
+										<h:inputText value="#{ficha.evaluacionIndicador}"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											styleClass="form-control input-sm" />
+
+										<h:outputText value="Linea Base: " />
+										<h:inputText value="#{ficha.lineaBase}"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											styleClass="form-control input-sm" />
+
+										<h:outputText value="Descripción de la Meta Anual: " />
+										<h:inputText value="#{ficha.descripcionMetaAnual}"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											styleClass="form-control input-sm" />
+
+										<h:outputText value="Metas de Acción: " />
+										<h:inputText value="#{ficha.metasAccion}"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											styleClass="form-control input-sm" />
+
+									</p:panelGrid>
+								</p:panel>
+
+								<p:panel style="border:none; width:100%;">
+									<p:panelGrid columns="8" layout="tabular"
+										columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4">
+										<p:outputLabel value="" />
+										<p:outputLabel value="Meta Anual" />
+										<p:outputLabel value="Programada" />
+										<p:outputLabel value="% de Eficiencia" />
+										<p:outputLabel value="Alcanzada" />
+										<p:outputLabel value="% de Eficiencia Acumulado" />
+										<p:outputLabel value="Semáforo" />
+										<p:outputLabel value="Semáforo Acumulado" />
+
+										<p:outputLabel
+											value="#{ficha.trimestres.get(0).periodo.descripcion}" />
+										<pe:inputNumber id="meta1" size="13"
+											value="#{ficha.trimestres.get(0).metaAnual}" maxlength="12"
+											disabled="#{!fichaSeguimientoMB.editing}" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," />
+										<pe:inputNumber id="programada1" size="13"
+											disabled="#{!fichaSeguimientoMB.editing}" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(0).programada}">
+											<p:ajax event="change"
+												update="porcentaje1, porcentajeAlcanzada1"
+												listener="#{fichaSeguimientoMB.porcentajes(0)}" />
+										</pe:inputNumber>
+										<pe:inputNumber id="porcentaje1" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(0).porcentaje}" />
+										<pe:inputNumber id="alcanzada1" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(0).alcanzada}">
+											<p:ajax event="change"
+												update="porcentaje1, porcentajeAlcanzada1"
+												listener="#{fichaSeguimientoMB.porcentajes(0)}" />
+										</pe:inputNumber>
+										<pe:inputNumber id="porcentajeAlcanzada1" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(0).porcentajeAlcanzada}" />
+										<p:inputText disabled="#{!fichaSeguimientoMB.editing}"
+											value="#{ficha.trimestres.get(0).semaforo}" size="13" />
+										<p:inputText size="13"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											value="#{ficha.trimestres.get(0).semaforoAcumulado}" />
+
+										<p:outputLabel
+											value="#{ficha.trimestres.get(1).periodo.descripcion}" />
+										<pe:inputNumber id="meta2" size="13"
+											value="#{ficha.trimestres.get(1).metaAnual}" maxlength="12"
+											disabled="#{!fichaSeguimientoMB.editing}" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," />
+										<pe:inputNumber id="programada2" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(1).programada}">
+											<p:ajax event="change"
+												update="porcentaje2, porcentajeAlcanzada2"
+												listener="#{fichaSeguimientoMB.porcentajes(1)}" />
+										</pe:inputNumber>
+										<pe:inputNumber id="porcentaje2" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(1).porcentaje}" />
+										<pe:inputNumber id="alcanzada2" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(1).alcanzada}">
+											<p:ajax event="change"
+												update="porcentaje2, porcentajeAlcanzada2"
+												listener="#{fichaSeguimientoMB.porcentajes(1)}" />
+										</pe:inputNumber>
+										<pe:inputNumber id="porcentajeAlcanzada2" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(1).porcentajeAlcanzada}" />
+										<p:inputText disabled="#{!fichaSeguimientoMB.editing}"
+											value="#{ficha.trimestres.get(1).semaforo}" size="13" />
+										<p:inputText size="13"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											value="#{ficha.trimestres.get(1).semaforoAcumulado}" />
+
+										<p:outputLabel
+											value="#{ficha.trimestres.get(2).periodo.descripcion}" />
+										<pe:inputNumber id="meta3" size="13"
+											value="#{ficha.trimestres.get(2).metaAnual}" maxlength="12"
+											disabled="#{!fichaSeguimientoMB.editing}" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," />
+										<pe:inputNumber id="programada3" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(2).programada}">
+											<p:ajax event="change"
+												update="porcentaje3, porcentajeAlcanzada3"
+												listener="#{fichaSeguimientoMB.porcentajes(2)}" />
+										</pe:inputNumber>
+										<pe:inputNumber id="porcentaje3" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(2).porcentaje}" />
+										<pe:inputNumber id="alcanzada3" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(2).alcanzada}">
+											<p:ajax event="change"
+												update="porcentaje3, porcentajeAlcanzada3"
+												listener="#{fichaSeguimientoMB.porcentajes(2)}" />
+										</pe:inputNumber>
+										<pe:inputNumber id="porcentajeAlcanzada3" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(2).porcentajeAlcanzada}" />
+										<p:inputText disabled="#{!fichaSeguimientoMB.editing}"
+											size="13" value="#{ficha.trimestres.get(2).semaforo}" />
+										<p:inputText size="13"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											value="#{ficha.trimestres.get(2).semaforoAcumulado}" />
+
+										<p:outputLabel
+											value="#{ficha.trimestres.get(3).periodo.descripcion}" />
+										<pe:inputNumber id="meta4" size="13"
+											value="#{ficha.trimestres.get(3).metaAnual}" maxlength="12"
+											disabled="#{!fichaSeguimientoMB.editing}" decimalPlaces="2"
+											decimalSeparator="." thousandSeparator="," />
+										<pe:inputNumber id="programada4" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(3).programada}">
+											<p:ajax event="change"
+												update="porcentaje4, porcentajeAlcanzada4"
+												listener="#{fichaSeguimientoMB.porcentajes(3)}" />
+										</pe:inputNumber>
+
+										<pe:inputNumber id="porcentaje4" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(3).porcentaje}" />
+										<pe:inputNumber id="alcanzada4" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(3).alcanzada}">
+											<p:ajax event="change"
+												update="porcentaje4, porcentajeAlcanzada4"
+												listener="#{fichaSeguimientoMB.porcentajes(3)}" />
+										</pe:inputNumber>
+										<pe:inputNumber id="porcentajeAlcanzada4" decimalPlaces="2"
+											disabled="#{!fichaSeguimientoMB.editing}" size="13"
+											decimalSeparator="." thousandSeparator="," maxlength="12"
+											value="#{ficha.trimestres.get(3).porcentajeAlcanzada}" />
+										<p:inputText disabled="#{!fichaSeguimientoMB.editing}"
+											size="13" value="#{ficha.trimestres.get(3).semaforo}" />
+										<p:inputText size="13"
+											disabled="#{!fichaSeguimientoMB.editing}"
+											value="#{ficha.trimestres.get(3).semaforoAcumulado}" />
+									</p:panelGrid>
+								</p:panel>
+
+							</center>
+
+							<p:dataTable id="tablaDetalle" var="variable" rows="1"
+								value="#{ficha.variables}" styleClass="et_datatable"
+								emptyMessage="No hay registros que mostrar" paginator="true"
+								rowIndexVar="rowIndexDetalle" widgetVar="detalleWdg"
+								paginatorPosition="top"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}">
+								<f:facet name="header">Variables</f:facet>
+
+								<p:ajax event="page"
+									listener="#{fichaSeguimientoMB.changeVariablePage}" />
+								<p:column>
+									<center>
+
+										<p:panel id="datalleVariables" style="border:none;"
+											rendered="#{not empty ficha.variables}">
+											<p:panelGrid styleClass="noBorders" rendered="true"
+												id="variableDetalle">
+												<p:row style="text-align: center"
+													styleClass="ui-widget-header">
+													<p:column style="width:5%">
+														<h:outputText value="Código" />
+													</p:column>
+													<p:column style="width:10%">
+														<h:outputText value="Número de Variable" />
+													</p:column>
+													<p:column style="width:10%">
+														<h:outputText value="Nombre Corto de la Variable" />
+													</p:column>
+													<p:column style="width:15%">
+														<h:outputText value="Nombre de la Variable" />
+													</p:column>
+													<p:column style="width:15%">
+														<h:outputText value="Unidad de Medida" />
+													</p:column>
+													<p:column style="width:15%">
+														<h:outputText value="Operación" />
+													</p:column>
+													<p:column style="width:10%">
+														<h:outputText value="Meta Anual" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column style="width:5%">
+														<p:inputText id="detCodigo" value="#{variable.codigo}"
+															emptyValue="zero" maxlength="4"
+															disabled="#{!fichaSeguimientoMB.editingVariable}"
+															styleClass="form-control input-sm" />
+													</p:column>
+													<p:column style="width:10%">
+														<p:panelGrid columns="2" columnClasses="col-md-9,col-md-3">
+															<h:inputText id="numVar"
+																value="#{variable.variable.numvar}"
+																styleClass="form-control input-sm"
+																disabled="#{!fichaSeguimientoMB.editingVariable}">
+															</h:inputText>
+															<p:commandLink id="searchclvdgm"
+																disabled="#{!fichaSeguimientoMB.editingVariable}"
+																styleClass="glyphicon glyphicon-search"
+																onclick="PF('catalogVariablesDlg').show(); return false" />
+														</p:panelGrid>
+													</p:column>
+													<p:column style="width:15%">
+														<h:inputText id="varClave"
+															value="#{variable.variable.cvevar}"
+															styleClass="form-control input-sm" readonly="true" />
+													</p:column>
+													<p:column>
+														<h:inputText id="varDescripcion" readonly="true"
+															styleClass="form-control input-sm"
+															value="#{variable.variable.nomvar}" />
+													</p:column>
+													<p:column style="width:15%">
+														<h:inputText value="#{variable.unidadMedida}"
+															styleClass="form-control input-sm" maxlength="100"
+															disabled="#{!fichaSeguimientoMB.editingVariable}" />
+													</p:column>
+													<p:column style="width:10%">
+														<h:inputText value="#{variable.operacion}"
+															styleClass="form-control input-sm" maxlength="50"
+															disabled="#{!fichaSeguimientoMB.editingVariable}" />
+													</p:column>
+													<p:column style="width:10%">
+														<pe:inputNumber value="#{variable.metaAnual}"
+															disabled="#{!fichaSeguimientoMB.editingVariable}"
+															id="metaAnual" size="13" emptyValue="zero"
+															decimalPlaces="2" decimalSeparator="."
+															thousandSeparator="," maxlength="12">
+															<p:ajax event="blur" update="metaAnual" />
+														</pe:inputNumber>
+													</p:column>
+												</p:row>
+
+											</p:panelGrid>
+											<p:panel style="border:none; width:90%;">
+												<p:panelGrid columns="5" layout="tabular"
+													columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4">
+													<p:outputLabel value="" />
+													<p:outputLabel value="Programado" />
+													<p:outputLabel value="%" />
+													<p:outputLabel value="Alcanzada" />
+													<p:outputLabel value="%" />
+
+													<p:outputLabel
+														value="#{variable.trimestres.get(0).periodo.descripcion}" />
+													<pe:inputNumber id="programada1"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalPlaces="2" decimalSeparator="."
+														thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(0).programada}">
+														<p:ajax event="change" update="porcentaje1"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(true,0)}" />
+													</pe:inputNumber>
+													<pe:inputNumber id="porcentaje1" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(0).porcentaje}" />
+													<pe:inputNumber id="alcanzada1" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(0).alcanzada}">
+														<p:ajax event="change" update="porcentajeAlcanzada1"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(false,0)}" />
+													</pe:inputNumber>
+													<pe:inputNumber id="porcentajeAlcanzada1" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(0).porcentajeAlcanzada}" />
+
+													<p:outputLabel
+														value="#{variable.trimestres.get(1).periodo.descripcion}" />
+													<pe:inputNumber id="programada2" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(1).programada}">
+														<p:ajax event="change" update="porcentaje2"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(true,1)}" />
+													</pe:inputNumber>
+													<pe:inputNumber id="porcentaje2" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(1).porcentaje}" />
+													<pe:inputNumber id="alcanzada2" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(1).alcanzada}">
+														<p:ajax event="change" update="porcentajeAlcanzada2"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(false,1)}" />
+													</pe:inputNumber>
+													<pe:inputNumber id="porcentajeAlcanzada2" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(1).porcentajeAlcanzada}" />
+
+													<p:outputLabel
+														value="#{variable.trimestres.get(2).periodo.descripcion}" />
+													<pe:inputNumber id="programada3" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(2).programada}">
+														<p:ajax event="change" update="porcentaje3"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(true,2)}" />
+													</pe:inputNumber>
+													<pe:inputNumber id="porcentaje3" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(2).porcentaje}" />
+													<pe:inputNumber id="alcanzada3" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(2).alcanzada}">
+														<p:ajax event="change" update="porcentajeAlcanzada3"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(false,2)}" />
+													</pe:inputNumber>
+													<pe:inputNumber id="porcentajeAlcanzada3" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(2).porcentajeAlcanzada}" />
+
+													<p:outputLabel
+														value="#{variable.trimestres.get(3).periodo.descripcion}" />
+													<pe:inputNumber id="programada4" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(3).programada}">
+														<p:ajax event="change" update="porcentaje4"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(true,3)}" />
+													</pe:inputNumber>
+
+													<pe:inputNumber id="porcentaje4" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(3).porcentaje}" />
+													<pe:inputNumber id="alcanzada4" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(3).alcanzada}">
+														<p:ajax event="change" update="porcentajeAlcanzada4"
+															listener="#{fichaSeguimientoMB.calcularPorcentaje(false,3)}" />
+													</pe:inputNumber>
+													<pe:inputNumber id="porcentajeAlcanzada4" decimalPlaces="2"
+														disabled="#{!fichaSeguimientoMB.editingVariable}"
+														decimalSeparator="." thousandSeparator="," maxlength="12"
+														value="#{variable.trimestres.get(3).porcentajeAlcanzada}" />
+												</p:panelGrid>
+											</p:panel>
+										</p:panel>
+									</center>
+
+								</p:column>
+
+							</p:dataTable>
+
+							<p:panel id="pnlBotonesDetalle" style="border: none;">
+								<center>
+									<p:commandButton value="Adicionar"
+										actionListener="#{fichaSeguimientoMB.addVariable}"
+										style="padding: 5px; width:100px"
+										rendered="#{!fichaSeguimientoMB.editingVariable}" />
+
+									<p:commandButton value="Modificar"
+										style="padding: 5px; width:100px"
+										rendered="#{!fichaSeguimientoMB.editingVariable}"
+										disabled="#{empty ficha.variables}"
+										update="tablaDetalle,pnlBotonesDetalle,growl"
+										actionListener="#{fichaSeguimientoMB.updateVariable}" />
+
+									<p:commandButton value="Guardar"
+										actionListener="#{fichaSeguimientoMB.saveVariable}"
+										style="padding: 5px; width:100px"
+										rendered="#{fichaSeguimientoMB.editingVariable}"
+										update="tablaDetalle,pnlBotonesDetalle,growl" />
+
+									<p:commandButton value="Borrar"
+										disabled="#{empty ficha.variables}"
+										style="padding: 5px; width:100px"
+										rendered="#{!fichaSeguimientoMB.editingVariable}"
+										onclick="PF('confirmDeleteDetalle').show();">
+										<p:confirmDialog widgetVar="confirmDeleteDetalle"
+											message="¿Desea borrar el registro actual?"
+											header="Confirmacion" severity="alert">
+											<p:commandButton value="SI" label="SI"
+												style="margin-top:10px;padding:5px;"
+												onclick="PF('confirmDeleteDetalle').hide();"
+												actionListener="#{fichaSeguimientoMB.deleteVariable}"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update="tablaDetalle,pnlBotonesDetalle,growl" />
+											<p:commandButton value="NO" label="NO"
+												style="margin-top:10px;padding:5px;"
+												onclick="PF('confirmDeleteDetalle').hide();"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+												update="growl" />
+										</p:confirmDialog>
+									</p:commandButton>
+
+									<p:commandButton value="Cancelar"
+										actionListener="#{fichaSeguimientoMB.cancelVariable}"
+										style="padding: 5px; width:100px"
+										rendered="#{fichaSeguimientoMB.editingVariable}"
+										update="tablaDetalle,pnlBotonesDetalle,growl" />
+
+								</center>
+							</p:panel>
+						</p:column>
+					</p:dataTable>
+
+				</p:panel>
+
+
+				<p:dialog header="Consulta al Cat&aacute;logo de Variables"
+					widgetVar="catalogVariablesDlg" width="800" height="500"
+					showEffect="clip" hideEffect="clip" modal="true">
+					<p:outputPanel id="panelCatalogVariables" layout="block"
+						style="text-align:left">
+
+						<p:dataTable id="variablesTbl" var="variable"
+							value="#{fichaSeguimientoMB.listVariables}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowKey="#{variable.cvevar}" selectionMode="single"
+							widgetVar="variableWdg"
+							filteredValue="#{fichaSeguimientoMB.filteredVariables}"
+							selection="#{fichaSeguimientoMB.variableSelected}"
+							emptyMessage="No hay registros">
+
+							<p:ajax event="rowDblselect"
+								listener="#{fichaSeguimientoMB.changeVariable}"
+								update="formCaptura" />
+
+							<f:facet name="header">Consulta al Cat&aacute;logo de Variables</f:facet>
+							<p:column headerText="N&uacute;mero de Variable" width="15%"
+								filterMatchMode="contains" filterBy="#{variable.numvar}">
+								<h:outputText value="#{variable.numvar}" />
+							</p:column>
+							<p:column headerText="Nombre Corto de la Variable" width="20%"
+								filterMatchMode="contains" filterBy="#{variable.cvevar}">
+								<h:outputText value="#{variable.cvevar}" />
+							</p:column>
+							<p:column headerText="Nombre" width="65%"
+								filterMatchMode="contains" filterBy="#{variable.nomvar}">
+								<h:outputText value="#{variable.nomvar}" />
+							</p:column>
+						</p:dataTable>
+
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

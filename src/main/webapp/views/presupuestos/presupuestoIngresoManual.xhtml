@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:panel id="panel"
+					header="Mantenimiento al Cat&aacute;logo de Cuentas"
+					styleClass="green col-md-10 col-centered row-centered shadow-panel">
+					<p:dataTable id="objects" binding="#{table}" var="object"
+						value="#{presupuestoIntegradoIMB.listCuenta}" styleClass="et_datatable"
+						emptyMessage="No hay registros" editable="true" paginator="true"
+						rows="10"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						selectionMode="single" rowKey="#{object.index}"
+						widgetVar="dependenciesWdg">
+						
+						<p:column headerText="Cuenta" style="width:2%">
+						    <p:commandLink id="idCuentaEvent" update=":form1:concuentas" oncomplete="PF('cuentascon').show();" actionListener="#{consultaPolizaMB.findCuentasPolizas(object.cuenta, object.scta, object.sscta, object.ssscta, object.sssscta)}">
+							     <h:outputText value="#{object.cuenta}"  />
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="Scta" style="width:3%">
+							<h:outputText value="#{object.scuenta}" />
+						</p:column>
+						<p:column headerText="Ssscta" style="width:4%">
+							<h:outputText value="#{object.sscuenta}" />
+						</p:column>
+						<p:column headerText="Sscta" style="width:2%">
+							<h:outputText value="#{object.ssscuenta}" />
+						</p:column>
+						<p:column headerText="Sssscta" style="width:3%">
+
+							<h:outputText value="#{object.sssscuenta}" />
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="pgrid1" columns="12">
+						<h:outputText value="Cuenta" />
+						<h:inputText value="#{presupuestoIntegradoIMB.cuenta.cuenta}"
+							size="4" maxlength="4"
+							disabled="#{presupuestoIntegradoIMB.activaCuentas}" />
+						<h:outputText value="SCuenta" />
+						<h:inputText value="#{presupuestoIntegradoIMB.cuenta.scuenta}"
+							size="10" maxlength="10"
+							disabled="#{presupuestoIntegradoIMB.activaCuentas}" />
+						<h:outputText value="SsCuenta" />
+						<h:inputText value="#{presupuestoIntegradoIMB.cuenta.sscuenta}"
+							size="15" maxlength="15"
+							disabled="#{presupuestoIntegradoIMB.activaCuentas}" />
+						<h:outputText value="SssCuenta" />
+						<h:inputText value="#{presupuestoIntegradoIMB.cuenta.ssscuenta}"
+							size="4" maxlength="4"
+							disabled="#{presupuestoIntegradoIMB.activaCuentas}" />
+						<h:outputText value="SsssCuenta" />
+						<h:inputText value="#{presupuestoIntegradoIMB.cuenta.sssscuenta}"
+							size="3" maxlength="3"
+							disabled="#{presupuestoIntegradoIMB.activaCuentas}" />
+						<h:outputText value="Cve Txt" />
+						<h:inputText value="#{presupuestoIntegradoIMB.integradoi.cvetxt}"
+							size="10" maxlength="10"
+							disabled="#{presupuestoIntegradoIMB.activaCuentas}" />
+					</p:panelGrid>
+					<center>
+						<p:panelGrid id="pgrid2" columns="5">
+							<h:outputText value="" />
+							<h:outputText value="Ayunntamiento" />
+							<h:outputText value="Organismo de Agua" />
+							<h:outputText value="Dif Municipal" />
+							<h:outputText value="Organismo del Deporte" />
+
+							<h:outputText value="Enero" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos1}"
+								id="ayttoabonos1" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos1}"
+								id="aguaabonos1" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos1}"
+								id="difabonos1" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos1}"
+								id="deporteabonos1" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+
+							<h:outputText value="Febrero" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos2}"
+								id="ayttoabonos2" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos3}"
+								id="aguaabonos3" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos2}"
+								id="difabonos2" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos2}"
+								id="deporteabonos2" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+
+							<h:outputText value="Marzo" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos3}"
+								id="ayttoabonos3" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos31}"
+								id="aguaabonos31" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos3}"
+								id="difabonos3" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos3}"
+								id="deporteabonos3" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+
+							<h:outputText value="Abril" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos4}"
+								id="ayttoabonos4" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos4}"
+								id="aguaabonos4" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos4}"
+								id="difabonos4" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos4}"
+								id="deporteabonos4" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+								
+							<h:outputText value="Mayo" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos5}"
+								id="ayttoabonos5" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos5}"
+								id="aguaabonos5" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos5}"
+								id="difabonos5" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos5}"
+								id="deporteabonos5" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+								
+							<h:outputText value="Junio" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos6}"
+								id="ayttoabonos6" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos6}"
+								id="aguaabonos6" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos6}"
+								id="difabonos6" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos6}"
+								id="deporteabonos6" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+								
+							<h:outputText value="Julio" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos7}"
+								id="ayttoabonos7" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos7}"
+								id="aguaabonos7" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos7}"
+								id="difabonos7" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos7}"
+								id="deporteabonos7" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+								
+							<h:outputText value="Agosto" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos8}"
+								id="ayttoabonos8" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos8}"
+								id="aguaabonos8" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos8}"
+								id="difabonos8" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+						    <h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos8}"
+								id="deporteabonos8" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" /> 
+								
+							<h:outputText value="Septiembre" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos9}"
+								id="ayttoabonos9" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos9}"
+								id="aguaabonos9" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos9}"
+								id="difabonos9" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos9}"
+								id="deporteabonos9" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+
+							<h:outputText value="Octubre" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos10}"
+								id="ayttoabonos10" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos10}"
+								id="aguaabonos10" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos10}"
+								id="difabonos10" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos10}"
+								id="deporteabonos10" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+
+							<h:outputText value="Noviembre" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos11}"
+								id="ayttoabonos11" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos11}"
+								id="aguaabonos11" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos11}"
+								id="difabonos11" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos11}"
+								id="deporteabonos11" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+
+							<h:outputText value="Diciembre" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.ayttoabonos12}"
+								id="ayttoabonos12" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.aguaabonos12}"
+								id="aguaabonos12" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.difabonos12}"
+								id="difabonos12" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+							<h:inputText
+								value="#{presupuestoIntegradoIMB.integradoi.deporteabonos12}"
+								id="deporteabonos12" size="10" maxlength="10"
+								disabled="#{presupuestoIntegradoIMB.activaTxt}" />
+						</p:panelGrid>
+
+						<p:panelGrid columns="5">
+							<p:commandButton value="Modificar" ajax="false" id="modificar"
+								icon="ui-icon-pencil" update=":form1:panel" />
+
+							<p:commandButton value="Reset" ajax="false" id="reset"
+								icon="ui-icon-document" update=":form1:panel"
+								disabled="#{presupuestoIntegradoIMB.activaButton}" />
+
+							<p:commandButton value="Adicionar" ajax="false" id="adicionar"
+								icon="ui-icon-plusthick" update=":form1:panel" />
+
+							<p:commandButton value="Borrar" ajax="false" id="Borrar"
+								icon="ui-icon-trash" update=":form1:panel" />
+
+							<p:commandButton value="Cancelar" ajax="false" id="cancelar"
+								icon="ui-icon-closethick" update=":form1:panel"
+								disabled="#{presupuestoIntegradoIMB.activaButton}" />
+						</p:panelGrid>
+					</center>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

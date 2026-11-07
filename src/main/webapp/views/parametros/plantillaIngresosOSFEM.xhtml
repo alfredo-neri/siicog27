@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1" enctype="multipart/form-data">
+				<p:growl id="msgs" showDetail="true" />
+				<p:commandButton style="display: none;" id="hiddenUpdate"
+					name="hiddenUpdate"
+					actionListener="#{plantillaIngresosOsfemMB.refreshData}"
+					update=":form1:msgs, :form1:object" />
+				<p:remoteCommand id="lasPage" name="lastPage"
+					oncomplete="activeRow(#{plantillaIngresosOsfemMB.listIngresos.size()})"
+					update=":form1:object" />
+				<p:remoteCommand id="refreshData" name="refreshData"
+					actionListener="#{plantillaIngresosOsfemMB.refreshData}"
+					update=":form1:msgs, :form1:object, :form1:head" />
+
+				<p:panel id="panel" header="Plantilla Ingresos del OSFEM"
+					styleClass="green col-md-9 col-centered row-centered shadow-panel">
+					<p:fieldset style="margin-bottom:20px">
+						<p:panelGrid id="head" columns="2"
+							styleClass="row-centered ui-noborder">
+
+							<p style="text-align: left; color: #f00">
+								Campo CVETXT <br /> 1 = Cuenta se muestra en todos los archivos
+								de texto y reporte de ingresos. <br /> 0 = Cuenta NO se muestra
+								en los archivos de texto y reporte de ingresos.
+							</p>
+
+							<p:commandButton value="Cargar Plantilla"
+								rendered="#{plantillaIngresosOsfemMB.objDisabled}"
+								onclick="PF('wingetPasswor').show(); resetPass();" />
+
+							<p:fileUpload
+								fileUploadListener="#{plantillaIngresosOsfemMB.handleFileUpload}"
+								mode="advanced" dragDropSupport="true" update="msgs"
+								rendered="#{!plantillaIngresosOsfemMB.objDisabled}"
+								sizeLimit="100000" fileLimit="3" uploadLabel="Cargar"
+								cancelLabel="Calcelar" label="Selecionar"
+								invalidFileMessage="Solo se permiten archivos CSV"
+								allowTypes="/(\.|\/)(csv)$/"
+								onstart="PF('blockUIWidget').block();"
+								oncomplete="PF('blockUIWidget').unblock(); refreshData();" />
+						</p:panelGrid>
+
+						<p:dataTable id="object" var="objects"
+							value="#{plantillaIngresosOsfemMB.dataModelIngreso.listT}"
+							binding="#{table}" emptyMessage="No hay registros"
+							paginator="true" rows="20"
+							selection="#{plantillaIngresosOsfemMB.dataModelIngreso.selected}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}"
+							widgetVar="balanceWdg" rowKey="#{objects.id}" editable="true"
+							rowIndexVar="rowIndex">
+
+							<p:ajax event="rowEdit"
+								listener="#{plantillaIngresosOsfemMB.onRowEdit}"
+								update=":form1:msgs, :form1:object"
+								oncomplete="jQuery('#form1\\\\:hiddenUpdate').click();" />
+							<p:ajax event="rowEditInit"
+								listener="#{plantillaIngresosOsfemMB.onInitRowEdit}"
+								oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')}); jQuery('#form1\\\\:add').click();" />
+							<p:ajax event="rowEditCancel"
+								listener="#{plantillaIngresosOsfemMB.refreshData}"
+								update=":form1:msgs" />
+							<p:ajax event="page" onstart="PF('blockUIWidget').block();"
+								update=":form1:object"
+								oncomplete="PF('blockUIWidget').unblock();lastPage();" />
+							<p:column headerText="CTA" style="width:15%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.cuenta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="cta" value="#{objects.cuenta}"
+											disabled="true" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="SCTA" style="width:15%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.scta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="consecutivo" disabled="true"
+											value="#{objects.scta}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="SSCTA" style="width:15%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.sscta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{objects.sscta}" disabled="true" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="SSSCTA" style="width:15%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.ssscta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{objects.ssscta}" disabled="true" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="SSSSCTA" style="width:15%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.sssscta}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{objects.sssscta}" disabled="true" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="CVETXT" style="width:15%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{objects.cvetxt}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="cvetxt"
+											validatorMessage="Solo se permite 1 o 0" maxlength="1"
+											onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:object span.ui-icon-check').last().click(); return false; } "
+											value="#{objects.cvetxt}" style="width:100%">
+											<f:validateDoubleRange minimum="0" maximum="1" />
+											<p:ajax event="blur" update="cvetxt" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column style="width:5%">
+								<p:rowEditor />
+							</p:column>
+						</p:dataTable>
+
+					</p:fieldset>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+				</p:panel>
+				<p:dialog id="panelValida" widgetVar="wingetPasswor"
+					header="Valida Password" modal="true" styleClass="green">
+					<p:panelGrid id="pgridpass" columns="2"
+						styleClass="green col-md-8 col-centered row-centered ui-noborder">
+						<h:outputText value="Password Administrador" />
+						<h:inputSecret id="validatePass"
+							value="#{plantillaIngresosOsfemMB.validaPass}"
+							onkeypress="if(event.keyCode == 27) {PF('wingetPasswor').hide(); return false;} if(event.keyCode == 13){return false;}" />
+						<h:outputText value="" />
+						<p:commandButton value="Validar"
+							update=":form1:msgs, :form1:object, :form1:head"
+							actionListener="#{plantillaIngresosOsfemMB.validaPassword}"
+							oncomplete="PF('wingetPasswor').hide();document.getElementById('form1:validatePass').value=''; resetPass();" />
+					</p:panelGrid>
+
+				</p:dialog>
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../catalogs/please_wait.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+			</h:form>
+			<script type="text/javascript">
+			     
+					 function activeRow(index) {
+						 var bEdition =  $('#form1\\:banderaEdit').val();
+						 
+						 if(bEdition == "true") {
+							 var rows = 20;
+							 var size = index;
+							 var indexOf = (size % rows);
+							
+						      jQuery('#form1\\:object span.ui-icon-pencil').eq(indexOf).each(function(){jQuery(this).click()});
+						 }
+					 }
+			    
+			</script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

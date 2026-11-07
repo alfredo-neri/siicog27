@@ -1,0 +1,1401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-03-13T11:52:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EstadoCambiosSFBC" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="2b90bdb7-06e5-4398-a2ca-cdf05f02e21e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GEM_SERVER"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.zoom" value="1.6528925619834876"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="120"/>
+	<style name="miestilo">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 1000]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 1100]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 1200]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 1300]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 2000]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 2100]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 2200]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 3000]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 3100]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 3200]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{CUENTA} == 3300]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($F{NOMCTA} == "CUENTAS DE ACTIVO")]]></conditionExpression>
+			<style forecolor="#E21515" backcolor="#0025DF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="MES" class="java.lang.Integer"/>
+	<parameter name="SECTOR" class="java.lang.Integer"/>
+	<parameter name="NOM_MUNICIPIO" class="java.lang.String"/>
+	<parameter name="imagen" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{imagen}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ANIO" class="java.lang.Integer"/>
+	<parameter name="L1" class="java.lang.String"/>
+	<parameter name="L2" class="java.lang.String"/>
+	<parameter name="L3" class="java.lang.String"/>
+	<parameter name="N1" class="java.lang.String"/>
+	<parameter name="N2" class="java.lang.String"/>
+	<parameter name="N3" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[WITH pasivo AS (
+
+SELECT
+
+c.cuenta AS cuenta,
+
+c.nomcta AS nomcta,
+
+
+
+to_number(
+CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+  WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+             WHEN 2 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+             WHEN 3 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+             WHEN 4 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+             WHEN 5 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+             WHEN 6 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+             WHEN 7 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+             WHEN 8 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8)
+             WHEN 9 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 )
+             WHEN 10 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10)
+             WHEN 11 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+             WHEN 12 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+
+
+ 	 WHEN c.cuenta = '3241' AND (4 < 0) THEN
+     		to_char(c.salini)
+     WHEN c.cuenta = '3241' AND (4 > 0) THEN
+         	to_char(c.salini * -1) END
+
+
+
+ ) -
+
+
+
+to_number(
+CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+  WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+             WHEN 2 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+             WHEN 3 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+             WHEN 4 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+             WHEN 5 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+             WHEN 6 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+             WHEN 7 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+             WHEN 8 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8)
+             WHEN 9 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 )
+             WHEN 10 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10)
+             WHEN 11 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+             WHEN 12 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+
+
+ 	 WHEN c.cuenta = '3241' AND (4 < 0) THEN
+     		to_char(c.salini)
+     WHEN c.cuenta = '3241' AND (4 > 0) THEN
+         	to_char(c.salini * -1) END
+
+
+
+ ) AS resta_origen,
+
+
+
+ to_number(
+ 
+ CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+  WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+             WHEN 2 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+             WHEN 3 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+             WHEN 4 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+             WHEN 5 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+             WHEN 6 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+             WHEN 7 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+             WHEN 8 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8)
+             WHEN 9 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 )
+             WHEN 10 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10)
+             WHEN 11 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+             WHEN 12 <= $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+
+
+ 	 WHEN c.cuenta = '3241' AND (4 < 0) THEN
+     		to_char(c.salini)
+     WHEN c.cuenta = '3241' AND (4 > 0) THEN
+         	to_char(c.salini * -1) END
+ 
+ 
+ 
+ 
+
+ ) -
+
+
+
+ to_number(
+
+
+ 
+CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+  WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+             WHEN 2 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+             WHEN 3 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+             WHEN 4 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+             WHEN 5 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+             WHEN 6 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+             WHEN 7 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+             WHEN 8 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8)
+             WHEN 9 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 )
+             WHEN 10 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10)
+             WHEN 11 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+             WHEN 12 < $P{MES}   THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4  - c.cargos_5 - c.cargos_6 - c.cargos_7
+             - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7
+             + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+
+
+
+ 	 WHEN c.cuenta = '3241' AND (4 < 0) THEN
+     		to_char(c.salini)
+     WHEN c.cuenta = '3241' AND (4 > 0) THEN
+         	to_char(c.salini * -1) END
+
+
+	
+         ) AS resta_aplicacion
+
+
+
+
+
+
+FROM  maycta INNER JOIN cuenta c ON (maycta.cuenta=c.cuenta)
+WHERE
+(c.cuenta>=2000) AND (c.cuenta<=3321) AND
+(c.scta='') AND (c.notcta=0)
+AND
+(c.idsector =  $P{SECTOR})
+
+ORDER BY cuenta
+
+),
+
+
+ activo AS (
+
+SELECT
+
+c.cuenta AS cuenta,
+
+c.nomcta AS nomcta,
+
+to_number(
+CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+    WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+            WHEN 2 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+            WHEN 3 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 -  c.abonos_3)
+            WHEN 4 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4)
+            WHEN 5 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5)
+            WHEN 6 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+            WHEN 7 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+            WHEN 8 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8)
+            WHEN 9 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - abonos_8 - abonos_9)
+            WHEN 10 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10)
+            WHEN 11 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+            WHEN 12 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12)
+
+
+            WHEN 1 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+            WHEN 2 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+            WHEN 3 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+            WHEN 4 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+            WHEN 5 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+            WHEN 6 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+            WHEN 7 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+            WHEN 8 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8)
+            WHEN 9 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9)
+            WHEN 10 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10)
+            WHEN 11 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+            WHEN 12 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12)
+
+             END
+
+END)
+
+-
+
+to_number(
+CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+    WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+            WHEN 2 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+            WHEN 3 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 -  c.abonos_3)
+            WHEN 4 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4)
+            WHEN 5 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5)
+            WHEN 6 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+            WHEN 7 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+            WHEN 8 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8)
+            WHEN 9 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - abonos_8 - abonos_9)
+            WHEN 10 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10)
+            WHEN 11 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+            WHEN 12 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12)
+
+
+            WHEN 1 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+            WHEN 2 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+            WHEN 3 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+            WHEN 4 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+            WHEN 5 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+            WHEN 6 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+            WHEN 7 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+            WHEN 8 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8)
+            WHEN 9 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9)
+            WHEN 10 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10)
+            WHEN 11 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+            WHEN 12 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12)
+            ELSE to_char(c.salini)
+             END
+
+END)
+
+
+ AS resta_origen, --mes_act - mes_ant
+
+
+ to_number(
+CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 <= $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+    WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+            WHEN 2 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+            WHEN 3 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 -  c.abonos_3)
+            WHEN 4 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4)
+            WHEN 5 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5)
+            WHEN 6 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+            WHEN 7 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+            WHEN 8 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8)
+            WHEN 9 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - abonos_8 - abonos_9)
+            WHEN 10 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10)
+            WHEN 11 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+            WHEN 12 <= $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12)
+
+
+            WHEN 1 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+            WHEN 2 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+            WHEN 3 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+            WHEN 4 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+            WHEN 5 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+            WHEN 6 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+            WHEN 7 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+            WHEN 8 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8)
+            WHEN 9 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9)
+            WHEN 10 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10)
+            WHEN 11 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+            WHEN 12 <= $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12)
+
+             END
+
+END)
+
+ -
+
+to_number(
+CASE  WHEN maycta.natcta = 'D'
+	THEN CASE
+             WHEN 1 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+             WHEN 2 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+             WHEN 3 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 - c.abonos_3)
+             WHEN 4 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4)
+             WHEN 5 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5)
+             WHEN 6 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+             WHEN 7 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+             WHEN 8 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8)
+             WHEN 9 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 )
+             WHEN 10 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10)
+             WHEN 11 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+             WHEN 12 < $P{MES}   THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4  + c.cargos_5 + c.cargos_6 + c.cargos_7
+             + c.cargos_8 + c.cargos_9 + c.cargos_10 + c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 - c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7
+             - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12 )
+
+             ELSE to_char(c.salini) END
+    WHEN maycta.natcta <> 'D'
+    	THEN CASE
+    		WHEN 1 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 - c.abonos_1)
+            WHEN 2 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 - c.abonos_1 - c.abonos_2)
+            WHEN 3 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 - c.abonos_1 - c.abonos_2 -  c.abonos_3)
+            WHEN 4 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4)
+            WHEN 5 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5)
+            WHEN 6 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6)
+            WHEN 7 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7)
+            WHEN 8 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8)
+            WHEN 9 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - abonos_8 - abonos_9)
+            WHEN 10 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10)
+            WHEN 11 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11)
+            WHEN 12 < $P{MES}   AND (c.cuenta = '1115' OR c.cuenta = '1162') THEN
+             to_char(c.salini + c.cargos_1 + c.cargos_2 + c.cargos_3 + c.cargos_4 + c.cargos_5 + c.cargos_6 + c.cargos_7 + c.cargos_8 + c.cargos_9 + c.cargos_10 +  c.cargos_11 + c.cargos_12
+             - c.abonos_1 - c.abonos_2 -  c.abonos_3 - c.abonos_4 - c.abonos_5 - c.abonos_6 - c.abonos_7 - c.abonos_8 - c.abonos_9 - c.abonos_10 - c.abonos_11 - c.abonos_12)
+
+
+            WHEN 1 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 + c.abonos_1)
+            WHEN 2 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 + c.abonos_1 + c.abonos_2)
+            WHEN 3 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 + c.abonos_1 + c.abonos_2 + c.abonos_3)
+            WHEN 4 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4)
+            WHEN 5 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5)
+            WHEN 6 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6)
+            WHEN 7 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7)
+            WHEN 8 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8)
+            WHEN 9 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9)
+            WHEN 10 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10)
+            WHEN 11 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11)
+            WHEN 12 < $P{MES}   AND (c.cuenta <> '1115' AND c.cuenta <> '1162') THEN
+             to_char(c.salini - c.cargos_1 - c.cargos_2 - c.cargos_3 - c.cargos_4 - c.cargos_5 - c.cargos_6 - c.cargos_7 - c.cargos_8 - c.cargos_9 - c.cargos_10 - c.cargos_11 - c.cargos_12
+             + c.abonos_1 + c.abonos_2 + c.abonos_3 + c.abonos_4 + c.abonos_5 + c.abonos_6 + c.abonos_7 + c.abonos_8 + c.abonos_9 + c.abonos_10 + c.abonos_11 + c.abonos_12)
+
+             END
+
+END)
+
+ AS resta_aplicacion --mes_ant - mes_act
+
+
+
+FROM  maycta INNER JOIN cuenta c ON (maycta.cuenta=c.cuenta)
+WHERE
+(c.cuenta>=1000) AND (c.cuenta<=1293) AND
+(c.scta='') AND (c.notcta=0)
+AND
+(c.idsector =  $P{SECTOR})
+
+ORDER BY cuenta
+
+)
+
+
+SELECT c.cuenta AS cuenta,
+CASE WHEN c.cuenta = 3300 THEN 'ACTUALIZACION DEL PATRIMONIO'
+ELSE UPPER(c.nomcta) END
+AS nomcta, NULL	 AS Origen, NULL AS Aplicacion
+FROM cuenta c where c.idsector =  $P{SECTOR}
+AND c.cuenta in(1000, 1100, 1200, 2100, 2200, 2300, 3000, 3100, 3200, 3300)
+
+UNION
+
+SELECT cuenta, nomcta,
+CASE
+	WHEN resta_origen < 0 THEN resta_origen
+	ELSE NULL
+	END
+	AS ORIGEN,
+
+CASE
+	WHEN resta_aplicacion > 0 THEN resta_aplicacion
+	ELSE NULL
+	END AS APLICACION
+
+
+FROM activo
+
+
+UNION
+
+SELECT cuenta, nomcta,
+CASE
+	WHEN resta_origen < 0 THEN resta_origen
+	ELSE NULL
+	END
+	AS ORIGEN,
+
+CASE
+	WHEN resta_aplicacion > 0 THEN resta_aplicacion
+	ELSE NULL
+	END AS APLICACION
+
+
+FROM pasivo]]>
+	</queryString>
+	<field name="CUENTA" class="java.lang.Integer"/>
+	<field name="NOMCTA" class="java.lang.String"/>
+	<field name="ORIGEN" class="java.math.BigDecimal"/>
+	<field name="APLICACION" class="java.math.BigDecimal"/>
+	<variable name="MESACTUAL" class="java.lang.String"/>
+	<variable name="v_mes" class="java.util.List">
+		<variableExpression><![CDATA[java.util.Arrays.asList("","ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE")]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.util.ArrayList()]]></initialValueExpression>
+	</variable>
+	<variable name="v_dia" class="java.util.List">
+		<variableExpression><![CDATA[java.util.Arrays.asList(0,31,28,31,30,31,30,31,31,30,31,30,31)]]></variableExpression>
+	</variable>
+	<variable name="v_get_day" class="java.lang.Integer" incrementType="Report">
+		<variableExpression><![CDATA[($P{MES}==2)?(
+($P{ANIO}%4==0)?
+(29)
+:($V{v_dia}.get($P{MES}))
+):($V{v_dia}.get($P{MES}))]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="3" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="125" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="true">
+				<reportElement x="280" y="105" width="272" height="15" uuid="845f33e1-f018-47d8-b07e-655aea139fb5"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["AL " +  $V{v_get_day} + " DE "+ $V{v_mes}.get($P{MES}) + " DE "+$P{ANIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="106" width="215" height="15" uuid="aed2221d-b7a1-4898-b640-3677ed89ed90"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOM_MUNICIPIO}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="16" y="9" width="60" height="56" uuid="dd79c0c5-da4a-4a14-8b2e-de60b2b18680"/>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="86" y="65" width="400" height="20" uuid="cb3e300c-cfe7-49c5-b214-1a8e86a1945a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[ESTADO DE CAMBIOS EN LA SITUACION FINANCIERA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement mode="Opaque" x="10" y="1" width="60" height="15" backcolor="#CCCCCC" uuid="ab526285-c59b-4584-bf02-fb36659956cb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="71" y="1" width="280" height="15" backcolor="#CCCCCC" uuid="30dc7c38-dc56-4b09-9f37-1aef31776147">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE DE LA CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="352" y="1" width="100" height="15" backcolor="#CCCCCC" uuid="b4d5f40b-a07c-4f92-9119-76f9d400faf6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORIGEN]]></text>
+			</staticText>
+			<line>
+				<reportElement x="9" y="1" width="1" height="15" uuid="9092ca1b-6002-44fa-ac8a-1f7e9278c3eb"/>
+			</line>
+			<line>
+				<reportElement x="70" y="0" width="1" height="17" uuid="a695fc10-d8fc-4ee8-96d8-8f2ceeec9374"/>
+			</line>
+			<line>
+				<reportElement x="351" y="1" width="1" height="15" uuid="ad93b157-2ae5-4368-b539-82bbf49cf49b"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="453" y="1" width="100" height="15" backcolor="#CCCCCC" uuid="049b4e24-c614-4d2e-ad8c-e5f711c21f14">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[APLICACION]]></text>
+			</staticText>
+			<line>
+				<reportElement x="553" y="1" width="1" height="15" uuid="075ce350-50f3-4f3f-adc3-a0dd6d010b2e"/>
+			</line>
+			<line>
+				<reportElement x="9" y="0" width="544" height="1" uuid="344c0b63-84ca-4884-8c72-7b053970857c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="452" y="1" width="1" height="15" uuid="c375ce09-c214-4df8-9633-85d887cf9050"/>
+			</line>
+			<line>
+				<reportElement x="9" y="16" width="545" height="1" uuid="d534cba9-bbec-42d8-baf5-9caaafd1960d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement style="miestilo" x="10" y="1" width="60" height="15" uuid="b513b049-0708-4eae-a768-f62a267bd003">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="352" y="1" width="100" height="15" uuid="6ce5c44b-c4a3-4e4b-a1ef-6ef7fd9a9803">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CUENTA}==1000 || $F{CUENTA}==1100 ||
+ $F{CUENTA}==1200 || $F{CUENTA}==1300 ||
+ $F{CUENTA}==2000 || $F{CUENTA}==2100 ||
+ $F{CUENTA}==2200 || $F{CUENTA}==3100 || $F{CUENTA}==3000 ||
+ $F{CUENTA}==3200 || $F{CUENTA}==3300
+) ? " ": ($F{ORIGEN} != null ) ? $F{ORIGEN} : " "]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="453" y="1" width="99" height="15" uuid="f37ef1b6-68f5-488e-971c-94f0fc673446">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CUENTA}==1000 || $F{CUENTA}==1100 ||
+ $F{CUENTA}==1200 || $F{CUENTA}==1300 ||
+ $F{CUENTA}==2000 || $F{CUENTA}==2100 ||
+ $F{CUENTA}==2200 || $F{CUENTA}==3100 || $F{CUENTA}==3000 ||
+ $F{CUENTA}==3200 || $F{CUENTA}==3300
+) ? " ": ($F{APLICACION} != null) ? $F{APLICACION} : " "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="miestilo" x="71" y="1" width="280" height="15" uuid="17e50bd2-dfa0-4145-9225-d3e3cada8f4c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMCTA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="9" y="0" width="1" height="16" uuid="aa5e87c9-9e9b-43d1-b4e1-0590c91a9993"/>
+			</line>
+			<line>
+				<reportElement x="70" y="0" width="1" height="16" uuid="68379856-8983-49ad-b179-97c470027bc4"/>
+			</line>
+			<line>
+				<reportElement x="351" y="0" width="1" height="16" uuid="38aa697d-3d2d-4441-9d9a-2c1df6acc0dc"/>
+			</line>
+			<line>
+				<reportElement x="452" y="0" width="1" height="16" uuid="5d5e8a2a-4bd5-41d9-9618-53cb9097eee7"/>
+			</line>
+			<line>
+				<reportElement x="553" y="0" width="1" height="16" uuid="0639403e-c3d3-49f6-8180-451e3e65c3be"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="55" splitType="Immediate"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="456" y="7" width="52" height="10" uuid="f4f1d8b4-830e-4d09-9982-2d925e40cd7f"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="508" y="7" width="44" height="10" uuid="6ee4ebfc-91c5-443b-9377-25565223a90f"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="351" y="10" width="83" height="10" uuid="29bcdcb7-7cc2-462b-8103-b11ce17f69fe"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[FECHA DE ELABORACION:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="434" y="10" width="36" height="10" uuid="0939c04a-a1e4-43da-bef4-e51eb92a0165"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="10" width="61" height="10" uuid="c92b5d50-baf8-4f6b-9618-36fa33e5d425"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[OSFAIM101/10/05]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="101">
+			<line>
+				<reportElement x="52" y="48" width="133" height="1" uuid="144c153f-8746-4a69-9f07-6f30e5e18c4f"/>
+			</line>
+			<line>
+				<reportElement x="357" y="48" width="133" height="1" uuid="c520286d-9d45-4eb2-935e-650912511059"/>
+			</line>
+			<line>
+				<reportElement x="205" y="48" width="133" height="1" uuid="854b93d4-beb7-405c-b75b-f97b5fd83533"/>
+			</line>
+			<staticText>
+				<reportElement x="350" y="85" width="83" height="10" uuid="2c32b4ee-6725-4cd3-b28c-595d1de22c55"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[FECHA DE ELABORACION:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="85" width="61" height="9" uuid="ee16b20f-e68a-44b0-9cdb-8f6d0b7b7291"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[OSFAIM101/10/05]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="508" y="82" width="44" height="10" uuid="37426775-2bdf-4d21-97bd-61bb9e7fe273"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="456" y="82" width="52" height="10" uuid="f4f3ceba-a205-40c1-8bc0-71fc3d5d32d6"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="434" y="85" width="36" height="10" uuid="d906a009-c76e-41a3-add9-43f130ccf38a"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="52" y="51" width="133" height="15" uuid="f0eb1d0c-4354-49e5-ba19-7bfc74ba5688"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{N1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="356" y="52" width="133" height="15" uuid="49adc534-5314-4e68-a933-8ba857a1a0c2"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{N3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="396" y="10" width="54" height="15" uuid="8e35710a-04c6-4155-9976-246fac6d78f0"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{L3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="86" y="10" width="54" height="15" uuid="b43627d5-ae72-41ea-b1ad-7b29e5009c9c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{L1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="245" y="10" width="54" height="15" uuid="1f3ee9f8-c7e8-47db-bbb7-b81d8068c8a9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{L2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="205" y="52" width="133" height="15" uuid="afda1396-9ec6-42be-9384-aa1966375c12"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{N2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="107" splitType="Stretch">
+			<line>
+				<reportElement x="9" y="0" width="545" height="1" uuid="7db62824-784e-4da9-a6d7-c2f53c5404cd"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

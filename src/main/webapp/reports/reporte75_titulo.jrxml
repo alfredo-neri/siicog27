@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-03-31T12:16:27 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="titulo" pageWidth="1170" pageHeight="612" orientation="Landscape" columnWidth="1170" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cbcffced-fbaa-4a94-a5b4-ddcbdc3ee560">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="db2"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="4"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="12"/>
+	<parameter name="mes" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="clave" class="java.lang.String">
+		<defaultValueExpression><![CDATA["100"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="anio" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2016]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sector" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT CLVDEP,NOMDEP FROM CATDEP 
+where  CLVDEP=$P{clave}
+AND IDSECTOR= $P{sector}]]>
+	</queryString>
+	<field name="CLVDEP" class="java.lang.String"/>
+	<field name="NOMDEP" class="java.lang.String"/>
+	<variable name="RANGO" class="java.lang.String">
+		<variableExpression><![CDATA[($P{mes} == 1) ?  $P{anio}+" AL 31 DE ENERO DE "+$P{anio} : (
+	($P{mes} == 2) ?  (($P{anio} % 4==0)?  $P{anio}+" AL 29 DE FEBRERO DE "+$P{anio}:  $P{anio}+" AL 28 DE FEBRERO DE "+ $P{anio}): (
+		($P{mes} == 3) ?  $P{anio}+" AL 31 DE MARZO DE "+$P{anio}	: (
+			($P{mes} == 4) ?  $P{anio}+" AL 30 DE ABRIL DE "+$P{anio}	: (
+				($P{mes} == 5) ?  $P{anio}+" AL 31 DE MAYO DE "+$P{anio} : (
+					($P{mes} == 6) ?  $P{anio}+" AL 30 DE JUNIO DE "+$P{anio} : (
+						($P{mes} == 7) ?  $P{anio}+" AL 31 DE JULIO DE "+$P{anio} : (
+							($P{mes} == 8) ?  $P{anio}+" AL 31DE AGOSTO DE "+$P{anio} : (
+								($P{mes} == 9) ?  $P{anio}+" AL 30 DE SEPTIEMBRE DE "+$P{anio} : (
+									($P{mes} == 10) ?  $P{anio}+" AL 31 DE OCTUBRE DE "+$P{anio} : (
+										($P{mes} == 11) ?  $P{anio}+" AL 30 DE NOVIEMBRE DE "+$P{anio} : (
+											($P{mes} == 12) ?  $P{anio}+" AL 31 DE DICIEMBRE DE "+$P{anio} : ""
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+)]]></variableExpression>
+	</variable>
+	<variable name="se" class="java.lang.String">
+		<variableExpression><![CDATA[$P{clave}+"0000000"]]></variableExpression>
+	</variable>
+	<variable name="mess" class="java.lang.String">
+		<variableExpression><![CDATA[($P{mes} == 1) ?  " ENERO " : (
+	($P{mes} == 2) ?  " FEBRERO  ": (
+		($P{mes} == 3) ?  "  MARZO  "	: (
+			($P{mes} == 4) ?  "  ABRIL ": (
+				($P{mes} == 5) ?  " MAYO " : (
+					($P{mes} == 6) ?  "  JUNIO  " : (
+						($P{mes} == 7) ?  " JULIO  " : (
+							($P{mes} == 8) ? " AGOSTO" : (
+								($P{mes} == 9) ?  " SEPTIEMBRE " : (
+									($P{mes} == 10) ?  "  OCTUBRE " : (
+										($P{mes} == 11) ?  "  NOVIEMBRE  " : (
+											($P{mes} == 12) ?  "  DICIEMBRE " : ""
+										)
+									)
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+)]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="24" width="1170" height="12" uuid="982b44f4-67f1-4e04-aa82-e4a061f0ebe9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ESTADO DE AVANCE PRESUPUESTAL DE EGRESOS DEL 1 DE ENERO DE  ".concat($V{RANGO})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="1170" height="12" uuid="60d610a9-937b-42f4-8417-00bd06e2cd05">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["AVANCE PRESUPUESTAL DEL MES".concat( $V{mess})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="12" width="1170" height="12" uuid="32b943c2-c0d7-48dc-9fca-c326cb2d2bce">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLVDEP}.concat( "  " ).concat($F{NOMDEP})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

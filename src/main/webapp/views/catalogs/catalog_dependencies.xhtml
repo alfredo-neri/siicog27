@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+
+				<p:remoteCommand name="onload"
+					action="#{catalogDependenciesMB.onPageLoad}"
+					update=":form1:display_1, :form1:messagesEdit, :form1:objects" />
+				<p:remoteCommand name="consultDependenciesGeneral"
+					actionListener="#{catalogDependenciesMB.consultDependenciesGeneral}"
+					oncomplete="PF('catalogDependenciesGeneralDlg').show()"
+					update=":form1:dependenciesGeneral" />
+				<p:remoteCommand name="consultDependenciesAuxiliary"
+					actionListener="#{catalogDependenciesMB.consultDependenciesAuxiliary}"
+					oncomplete="PF('catalogDependenciesAuxiliaryDlg').show()"
+					update=":form1:dependenciesAuxiliary" />
+				<p:remoteCommand id="active" name="active"
+					actionListener="#{catalogDependenciesMB.activeRow}"
+					update=":form1:objects" />
+
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+				<p:panel id="panel"
+					header="Cat&aacute;logo de Dependencias Municipal"
+					styleClass="green col-md-4 col-centered row-centered shadow-panel">
+
+					<h:panelGrid id="display_1" columns="4" cellpadding="1">
+
+						<h:outputText value="Dependencia" for="keyInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<p:inputText id="keyInput" styleClass="form-control" size="10"
+							value="#{catalogDependenciesMB.beanFind.clvdep}" maxlength="10"
+							validatorMessage="El campo Dependencia solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="keyInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogDependenciesMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<h:outputText value="Nombre" for="nameInput"
+							styleClass="control-label"
+							style="padding-left: 10px; padding-right: 10px;" />
+						<p:inputText id="nameInput" styleClass="form-control"
+							value="#{catalogDependenciesMB.beanFind.nomdep}" maxlength="150"
+							validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos">
+							<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+								for="nameInput" />
+							<p:ajax event="keyup"
+								update=":form1:messagesEdit, :form1:objects"
+								listener="#{catalogDependenciesMB.findValuesCatalog}" />
+						</p:inputText>
+
+						<!-- 						<p:outputPanel layout="block" style="text-align:center"> -->
+						<br />
+						<br />
+						<br />
+
+						<p:commandButton value="Buscar" style="padding: 5px;"
+							update=":form1:messagesEdit, :form1:objects"
+							actionListener="#{catalogDependenciesMB.findValuesCatalog}"
+							onstart="PF('blockUIWidget').block()"
+							oncomplete="PF('blockUIWidget').unblock()" />
+
+						<p:commandButton value="Limpiar"
+							style="padding: 5px; margin-left: 15px;"
+							update=":form1:messagesEdit, :form1:objects, :form1:display_1"
+							actionListener="#{catalogDependenciesMB.findAllValuesCatalog}"
+							onstart="PF('blockUIWidget').block()" immediate="true"
+							oncomplete="PF('blockUIWidget').unblock();document.getElementById('form1:keyInput').value='';document.getElementById('form1:nameInput').value='';" />
+
+						<!-- 						</p:outputPanel> -->
+					</h:panelGrid>
+				</p:panel>
+
+
+				<pe:blockUI widgetVar="blockUIWidget">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="indice.png"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Please wait..." style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+				<br />
+
+
+				<p:panel id="panelButton"
+					style="width:100%; background-color: #E8ECED;"
+					styleClass="col-centered row-centered">
+
+					<p:commandButton value="Nuevo Registro"
+						update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+						actionListener="#{catalogDependenciesMB.insertRow}"
+						onclick="PF('dependenciesWdg').clearFilters();"
+						oncomplete="jQuery('.ui-datatable-data tr').first().find('span.ui-icon-pencil').each(function(){jQuery(this).click()}); 
+						$(function(){PrimeFaces.focus('objects:clvdgm');});"
+						onmousedown="jQuery('.ui-paginator-first').click();" />
+				</p:panel>
+
+				<p:focus context="objects:clvdep" id="focusTable" />
+
+
+
+				<p:commandButton id="hideButton2"
+					update=":form1:messagesEdit, :form1:objects"
+					onstart="PF('blockUIWidget').block()"
+					oncomplete="PF('blockUIWidget').unblock();" ajax="false"
+					style="visibility: hidden;" />
+
+				<p:dataTable id="objects" binding="#{table}" var="object"
+					value="#{catalogDependenciesMB.list}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					selectionMode="single" rowKey="#{object.id}"
+					selection="#{catalogDependenciesMB.rowSelected}"
+					filteredValue="#{catalogDependenciesMB.filteredList}"
+					widgetVar="dependenciesWdg">
+
+					<f:facet name="header">Cat&aacute;logo de Dependencias Municipal</f:facet>
+
+
+					<p:ajax event="rowEditInit"
+						listener="#{catalogDependenciesMB.onInitRowEdit}"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','hidden')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','hidden')});" />
+
+					<p:ajax event="rowEdit"
+						listener="#{catalogDependenciesMB.onRowEdit}"
+						update=":form1:messagesEdit"
+						oncomplete="$('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogDependenciesMB.onRowCancel}"
+						update=":form1:messagesEdit"
+						onstart="PF('blockUIWidget').block(); $('.ui-row-editor span.ui-icon-pencil').each(function(){$(this).css('visibility','visible')});
+						$('.ui-commandlink span.ui-icon-close').each(function(){$(this).css('visibility','visible')});"
+						oncomplete="PF('blockUIWidget').unblock();" />
+
+
+					<p:column headerText="Dependencia" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.clvdep}" />
+					</p:column>
+
+					<p:column headerText="Dependencia" exportable="false"
+						style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvdep}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="clvdep" value="#{object.clvdep}"
+									style="width:100%" maxlength="10" required="true"
+									requiredMessage="El campo Dependencia es requerido"
+									validatorMessage="El campo Dependencia solo permite valores alfanum&eacute;ricos sin espacios"
+									disabled="true">
+
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z]*)\s*$" for="clvdep" />
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Dependencia General" visible="false"
+						width="0" exportable="true">
+						<h:outputText value="#{object.claveDgm}" />
+					</p:column>
+
+					<p:column headerText="Dependencia General" exportable="false"
+						style="width:7%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.claveDgm}" />
+							</f:facet>
+							<f:facet name="input">
+								<div class="ui-grid ui-grid-responsive">
+									<div class="ui-grid-row">
+										<div class="ui-grid-col-13">
+											<p:inputText id="clvdgm" value="#{object.claveDgm}"
+												style="width:100%" maxlength="3" required="true"
+												onkeypress="if (event.keyCode == 9 ) {document.getElementById('clvdaa').focus(); return false; } if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}"
+												requiredMessage="El campo Dependencia General es requerido"
+												validatorMessage="El campo Dependencia General solo permite valores alfanum&eacute;ricos">
+
+												<f:validateLength maximum="3" for="clvdgm" />
+												<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+													for="clvdgm" />
+												<p:ajax event="blur" update="clvdaa"></p:ajax>
+											</p:inputText>
+										</div>
+										<div class="ui-grid-col-2" align="center">
+											<p:commandLink id="searchclvdgm"
+												styleClass="glyphicon glyphicon-search"
+												onclick="consultDependenciesGeneral(); return false;"
+												style="width:18px;height:18px;" />
+										</div>
+									</div>
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Dependencia Auxiliar" visible="false"
+						width="0" exportable="true">
+						<h:outputText value="#{object.claveDaa}" />
+					</p:column>
+
+					<p:column headerText="Dependencia Auxiliar" exportable="false"
+						style="width:7%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.claveDaa}" />
+							</f:facet>
+							<f:facet name="input">
+
+								<div class="ui-grid ui-grid-responsive">
+									<div class="ui-grid-row">
+										<div class="ui-grid-col-13">
+											<p:inputText id="clvdaa" value="#{object.claveDaa}"
+												style="width:100%" maxlength="3" required="true"
+												disabled="false"
+												requiredMessage="El campo Dependencia Auxiliar es requerido"
+												validatorMessage="El campo Dependencia Auxiliar solo permite valores alfanum&eacute;ricos"
+												onkeypress="if (event.keyCode == 13) {return false; } if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;}">
+
+												<f:validateRegex pattern="^\s*([0-9a-zA-Z _-]*)\s*$"
+													for="clvdaa" />
+
+											</p:inputText>
+										</div>
+										<div class="ui-grid-col-2" align="center">
+											<p:commandLink id="searchclvdaa"
+												styleClass="glyphicon glyphicon-search"
+												onclick="consultDependenciesAuxiliary(); return false;"
+												style="width:18px;height:18px;" />
+										</div>
+									</div>
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre" visible="false" width="0"
+						exportable="true">
+						<h:outputText value="#{object.nomdep}" />
+					</p:column>
+
+					<p:column headerText="Nombre" exportable="false" style="width:80%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nomdep}" disabled="true" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="nomdep" value="#{object.nomdep}"
+									style="width:100%" maxlength="150"
+									requiredMessage="El campo Nombre es requerido"
+									validatorMessage="El campo Nombre solo permite valores alfanum&eacute;ricos"
+									disabled="true">
+									<f:validateRegex pattern="^\s*([0-9a-zA-Z áÁéÉíÍóÓúÚ_-]*)\s*$"
+										for="Nombre" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Borrar" style="width:5%" exportable="false">
+						<p:commandLink rendered="#{object.notDelete}"
+							update=":form1:objects, :form1:messagesEdit, :form1:panelDelete"
+							oncomplete="PF('confirmDeleteDlg').show()"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogDependenciesMB.beanSelected}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column style="width:5%" exportable="false">
+						<p:rowEditor rendered="#{object.notDelete}" />
+					</p:column>
+
+
+					<f:facet name="footer">
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogDependenciesMB.list}">
+							<p:graphicImage value="excel.png" width="24" />
+							<p:fileDownload value="#{catalogDependenciesMB.fileXls}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogDependenciesMB.list}">
+							<p:graphicImage value="pdf.png" width="24" />
+							<p:fileDownload value="#{catalogDependenciesMB.filePdf}" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogDependenciesMB.list}">
+							<p:graphicImage value="csv.png" width="24" />
+							<p:dataExporter type="csv" target="objects"
+								fileName="Dependencias" pageOnly="false" encoding="ISO-8859-1" />
+						</h:commandLink>
+
+						<h:commandLink onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{empty catalogDependenciesMB.list}">
+							<p:graphicImage value="txt.gif" width="24" />
+							<p:fileDownload value="#{catalogDependenciesMB.file}" />
+						</h:commandLink>
+
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<br />
+				<br />
+
+				<p:dialog header="Borrar" widgetVar="confirmDeleteDlg"
+					resizable="false" width="400" height="90" showEffect="clip"
+					hideEffect="clip" modal="true">
+					<h:outputText value="¿Está seguro de querer eliminar el registro?"
+						style="padding-left: 30px; padding-right: 30px;" />
+					<br />
+					<br />
+					<p:outputPanel id="panelDelete" layout="block"
+						style="text-align:center">
+						<p:commandButton value="Aceptar"
+							update=":form1:messagesEdit, :form1:objects"
+							actionListener="#{catalogDependenciesMB.delete}"
+							oncomplete="PF('confirmDeleteDlg').hide()" style="padding: 5px;" />
+
+						<p:commandButton value="Cancelar"
+							onclick="PF('confirmDeleteDlg').hide()" type="button"
+							style="padding: 5px; margin-left: 15px;" />
+					</p:outputPanel>
+				</p:dialog>
+
+				<p:dialog
+					header="Consulta al Cat&aacute;logo de Dependencias Generales"
+					widgetVar="catalogDependenciesGeneralDlg" resizable="false"
+					width="800" height="650" showEffect="clip" hideEffect="clip"
+					modal="true">
+					<br />
+					<p:outputPanel id="panelCatalogDependenciesGeneral" layout="block"
+						style="text-align:left">
+						<p:dataTable id="dependenciesGeneral" var="depGeneral"
+							value="#{catalogDependenciesMB.dependenciesGeneral}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogDependenciesMB.depGeneralSelected}"
+							rowKey="#{depGeneral.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogDependenciesMB.filteredDependenciesGeneral}">
+
+							<p:ajax event="rowDblselect"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								listener="#{catalogDependenciesMB.onClvdgmRowDblClckSelect}"
+								oncomplete="PF('catalogDependenciesGeneralDlg').hide();" />
+
+							<f:facet name="header">Consulta al Cat&aacute;logo Dependencias Generales</f:facet>
+
+							<p:column headerText="Clave" width="30%"
+								filterMatchMode="contains" filterBy="#{depGeneral.clave}"
+								filterMaxLength="3">
+								<h:outputText value="#{depGeneral.clave}" />
+							</p:column>
+
+							<p:column headerText="Nombre" width="40%"
+								filterMatchMode="contains" filterBy="#{depGeneral.nombre}">
+								<h:outputText value="#{depGeneral.nombre}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<br />
+
+						<p:commandButton value="Aceptar"
+							actionListener="#{catalogDependenciesMB.changeDependenceGeneral}"
+							oncomplete="PF('catalogDependenciesGeneralDlg').hide();"
+							style="padding: 5px; position: absolute; right: 50%;" />
+
+						<p:commandButton value="Cancelar"
+							actionListener="#{catalogDependenciesMB.activateRowEdit}"
+							oncomplete="PF('catalogDependenciesGeneralDlg').hide();"
+							style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+				<p:dialog
+					header="Consulta al Cat&aacute;logo de Dependencias Auxiliares"
+					widgetVar="catalogDependenciesAuxiliaryDlg" resizable="false"
+					width="800" height="650" showEffect="clip" hideEffect="clip"
+					modal="true">
+					<br />
+					<p:outputPanel id="panelCatalogDependenciesAuxiliary"
+						layout="block" style="text-align:left">
+						<p:dataTable id="dependenciesAuxiliary" var="depAuxiliary"
+							value="#{catalogDependenciesMB.dependenciesAuxiliary}"
+							styleClass="et_datatable" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							selectionMode="single"
+							selection="#{catalogDependenciesMB.depAuxiliarySelected}"
+							rowKey="#{depAuxiliary.id}" emptyMessage="No hay registros"
+							filteredValue="#{catalogDependenciesMB.filteredDependenciesAuxiliary}">
+
+							<p:ajax event="rowDblselect"
+								update=":form1:messagesEdit, :form1:objects, :form1:focusTable"
+								listener="#{catalogDependenciesMB.onClvdaaRowDblClckSelect}"
+								oncomplete="PF('catalogDependenciesAuxiliaryDlg').hide();"></p:ajax>
+
+							<f:facet name="header">Consulta al Cat&aacute;logo Dependencias Auxiliares</f:facet>
+
+							<p:column headerText="Clave" width="30%"
+								filterMatchMode="contains" filterBy="#{depAuxiliary.clave}"
+								filterMaxLength="3">
+								<h:outputText value="#{depAuxiliary.clave}" />
+							</p:column>
+
+							<p:column headerText="Nombre" width="40%"
+								filterMatchMode="contains" filterBy="#{depAuxiliary.nombre}">
+								<h:outputText value="#{depAuxiliary.nombre}" />
+							</p:column>
+
+						</p:dataTable>
+
+						<br />
+
+						<p:commandButton value="Aceptar"
+							actionListener="#{catalogDependenciesMB.changeDependenceAuxiliary}"
+							oncomplete="PF('catalogDependenciesAuxiliaryDlg').hide();"
+							style="padding: 5px; position: absolute; right: 50%;" />
+
+						<p:commandButton value="Cancelar"
+							actionListener="#{catalogDependenciesMB.activateRowEdit}"
+							oncomplete="PF('catalogDependenciesAuxiliaryDlg').hide();"
+							style="padding: 5px; margin-left: 15px; position: absolute; right: 35%;" />
+					</p:outputPanel>
+
+				</p:dialog>
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

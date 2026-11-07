@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<center>
+				<h:form enctype="multipart/form-data" id="form1">
+					<p:growl id="messages" showDetail="true" sticky="true"
+						autoUpdate="true"></p:growl>
+					<p:panel id="panelCarga" header="Carga de Bienes Inmuebles"
+						style="height: 26em;" styleClass="green shadow-panel container">
+						<p:panelGrid styleClass="ui-noborder col-centered row-centered"
+							id="panel-filtros">
+							<p:row>
+								<p:column>
+									<h:outputText value="Archivo CSV" />
+								</p:column>
+								<p:column>
+									<h:outputText value="Al Mes" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<p:remoteCommand name="submmit" process="@this inputAlMes"
+										partialSubmit="true" />
+
+									<p:fileUpload fileLimitMessage="Un solo archivo permitido"
+										invalidFileMessage="Archivo inválido" cancelLabel="Cancelar"
+										uploadLabel="Confirmar" label="Seleccionar" mode="advanced"
+										skinSimple="false" auto="true" dragDropSupport="true"
+										multiple="false"
+										fileUploadListener="#{CinmueblesMB.handleFileUpload}"
+										fileLimit="1" allowTypes="/(bienesi.)(csv)$/" accept=".csv"
+										value="#{CinmueblesMB.archivo}"
+										update="@this btnCorrecto,  :form1:nameFile"
+										onstart="submmit();" style="height: 2.6em;" />
+									<p:outputLabel value="#{CinmueblesMB.archivo.name}"
+										id="nameFile" />
+								</p:column>
+
+								<p:column>
+									<p:selectOneMenu id="inputAlMes" editable="false"
+										value="#{CinmueblesMB.alMes}">
+										<f:selectItem itemValue="1" itemLabel="01" />
+										<f:selectItem itemValue="2" itemLabel="02" />
+										<f:selectItem itemValue="3" itemLabel="03" />
+										<f:selectItem itemValue="4" itemLabel="04" />
+										<f:selectItem itemValue="5" itemLabel="05" />
+										<f:selectItem itemValue="6" itemLabel="06" />
+										<f:selectItem itemValue="7" itemLabel="07" />
+										<f:selectItem itemValue="8" itemLabel="08" />
+										<f:selectItem itemValue="9" itemLabel="09" />
+										<f:selectItem itemValue="10" itemLabel="10" />
+										<f:selectItem itemValue="11" itemLabel="11" />
+										<f:selectItem itemValue="12" itemLabel="12" />
+									</p:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="4">
+									<h:panelGroup styleClass="pull-right">
+										<p:commandButton id="btnCorrecto"
+											onclick="PF('confirmDialog').show();" value="Correcto"
+											update=" :form1:messages"
+											styleClass="btn btn-default pull-right"
+											style="margin-top: .5em;" disabled="#{!CinmueblesMB.actBtn}">
+										</p:commandButton>
+									</h:panelGroup>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="../catalogs/please_wait.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+					<p:confirmDialog widgetVar="confirmDialog"
+						message="Si existen registros de bienes inmuebles, estos se borrarán, ¿Esta seguro que desea cargar el archivo de bienes inmuebles?"
+						header="Confirmación" severity="alert">
+						<p:commandButton value="SI" label="SI" id="btnConf"
+							style="margin-top:10px;padding:5px;"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+							actionListener="#{CinmueblesMB.cargar()}"
+							onstart="PF('blockUIWidget').block();"
+							oncomplete="PF('blockUIWidget').unblock();"
+							onclick="PF('confirmDialog').hide();"
+							update=":form1:messages,:form1:btnCorrecto" />
+						<p:remoteCommand name="unblock"
+							onstart="PF('blockUIWidget').unblock();" />
+						<p:commandButton value="NO" label="NO"
+							style="margin-top:10px;padding:5px;"
+							onclick="PF('confirmDialog').hide();"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-check" />
+					</p:confirmDialog>
+				</h:form>
+			</center>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>
