@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+<body>
+	<!--
+		Menu lateral de SIICOG. Las opciones vienen de TC_MENU_NIVELES (menuMB); cada modulo de primer
+		nivel se agrupa e ilustra con un icono en MenuMB.getGrupos(). p:panelMenu recuerda los modulos
+		abiertos (stateful).
+	-->
+	<ui:composition>
+		<nav class="sg-side" id="sg-side" aria-label="Menú principal">
+			<div class="sg-group">
+				<a class="sg-nav #{view.viewId eq '/home.xhtml' ? 'on' : ''}" href="#{request.contextPath}/home.xhtml"
+					title="Inicio">
+					<i class="pi pi-home" /><span class="sg-label">Inicio</span>
+				</a>
+			</div>
+			<h:form id="menuGobForm" rendered="#{not empty menuMB.grupos}">
+				<ui:repeat value="#{menuMB.grupos}" var="grupo">
+					<div class="sg-group">
+						<h3>#{grupo.nombre}</h3>
+						<p:panelMenu id="menu" model="#{grupo.modelo}" stateful="true" multiple="true" />
+					</div>
+				</ui:repeat>
+			</h:form>
+		</nav>
+	</ui:composition>
+</body>
+</html>

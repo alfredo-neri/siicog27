@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="jakarta.faces.passthrough">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<!--
+				Panel Apariencia: el administrador elige el tema de colores de toda la aplicación.
+				Solo ROLE_ADMIN abre /views/administracion/** (SecurityConfig); se llega desde el botón
+				"Apariencia" de la barra superior. Al guardar, AparienciaService lo escribe en TC_PARAMETROS
+				(SIICOG_APARIENCIA) y siicog.js lo aplica en los navegadores abiertos.
+				Cada muestra lleva data-sg-tema: los temas solo redefinen las variables de siicog.css.
+			-->
+			<h:form id="form">
+				<p:growl id="mensajes" showDetail="true" life="6000" />
+
+				<h:panelGroup id="panel" layout="block" styleClass="sg-page">
+					<div class="sg-page-h">
+						<div>
+							<div class="sg-crumbs">Administración</div>
+							<h1>Apariencia del sistema</h1>
+						</div>
+						<div class="sg-actions">
+							<p:commandButton value="Descartar" styleClass="ui-button-flat"
+								action="#{aparienciaMB.descartar}" process="@this" update="panel"
+								disabled="#{not aparienciaMB.cambios}" />
+							<p:commandButton value="Aplicar a todos los usuarios" icon="pi pi-check"
+								action="#{aparienciaMB.guardar}" process="@form" update="panel mensajes"
+								disabled="#{not aparienciaMB.cambios or not empty aparienciaMB.aviso}"
+								oncomplete="sgApariencia.revisar();" />
+						</div>
+					</div>
+
+					<div class="sg-alert info">
+						<i class="pi pi-info-circle" />
+						<div>
+							<b>El tema se aplica a todos los usuarios del sistema.</b>
+							Los que estén conectados lo verán en menos de un minuto, sin recargar la página.
+							Tema vigente: <strong>#{aparienciaMB.vigente.tema().nombre}</strong>
+							<h:outputText rendered="#{not empty aparienciaMB.vigente.ultimoCambio()}"
+								value=" · último cambio: #{aparienciaMB.vigente.ultimoCambio()}" />
+						</div>
+					</div>
+
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Tema de colores</h2>
+						</div>
+						<div class="sg-card-b">
+							<div class="sg-temas" role="radiogroup" aria-label="Tema de colores">
+								<ui:repeat value="#{aparienciaMB.temas}" var="t">
+									<p:commandLink action="#{aparienciaMB.elegir(t)}" process="@this" update=":form:panel"
+										styleClass="sg-tema#{aparienciaMB.tema eq t ? ' on' : ''}"
+										pt:role="radio" pt:aria-checked="#{aparienciaMB.tema eq t}">
+										<span class="sg-tema-muestra" data-sg-tema="#{t.clave}"
+											style="#{t eq 'PERSONALIZADO' ? aparienciaMB.muestraPersonalizada : ''}">
+											<span class="m-top"><span class="m-dot"></span></span>
+											<span class="m-body">
+												<span class="m-side"><span></span><span class="on"></span><span></span></span>
+												<span class="m-main">
+													<span class="m-line"></span>
+													<span class="m-btns"><span class="m-btn"></span><span class="m-acc"></span></span>
+													<span class="m-chip"></span>
+												</span>
+											</span>
+										</span>
+										<span class="sg-tema-txt">
+											<b>#{t.nombre}
+												<h:panelGroup styleClass="sg-chip ok" rendered="#{aparienciaMB.vigente.tema() eq t}">Vigente</h:panelGroup>
+											</b>
+											<small>#{t.descripcion}</small>
+										</span>
+										<i class="pi pi-check-circle sg-tema-check" />
+									</p:commandLink>
+								</ui:repeat>
+							</div>
+
+							<h:panelGroup layout="block" styleClass="sg-fields sg-tema-colores"
+								rendered="#{aparienciaMB.tema eq 'PERSONALIZADO'}">
+								<div class="sg-field">
+									<p:outputLabel for="principal" value="Color principal" />
+									<div class="sg-color">
+										<h:inputText id="principal" value="#{aparienciaMB.principal}" pt:type="color">
+											<p:ajax event="change" process="@this acento" update=":form:panel" />
+										</h:inputText>
+										<span class="sg-code">#{aparienciaMB.principal}</span>
+									</div>
+									<span class="sg-note">Barra superior, botones y selección. Debe ser oscuro.</span>
+								</div>
+								<div class="sg-field">
+									<p:outputLabel for="acento" value="Color de acento" />
+									<div class="sg-color">
+										<h:inputText id="acento" value="#{aparienciaMB.acento}" pt:type="color">
+											<p:ajax event="change" process="@this principal" update=":form:panel" />
+										</h:inputText>
+										<span class="sg-code">#{aparienciaMB.acento}</span>
+									</div>
+									<span class="sg-note">Indicadores del menú, foco y botones destacados.</span>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup layout="block" styleClass="sg-alert bad" rendered="#{not empty aparienciaMB.aviso}">
+								<i class="pi pi-exclamation-triangle" />
+								<div>#{aparienciaMB.aviso}</div>
+							</h:panelGroup>
+						</div>
+					</div>
+
+					<!-- Vista previa del tema marcado, con las piezas reales del marco -->
+					<div class="sg-card">
+						<div class="sg-card-h">
+							<h2>Vista previa <small>#{aparienciaMB.tema.nombre}</small></h2>
+						</div>
+						<div class="sg-card-b">
+							<div class="sg-vista" data-sg-tema="#{aparienciaMB.tema.clave}"
+								style="#{aparienciaMB.tema eq 'PERSONALIZADO' ? aparienciaMB.muestraPersonalizada : ''}">
+								<div class="sg-vista-top">
+									<b>SIICOG</b>
+									<span class="sg-fy">Ejercicio Fiscal 2026</span>
+									<span class="sg-avatar">AD</span>
+								</div>
+								<div class="sg-vista-cuerpo">
+									<div class="sg-vista-side">
+										<span class="sg-nav"><i class="pi pi-home" /> Inicio</span>
+										<span class="sg-nav on"><i class="pi pi-book" /> Catálogos</span>
+										<span class="sg-nav"><i class="pi pi-file" /> Pólizas</span>
+									</div>
+									<div class="sg-vista-main">
+										<div class="sg-crumbs">Contabilidad / Catálogos</div>
+										<h3>Catálogo de Programas</h3>
+										<div class="sg-vista-botones">
+											<button type="button" class="ui-button ui-widget ui-corner-all ui-button-text-only" tabindex="-1"><span class="ui-button-text">Buscar</span></button>
+											<button type="button" class="ui-button ui-widget ui-corner-all ui-button-text-only sg-btn-accent" tabindex="-1"><span class="ui-button-text">Afectar</span></button>
+											<button type="button" class="ui-button ui-widget ui-corner-all ui-button-text-only ui-button-secondary" tabindex="-1"><span class="ui-button-text">Exportar</span></button>
+										</div>
+										<div class="sg-vista-tabla">
+											<div class="h"><span>Clave</span><span>Nombre</span><span>Estado</span></div>
+											<div><span class="sg-code">0101</span><span>Gobierno</span><span class="sg-chip info">Activo</span></div>
+											<div class="sel"><span class="sg-code">0102</span><span>Desarrollo social</span><span class="sg-chip cian">Último nivel</span></div>
+											<div><span class="sg-code">0103</span><span>Desarrollo económico</span><span class="sg-chip ok">Vigente</span></div>
+										</div>
+										<a href="#" onclick="return false;" tabindex="-1">Enlace de ejemplo</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

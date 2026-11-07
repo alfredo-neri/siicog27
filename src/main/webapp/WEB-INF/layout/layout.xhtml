@@ -1,130 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--
+	Marco de SIICOG: barra superior, menu lateral, contenido y pie (prototipo sicog-pantallas.html).
+	Lo usan todas las vistas (template="/WEB-INF/layout/layout.xhtml"); cada una llena "content".
+-->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	data-sg-tema="#{apariencia.tema}" data-sg-apariencia="#{apariencia.version}">
 <h:head>
 	<ui:param name="root" value="#{request.contextPath}/" />
-	<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
-	<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
-	<!-- Latest compiled and minified CSS -->
-	<link rel="shortcut icon" type="image/png"
-		href="#{resource['images/colibriIcon.png']}"></link>
-	<!-- Latest compiled and minified CSS -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="icon" type="image/png" href="#{request.contextPath}/resources/siicog/img/siicog-logo.png" />
+	<!-- Estilos heredados que todavia usan las vistas (rejilla de Bootstrap 3, clases de cssLayout) -->
 	<h:outputStylesheet library="css" name="cssLayout.css" />
 	<h:outputStylesheet library="css" name="bootstrap.min.css" />
-	<h:outputStylesheet library="css" name="bootstrap-theme.min.css" />
 	<h:outputStylesheet library="css" name="override-panelgrid.css" />
-	<h:outputScript library="js" name="bootstrap.min.js" />
-	<!-- Sticky note -->
-	<h:outputStylesheet library="sticky" name="jquery.minicolors.css" />
-	<h:outputStylesheet library="sticky" name="jquery.postitall.css" />
-	<h:outputScript library="sticky" name="jquery-ui.min.js" />
-	<h:outputScript library="sticky" name="jquery.minicolors.js" />
-	<h:outputScript library="sticky" name="jquery.postitall.js" />
+	<!-- Sin bootstrap.min.js, jQuery UI 1.11 ni notas adhesivas: no son compatibles con jQuery 4
+	     (PrimeFaces 16) y solo los usaba la barra anterior (ver resources/js/gem.js) -->
 	<h:outputScript library="js" name="underscore.js" />
-	<h:outputScript library="js" name="gem.js" />
-	<h:outputScript library="js" name="calendar_es.js" />
-	<h:outputScript library="js" name="selectRowTabale.js" />
+	<!-- Textos en espanol de calendarios y componentes: los de PrimeFaces 16 (calendar_es.js era formato PF5) -->
+	<h:outputScript library="primefaces" name="locales/locale-es.js" />
 	<h:outputScript library="js" name="resetPassword.js" />
 	<h:outputScript library="js" name="tiff.min.js" />
 	<h:outputScript library="js" name="tiffView.js" />
-	<!-- <h:outputScript library="js" name="jquery-ui.js" /> -->
-	<!-- Overriding default CSS of primefaces -->
 	<h:outputStylesheet library="css" name="slick.css" />
 	<h:outputStylesheet library="css" name="slick-theme.css" />
 	<style>
-.ui-widget {
+.renglon {
 	font-size: 12px;
 }
-
-.ui-widget-overlay {
-	background: RGBA(255, 255, 255, 0.65); !important
-    filter:alpha(opacity=35);  !important /* works in IE 7 */
-    opacity: 0.3;   !important /* works in Firefox */
-}
-
-body {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 11px;
-    line-height: 1.42857143;
-    color: #333;
-}
-
-.ui-widget-header,.ui-column-title {
-font-size: 10pt;
-font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-
-.ui-widget-content {
-font-size: 10pt;
-font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-
-.ui-column-title {
-    font-size: 8pt;
-}
-
-.renglon {
-font-size: 8pt;
-font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-
-
-.customDialog {
-    background: green;
-}
-
-.ui-dialog.customDialog .ui-dialog-content {
-    padding: 0;
-    margin: 20px 10px;
-}
-.ui-dialog-titlebar.ui-widget-header.customDialog {
- background-image: none;
-    background: green;
-    color: black;
-    box-shadow: none;
-}
-
-.ui-state-highlight .ui-icon {
-	background-image: url("#{resource['images/ui-icons.png']}");
-}
-
-
 </style>
-	<title>2026 - Sistema de Contabilidad Gubernamental</title>
+	<!-- Sin la regla .customDialog de difem26 (margin: 20px 10px en el contenido): dejaba una franja vacia
+	     entre el encabezado y el cuerpo de los dialogos de users.xhtml -->
+
+	<!-- SIICOG: al final, para que prevalezca sobre los estilos heredados. ?v= cambia en cada arranque
+	     (siicog.recursos) para que el navegador no use una copia anterior de estos archivos. -->
+	<f:facet name="last">
+		<link rel="stylesheet" href="#{request.contextPath}/resources/siicog/iconos-jqueryui.css?v=#{siicog.recursos}" />
+		<link rel="stylesheet" href="#{request.contextPath}/resources/siicog/siicog.css?v=#{siicog.recursos}" />
+		<!-- Tema personalizado del panel Apariencia (vacio con los temas fijos; siicog.js lo actualiza) -->
+		<style id="sg-tema-css">#{apariencia.css}</style>
+		<!-- gem.js: start()/stop() de las descargas (PrimeFaces.monitorDownload); despues de jQuery -->
+		<script src="#{request.contextPath}/resources/js/gem.js?v=#{siicog.recursos}"></script>
+		<script src="#{request.contextPath}/resources/siicog/siicog.js?v=#{siicog.recursos}" defer="defer"></script>
+	</f:facet>
+	<title>SIICOG · Sistema Inteligente de Contabilidad Gubernamental</title>
 </h:head>
-<h:body styleClass="bgDesktop">
-	<div class="container-fluid">
-
-		<p:dialog modal="true" widgetVar="statusDialog" header="Descargando.."
-			draggable="false" closable="false" resizable="false">
-			<p:graphicImage value="#{resource['images/ajaxloadingbar.gif']}" />
-		</p:dialog>
-
-		<!-- Header Facelets -->
-		<ui:insert name="header">
-			<ui:include src="/WEB-INF/layout/header.xhtml" />
-		</ui:insert>
-
-		<div class="container-fluid"  style="background-color: #dac4a2; min-height: 300px; margin-left:5px; margin-right:5px;">
-			<!-- Content Facelets -->
-			<ui:insert name="content">
-
-			</ui:insert>
+<h:body>
+	<!--
+		Unica ventana de espera de la aplicacion: la usan Generar (PF('blockUIWidget').block()), las
+		descargas de Excel/TXT (start/stop de gem.js con PrimeFaces.monitorDownload) y los procesos de carga.
+		Antes cada vista declaraba la suya; ver herramientas/tema/unificar_espera.py.
+	-->
+	<pe:blockUI widgetVar="blockUIWidget">
+		<div class="sg-espera" role="status" aria-live="polite">
+			<div class="sg-espera-icono">
+				<span class="sg-espera-spinner"></span>
+				<i class="pi pi-hourglass" />
+			</div>
+			<div class="sg-espera-titulo">Procesando su solicitud</div>
+			<div class="sg-espera-texto">Esto puede tardar unos segundos. Por favor espere.</div>
 		</div>
+	</pe:blockUI>
 
-		<!-- Footer Facelets -->
-		<ui:insert name="footer">
-			<ui:include src="/WEB-INF/layout/footer.xhtml" />
-		</ui:insert>
-		
-		<h:outputScript library="js" name="growl-render-gem.js" />
+	<!-- Header Facelets: barra superior -->
+	<ui:insert name="header">
+		<ui:include src="/WEB-INF/layout/header.xhtml" />
+	</ui:insert>
 
+	<div class="sg-layout">
+		<ui:include src="/WEB-INF/layout/menu.xhtml" />
+		<div class="sg-scrim" id="sg-scrim"></div>
+
+		<main class="sg-main">
+			<div class="sg-content">
+				<!-- Content Facelets -->
+				<ui:insert name="content">
+
+				</ui:insert>
+			</div>
+
+			<!-- Footer Facelets -->
+			<ui:insert name="footer">
+				<ui:include src="/WEB-INF/layout/footer.xhtml" />
+			</ui:insert>
+		</main>
 	</div>
+
 	<h:outputScript library="js" name="slick.min.js" />
 </h:body>
 </html>

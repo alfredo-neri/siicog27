@@ -1,124 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pe="http://primefaces.org/ui/extensions">
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
 
 <body>
+	<!-- Barra superior de SIICOG -->
 	<ui:composition>
-		<h:outputScript>
-                        $( document ).ready(function() {
-                                        $("a span").removeClass("caret");
-                        });
-        </h:outputScript>
-		<h:outputStylesheet library="css" name="menu.css" />
-		<div class="container-fluid">
-
-			<!-- START header logos -->
-			<div id="headGem" style="position: relative;">
-				<h:link outcome="home.xhtml">
-					<div class="row colorwhite">
-						<div class="col-md-3 col-centeredLogos">
-							<div id="edomexlogo"></div>
-						</div>
-						<div class="col-md-6 col-centeredLogos vcenter">
-							<p class="titleapp">Gobierno del Estado de M&eacute;xico</p>
-							<p class="titleapp">Secretar&iacute;a de Finanzas</p>
-							<p class="titleapp">Contadur&iacute;a General Gubernamental</p>
-							<p class="titleapp">Sistema para el Desarrollo Integral de la Familia del Estado de M&eacute;xico</p>
-							<p></p>
-						</div>
-						<div class="col-md-3 col-centeredLogos">
-							<div id="piensagrande"></div>
-						</div>
-					</div>
-					<div id="greenwaves" class="row colorwhite"></div>
-				</h:link>
+		<header class="sg-top">
+			<button type="button" class="sg-burger" id="sg-burger"
+				aria-label="Mostrar u ocultar menú" aria-expanded="true">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+			</button>
+			<a class="sg-brand" href="#{request.contextPath}/home.xhtml">
+				<img src="#{request.contextPath}/resources/siicog/img/siicog-logo.png"
+					alt="SIICOG · Sistema Inteligente de Contabilidad Gubernamental" />
+			</a>
+			<div class="sg-logos">
+				<span class="sg-plate">
+					<img src="#{request.contextPath}/resources/siicog/img/logos-institucionales.png"
+						alt="Gobierno del Estado de México · DIF Estado de México" />
+				</span>
 			</div>
-			<!-- END  header logos -->
-
-			<!--  START Dinamic navbar -->
-			<div id="navv" data-spy="affix" data-offset-top="154">
-				<nav class="navbar navbar-default navbar-static">
-				<div class="container-fluid">
-					<div class="navbar-header">
-						<button type="button" class="navbar-toggle collapsed"
-							data-toggle="collapse" data-target="#navbar"
-							aria-expanded="false" aria-controls="navbar">
-							<span class="sr-only">Toggle navigation</span> 
-							<span class="icon-bar"></span> 
-							<span class="icon-bar"></span> 
-							<span class="icon-bar"></span>
-						</button>
-					</div>
-					<div id="navbar" class="navbar-collapse collapse">
-						<div class="ui-grid ui-grid-responsive">
-							<div class="ui-grid-row">
-								<div class="ui-grid-col-12">
-									<ul class="nav navbar-nav">
-
-										<li class="active" id="idHome"><a
-											href="#{request.contextPath}/home.xhtml">Home</a></li>
-									</ul>
-									<h:form id="menuGobForm">
-										<ul id="menuUL" class="nav navbar-nav">
-											<p:menubar id="menuGob"
-												styleClass="dropdown-menu multi-level"
-												model="#{menuMB.menuModel}" />
-										</ul>
-									</h:form>
-								</div>
-								<div class="ui-grid-col-2" style="max-width: 11em;">
-									<ul class="nav navbar-nav">
-										<li class="btn-success"><h:outputLink id="ink" value="#">
-												<span class="glyphicon glyphicon-user" style="color: white" />
-											</h:outputLink> <pe:tooltip for="ink" atPosition="bottom center"
-												myPosition="top center" hideEffectLength="150">
-												<div style="padding: 10px; color: gray;">
-													<div>
-														<h:outputText value="Nombre: " style="font-weight:bold;" />
-														<h:outputText value="#{menuMB.userDetails.fullName}" />
-													</div>
-													<!--<div style="margin-top: 5px;">
-														<h:outputText value="Tipo: " style="font-weight:bold;" />
-														<h:outputText value="#{menuMB.userDetails.userType}" />
-													</div>
-													<div style="margin-top: 7px;">
-														<h:outputText value="Localidad: "
-															style="font-weight:bold;" />
-														<h:outputText value="#{menuMB.userDetails.municipio}" />
-													</div>-->
-													<div style="margin-top: 7px;">
-														<h:outputText value="Rol: " style="font-weight:bold;" />
-														<h:outputText value="#{menuMB.userDetails.role}" />
-													</div>
-												</div>
-											</pe:tooltip></li>
-
-										<li class="btn-danger">
-											<a href="#{request.contextPath}/logout" style="color: white">
-												<span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-												Salir
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				</nav>
-			</div>
-
-			<!--  END Dinamic navbar -->
-		</div>
-		<!-- /.container-fluid -->
+			<div class="sg-spacer"></div>
+			<h:panelGroup styleClass="sg-fy" rendered="#{not empty menuMB.ejercicio}">
+				Ejercicio Fiscal #{menuMB.ejercicio}
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not empty menuMB.userDetails}">
+				<h:outputLink id="sg-usuario" value="#" styleClass="sg-user" onclick="return false;">
+					<span class="sg-avatar">#{menuMB.iniciales}</span>
+					<span class="sg-who">#{menuMB.nombreUsuario}<small>#{menuMB.userDetails.role}</small></span>
+				</h:outputLink>
+				<!-- Panel Apariencia: solo administradores (la pagina tambien lo exige en SecurityConfig) -->
+				<h:outputLink value="#{request.contextPath}/views/administracion/apariencia.xhtml" styleClass="sg-logout sg-ajustes"
+					title="Apariencia del sistema" rendered="#{apariencia.administrador}">
+					<i class="pi pi-palette" aria-hidden="true" />
+					<span class="sg-label">Apariencia</span>
+				</h:outputLink>
+				<a class="sg-logout" href="#{request.contextPath}/logout">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg>
+					<span class="sg-label">Salir</span>
+				</a>
+			</h:panelGroup>
+		</header>
 	</ui:composition>
-
-
 </body>
 </html>
